@@ -22,26 +22,26 @@ final class Assert {
     
     
     public static function arraysEqual($cat, array $a1, array $a2) {
-    	$throwEx = false;
-    	
-    	if (count($a1) == count($a2)) {
-    		for ($i = 0; $i < count($a1); $i++) {
-    			if ($a1[$i] != $a2[$i]) {
-    				// different content
-    				
-    				$throwEx = true;
-    				break;
-    			}
-    		}
-    	}
-    	else {
-    		// different count
-    		$throwEx = true;
-    	}
-    	
-    	if ($throwEx) {
-    		self::throwException($cat, 'Different arrays!');
-    	}
+        $throwEx = false;
+        
+        if (count($a1) == count($a2)) {
+            for ($i = 0; $i < count($a1); $i++) {
+                if ($a1[$i] != $a2[$i]) {
+                    // different content
+                    
+                    $throwEx = true;
+                    break;
+                }
+            }
+        }
+        else {
+            // different count
+            $throwEx = true;
+        }
+        
+        if ($throwEx) {
+            self::throwException($cat, 'Different arrays!');
+        }
     }
     
     public static function areEqual($cat, $left, $right) {
@@ -105,22 +105,22 @@ final class LinqTests {
     }
     
     public function test_Concat() {
-    	$r1 = self::createRangeArray();    // 0 - 9
-    	$r2 = self::createRangeArray(10, 9);    // 10 - 18
+        $r1 = self::createRangeArray();    // 0 - 9
+        $r2 = self::createRangeArray(10, 9);    // 10 - 18
     
-    	Assert::areEqual('Range::concat', $r1->concat($r2)
-    	                                     ->count()
+        Assert::areEqual('Range::concat', $r1->concat($r2)
+                                             ->count()
                                         , 19);
     }
     
     public function test_Contains() {
-    	$r = self::createRangeArray();    // 0 - 9
+        $r = self::createRangeArray();    // 0 - 9
     
-    	$r->rewind();
-    	Assert::isTrue('Range::contains', $r->contains(9));
-    	
-    	$r->rewind();
-    	Assert::isFalse('Range::contains', $r->contains(10));
+        $r->rewind();
+        Assert::isTrue('Range::contains', $r->contains(9));
+        
+        $r->rewind();
+        Assert::isFalse('Range::contains', $r->contains(10));
     }
     
     public function test_Count() {
@@ -194,14 +194,14 @@ final class LinqTests {
     }
     
     public function test_SelectMany() {
-    	$r1 = self::createRangeArray(1, 3);
-    	$r2 = $r1->selectMany(function($i) {
-    		return array($i, $i, $i);
-    	});
+        $r1 = self::createRangeArray(1, 3);
+        $r2 = $r1->selectMany(function($i) {
+            return array($i, $i, $i);
+        });
     
-    	Assert::arraysEqual('Range::selectMany',
-    	                    $r2->toArray(),
-    	                    array(1, 1, 1, 2, 2, 2, 3, 3, 3));
+        Assert::arraysEqual('Range::selectMany',
+                            $r2->toArray(),
+                            array(1, 1, 1, 2, 2, 2, 3, 3, 3));
     }
     
     public function test_Skip() {
