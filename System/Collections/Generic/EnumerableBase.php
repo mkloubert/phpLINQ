@@ -65,6 +65,23 @@ abstract class EnumerableBase implements IEnumerable {
 	
 	/**
 	 * (non-PHPdoc)
+	 * @see \System\Collections\Generic\IEnumerable::contains()
+	 */
+	public function contains($item) {
+		while ($this->valid()) {
+			$i = $this->current();
+			$this->next();
+			
+			if ($item == $i) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * (non-PHPdoc)
 	 * @see \System\Collections\Generic\IEnumerable::concat()
 	 */
 	public function concat($iterator) {

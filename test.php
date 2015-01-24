@@ -113,6 +113,16 @@ final class LinqTests {
                                         , 19);
     }
     
+    public function test_Contains() {
+    	$r = self::createRangeArray();    // 0 - 9
+    
+    	$r->rewind();
+    	Assert::isTrue('Range::contains', $r->contains(9));
+    	
+    	$r->rewind();
+    	Assert::isFalse('Range::contains', $r->contains(10));
+    }
+    
     public function test_Count() {
         $r = self::createRangeArray();
 

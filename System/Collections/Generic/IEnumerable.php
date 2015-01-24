@@ -58,6 +58,15 @@ interface IEnumerable extends \Iterator, \Countable {
 	function concat($iterator);
 	
 	/**
+	 * Checks if that sequence contains a specific element.
+	 * 
+	 * @param mixed $item The element to search for.
+	 * 
+	 * @return boolean Element exists or not.
+	 */
+	function contains($item);
+	
+	/**
 	 * Returns the first item of that sequence.
 	 * 
 	 * @param callable $predicate The optional predicate to use.
