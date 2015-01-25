@@ -181,6 +181,15 @@ interface IEnumerable extends \Iterator, \Countable {
     function skip($count);
     
     /**
+     * Skips elements while a predicate matches.
+     * 
+     * @param callable $predicate The predicate to use.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function skipWhile($predicate);
+    
+    /**
      * Calculates the sum of the elements of that sequence.
      * 
      * @param mixed The value that is returned if no element was found.
@@ -197,6 +206,15 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function take($count);
+    
+    /**
+     * Takes elements while a predicate matches.
+     *
+     * @param callable $predicate The predicate to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function takeWhile($predicate);
     
     /**
      * Returns the items of that sequence as new array.

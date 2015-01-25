@@ -439,23 +439,34 @@ abstract class EnumerableBase implements IEnumerable {
     		$this->throwException('count value is invalid!');
     	}
     	
-        return static::toEnumerable($this->skipInner($count));
+        return $this->skipWhile(function($item) use(&$count) {
+        	return $count-- > 0;
+        });
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::skipWhile()
+     */
+    public final function skipWhile($predicate) {
+    	 $this->checkForFunctionOrThrow($predicate);
+    	 
+    	 return static::toEnumerable($this->skipWhileInner($predicate));
     }
     
-    private function skipInner($count) {
-        while ($this->valid()) {
-            $i = $this->current();
-            $this->next();
-            
-            if ($count > 0) {
-                --$count;
-                continue;
-            }
-
-            yield $i;
-        }
+    private function skipWhileInner($predicate) {
+    	while ($this->valid()) {
+    		$i = $this->current();
+    		$this->next();
+    
+    		if ($predicate($i)) {
+    			continue;
+    		}
+    
+    		yield $i;
+    	}
     }
-
+    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::sum()
@@ -490,20 +501,32 @@ abstract class EnumerableBase implements IEnumerable {
     		$this->throwException('count value is invalid!');
     	}
     	
-        return static::toEnumerable($this->takeInner($count));
+        return $this->takeWhile(function($item) use(&$count) {
+        	return $count-- > 0;
+        });
     }
     
-    private function takeInner($count) {
-        while ($this->valid()) {
-            if ($count <= 0) {
-                break;
-            }
-
-            yield $this->current();
-            --$count;
-            
-            $this->next();
-        }
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::takeWhile()
+     */
+    public final function takeWhile($predicate) {
+    	$this->checkForFunctionOrThrow($predicate);
+    	
+    	return static::toEnumerable($this->takeWhileInner($predicate));
+    }
+    
+    private function takeWhileInner($predicate) {
+    	while ($this->valid()) {
+    		$i = $this->current();
+    		$this->next();
+    
+    		if (!$predicate($i)) {
+    			break;
+    		}
+    
+    		yield $i;
+    	}
     }
     
     /**
