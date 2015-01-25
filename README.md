@@ -69,7 +69,7 @@ function createIterator() {
     yield 241279;
 }
 
-$seq = mew Enumerable(createIterator());
+$seq = new Enumerable(createIterator());
 
 // ...
 ```
