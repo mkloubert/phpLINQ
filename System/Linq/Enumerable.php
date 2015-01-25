@@ -29,7 +29,7 @@ use System\Collections\Generic\EnumerableBase as EnumerableBase;
  * 
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-final class Enumerable extends EnumerableBase {
+class Enumerable extends EnumerableBase {
     /**
      * @var \Iterator
      */
@@ -111,7 +111,7 @@ final class Enumerable extends EnumerableBase {
      * @return \System\Linq\Enumerable The new instance.
      */
     public final static function range($start, $count) {
-        return static::toEnumerable(self::rangeInner($start, $count));
+        return static::toEnumerable(static::rangeInner($start, $count));
     }
     
     private static function rangeInner($start, $count) {
@@ -131,7 +131,7 @@ final class Enumerable extends EnumerableBase {
      * @return \System\Linq\Enumerable The new insatnce.
      */
     public final static function repeat($val, $count) {
-        return static::toEnumerable(self::repeatInner($val, $count));
+        return static::toEnumerable(static::repeatInner($val, $count));
     }
     
     private static function repeatInner($val, $count) {

@@ -103,6 +103,11 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return number The minimum value.
      */
     function min($defValue = null);
+
+    /**
+     * Same as \Iterator::rewind() method.
+     */
+    function reset();
     
     /**
      * Selects each item of that sequence to a new type.
@@ -131,6 +136,15 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function skip($count);
+    
+    /**
+     * Calculates the sum of the elements of that sequence.
+     * 
+     * @param mixed The value that is returned if no element was found.
+     * 
+     * @return number The sum of the elements.
+     */
+    function sum($defValue = null);
     
     /**
      * Takes a specific number of elements.
