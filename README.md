@@ -368,6 +368,19 @@ foreach ($seq->skip(1) as $item) {
 }
 ```
 
+### sum
+
+Calculates the sum of all elements of that sequence. (s. [Sum()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sum%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(1, 20, 300));
+
+// 321
+$s = $seq->sum();
+```
+
 ### take
 
 Takes a number of elements. (s. [Take()](https://msdn.microsoft.com/en-us/library/bb503062%28v=vs.100%29.aspx)).
