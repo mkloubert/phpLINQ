@@ -367,13 +367,13 @@ abstract class EnumerableBase implements IEnumerable {
     public function ofType($type) {
     	return $this->where(function($item) use ($type) {
     		if (is_object($item)) {
-    			$code = 'get_class($item)';
+    			$code = 'get_class($item) == trim($type)';
     		}
     		else {
-    			$code = 'gettype($item)';
+    			$code = 'gettype($item) == trim($type)';
     		}
     		
-    		return eval(sprintf('return %s == trim($type);', $code));
+    		return eval(sprintf('return %s;', $code));
     	});
     }
     
