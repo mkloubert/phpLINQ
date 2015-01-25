@@ -2,6 +2,8 @@
 
 A LINQ concept for PHP.
 
+Most methods are chainable like in .NET context.
+
 ## Requirements
 
 * PHP 5.5+ (because it uses [Generator syntax](http://php.net/manual/en/language.generators.syntax.php))
@@ -137,6 +139,24 @@ foreach ($seq1->concat($seq2) as $item) {
 ### contains
 
 Determines whether the sequence contains a specified element. (s. [Contains(TSource)](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(5979, 'TM', null));
+
+// (true)
+$seq->reset();
+$a1 = $seq->contains("TM");
+
+// (false)
+$seq->reset();
+$a2 = $seq->contains(23979);
+```
+
+### count
+
+Counts the elements of that sequence. (s. [Count()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.count%28v=vs.100%29.aspx))
 
 ```php
 use \System\Linq;
@@ -369,4 +389,24 @@ $dict2 = $seq->toDictionary(function($key, $item) {
                                                $key,
                                                $item);
                             });
+```
+
+### where
+
+Filters the elements of that sequence. (s. [Where()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.where%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(1, 2, 3, 4, 5, 6, 8));
+
+foreach ($seq->where(function($i) {
+                         return ($i % 2) == 0;
+                     }) as $item) {
+    
+    // [0] 2
+    // [1] 4
+    // [2] 6
+    // [3] 8
+}
 ```
