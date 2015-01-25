@@ -49,6 +49,15 @@ interface IEnumerable extends \Iterator, \Countable {
     function any($predicate = null);
     
     /**
+     * Calculates the average value of all elements of that sequence.
+     * 
+     * @param mixed $defValue The value to return if no element was found.
+     * 
+     * @return number The average value.
+     */
+    function average($defValue = null);
+    
+    /**
      * Concats an iterator / array with that sequence.
      * 
      * @param array|\Traversable $iterator The iterator / array to concat.
@@ -103,6 +112,15 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return number The minimum value.
      */
     function min($defValue = null);
+    
+    /**
+     * Multiplies all elements of that sequence.
+     *
+     * @param mixed $defValue Use that value if sequence is empty.
+     *
+     * @return number The result of the multiplication.
+     */
+    function multiply($defValue = null);
 
     /**
      * Same as \Iterator::rewind() method.

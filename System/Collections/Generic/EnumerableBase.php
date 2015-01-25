@@ -31,7 +31,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::all()
      */
-    public function all($predicate) {
+    public final function all($predicate) {
     	$this->checkForFunctionOrThrow($predicate, 1, false);
     	
         while ($this->valid()) {
@@ -50,7 +50,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::any()
      */
-    public function any($predicate = null) {
+    public final function any($predicate = null) {
     	$this->checkForFunctionOrThrow($predicate);
     	
         $predicate = self::toPredeciateSafe($predicate);
@@ -65,6 +65,34 @@ abstract class EnumerableBase implements IEnumerable {
         }
         
         return false;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::average()
+     */
+    public final function average($defValue = null) {
+    	$result = $defValue;
+    	
+    	$i = 0;
+    	while ($this->valid()) {
+    		$item = $this->current();
+    	
+    		if (0 == $i++) {
+    			$result = $item;
+    		}
+    		else {
+    			$result += $item;
+    		}
+    	
+    		$this->next();
+    	}
+    	
+    	if ($i > 0) {
+    		$result = $result / $i;
+    	}
+    	 
+    	return $result;
     }
     
     /**
@@ -103,9 +131,37 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::concat()
+     */
+    public final function concat($iterator) {
+    	if (is_array($iterator)) {
+    		$iterator = new \ArrayIterator($iterator);
+    	}
+    
+    	return static::toEnumerable($this->concatInner($iterator));
+    }
+    
+    private function concatInner($iterator) {
+    	// first this elements
+    	while ($this->valid()) {
+    		yield $this->current();
+    
+    		$this->next();
+    	}
+    
+    	// now other elements
+    	while ($iterator->valid()) {
+    		yield $iterator->current();
+    
+    		$iterator->next();
+    	}
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::contains()
      */
-    public function contains($item) {
+    public final function contains($item) {
         while ($this->valid()) {
             $i = $this->current();
             $this->next();
@@ -118,33 +174,6 @@ abstract class EnumerableBase implements IEnumerable {
         return false;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see \System\Collections\Generic\IEnumerable::concat()
-     */
-    public function concat($iterator) {
-        if (is_array($iterator)) {
-            $iterator = new \ArrayIterator($iterator);
-        }
-        
-        return static::toEnumerable($this->concatInner($iterator));
-    }
-    
-    private function concatInner($iterator) {
-        // first this elements
-        while ($this->valid()) {
-            yield $this->current();
-            
-            $this->next();
-        }
-        
-        // now other elements
-        while ($iterator->valid()) {
-            yield $iterator->current();
-            
-            $iterator->next();
-        }
-    }
     
     /**
      * (non-PHPdoc)
@@ -244,7 +273,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::max()
      */
-    public function max($defValue = null) {
+    public final function max($defValue = null) {
         return $this->leftOrRight(function($left, $right) {
             return max($left, $right);
         }, $defValue);
@@ -254,10 +283,35 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::min()
      */
-    public function min($defValue = null) {
+    public final function min($defValue = null) {
         return $this->leftOrRight(function($left, $right) {
             return min($left, $right);
         }, $defValue);
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::multiply()
+     */
+    public final function multiply($defValue = null) {
+    	$result = $defValue;
+    	 
+    	$isFirst = true;
+    	while ($this->valid()) {
+    		$i = $this->current();
+    	
+    		if ($isFirst) {
+    			$result = $i;
+    			$isFirst = false;
+    		}
+    		else {
+    			$result *= $i;
+    		}
+    	
+    		$this->next();
+    	}
+    	 
+    	return $result;
     }
     
     /**
@@ -284,7 +338,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::select()
      */
-    public function select($selector) {
+    public final function select($selector) {
     	$this->checkForFunctionOrThrow($selector);
     	
         return static::toEnumerable($this->selectInner($selector));
@@ -302,7 +356,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::selectMany()
      */
-    public function selectMany($selector) {
+    public final function selectMany($selector) {
     	$this->checkForFunctionOrThrow($selector);
     	
         return static::toEnumerable($this->selectManyInner($selector));
@@ -323,7 +377,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::skip()
      */
-    public function skip($count) {
+    public final function skip($count) {
     	if ($count < 0) {
     		$this->throwException('count value is invalid!');
     	}
@@ -374,7 +428,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::take()
      */
-    public function take($count) {
+    public final function take($count) {
     	if ($count < 0) {
     		$this->throwException('count value is invalid!');
     	}
@@ -483,7 +537,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::where()
      */
-    public function where($predicate) {
+    public final function where($predicate) {
     	$this->checkForFunctionOrThrow($predicate);
     	
         return static::toEnumerable($this->whereInner($predicate));

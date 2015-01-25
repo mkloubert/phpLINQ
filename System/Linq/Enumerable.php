@@ -87,6 +87,15 @@ class Enumerable extends EnumerableBase {
     }
     
     /**
+     * Creates a new instance from a list of values.
+     * 
+     * @return \System\Linq\Enumerable The new instance.
+     */
+    public static function fromValues() {
+    	return static::fromArray(func_get_args());
+    }
+    
+    /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\EnumerableBase::key()
      */
@@ -107,18 +116,31 @@ class Enumerable extends EnumerableBase {
      *
      * @param number $start The start value.
      * @param number $count The number of values.
+     * @param number|callable The value for increasing each value or
+     *                        a function that provides that value.
      *
      * @return \System\Linq\Enumerable The new instance.
      */
-    public final static function range($start, $count) {
-        return static::toEnumerable(static::rangeInner($start, $count));
+    public final static function range($start, $count, $increaseBy = 1) {
+    	$increaseFunc = $increaseBy;
+    	if (!is_callable($increaseFunc)) {
+    		$increaseFunc = function($value, $index) use ($increaseBy) {
+    			return $increaseBy;
+    		};
+    	}
+    	
+        return static::toEnumerable(static::rangeInner($start, $count,
+        		                                       $increaseFunc));
     }
     
-    private static function rangeInner($start, $count) {
-        $i = $start;
-        while ($count > 0) {
-            yield $i++;
-            --$count;
+    private static function rangeInner($start, $count, $increaseFunc) {
+        $index = -1;
+    	
+    	$i = $start;
+        while (($count - ++$index) > 0) {
+            yield $i;
+            
+            $i += $increaseFunc($i, $index);
         }
     }
     
