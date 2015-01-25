@@ -76,7 +76,7 @@ $seq = mew Enumerable(createIterator());
 
 ### all
 
-Determines whether all elements of the sequence satisfy a condition (s. [All<TSource>(TSource)](https://msdn.microsoft.com/en-us/library/bb548541%28v=vs.100%29.aspx)).
+Determines whether all elements of the sequence satisfy a condition (s. [All(TSource)](https://msdn.microsoft.com/en-us/library/bb548541%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -98,7 +98,7 @@ $a2 = $seq->all(function($item) {
 
 ### any
 
-Determines whether any element of the sequence exists or satisfies a condition. (s. [Any<TSource>](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.any%28v=vs.100%29.aspx)).
+Determines whether any element of the sequence exists or satisfies a condition. (s. [Any](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.any%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -117,7 +117,7 @@ $a2 = $seq2->any();
 
 ### concat
 
-Concatenates that sequence with another. (s. [Concat<TSource>(TSource)](https://msdn.microsoft.com/en-us/library/bb302894%28v=vs.100%29.aspx)).
+Concatenates that sequence with another. (s. [Concat(TSource)](https://msdn.microsoft.com/en-us/library/bb302894%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -136,7 +136,7 @@ foreach ($seq1->concat($seq2) as $item) {
 
 ### contains
 
-Determines whether the sequence contains a specified element. (s. [Contains<TSource>(TSource)](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains%28v=vs.100%29.aspx)).
+Determines whether the sequence contains a specified element. (s. [Contains(TSource)](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -154,7 +154,7 @@ $a2 = $seq->contains(23979);
 
 ### firstOrDefault
 
-Returns the first element of the sequence, or a default value if no element is found. (s. [FirstOrDefault<TSource>()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault%28v=vs.100%29.aspx)).
+Returns the first element of the sequence, or a default value if no element is found. (s. [FirstOrDefault()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -174,7 +174,7 @@ $a2 = $seq->firstOrDefault(function($item) {
 
 ### lastOrDefault
 
-Returns the last element of the sequence, or a default value if no element is found. (s. [LastOrDefault<TSource>()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault%28v=vs.100%29.aspx)).
+Returns the last element of the sequence, or a default value if no element is found. (s. [LastOrDefault()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
@@ -191,3 +191,99 @@ $a2 = $seq->lastOrDefault(function($item) {
                               return $item == 23979;
                           }, 666);
 ```
+
+### max
+
+Gets the maximum value of that sequence. (s. [Max()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.max%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromArray(array(239, 5979, 1));
+$seq2 = Enumerable::createEmpty();
+
+// 5979
+$a1 = $seq1->max();
+
+// 666, because no element found
+$a2 = $seq2->max(666);
+```
+
+### min
+
+Gets the minimum value of that sequence. (s. [Min()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.min%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromArray(array(239, 5979, 1));
+$seq2 = Enumerable::createEmpty();
+
+// 1
+$a1 = $seq1->min();
+
+// 666, because no element found
+$a2 = $seq2->min(666);
+```
+
+### select
+
+Projects each element of that sequence to a new value. (s. [Select()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.select%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromArray(array(239, 5979, 1));
+
+// convert items to strings
+$seq2 = $seq1->select(function($item) {
+                          return strval($item);
+                      });
+```
+
+### selectMany
+
+Projects each element (that have to be iterators or arrays) of that sequence to a new sequence and flattens the resulting sequences into one sequence. (s. [SelectMany()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.selectmany%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromArray(array(1, 2, 3));
+
+// convert items to strings
+$seq2 = $seq1->selectMany(function($item) {
+                              return array($item, $item * 10, $item * 100);
+                          });
+
+foreach ($seq2 as $item) {
+    // [0] 1
+    // [1] 10
+    // [2] 100
+    // [3] 2
+    // [4] 20
+    // [5] 200
+    // [6] 3
+    // [7] 30
+    // [8] 300
+}
+```
+
+Other way:
+
+```php
+use \System\Linq;
+
+function selectorFunc($item) {
+    yield $item;
+    yield $item * 10;
+    yield $item * 100;
+}
+
+$seq1 = Enumerable::fromArray(array(1, 2, 3));
+
+// convert items to strings
+$seq2 = $seq1->selectMany('selectorFunc');
+
+// ...
+```
+
