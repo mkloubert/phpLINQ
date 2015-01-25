@@ -287,3 +287,86 @@ $seq2 = $seq1->selectMany('selectorFunc');
 // ...
 ```
 
+### reset
+
+Same as [rewind()](http://php.net/manual/en/iterator.rewind.php).
+
+### skip
+
+Skips a number of elements. (s. [Skip()](https://msdn.microsoft.com/en-us/library/bb358985%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(239, 5979, 12));
+
+foreach ($seq->skip(1) as $item) {
+    // [0] 5979
+    // [1] 22
+}
+```
+
+### take
+
+Takes a number of elements. (s. [Take()](https://msdn.microsoft.com/en-us/library/bb503062%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(239, 5979, 1));
+
+foreach ($seq->take(2) as $item) {
+    // [0] 239
+    // [1] 5979
+}
+```
+
+### toArray
+
+Converts that sequence to a new PHP array. (s. [ToArray()](https://msdn.microsoft.com/en-us/library/bb298736%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(239, 5979, 1));
+
+// [0] => 239
+// [1] => 5979
+// [2] => 1
+$arr = $seq->toArray();
+
+$a1 = is_array($arr);    // (true)
+```
+
+### toDictionary
+
+Converts that sequence to a new PHP array that is similar to a [hashtable / dictionary](https://msdn.microsoft.com/en-us/library/system.collections.idictionary%28v=vs.110%29.aspx). (s. [ToDictionary()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary%28v=vs.100%29.aspx)).
+
+The original key value for the result array is taken from [key()](php.net/manual/en/iterator.key.php) method.
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array('a' => 239,
+                                   'b' => 5979,
+                                   'c' => 1));
+
+$seq->reset();
+
+// ['a'] => 239
+// ['b'] => 5979
+// ['c'] => 1
+$dict1 = $seq->toDictionary();
+
+
+$seq->reset();
+
+// ['a :: 239']  => 239
+// ['b :: 5979'] => 5979
+// ['c :: 1']    => 1
+$dict2 = $seq->toDictionary(function($key, $item) {
+                                return sprintf('%s :: %s',
+                                               $key,
+                                               $item);
+                            });
+```
