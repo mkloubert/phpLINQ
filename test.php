@@ -15,16 +15,16 @@ require_once './System/Linq/Enumerable.php';
 use \System\Linq\Enumerable as Enumerable;
 
 class TestClass {
-	public function __toString() {
-		return "Yep";
-	}
+    public function __toString() {
+        return "Yep";
+    }
 }
 
 $seq1 = Enumerable::fromValues(1, '2', 3, new TestClass());
 
 $seq2 = $seq1->ofType('TestClass');
 foreach ($seq2 as $i) {
-	echo $i; ?><br /><?php
+    echo $i; ?><br /><?php
 }
 
 ?>

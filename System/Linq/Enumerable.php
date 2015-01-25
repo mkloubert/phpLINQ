@@ -92,7 +92,7 @@ class Enumerable extends EnumerableBase {
      * @return \System\Linq\Enumerable The new instance.
      */
     public static function fromValues() {
-    	return static::fromArray(func_get_args());
+        return static::fromArray(func_get_args());
     }
     
     /**
@@ -122,21 +122,21 @@ class Enumerable extends EnumerableBase {
      * @return \System\Linq\Enumerable The new instance.
      */
     public final static function range($start, $count, $increaseBy = 1) {
-    	$increaseFunc = $increaseBy;
-    	if (!is_callable($increaseFunc)) {
-    		$increaseFunc = function($value, $index) use ($increaseBy) {
-    			return $increaseBy;
-    		};
-    	}
-    	
+        $increaseFunc = $increaseBy;
+        if (!is_callable($increaseFunc)) {
+            $increaseFunc = function($value, $index) use ($increaseBy) {
+                return $increaseBy;
+            };
+        }
+        
         return static::toEnumerable(static::rangeInner($start, $count,
-        		                                       $increaseFunc));
+                                                       $increaseFunc));
     }
     
     private static function rangeInner($start, $count, $increaseFunc) {
         $index = -1;
-    	
-    	$i = $start;
+        
+        $i = $start;
         while (($count - ++$index) > 0) {
             yield $i;
             

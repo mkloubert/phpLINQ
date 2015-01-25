@@ -28,36 +28,36 @@ namespace System\Collections\Generic;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class EnumerableException extends \Exception {
-	/**
-	 * @var IEnumerable
-	 */
-	private $_sequence;
-	
-	
-	/**
-	 * Initializes a new instance of that class.
-	 * 
-	 * @param IEnumerable $seq The underlying sequence.
-	 * @param string $message The message.
-	 * @param number $code The code.
-	 * @param string $previous The inner/previous exception.
-	 */
-	public function __construct(IEnumerable $seq,
-			                    $message = null,
-			                    $code = 0,
-			                    $previous = null) {
-		parent::__construct($message, $code, $previous);
-		
-		$this->_sequence = $seq;
-	}
-	
-	
-	/**
-	 * Gets the underlying sequence.
-	 * 
-	 * @return \System\Collections\Generic\IEnumerable The underlying sequence.
-	 */
-	public function getSequence() {
-		return $this->_sequence;
-	}
+    /**
+     * @var IEnumerable
+     */
+    private $_sequence;
+    
+    
+    /**
+     * Initializes a new instance of that class.
+     * 
+     * @param IEnumerable $seq The underlying sequence.
+     * @param string $message The message.
+     * @param number $code The code.
+     * @param string $previous The inner/previous exception.
+     */
+    public function __construct(IEnumerable $seq,
+                                $message = null,
+                                $code = 0,
+                                $previous = null) {
+        parent::__construct($message, $code, $previous);
+        
+        $this->_sequence = $seq;
+    }
+    
+    
+    /**
+     * Gets the underlying sequence.
+     * 
+     * @return \System\Collections\Generic\IEnumerable The underlying sequence.
+     */
+    public function getSequence() {
+        return $this->_sequence;
+    }
 }
