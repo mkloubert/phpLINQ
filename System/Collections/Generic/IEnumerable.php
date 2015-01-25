@@ -149,6 +149,8 @@ interface IEnumerable extends \Iterator, \Countable {
     
     /**
      * Same as \Iterator::rewind() method.
+     * 
+     * @return IEnumerable The current sequence.
      */
     function reset();
     

@@ -383,6 +383,7 @@ abstract class EnumerableBase implements IEnumerable {
      */
     public final function reset() {
     	$this->rewind();
+    	return $this;
     }
     
     /**
