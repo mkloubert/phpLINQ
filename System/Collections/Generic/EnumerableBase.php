@@ -96,6 +96,16 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::cast()
+     */
+    public final function cast($type) {
+    	return $this->select(function($item) use ($type) {
+    		return eval(sprintf('return (%s)$item;', trim($type)));
+    	});
+    }
+    
+    /**
      * Checks if an object/value is a function and throws an exception
      * if not.
      * 
@@ -350,6 +360,23 @@ abstract class EnumerableBase implements IEnumerable {
      */
     public abstract function next();
 
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::ofType()
+     */
+    public function ofType($type) {
+    	return $this->where(function($item) use ($type) {
+    		if (is_object($item)) {
+    			$code = 'get_class($item)';
+    		}
+    		else {
+    			$code = 'gettype($item)';
+    		}
+    		
+    		return eval(sprintf('return %s == trim($type);', $code));
+    	});
+    }
+    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::reset()

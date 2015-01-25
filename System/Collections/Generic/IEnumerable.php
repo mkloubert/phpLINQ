@@ -58,6 +58,15 @@ interface IEnumerable extends \Iterator, \Countable {
     function average($defValue = null);
     
     /**
+     * Casts each element to a target type.
+     * 
+     * @param string $type The name of the target type.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function cast($type);
+    
+    /**
      * Concats an iterator / array with that sequence.
      * 
      * @param array|\Traversable $iterator The iterator / array to concat.
@@ -129,6 +138,15 @@ interface IEnumerable extends \Iterator, \Countable {
      */
     function multiply($defValue = null);
 
+    /**
+     * Selects all elements of a specific type.
+     * 
+     * @param string $type The name of the type to filter.
+     * 
+     * @return IEnumerable The filtered sequence.
+     */
+    function ofType($type);
+    
     /**
      * Same as \Iterator::rewind() method.
      */
