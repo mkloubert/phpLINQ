@@ -342,7 +342,7 @@ $a1 = is_array($arr);    // (true)
 
 Converts that sequence to a new PHP array that is similar to a [hashtable / dictionary](https://msdn.microsoft.com/en-us/library/system.collections.idictionary%28v=vs.110%29.aspx). (s. [ToDictionary()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary%28v=vs.100%29.aspx)).
 
-The original key value for the result array is taken from [key()](php.net/manual/en/iterator.key.php) method.
+The original key values for the result array are taken from [key()](php.net/manual/en/iterator.key.php) method.
 
 ```php
 use \System\Linq;
