@@ -172,6 +172,16 @@ $seq->reset();
 $a2 = $seq->contains(23979);
 ```
 
+### createEmpty
+
+Creates a new empty sequence. (s. [Empty()](https://msdn.microsoft.com/en-us/library/bb341042%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::createEmpty();
+```
+
 ### firstOrDefault
 
 Returns the first element of the sequence, or a default value if no element is found. (s. [FirstOrDefault()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault%28v=vs.100%29.aspx)).
@@ -190,6 +200,16 @@ $seq->reset();
 $a2 = $seq->firstOrDefault(function($item) {
                                return $item == 'MK';
                            }, 666);
+```
+
+### fromArray
+
+Creates a new sequence from a PHP array.
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(5979, 'TM', null));
 ```
 
 ### lastOrDefault
@@ -244,6 +264,28 @@ $a1 = $seq1->min();
 
 // 666, because no element found
 $a2 = $seq2->min(666);
+```
+
+### range
+
+Generates a new sequence of numbers within a specified range. (s. [Range()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.range%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+// 2 - 11
+$seq = Enumerable::range(2, 10);
+```
+
+### repeat
+
+Generates a new sequence that contains one repeated value or object. (s. [Repeat()](https://msdn.microsoft.com/en-us/library/bb348899%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+// 5979 elements of 'TM' string
+$seq = Enumerable::repeat(5979, 'TM');
 ```
 
 ### select
