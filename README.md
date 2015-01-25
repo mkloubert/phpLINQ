@@ -117,6 +117,23 @@ $a1 = $seq1->any(function($item) {
 $a2 = $seq2->any();
 ```
 
+### average
+
+Computes the average of that sequence. (s. [Average()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.average%28v=vs.90%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromValues(1, 2, 3, 4, 5, 6);
+$seq2 = Enumerable::createEmpty();
+
+// 12
+$a1 = $seq1->average();
+
+// 'TM', because sequence is empty
+$a2 = $seq2->average('TM');
+```
+
 ### concat
 
 Concatenates that sequence with another. (s. [Concat(TSource)](https://msdn.microsoft.com/en-us/library/bb302894%28v=vs.100%29.aspx)).
@@ -212,6 +229,16 @@ use \System\Linq;
 $seq = Enumerable::fromArray(array(5979, 'TM', null));
 ```
 
+### fromValues
+
+Creates a new sequence from a list of values.
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromValues('TM', 5979, 'MK', 23979);
+```
+
 ### lastOrDefault
 
 Returns the last element of the sequence, or a default value if no element is found. (s. [LastOrDefault()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault%28v=vs.100%29.aspx)).
@@ -266,6 +293,23 @@ $a1 = $seq1->min();
 $a2 = $seq2->min(666);
 ```
 
+### multiply
+
+Multiplies all values of that sequence.
+
+```php
+use \System\Linq;
+
+$seq1 = Enumerable::fromValues(1, 2, 3, 4, 5, 6);
+$seq2 = Enumerable::createEmpty();
+
+// 6! = 720
+$a1 = $seq1->multiply();
+
+// '1979-09-05', because sequence is empty
+$a2 = $seq2->multiply('1979-09-05');
+```
+
 ### range
 
 Generates a new sequence of numbers within a specified range. (s. [Range()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.range%28v=vs.100%29.aspx)).
@@ -274,7 +318,15 @@ Generates a new sequence of numbers within a specified range. (s. [Range()](http
 use \System\Linq;
 
 // 2 - 11
-$seq = Enumerable::range(2, 10);
+$seq1 = Enumerable::range(2, 10);
+
+// 2, 4, 6, 8 ... 20
+$seq2a = Enumerable::range(2, 10, 2);
+
+// other way to do this
+$seq2b = Enumerable::range(2, 10, function($value, $index) {
+                                      return 1 + 1;
+                                  });
 ```
 
 ### repeat
