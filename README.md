@@ -1,8 +1,8 @@
 # phpLINQ
 
-A LINQ concept for PHP.
+A [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) concept for [PHP](https://en.wikipedia.org/wiki/PHP).
 
-Most methods are chainable like in .NET context.
+Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Framework) context.
 
 ## Requirements
 
