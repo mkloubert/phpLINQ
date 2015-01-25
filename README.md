@@ -134,6 +134,22 @@ $a1 = $seq1->average();
 $a2 = $seq2->average('TM');
 ```
 
+### cast
+
+Casts all elements of the sequence to a new type. (s. [Cast()](https://msdn.microsoft.com/en-us/library/vstudio/bb341406%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(1, 2, 3));
+
+foreach ($seq1->cast('string') as $item) {
+    // [0] '1'
+    // [1] '2'
+    // [2] '3'
+}
+```
+
 ### concat
 
 Concatenates that sequence with another. (s. [Concat(TSource)](https://msdn.microsoft.com/en-us/library/bb302894%28v=vs.100%29.aspx)).
@@ -308,6 +324,20 @@ $a1 = $seq1->multiply();
 
 // '1979-09-05', because sequence is empty
 $a2 = $seq2->multiply('1979-09-05');
+```
+
+### ofType
+
+Filters all elements of the sequence with a specific type. (s. [OfType()](https://msdn.microsoft.com/en-us/library/vstudio/bb360913%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(1, '2', 3));
+
+foreach ($seq1->ofType('string') as $item) {
+    // [0] '2'
+}
 ```
 
 ### range
