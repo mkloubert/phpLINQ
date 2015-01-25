@@ -143,7 +143,7 @@ use \System\Linq;
 
 $seq = Enumerable::fromArray(array(1, 2, 3));
 
-foreach ($seq1->cast('string') as $item) {
+foreach ($seq->cast('string') as $item) {
     // [0] '1'
     // [1] '2'
     // [2] '3'
@@ -333,9 +333,9 @@ Filters all elements of the sequence with a specific type. (s. [OfType()](https:
 ```php
 use \System\Linq;
 
-$seq = Enumerable::fromArray(array(1, '2', 3));
+$seq = Enumerable::fromArray(array(1, null, '2', 3));
 
-foreach ($seq1->ofType('string') as $item) {
+foreach ($seq->ofType('string') as $item) {
     // [0] '2'
 }
 ```
@@ -450,6 +450,25 @@ foreach ($seq->skip(1) as $item) {
 }
 ```
 
+### skipWhile
+
+Bypasses elements in that sequence as long as a specified condition is true and then returns the remaining elements. (s. [SkipWhile()](https://msdn.microsoft.com/en-us/library/vstudio/system.linq.enumerable.skipwhile%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(239, 5979, 22));
+
+$predicate = function($item) {
+    return $item == 239; 
+};
+
+foreach ($seq->skipWhile($predicate) as $item) {
+    // [0] 5979
+    // [1] 22
+}
+```
+
 ### sum
 
 Calculates the sum of all elements of that sequence. (s. [Sum()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sum%28v=vs.100%29.aspx)).
@@ -473,6 +492,25 @@ use \System\Linq;
 $seq = Enumerable::fromArray(array(239, 5979, 1));
 
 foreach ($seq->take(2) as $item) {
+    // [0] 239
+    // [1] 5979
+}
+```
+
+### takeWhile
+
+Takes elements in that sequence as long as a specified condition is true and then returns the remaining elements. (s. [TakeWhile()](https://msdn.microsoft.com/en-us/library/vstudio/system.linq.enumerable.takewhile%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(239, 5979, 22));
+
+$predicate = function($item) {
+    return $item != 22; 
+};
+
+foreach ($seq->takeWhile($predicate) as $item) {
     // [0] 239
     // [1] 5979
 }
