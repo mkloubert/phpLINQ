@@ -5,7 +5,7 @@ The tests are optimized for [PHPUnit](https://phpunit.de/).
 ## Execution example
 
 ```bash
-php phpunit.phar tests/OtherTest
+php phpunit.phar ./OtherTest
 ```
 
 ## Available tests
