@@ -70,15 +70,19 @@ interface IEnumerable extends \Iterator, \Countable {
      * Checks if that sequence contains a specific element.
      * 
      * @param mixed $item The element to search for.
+     * @param callable $comparer The optional comparer function.
      * 
      * @return boolean Element exists or not.
      */
-    function contains($item);
+    function contains($item, $comparer = null);
     
     /**
      * Returns the first item of that sequence.
      * 
-     * @param callable $predicate The optional predicate to use.
+     * @param callable|mixed $predicate The optional predicate to use.
+     *                                  If there is only one argument and that
+     *                                  value is NOT callable it will be used
+     *                                  as default value.
      * @param mixed $defValue The default value if no item was found.
      * 
      * @return mixed The first or default value.
@@ -88,7 +92,10 @@ interface IEnumerable extends \Iterator, \Countable {
     /**
      * Returns the last item of that sequence.
      *
-     * @param callable $predicate The optional predicate to use.
+     * @param callable|mixed $predicate The optional predicate to use.
+     *                                  If there is only one argument and that
+     *                                  value is NOT callable it will be used
+     *                                  as default value.
      * @param mixed $defValue The default value if no item was found.
      *
      * @return mixed The last or default value.

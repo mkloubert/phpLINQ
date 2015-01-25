@@ -161,12 +161,22 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::contains()
      */
-    public final function contains($item) {
+    public final function contains($item, $comparer = null) {
+    	$this->checkForFunctionOrThrow($comparer, 2);
+    	
+    	if (is_null($comparer)) {
+    		// define default
+    		
+    		$comparer = function($x, $y) {
+    			return $x == $y;
+    		};
+    	}
+    	
         while ($this->valid()) {
             $i = $this->current();
             $this->next();
             
-            if ($item == $i) {
+            if ($comparer($i, $item)) {
                 return true;
             }
         }
@@ -201,6 +211,16 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::firstOrDefault()
      */
     public final function firstOrDefault($predicate = null, $defValue = null) {
+    	if (func_num_args() == 1) {
+    		if (!is_null($predicate) &&
+    			!is_callable($predicate)) {
+    			
+    			// handle first argument as default value
+    			$defValue = $predicate;
+    			$predicate = null;
+    		}
+    	}
+    	
     	$this->checkForFunctionOrThrow($predicate);
     	
         $predicate = self::toPredeciateSafe($predicate);
@@ -231,6 +251,16 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::lastOrDefault()
      */
     public final function lastOrDefault($predicate = null, $defValue = null) {
+    	if (func_num_args() == 1) {
+    		if (!is_null($predicate) &&
+    			!is_callable($predicate)) {
+    					 
+    			// handle first argument as default value
+    			$defValue = $predicate;
+   				$predicate = null;
+  			}
+    	}
+    	
     	$this->checkForFunctionOrThrow($predicate);
     	
         $predicate = self::toPredeciateSafe($predicate);
