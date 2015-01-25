@@ -24,7 +24,7 @@ Create a sequence with methods that are similar to [LINQ extension methods](http
 ```php
 use \System\Linq;
 
-$seq = Enumerable::fromArray(array(5979, 'TM', null, "MK", 23979));
+$seq = Enumerable::fromValues(5979, 'TM', null, "MK", 23979);
 foreach ($seq as $item) {
     //TODO
 }
@@ -412,7 +412,7 @@ Skips a number of elements. (s. [Skip()](https://msdn.microsoft.com/en-us/librar
 ```php
 use \System\Linq;
 
-$seq = Enumerable::fromArray(array(239, 5979, 12));
+$seq = Enumerable::fromArray(array(239, 5979, 22));
 
 foreach ($seq->skip(1) as $item) {
     // [0] 5979
