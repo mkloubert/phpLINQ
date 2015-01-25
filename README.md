@@ -10,7 +10,7 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 ## Getting started
 
-Include class files manually or via [autloader](http://php.net/manual/en/language.oop5.autoload.php):
+Include class files manually or via [autoloader](http://php.net/manual/en/language.oop5.autoload.php):
 
 ```php
 require_once './System/Collections/Generic/IEnumerable.php';
