@@ -6,7 +6,7 @@ require_once 'common_include.php';
 use \System\Linq\Enumerable as Enumerable;
 
 
-class ScalerTest extends TestCaseBase {
+class ScalarTest extends TestCaseBase {
 	/**
 	 * \System\Collections\Generic\IEnumerable::average()
 	 */
