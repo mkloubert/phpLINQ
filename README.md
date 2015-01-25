@@ -499,7 +499,7 @@ foreach ($seq->take(2) as $item) {
 
 ### takeWhile
 
-Takes elements in that sequence as long as a specified condition is true and then returns the remaining elements. (s. [TakeWhile()](https://msdn.microsoft.com/en-us/library/vstudio/system.linq.enumerable.takewhile%28v=vs.100%29.aspx)).
+Takes elements in that sequence as long as a specified condition is true. (s. [TakeWhile()](https://msdn.microsoft.com/en-us/library/vstudio/system.linq.enumerable.takewhile%28v=vs.100%29.aspx)).
 
 ```php
 use \System\Linq;
