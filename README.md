@@ -196,13 +196,12 @@ use \System\Linq;
 
 $seq = Enumerable::fromArray(array(5979, 'TM', null));
 
-// (true)
-$seq->reset();
-$a1 = $seq->contains("TM");
+// 3
+$a1 = $seq->count();
 
-// (false)
+// other way
 $seq->reset();
-$a2 = $seq->contains(23979);
+$a2 = count($seq);
 ```
 
 ### createEmpty
