@@ -28,7 +28,9 @@ foreach ($seq as $item) {
 }
 ```
 
-## Example
+## Example 1
+
+Create a sequence from an [array](http://php.net/manual/en/language.types.array.php).
 
 ```php
 use \System\Linq;
@@ -49,6 +51,25 @@ foreach ($transformedSeq as $item) {
     // [0] '23979'
     // [1] '1781'
 }
+```
+
+## Example 2
+
+Create a sequence from any [Iterator](http://php.net/manual/en/class.iterator.php).
+
+```php
+use \System\Linq;
+
+function createIterator() {
+    yield 5979;
+    yield 23979;
+    yield 1781;
+    yield 241279;
+}
+
+$seq = mew Enumerable(createIterator());
+
+// ...
 ```
 
 ## Methods
@@ -113,3 +134,60 @@ foreach ($seq1->concat($seq2) as $item) {
 }
 ```
 
+### contains
+
+Determines whether the sequence contains a specified element. (s. [Contains<TSource>(TSource)](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(5979, 'TM', null));
+
+// (true)
+$seq->reset();
+$a1 = $seq->contains("TM");
+
+// (false)
+$seq->reset();
+$a2 = $seq->contains(23979);
+```
+
+### firstOrDefault
+
+Returns the first element of the sequence, or a default value if no element is found. (s. [FirstOrDefault<TSource>()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(5979, 'TM', null));
+
+// 5979
+$seq->reset();
+$a1 = $seq->firstOrDefault();
+
+// 666, because 'MK' does not exist
+$seq->reset();
+$a2 = $seq->firstOrDefault(function($item) {
+                               return $item == 'MK';
+                           }, 666);
+```
+
+### lastOrDefault
+
+Returns the last element of the sequence, or a default value if no element is found. (s. [LastOrDefault<TSource>()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault%28v=vs.100%29.aspx)).
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array(5979, 'TM', null));
+
+// (null)
+$seq->reset();
+$a1 = $seq->lastOrDefault();
+
+// 666, because 23979 does not exist
+$seq->reset();
+$a2 = $seq->lastOrDefault(function($item) {
+                              return $item == 23979;
+                          }, 666);
+```
