@@ -763,6 +763,21 @@ $a3 = $dict->containsKey(' tM');
 $a4 = $dict->containsKey(' Tm   ');
 ```
 
+##### fromValues
+
+Creates a new instance from a list of values.
+
+```php
+use \System\Collections;
+
+// $dict[0] = 1
+// $dict[1] = 2
+// $dict[2] = 3
+// $dict[3] = 4
+// $dict[4] = 5
+$dict = Dictionary::fromValues(1, 2, 3, 4, 5);
+```
+
 ##### isFixedSize
 
 Gets a value indicating whether the dictionary object has a fixed size.
