@@ -620,3 +620,217 @@ foreach ($seq->where(function($i) {
     // [3] 8
 }
 ```
+
+## Classes and interfaces
+
+### IDictionary
+
+This is an implementation of the [.NET dictionary](https://msdn.microsoft.com/en-us/library/system.collections.idictionary%28v=vs.110%29.aspx).
+
+#### Example
+
+```php
+use \System\Collections;
+
+
+$dict = new Dictionary();
+
+
+// add/set entries
+$dict['TM'] = 5979;
+$dict->add('MK', 23979);
+$dict->add('YS', '1981-07-01');
+
+// number of entries: 3
+$c = count($dict);
+
+// enumerate entries
+foreach ($dict as $entry) {
+    $k = $entry->key();
+    $v = $entry->value();
+    
+    //TODO
+}
+
+// LINQ
+// 
+// map entries to general objects (stdClass)
+foreach ($dict->select(function($e) {
+                           $o    = new \stdClass();
+                           $o->k = trim(strtolower($e->key()));
+                           $o->v = trim($e->value());
+                           
+                           return $o;
+                       }) as $entry) {
+                       
+    $k = $entry->k;    // key
+    $v = $entry->v;    // value
+    
+    //TODO
+}
+
+// enumerate keys
+foreach ($dict->keys() as $key) {
+    // [0] 'TM'
+    // [1] 'MK'
+    // [2] 'YS'
+}
+
+// enumerate values
+foreach ($dict->values() as $val) {
+    // [0] 5979
+    // [1] 23979
+    // [2] '1981-07-01'
+}
+
+// remove entries
+$dict->remove('YS');
+unset($dict['MK']);
+
+// clear
+$dict->clear();
+```
+
+#### Methods
+
+##### add
+
+Adds a new entry (s. [Add()](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.add%28v=vs.110%29.aspx)).
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', 5979);
+$dict->add('MK', 23979);
+
+$a1 = $dict['TM'];    // 5979
+$a2 = $dict['MK'];    // 23979
+```
+
+##### clear
+
+Removes all entries (s. [Clear()](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.clear%28v=vs.110%29.aspx)).
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', 5979);
+$dict->add('MK', 23979);
+
+$a1 = count($dict);    // 2
+
+$dict->clear();
+
+$a2 = count($dict);    // 0
+```
+
+##### containsKey
+
+Checks if a key exists (s. [Clear()](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.clear%28v=vs.110%29.aspx)).
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', '1979-09-05');
+
+$a1 = $dict->containsKey('TM');    // (true)
+$a2 = $dict->containsKey('tm');    // (false)
+```
+
+The case insentive way:
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary(function($x, $y) {
+                           return trim(strtolower($x)) ==
+                                  trim(strtolower($y));
+                       });
+
+$dict->add('TM', '1979-09-05');
+
+// all (true) because
+// any key is mapped to 'TM'
+$a1 = $dict->containsKey('TM');
+$a2 = $dict->containsKey('tm');
+$a3 = $dict->containsKey(' tM');
+$a4 = $dict->containsKey(' Tm   ');
+```
+
+##### isFixedSize
+
+Gets a value indicating whether the dictionary object has a fixed size.
+
+##### isReadOnly
+
+Gets a value indicating whether the dictionary object is read-only.
+
+##### isSynchronized
+
+Gets a value indicating whether the dictionary object is thread-safe.
+
+##### keys()
+
+Returns all keys. (s. [Keys](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.keys%28v=vs.110%29.aspx))
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', '1979-09-05');
+$dict->add('MK', '1979-09-23');
+
+// [0] 'TM'
+// [1] 'MK'
+$a = $dict->keys()->toArray();
+```
+
+##### remove()
+
+Removes an entry by key. (s. [Remove](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.remove%28v=vs.110%29.aspx))
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', '1979-09-05');
+$dict->add('MK', '1979-09-23');
+
+// 2
+$c1 = count($dict);
+
+$a1 = $dict->remove('MK');    // (true)
+$c2 = count($dict);    // 1
+
+$a2 = $dict->remove('MK');    // (false)
+$c2 = count($dict);    // 1
+```
+
+##### removeKey()
+
+Same as remove().
+
+##### values()
+
+Returns all values. (s. [Values](https://msdn.microsoft.com/en-us/library/system.collections.idictionary.values%28v=vs.110%29.aspx))
+
+```php
+use \System\Collections;
+
+$dict = new Dictionary();
+
+$dict->add('TM', '1979-09-05');
+$dict->add('MK', '1979-09-23');
+
+// [0] '1979-09-05'
+// [1] '1979-09-23'
+$a = $dict->values()->toArray();
+```
