@@ -8,10 +8,6 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 Have a look at the [wiki](https://github.com/mkloubert/phpLINQ/wiki).
 
-## Requirements
-
-* PHP 5.5+ (because it uses [Generator syntax](http://php.net/manual/en/language.generators.syntax.php))
-
 ## Getting started
 
 Include class files manually or via [autoloader](http://php.net/manual/en/language.oop5.autoload.php):
