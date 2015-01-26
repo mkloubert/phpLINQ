@@ -6,7 +6,7 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 ## Documentation
 
-Have a look at the [wiki](./wiki).
+Have a look at the [wiki](https://github.com/mkloubert/phpLINQ/wiki).
 
 ## Requirements
 
