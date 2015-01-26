@@ -4,6 +4,10 @@ A [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) concept for [P
 
 Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Framework) context.
 
+## Requirements
+
+* PHP 5.5+ (because it uses [Generator syntax](http://php.net/manual/en/language.generators.syntax.php))
+
 ## Documentation
 
 Have a look at the [wiki](https://github.com/mkloubert/phpLINQ/wiki).
