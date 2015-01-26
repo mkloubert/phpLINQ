@@ -372,6 +372,10 @@ use \System\Linq;
 $seq = Enumerable::repeat(5979, 'TM');
 ```
 
+### reset
+
+Same as [rewind()](http://php.net/manual/en/iterator.rewind.php).
+
 ### select
 
 Projects each element of that sequence to a new value. (s. [Select()](https://msdn.microsoft.com/en-us/library/system.linq.enumerable.select%28v=vs.100%29.aspx)).
@@ -432,10 +436,6 @@ $seq2 = $seq1->selectMany('selectorFunc');
 
 // ...
 ```
-
-### reset
-
-Same as [rewind()](http://php.net/manual/en/iterator.rewind.php).
 
 ### skip
 
