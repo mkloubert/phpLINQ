@@ -21,6 +21,9 @@
 
 namespace System\Collections\Generic;
 
+use \System\Collections\Dictionary as Dictionary;
+
+
 /**
  * A basic sequence.
  * 
@@ -100,8 +103,10 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::cast()
      */
     public final function cast($type) {
-        return $this->select(function($item) use ($type) {
-            return eval(sprintf('return (%s)$item;', trim($type)));
+        $code = sprintf('return (%s)$item;', trim($type));
+        
+        return $this->select(function($item) use ($code) {
+            return eval($code);
         });
     }
     
@@ -365,12 +370,14 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::ofType()
      */
     public function ofType($type) {
+        $type = trim($type);
+        
         return $this->where(function($item) use ($type) {
             if (is_object($item)) {
-                $code = 'get_class($item) == trim($type)';
+                $code = 'get_class($item) == $type';
             }
             else {
-                $code = 'gettype($item) == trim($type)';
+                $code = 'gettype($item) == $type';
             }
             
             return eval(sprintf('return %s;', $code));
@@ -397,7 +404,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::select()
      */
     public final function select($selector) {
-        $this->checkForFunctionOrThrow($selector);
+        $this->checkForFunctionOrThrow($selector, 1, false);
         
         return static::toEnumerable($this->selectInner($selector));
     }
@@ -415,7 +422,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::selectMany()
      */
     public final function selectMany($selector) {
-        $this->checkForFunctionOrThrow($selector);
+        $this->checkForFunctionOrThrow($selector, 1, false);
         
         return static::toEnumerable($this->selectManyInner($selector));
     }
@@ -450,7 +457,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::skipWhile()
      */
     public final function skipWhile($predicate) {
-         $this->checkForFunctionOrThrow($predicate);
+         $this->checkForFunctionOrThrow($predicate, 1, false);
          
          return static::toEnumerable($this->skipWhileInner($predicate));
     }
@@ -512,7 +519,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::takeWhile()
      */
     public final function takeWhile($predicate) {
-        $this->checkForFunctionOrThrow($predicate);
+        $this->checkForFunctionOrThrow($predicate, 1, false);
         
         return static::toEnumerable($this->takeWhileInner($predicate));
     }
@@ -542,6 +549,7 @@ abstract class EnumerableBase implements IEnumerable {
     protected function throwException($message = null,
                                       $code = 0,
                                       $previous = null) {
+        
         throw new EnumerableException($this,
                                       $message, $code, $previous);
     }
@@ -565,8 +573,9 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::toDictionary()
      */
-    public function toDictionary($keySelector = null) {
+    public function toDictionary($keySelector = null, $keyComparer = null) {
         $this->checkForFunctionOrThrow($keySelector, 2);
+        $this->checkForFunctionOrThrow($keyComparer, 2);
         
         if (is_null($keySelector)) {
             $keySelector = function($orgKey, $item) {
@@ -574,12 +583,12 @@ abstract class EnumerableBase implements IEnumerable {
             };
         }
         
-        $result = array();
+        $result = new Dictionary(null, $keyComparer);
         while ($this->valid()) {
             $i = $this->current();
             $k = $keySelector($this->key(), $i);
             
-            $result[$k] = $i;
+            $result->add($k, $i);
                 
             $this->next();
         }
@@ -619,7 +628,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::where()
      */
     public final function where($predicate) {
-        $this->checkForFunctionOrThrow($predicate);
+        $this->checkForFunctionOrThrow($predicate, 1, false);
         
         return static::toEnumerable($this->whereInner($predicate));
     }

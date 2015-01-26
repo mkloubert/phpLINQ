@@ -21,6 +21,8 @@
 
 namespace System\Collections\Generic;
 
+use \System\Collections\IDictionary as IDictionary;
+
 
 /**
  * Describes a sequence.
@@ -230,10 +232,11 @@ interface IEnumerable extends \Iterator, \Countable {
      * or dictionary.
      * 
      * @param callable $keySelector The optional key selector to use.
+     * @param callable $keyComparer The optional key comparer to use.
      * 
-     * @return array The hashtable / dictionary.
+     * @return IDictionary The hashtable / dictionary.
      */
-    function toDictionary($keySelector = null);
+    function toDictionary($keySelector = null, $keyComparer = null);
     
     /**
      * Filters the elements of that sequence.
