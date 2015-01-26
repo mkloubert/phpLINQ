@@ -16,6 +16,9 @@ Include class files manually or via [autoloader](http://php.net/manual/en/langua
 require_once './System/Collections/Generic/IEnumerable.php';
 require_once './System/Collections/Generic/EnumerableBase.php';
 require_once './System/Collections/Generic/EnumerableException.php';
+require_once './System/Collections/DictionaryEntry.php';
+require_once './System/Collections/IDictionary.php';
+require_once './System/Collections/Dictionary.php';
 require_once './System/Linq/Enumerable.php';
 ```
 
@@ -563,6 +566,39 @@ $dict2 = $seq->toDictionary(function($key, $item) {
                                                $key,
                                                $item);
                             });
+```
+
+For the new dictionary you can define a custom key comparer function:
+
+```php
+use \System\Linq;
+
+$seq = Enumerable::fromArray(array('a' => 239,
+                                   'B' => 5979));
+
+$dict = $seq->toDictionary(null,
+
+                           // compares keys case-insensitive
+                           // without whitespace at the beginning
+                           // and the end
+                           function($x, $y) {
+                               return trim(strtolower($x)) ==
+                                      trim(strtolower($y));
+                           });
+                           
+// all are (true)
+// because all will be mapped to 'a'
+$a1 = isset($dict['a']);
+$a2 = isset($dict['A']);
+$a3 = isset($dict[' a  ']);
+$a4 = isset($dict['  A  ']);
+
+// all will return 5979
+// because all will be mapped to 'B'
+$b1 = $dict['b'];
+$b2 = $dict['B'];
+$b3 = $dict[' b'];
+$b4 = $dict[' B  '];
 ```
 
 ### where
