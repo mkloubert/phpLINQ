@@ -155,6 +155,15 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         
         return;
     }
+    
+    /**
+     * Creates a new instance from a list of values.
+     * 
+     * @return \System\Collections\Dictionary The new instance.
+     */
+    public static function fromValues() {
+    	return new static(func_get_args());
+    }
 
     private function indexOfByOffset($offset) {
         foreach ($this->_items as $index => $item) {

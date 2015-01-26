@@ -53,17 +53,17 @@ interface IDictionary extends \ArrayAccess, IEnumerable {
     function containsKey($key);
     
     /**
-     *     Gets a value indicating whether the dictionary object has a fixed size.
+     *  Gets a value indicating whether the dictionary object has a fixed size.
      */
     function isFixedSize();
     
     /**
-     *     Gets a value indicating whether the dictionary object is read-only.
+     *  Gets a value indicating whether the dictionary object is read-only.
      */
     function isReadOnly();
     
     /**
-     *     Gets a value indicating whether the dictionary object is thread-safe.
+     *  Gets a value indicating whether the dictionary object is thread-safe.
      */
     function isSynchronized();
     
