@@ -8,32 +8,9 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 Have a look at the [wiki](https://github.com/mkloubert/phpLINQ/wiki).
 
-## Getting started
+## Examples
 
-Include class files manually or via [autoloader](http://php.net/manual/en/language.oop5.autoload.php):
-
-```php
-require_once './System/Collections/Generic/IEnumerable.php';
-require_once './System/Collections/Generic/EnumerableBase.php';
-require_once './System/Collections/Generic/EnumerableException.php';
-require_once './System/Collections/DictionaryEntry.php';
-require_once './System/Collections/IDictionary.php';
-require_once './System/Collections/Dictionary.php';
-require_once './System/Linq/Enumerable.php';
-```
-
-Create a sequence with methods that are similar to [LINQ extension methods](https://msdn.microsoft.com/en-us/library/system.linq.enumerable%28v=vs.100%29.aspx):
-
-```php
-use \System\Linq;
-
-$seq = Enumerable::fromValues(5979, 'TM', null, "MK", 23979);
-foreach ($seq as $item) {
-    //TODO
-}
-```
-
-## Example 1
+### Example 1
 
 Create a sequence from an [array](http://php.net/manual/en/language.types.array.php).
 
@@ -58,7 +35,7 @@ foreach ($transformedSeq as $item) {
 }
 ```
 
-## Example 2
+### Example 2
 
 Create a sequence from any [Iterator](http://php.net/manual/en/class.iterator.php).
 
