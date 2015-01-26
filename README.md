@@ -19,7 +19,7 @@ Create a sequence from an [array](http://php.net/manual/en/language.types.array.
 ```php
 use \System\Linq;
 
-$seq = Enumerable::fromArray(array(5979, 23979, null, 1781, 241279));
+$seq = Enumerable::fromValues(5979, 23979, null, 1781, 241279);
 
 $transformedSeq = $seq->select(function($item) {
                                    return strval($item);
