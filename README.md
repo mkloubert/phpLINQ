@@ -21,17 +21,18 @@ use \System\Linq;
 
 $seq = Enumerable::fromValues(5979, 23979, null, 1781, 241279);
 
-$transformedSeq = $seq->select(function($item) {
-                                   return strval($item);
-                               })  // cast all values to string
-                      ->where(function($item) {
-                                  return !empty($item);
-                              })    // filter out all values that are empty
-                      ->skip(1)    // skip the first element ('5979')
-                      ->take(2);    // take the next 2 elements from current position
-                                    // ('23979' and '1781')
+$newSeq = $seq->select(function($item) {
+                           return strval($item);
+                       })  // transform all values
+                           // to string
+              ->where(function($item) {
+                          return !empty($item);
+                      })    // filter out all values that are empty
+              ->skip(1)    // skip the first element ('5979')
+              ->take(2);    // take the next 2 elements from current position
+                            // ('23979' and '1781')
                                     
-foreach ($transformedSeq as $item) {
+foreach ($newSeq as $item) {
     // [0] '23979'
     // [1] '1781'
 }
