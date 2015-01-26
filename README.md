@@ -4,13 +4,11 @@ A [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) concept for [P
 
 Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Framework) context.
 
+Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki).
+
 ## Requirements
 
 * PHP 5.5+ (because it uses [Generator syntax](http://php.net/manual/en/language.generators.syntax.php))
-
-## Documentation
-
-Have a look at the [wiki](https://github.com/mkloubert/phpLINQ/wiki).
 
 ## Examples
 
@@ -57,3 +55,20 @@ $seq = new Enumerable(createIterator());
 
 // ...
 ```
+
+## TODO
+
+- [x] cast() method
+- [ ] defaultIfEmpty() method
+- [ ] distinct() method
+- [ ] elementAtOrDefault() method
+- [ ] except() method
+- [ ] groupBy() method
+- [ ] intersect() method
+- [ ] moveNext() method
+- [x] ofType() method
+- [ ] orderBy() method
+- [ ] orderByDescending() method
+- [x] skipWhile() method
+- [ ] singleOrDefault() method
+- [x] takeWhile() method
