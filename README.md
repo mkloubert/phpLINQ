@@ -621,7 +621,7 @@ foreach ($seq->where(function($i) {
 }
 ```
 
-## Classes and interface
+## Classes and interfaces
 
 ### IDictionary
 
