@@ -257,6 +257,45 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::groupBy()
+     */
+    public final function groupBy($keySelector, $keyComparer = null) {
+        $this->checkForFunctionOrThrow($keySelector, 1, false);
+        $this->checkForFunctionOrThrow($keyComparer, 2);
+         
+        return static::toEnumerable($this->groupByInner($keySelector,
+                                    $keyComparer));
+    }
+
+    private function groupByInner($keySelector, $keyComparer) {
+        $dict = new Dictionary(null, $keyComparer);
+         
+        while ($this->valid()) {
+            $i = $this->current();
+            $k = $keySelector($i);
+    
+            if (!isset($dict[$k])) {
+                $dict[$k] = new Dictionary();
+            }
+    
+            $items = $dict[$k];
+            $items[] = $i;
+    
+            $this->next();
+        }
+    
+        foreach ($dict as $entry) {
+            yield new Grouping($entry->key(),
+                               $entry->value()
+                                     ->reset()
+                                     ->select(function($i) {
+                                                  return $i->value();
+                                              }));
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \Iterator::key()
      */
     public abstract function key();
@@ -576,23 +615,17 @@ abstract class EnumerableBase implements IEnumerable {
     public function toDictionary($keySelector = null, $keyComparer = null) {
         $this->checkForFunctionOrThrow($keySelector, 2);
         $this->checkForFunctionOrThrow($keyComparer, 2);
-        
-        if (is_null($keySelector)) {
-            $keySelector = function($orgKey, $item) {
-                return $orgKey;
-            };
-        }
-        
+    
         $result = new Dictionary(null, $keyComparer);
         while ($this->valid()) {
             $i = $this->current();
             $k = $keySelector($this->key(), $i);
-            
+    
             $result->add($k, $i);
-                
+    
             $this->next();
         }
-        
+    
         return $result;
     }
 

@@ -8,9 +8,9 @@
 
 error_reporting(E_ALL);
 
-require_once './System/Collections/Generic/IEnumerable.php';
-require_once './System/Collections/Generic/EnumerableBase.php';
-require_once './System/Linq/Enumerable.php';
+function __autoload($clsName) {
+    require_once './' . str_replace('\\', '/', $clsName) . '.php';
+}
 
 use \System\Linq\Enumerable as Enumerable;
 
@@ -20,11 +20,27 @@ class TestClass {
     }
 }
 
-$seq1 = Enumerable::fromValues(1, '2', 3, new TestClass());
+$seq1 = Enumerable::range(0, 100);
 
-$seq2 = $seq1->ofType('TestClass');
-foreach ($seq2 as $i) {
-    echo $i; ?><br /><?php
+$seq2 = $seq1->groupBy(function($item) {
+                           switch($item % 3) {
+                               case 1:
+                                   return 'ONE';
+                                   
+                               case 2:
+                                      return 'twO';
+                           }
+                           
+                           return 'Zero';
+                        });
+
+foreach ($seq2 as $grp) {
+    echo htmlentities($grp->key()); ?><br /><?php
+
+    foreach ($grp as $i) {
+        ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php
+        echo htmlentities($i); ?><br /><?php
+    }
 }
 
 ?>

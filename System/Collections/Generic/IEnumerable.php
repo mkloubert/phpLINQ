@@ -101,6 +101,16 @@ interface IEnumerable extends \Iterator, \Countable {
     function firstOrDefault($predicate = null, $defValue = null);
     
     /**
+     * Groups the sequence.
+     * 
+     * @param callable $keySelector The function that provides the key / group value
+     *                              for the current element.
+     *                              
+     * @return IEnumerable The sequence of groups (@see IGrouping).
+     */
+    function groupBy($keySelector, $keyComparer = null);
+    
+    /**
      * Returns the last item of that sequence.
      *
      * @param callable|mixed $predicate The optional predicate to use.

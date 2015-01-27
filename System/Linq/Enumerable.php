@@ -21,7 +21,8 @@
 
 namespace System\Linq;
 
-use System\Collections\Generic\EnumerableBase as EnumerableBase;
+use \System\Collections\Generic\EnumerableBase as EnumerableBase;
+use \System\Collections\Generic\IEnumerable;
 
 
 /**
@@ -94,7 +95,7 @@ class Enumerable extends EnumerableBase {
     public static function fromValues() {
         return static::fromArray(func_get_args());
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\EnumerableBase::key()
@@ -108,7 +109,7 @@ class Enumerable extends EnumerableBase {
      * @see \System\Collections\Generic\EnumerableBase::next()
      */
     public function next() {
-        return $this->_i->next();
+        $this->_i->next();
     }
     
     /**
@@ -170,12 +171,20 @@ class Enumerable extends EnumerableBase {
     public function rewind() {
         return $this->_i->rewind();
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\EnumerableBase::toEnumerable()
      */
     protected static function toEnumerable($input) {
+        if ($input instanceof IEnumerable) {
+            return $input;
+        }
+        
+        if (is_array($input)) {
+            $input = new \ArrayIterator($input);
+        }
+        
         return new static($input);
     }
     

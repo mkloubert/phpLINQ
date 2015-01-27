@@ -81,6 +81,8 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         $this->checkForFunctionOrThrow($keyComparer, 2, false);
         
         $this->_keyComparer = $keyComparer;
+        
+        $this->reset();
     }
     
     
@@ -162,7 +164,7 @@ final class Dictionary extends EnumerableBase implements IDictionary {
      * @return \System\Collections\Dictionary The new instance.
      */
     public static function fromValues() {
-    	return new static(func_get_args());
+        return new static(func_get_args());
     }
 
     private function indexOfByOffset($offset) {
@@ -226,7 +228,7 @@ final class Dictionary extends EnumerableBase implements IDictionary {
      * @see \System\Collections\Generic\EnumerableBase::next()
      */
     public function next() {
-        return $this->_iterator->next();
+        $this->_iterator->next();
     }
     
     /**
@@ -255,8 +257,20 @@ final class Dictionary extends EnumerableBase implements IDictionary {
      * @see ArrayAccess::offsetSet()
      */
     public function offsetSet($offset, $value) {
+        $doAdd = false;
+        if (is_null($offset)) {
+            // find next index
+
+            $doAdd = true;
+            
+            $offset = $this->count();
+            while ($this->containsKey($offset)) {
+                ++$offset;
+            }
+        }
+        
         $i = $this->indexOfByOffset($offset);
-        if (false !== $i) {
+        if (!$doAdd && (false !== $i)) {
             $this->_items[$i]->value = $value;
         }
         else {
