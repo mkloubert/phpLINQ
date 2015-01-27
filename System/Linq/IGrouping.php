@@ -19,7 +19,7 @@
  */
 
 
-namespace System\Collections\Generic;
+namespace System\Linq;
 
 
 /**
@@ -27,7 +27,7 @@ namespace System\Collections\Generic;
  * 
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IGrouping extends \IteratorAggregate {
+interface IGrouping extends \Countable, \IteratorAggregate {
     /**
      * Gets the items of that group.
      * 

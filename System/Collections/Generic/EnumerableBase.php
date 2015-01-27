@@ -22,6 +22,7 @@
 namespace System\Collections\Generic;
 
 use \System\Collections\Dictionary as Dictionary;
+use \System\Linq\Grouping as Grouping;
 
 
 /**
