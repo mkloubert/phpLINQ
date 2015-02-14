@@ -105,6 +105,7 @@ interface IEnumerable extends \Iterator, \Countable {
      * 
      * @param callable $keySelector The function that provides the key / group value
      *                              for the current element.
+     * @param callable $keyComparer The optional key comparer to use.
      *                              
      * @return IEnumerable The sequence of groups (@see IGrouping).
      */
