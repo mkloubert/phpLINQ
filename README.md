@@ -64,7 +64,7 @@ $seq = new Enumerable(createIterator());
 - [ ] distinct() method
 - [ ] elementAtOrDefault() method
 - [ ] except() method
-- [ ] groupBy() method
+- [x] groupBy() method
 - [ ] intersect() method
 - [ ] moveNext() method
 - [x] ofType() method
