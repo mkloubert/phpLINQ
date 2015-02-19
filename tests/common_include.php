@@ -1,7 +1,9 @@
 <?php
 
-$includeFile = realpath(dirname(__FILE__)) . '/';
+$includeFile = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
 
-function __autoload($clsName) {
+set_include_path(get_include_path() . PATH_SEPARATOR . $includeFile);
+
+spl_autoload_register(function($clsName) use ($includeFile) {
     require_once $includeFile . '../' . str_replace('\\', '/', $clsName) . '.php';
-}
+});

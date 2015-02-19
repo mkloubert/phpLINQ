@@ -88,6 +88,15 @@ interface IEnumerable extends \Iterator, \Countable {
     function contains($item, $comparer = null);
     
     /**
+     * Returns a distincted sequences.
+     * 
+     * @param callable $comparer The optional comparer function.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function distinct($comparer = null);
+    
+    /**
      * Returns the first item of that sequence.
      * 
      * @param callable|mixed $predicate The optional predicate to use.
@@ -185,6 +194,22 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new / flatten sequence.
      */
     function selectMany($selector);
+    
+    /**
+     * Returns the one and only item of that sequence.
+     * An exception is thrown if there is more than one element.
+     *
+     * @param callable|mixed $predicate The optional predicate to use.
+     *                                  If there is only one argument and that
+     *                                  value is NOT callable it will be used
+     *                                  as default value.
+     * @param mixed $defValue The default value if no item was found.
+     *
+     * @return mixed The item or default value.
+     * 
+     * @throws \Exception More than one element found.
+     */
+    function singleOrDefault($predicate = null, $defValue = null);
     
     /**
      * Skips a specific number of elements.

@@ -224,6 +224,49 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::distinct()
+     */
+    public function distinct($comparer = null) {
+        $this->checkForFunctionOrThrow($comparer, 2);
+        
+        if (is_null($comparer)) {
+            // define default
+        
+            $comparer = function($x, $y) {
+                return $x == $y;
+            };
+        }
+        
+        return static::toEnumerable($this->distinctInner($comparer));
+    }
+    
+    private function distinctInner($comparer) {
+        $temp = array();
+        while ($this->valid()) {
+            $i = $this->current();
+        
+            // search for duplicate
+            $alreadyInList = false;
+            foreach ($temp as $ti) {
+                if ($comparer($i, $ti)) {
+                    // found duplicate
+        
+                    $alreadyInList = true;
+                    break;
+                }
+            }
+        
+            if (!$alreadyInList) {
+                $temp[] = $i;
+                yield $i;
+            }
+        
+            $this->next();
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::firstOrDefault()
      */
     public final function firstOrDefault($predicate = null, $defValue = null) {
@@ -265,7 +308,7 @@ abstract class EnumerableBase implements IEnumerable {
         $this->checkForFunctionOrThrow($keyComparer, 2);
          
         return static::toEnumerable($this->groupByInner($keySelector,
-                                    $keyComparer));
+                                                        $keyComparer));
     }
 
     private function groupByInner($keySelector, $keyComparer) {
@@ -492,6 +535,45 @@ abstract class EnumerableBase implements IEnumerable {
         });
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::singleOrDefault()
+     */
+    public final function singleOrDefault($predicate = null, $defValue = null) {
+        if (func_num_args() == 1) {
+            if (!is_null($predicate) &&
+                !is_callable($predicate)) {
+        
+                // handle first argument as default value
+                $defValue = $predicate;
+                $predicate = null;
+            }
+        }
+        
+        $this->checkForFunctionOrThrow($predicate);
+        
+        $predicate = static::toPredeciateSafe($predicate);
+        
+        $result = $defValue;
+        
+        $matchCount = 0;
+        while ($this->valid()) {
+            $i = $this->current();
+            if ($predicate($i)) {
+                $result = $i;
+                ++$matchCount;
+            }
+            
+            $this->next();
+        }
+        
+        if ($matchCount > 1) {
+            throw new \Exception('Sequence contains more than one matching element!');
+        }
+        
+        return $result;
+    }
+    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::skipWhile()

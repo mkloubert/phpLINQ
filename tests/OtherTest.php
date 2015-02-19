@@ -19,6 +19,25 @@ class OtherTest extends TestCaseBase {
     }
     
     /**
+     * \System\Collections\Generic\IEnumerable::distinct()
+     */
+    public function testDistinct() {
+        $seq1 = Enumerable::fromValues(1, 1, 2, 2, 3, 5, 4, 5);
+        $seq2 = Enumerable::fromValues(1, 2, 3, '1', 4, 5);
+        
+        $a1 = $seq1->distinct()->toArray();
+        $a2 = $seq2->distinct(function($x, $y) {
+            return gettype($x) == gettype($y);
+        })->toArray();
+        
+        $diff1 = array_diff($a1, array(1, 2, 3, 5, 4));
+        $this->assertTrue(empty($diff1));
+        
+        $diff2 = array_diff($a2, array(1, '1'));
+        $this->assertTrue(empty($diff2));
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::where()
      */
     public function testWhere() {
