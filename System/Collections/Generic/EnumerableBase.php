@@ -529,6 +529,15 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::order()
+     */
+    public function order($algo = null) {
+    	return $this->orderBy(function($x) { return $x; },
+    	                      $algo);
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::orderBy()
      */
     public final function orderBy($sortSelector, $algo = null) {
@@ -577,6 +586,15 @@ abstract class EnumerableBase implements IEnumerable {
     	foreach ($items as $obj) {
     		yield $obj->value;
     	}
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::orderDescending()
+     */
+    public function orderDescending($algo = null) {
+    	return $this->orderByDescending(function($x) { return $x; },
+    	                                $algo);
     }
     
     /**
