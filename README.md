@@ -31,10 +31,11 @@ $newSeq = $seq->select(function($item) {
               ->skip(1)    // skip the first element ('5979')
               ->take(2);    // take the next 2 elements from current position
                             // ('23979' and '1781')
+              ->order();    // sort
                                     
 foreach ($newSeq as $item) {
-    // [0] '23979'
-    // [1] '1781'
+    // [0] '1781'
+    // [1] '23979'
 }
 ```
 
