@@ -81,8 +81,10 @@ $seq = new Enumerable(createIterator());
 * [ofType()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.ofType()-method)
 * [orderBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderBy()-method)
 * [orderByDescending()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderByDescending()-method)
+* [reverse()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.reverse()-method)
 * [select()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.select()-method)
 * [selectMany()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.selectMany()-method)
+* [sequenceEqual()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.sequenceEqual()-method)
 * [singleOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.singleOrDefault()-method)
 * [skip()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skip()-method)
 * [skipWhile()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skipWhile()-method)
@@ -100,7 +102,7 @@ $seq = new Enumerable(createIterator());
 
 - [ ] groupJoin() method
 - [ ] join() method
-- [ ] reverse() method
+- [x] reverse() method
 - [ ] moveNext() method
-- [ ] sequenceEqual() method
+- [x] sequenceEqual() method
 - [ ] toLookup() method
