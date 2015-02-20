@@ -172,6 +172,8 @@ interface IEnumerable extends \Iterator, \Countable {
      *                                 value for two matching elements.
      * @param callable $keyComparer The optional custom key function for
      *                              comparing the keys of the two sequences.
+     *                              
+     * @return IEnumerable The new sequence.
      */
     function join($inner,
     		      $outerKeySelector, $innerKeySelector,
