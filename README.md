@@ -74,6 +74,7 @@ $seq = new Enumerable(createIterator());
 * [except()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.except()-method)
 * [firstOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.firstOrDefault()-method)
 * [groupBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.groupBy()-method)
+* [groupJoin()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.groupJoin()-method)
 * [intersect()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.intersect()-method)
 * [join()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.join()-method)
 * [lastOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.lastOrDefault()-method)
@@ -101,9 +102,5 @@ $seq = new Enumerable(createIterator());
 
 ## TODO
 
-- [ ] groupJoin() method
-- [x] join() method
-- [x] reverse() method
 - [ ] moveNext() method
-- [x] sequenceEqual() method
 - [ ] toLookup() method
