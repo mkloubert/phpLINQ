@@ -42,18 +42,20 @@ $pets = array(new Pet("Gina"     , $persons[1]),
               new Pet("Schnuffel", $persons[2]),
               new Pet("WauWau"   , $persons[0]),
               new Pet("Lulu"     , $persons[3]),
+              new Pet("Sparky"   , $persons[0]),
               new Pet("Asta"     , $persons[1]));
 
 $personSeq = Enumerable::fromArray($persons);
 $petSeq    = Enumerable::fromArray($pets);
 
-$joined = $personSeq->join($petSeq,
+$joined = $personSeq->groupJoin($petSeq,
                            function($person) { return $person->Name; },
                            function($pet) { return $pet->Owner->Name; },
-                           function($person, $pet) {
-                               return sprintf('Owner: %s; Pet: %s',
+                           function($person, $pets) {
+                               return sprintf('Owner: %s; Pets: %s',
                                               $person->Name,
-                                              $pet->Name);
+                                              $pets->stringJoin(', ',
+                                              		            function($pet) { return $pet->Name; }));
                            });
 
 foreach ($joined as $item) {

@@ -385,6 +385,16 @@ abstract class EnumerableBase implements IEnumerable {
         return $algo;
     }
     
+    private static function getStringSelectorSafe($selector) {
+    	if (is_null($selector)) {
+    		$selector = function($x) {
+    			return strval($x);
+    		};
+    	}
+    	
+    	return $selector;
+    }
+    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::groupBy()
@@ -962,6 +972,42 @@ abstract class EnumerableBase implements IEnumerable {
     
             yield $i;
         }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::stringConcat()
+     */
+    public function stringConcat($selector = null) {
+    	return $this->stringJoin('', $selector);
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::stringJoin()
+     */
+    public function stringJoin($separator, $selector = null) {
+    	$this->checkForFunctionOrThrow($selector);
+    	
+    	$selector = static::getStringSelectorSafe($selector);
+    	
+    	$result = '';
+    	
+    	$isFirst = true;
+    	while ($this->valid()) {
+    		if (!$isFirst) {
+    			$result .= strval($separator);
+    		}
+    		else {
+    			$isFirst = false;
+    		}
+    		
+    		$result .= $selector($this->current());
+    		
+    		$this->next();
+    	}
+    	
+    	return $result;
     }
     
     /**

@@ -372,6 +372,25 @@ interface IEnumerable extends \Iterator, \Countable {
     function skipWhile($predicate);
     
     /**
+     * Concats the elements of that sequence to one string.
+     *
+     * @param callable $selector The custom string provider for an element.
+     *
+     * @return string The generated string.
+     */
+    function stringConcat($selector = null);
+    
+    /**
+     * Joins the elements of that sequence to one string.
+     * 
+     * @param string $separator The string expression between two elements.
+     * @param callable $selector The custom string provider for an element.
+     * 
+     * @return string The generated string.
+     */
+    function stringJoin($separator, $selector = null);
+    
+    /**
      * Calculates the sum of the elements of that sequence.
      * 
      * @param mixed The value that is returned if no element was found.
