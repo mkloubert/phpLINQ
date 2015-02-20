@@ -150,7 +150,7 @@ interface IEnumerable extends \Iterator, \Countable {
     function groupBy($keySelector, $keyComparer = null);
     
     /**
-     * Produces the intersection of that sequence and another.
+     * Produces the set intersection of that sequence and another.
      *
      * @param Traversable|array $second The other items.
      * @param callable $comparer The optional, custom item comparer to use.
@@ -357,7 +357,7 @@ interface IEnumerable extends \Iterator, \Countable {
     function toDictionary($keySelector = null, $keyComparer = null);
     
     /**
-     * Produces the  union of that sequence and another.
+     * Produces the set union of that sequence and another.
      *
      * @param Traversable|array $second The other items.
      * @param callable $comparer The optional, custom item comparer to use.
