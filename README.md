@@ -60,9 +60,9 @@ $seq = new Enumerable(createIterator());
 ## TODO
 
 - [x] cast() method
-- [ ] defaultIfEmpty() method
+- [x] defaultIfEmpty() method
 - [x] distinct() method
-- [ ] elementAtOrDefault() method
+- [x] elementAtOrDefault() method
 - [ ] except() method
 - [x] groupBy() method
 - [ ] intersect() method
