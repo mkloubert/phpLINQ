@@ -341,6 +341,24 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
     
+    private static function getSortAlgoSafe($algo) {
+    	if (is_null($algo)) {
+    		$algo = function($x, $y) {
+    			if ($x > $y) {
+    				return 1;
+    			}
+    			 
+    			if ($x < $y) {
+    				return -1;
+    			}
+    			 
+    			return 0;
+    		};
+    	}
+    	
+    	return $algo;
+    }
+    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::groupBy()
@@ -507,6 +525,58 @@ abstract class EnumerableBase implements IEnumerable {
             
             return eval(sprintf('return %s;', $code));
         });
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::orderBy()
+     */
+    public final function orderBy($sortSelector, $algo = null) {
+    	$this->checkForFunctionOrThrow($sortSelector, 1, false);
+    	$this->checkForFunctionOrThrow($algo, 2);
+    	
+    	$algo = static::getSortAlgoSafe($algo);
+    	
+    	return static::toEnumerable($this->orderByInner($sortSelector, $algo));
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::orderBy()
+     */
+    public final function orderByDescending($sortSelector, $algo = null) {
+    	$this->checkForFunctionOrThrow($sortSelector, 1, false);
+    	$this->checkForFunctionOrThrow($algo, 2);
+    	 
+    	$algo = static::getSortAlgoSafe($algo);
+    	$descAlgo = function($x, $y) use ($algo) {
+    		return $algo($x, $y) * -1;
+    	};
+    	
+    	return static::toEnumerable($this->orderByInner($sortSelector, $descAlgo));
+    }
+    
+    private function orderByInner($sortSelector, $algo) {
+    	$items = array();
+    	while ($this->valid()) {
+    		$i = $this->current();
+    		
+    		$newItem            = new \stdClass();
+    		$newItem->sortValue = $sortSelector($i);
+    		$newItem->value     = $i;
+    		
+    		$items[] = $newItem;
+    		
+    		$this->next();
+    	}
+    	
+    	usort($items, function($x, $y) use ($algo) {
+    		              return $algo($x->sortValue, $y->sortValue);
+    	              });
+    	
+    	foreach ($items as $obj) {
+    		yield $obj->value;
+    	}
     }
     
     /**

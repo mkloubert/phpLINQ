@@ -189,6 +189,26 @@ interface IEnumerable extends \Iterator, \Countable {
     function ofType($type);
     
     /**
+     * Orders that sequence.
+     * 
+     * @param callable $sortSelector The function that provides the sort value.
+     * @param callable $algo The optional, custom algorithm to use.
+     * 
+     * @return IEnumerable The ordered sequence.
+     */
+    function orderBy($sortSelector, $algo = null);
+    
+    /**
+     * Orders that sequence (descending).
+     *
+     * @param callable $sortSelector The function that provides the sort value.
+     * @param callable $algo The optional, custom algorithm to use.
+     *
+     * @return IEnumerable The ordered sequence.
+     */
+    function orderByDescending($sortSelector, $algo = null);
+    
+    /**
      * Alias of @see \System\Collections\Generic\IEnumerable::multiply()
      */
     function product($defValue = null);
