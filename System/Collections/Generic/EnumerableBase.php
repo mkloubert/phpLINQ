@@ -499,27 +499,6 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
     
-    private function leftOrRight($func, $defValue = null) {
-        $result = $defValue;
-        
-        $isFirst = true;
-        while ($this->valid()) {
-            $item = $this->current();
-            
-            if ($isFirst) {
-                $result = $item;
-                $isFirst = false;
-            }
-            else {
-                $result = $func($item, $result);
-            }
-            
-            $this->next();
-        }
-        
-        return $result;
-    }
-    
     /**
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::max()
@@ -772,6 +751,8 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::sequenceEqual()
      */
     public final function sequenceEqual($second, $comparer = null) {
+    	$this->checkForFunctionOrThrow($comparer, 2);
+    	
     	$comparer = static::getComparerSafe($comparer);
     	
     	$other = static::toEnumerable($second);
