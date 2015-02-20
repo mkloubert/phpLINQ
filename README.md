@@ -90,8 +90,10 @@ $seq = new Enumerable(createIterator());
 * [take()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.take()-method)
 * [takeWhile()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.takeWhile()-method)
 * [toArray()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.toArray()-method)
-* [toDictionary()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.toDictionary()-method)
+* [toDictionary()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.toDictionary()-method
+* [union()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.union()-method)
 * [where()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.where()-method)
+* [zip()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.zip()-method)
 
 
 ## TODO
