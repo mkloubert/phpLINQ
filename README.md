@@ -68,8 +68,8 @@ $seq = new Enumerable(createIterator());
 - [ ] intersect() method
 - [ ] moveNext() method
 - [x] ofType() method
-- [ ] orderBy() method
-- [ ] orderByDescending() method
+- [x] orderBy() method
+- [x] orderByDescending() method
 - [x] skipWhile() method
 - [x] singleOrDefault() method
 - [x] takeWhile() method
