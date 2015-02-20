@@ -14,7 +14,7 @@ Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki)
 
 ### Example 1
 
-Create a sequence from an [array](http://php.net/manual/en/language.types.array.php).
+Create a sequence from a list of values.
 
 ```php
 use \System\Linq;
