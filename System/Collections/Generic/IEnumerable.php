@@ -357,6 +357,16 @@ interface IEnumerable extends \Iterator, \Countable {
     function toDictionary($keySelector = null, $keyComparer = null);
     
     /**
+     * Produces the  union of that sequence and another.
+     *
+     * @param Traversable|array $second The other items.
+     * @param callable $comparer The optional, custom item comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function union($second, $comparer = null);
+    
+    /**
      * Filters the elements of that sequence.
      * 
      * @param callable $predicate The filter to use.
@@ -364,4 +374,15 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function where($predicate);
+    
+    /**
+     * Applies a specified function to the corresponding elements
+     * of that sequence and another, producing a sequence of the results.
+     * 
+     * @param Traversable|array $second The other items.
+     * @param callable $selector The selector function.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function zip($second, $selector);
 }

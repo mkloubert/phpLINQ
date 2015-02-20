@@ -936,6 +936,40 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::union()
+     */
+    public final function union($second, $comparer = null) {
+    	return $this->concat($second)
+    	            ->distinct($comparer);
+    }
+    
+    private function unionInner(IEnumerable $second, $comparer) {
+    	$temp = array();
+    	
+    	$seqences = array($this, $second);
+    	foreach ($seqences as $seq) {
+    		while($seq->valid()) {
+    			$i = $seq->current();
+    			
+    			$alreadyInList = false;
+    			foreach ($temp as $ti) {
+    			    if ($comparer($ti, $i)) {
+    			    	$alreadyInList = true;
+    			    	break;
+    			    }
+    			}
+    			
+    			if (!$alreadyInList) {
+    				
+    			}
+    			
+    			$seq->next();
+    		}
+    	}
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \Iterator::valid()
      */
     public abstract function valid();
@@ -960,5 +994,26 @@ abstract class EnumerableBase implements IEnumerable {
             
             $this->next();
         }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::zip()
+     */
+    public final function zip($second, $selector) {
+    	$this->checkForFunctionOrThrow($selector, 2, false);
+    	
+    	return static::toEnumerable($this->zipInner(static::toEnumerable($second),
+    			                                    $selector));
+    }
+    
+    private function zipInner(IEnumerable $second, $selector) {
+    	while ($this->valid() && $second->valid()) {
+    		yield $selector($this->current(),
+    					    $second->current());
+    		
+    		$this->next();
+    		$second->next();
+    	}
     }
 }

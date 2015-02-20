@@ -84,6 +84,27 @@ class OtherTest extends TestCaseBase {
     }
     
     /**
+     * \System\Collections\Generic\IEnumerable::union()
+     */
+    public function testUnion() {
+    	$seq1 = Enumerable::fromValues(5, 3, 9, 7, 5, 9, 3, 7);
+    	$seq2 = Enumerable::fromValues(8, 3, 6, 4, 4, 9, 1, 0);
+    
+    	$a = $seq1->union($seq2)
+    	          ->toArray();
+    
+    	$this->assertEquals(5, $a[0]);
+    	$this->assertEquals(3, $a[1]);
+    	$this->assertEquals(9, $a[2]);
+    	$this->assertEquals(7, $a[3]);
+    	$this->assertEquals(8, $a[4]);
+    	$this->assertEquals(6, $a[5]);
+    	$this->assertEquals(4, $a[6]);
+    	$this->assertEquals(1, $a[7]);
+    	$this->assertEquals(0, $a[8]);
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::where()
      */
     public function testWhere() {
@@ -93,5 +114,24 @@ class OtherTest extends TestCaseBase {
         });
         
         $this->assertEquals(2, count($seq2));
+    }
+    
+    /**
+     * \System\Collections\Generic\IEnumerable::zip()
+     */
+    public function testZip() {
+    	$seq1 = Enumerable::fromValues(1, 2, 3, 4);
+    	$seq2 = Enumerable::fromValues('one', 'two', 'three');
+    
+    	$a = $seq1->zip($seq2, function($x, $y) {
+    		                       return sprintf('%s %s', $x, $y);
+    	                       })
+    	          ->toArray();
+    
+    	$this->assertEquals(3, count($a));
+    	
+    	$this->assertEquals('1 one'  , $a[0]);
+    	$this->assertEquals('2 two'  , $a[1]);
+    	$this->assertEquals('3 three', $a[2]);
     }
 }
