@@ -242,7 +242,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::distinct()
      */
-    public function distinct($comparer = null) {
+    public final function distinct($comparer = null) {
         $this->checkForFunctionOrThrow($comparer, 2);
         
         $comparer = static::getComparerSafe($comparer);
@@ -299,7 +299,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::except()
      */
-    public function except($second, $comparer = null) {
+    public final function except($second, $comparer = null) {
         $this->checkForFunctionOrThrow($comparer, 2);
         
         $comparer = static::getComparerSafe($comparer);
@@ -492,7 +492,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::intersect()
      */
-    public function intersect($second, $comparer = null) {
+    public final function intersect($second, $comparer = null) {
         $this->checkForFunctionOrThrow($comparer, 2);
          
         $comparer = static::getComparerSafe($comparer);
@@ -529,7 +529,10 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::join()
      */
-    public function join($inner, $outerKeySelector, $innerKeySelector, $resultSelector, $keyComparer = null) {
+    public final function join($inner,
+    		                   $outerKeySelector, $innerKeySelector,
+    		                   $resultSelector,
+    		                   $keyComparer = null) {
     	$this->checkForFunctionOrThrow($outerKeySelector, 1, false);
     	$this->checkForFunctionOrThrow($innerKeySelector, 1, false);
     	$this->checkForFunctionOrThrow($resultSelector, 2, false);
@@ -706,7 +709,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::ofType()
      */
-    public function ofType($type) {
+    public final function ofType($type) {
         $type = trim($type);
         
         return $this->where(function($item) use ($type) {
@@ -725,7 +728,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::order()
      */
-    public function order($algo = null) {
+    public final function order($algo = null) {
         return $this->orderBy(function($x) { return $x; },
                               $algo);
     }
@@ -786,7 +789,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::orderDescending()
      */
-    public function orderDescending($algo = null) {
+    public final function orderDescending($algo = null) {
         return $this->orderByDescending(function($x) { return $x; },
                                         $algo);
     }
@@ -812,7 +815,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::reverse()
      */
-    public function reverse() {
+    public final function reverse() {
     	$i = PHP_INT_MAX;
     	return $this->orderByDescending(function($x) use (&$i) {
     		                                return $i--;
@@ -978,7 +981,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::stringConcat()
      */
-    public function stringConcat($selector = null) {
+    public final function stringConcat($selector = null) {
     	return $this->stringJoin('', $selector);
     }
     
@@ -986,7 +989,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::stringJoin()
      */
-    public function stringJoin($separator, $selector = null) {
+    public final function stringJoin($separator, $selector = null) {
     	$this->checkForFunctionOrThrow($selector);
     	
     	$selector = static::getStringSelectorSafe($selector);
@@ -1093,7 +1096,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::toArray()
      */
-    public function toArray() {
+    public final function toArray() {
         $result = array();
         while ($this->valid()) {
             $result[] = $this->current();
