@@ -180,13 +180,7 @@ abstract class EnumerableBase implements IEnumerable {
     public final function contains($item, $comparer = null) {
         $this->checkForFunctionOrThrow($comparer, 2);
         
-        if (is_null($comparer)) {
-            // define default
-            
-            $comparer = function($x, $y) {
-                return $x == $y;
-            };
-        }
+        $comparer = static::getComparerSafe($comparer);
         
         while ($this->valid()) {
             $i = $this->current();
@@ -227,21 +221,21 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::defaultIfEmpty()
      */
     public final function defaultIfEmpty($defValue = null) {
-    	return static::toEnumerable($this->defaultIfEmptyInner(func_get_args()));
+        return static::toEnumerable($this->defaultIfEmptyInner(func_get_args()));
     }
     
     private function defaultIfEmptyInner($defValues) {
-    	if ($this->valid()) {
-    		do {
-    			yield $this->current();
-    			$this->next();
-    		} while ($this->valid());
-    	} 
-    	else {
-    		foreach ($defValues as $i) {
-    			yield $i;
-    		}
-    	}
+        if ($this->valid()) {
+            do {
+                yield $this->current();
+                $this->next();
+            } while ($this->valid());
+        } 
+        else {
+            foreach ($defValues as $i) {
+                yield $i;
+            }
+        }
     }
     
     /**
@@ -251,13 +245,7 @@ abstract class EnumerableBase implements IEnumerable {
     public function distinct($comparer = null) {
         $this->checkForFunctionOrThrow($comparer, 2);
         
-        if (is_null($comparer)) {
-            // define default
-        
-            $comparer = function($x, $y) {
-                return $x == $y;
-            };
-        }
+        $comparer = static::getComparerSafe($comparer);
         
         return static::toEnumerable($this->distinctInner($comparer));
     }
@@ -292,19 +280,47 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::elementAtOrDefault()
      */
     public final function elementAtOrDefault($index, $defValue = null) {
-    	$result = $defValue;
-    	
-    	while (($index >= 0) && $this->valid()) {
-    		$i = $this->current();
-    		$this->next();
-    	
-    		if (0 == $index--) {
-    			$result = $i;
-    			break;
-    		}
-    	}
-    	
-    	return $result;
+        $result = $defValue;
+        
+        while (($index >= 0) && $this->valid()) {
+            $i = $this->current();
+            $this->next();
+        
+            if (0 == $index--) {
+                $result = $i;
+                break;
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::except()
+     */
+    public function except($second, $comparer = null) {
+        $this->checkForFunctionOrThrow($comparer, 2);
+        
+        $comparer = static::getComparerSafe($comparer);
+        
+        return static::toEnumerable($this->exceptInner(static::toEnumerable($second),
+                                                       $comparer));
+    }
+    
+    private function exceptInner(IEnumerable $second, $comparer) {
+         $itemsToExclude = static::toEnumerable($second->distinct($comparer)
+                                                       ->toArray());
+         
+         while ($this->valid()) {
+             $i = $this->current();
+             if (!$itemsToExclude->reset()
+                                 ->contains($i, $comparer)) {
+                 yield $i;
+             }
+             
+             $this->next();
+         }
     }
     
     /**
@@ -341,22 +357,32 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
     
+    private static function getComparerSafe($comparer) {
+        if (is_null($comparer)) {
+            $comparer = function($x, $y) {
+                return $x == $y;
+            };
+        }
+        
+        return $comparer;
+    }
+    
     private static function getSortAlgoSafe($algo) {
-    	if (is_null($algo)) {
-    		$algo = function($x, $y) {
-    			if ($x > $y) {
-    				return 1;
-    			}
-    			 
-    			if ($x < $y) {
-    				return -1;
-    			}
-    			 
-    			return 0;
-    		};
-    	}
-    	
-    	return $algo;
+        if (is_null($algo)) {
+            $algo = function($x, $y) {
+                if ($x > $y) {
+                    return 1;
+                }
+                 
+                if ($x < $y) {
+                    return -1;
+                }
+                 
+                return 0;
+            };
+        }
+        
+        return $algo;
     }
     
     /**
@@ -395,6 +421,43 @@ abstract class EnumerableBase implements IEnumerable {
                                      ->select(function($i) {
                                                   return $i->value();
                                               }));
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::intersect()
+     */
+    public function intersect($second, $comparer = null) {
+        $this->checkForFunctionOrThrow($comparer, 2);
+         
+        $comparer = static::getComparerSafe($comparer);
+         
+        return static::toEnumerable($this->intersectInner(static::toEnumerable($second),
+                                                          $comparer));
+    }
+    
+    private function intersectInner(IEnumerable $second, $comparer) {
+        $secondArray = $second->distinct($comparer)
+                              ->toArray();
+    
+        while ($this->valid()) {
+            $ci = $this->current();
+            
+            // search for matching item in second sequence
+            foreach ($secondArray as $k => $v) {
+                if (!$comparer($v, $ci)) {
+                    // not found
+                    continue; 
+                }
+                
+                yield $ci;
+                unset($secondArray[$k]);
+                
+                break;
+            }
+                     
+            $this->next();
         }
     }
     
@@ -532,8 +595,8 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::order()
      */
     public function order($algo = null) {
-    	return $this->orderBy(function($x) { return $x; },
-    	                      $algo);
+        return $this->orderBy(function($x) { return $x; },
+                              $algo);
     }
     
     /**
@@ -541,12 +604,12 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::orderBy()
      */
     public final function orderBy($sortSelector, $algo = null) {
-    	$this->checkForFunctionOrThrow($sortSelector, 1, false);
-    	$this->checkForFunctionOrThrow($algo, 2);
-    	
-    	$algo = static::getSortAlgoSafe($algo);
-    	
-    	return static::toEnumerable($this->orderByInner($sortSelector, $algo));
+        $this->checkForFunctionOrThrow($sortSelector, 1, false);
+        $this->checkForFunctionOrThrow($algo, 2);
+        
+        $algo = static::getSortAlgoSafe($algo);
+        
+        return static::toEnumerable($this->orderByInner($sortSelector, $algo));
     }
     
     /**
@@ -554,38 +617,38 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::orderBy()
      */
     public final function orderByDescending($sortSelector, $algo = null) {
-    	$this->checkForFunctionOrThrow($sortSelector, 1, false);
-    	$this->checkForFunctionOrThrow($algo, 2);
-    	 
-    	$algo = static::getSortAlgoSafe($algo);
-    	$descAlgo = function($x, $y) use ($algo) {
-    		return $algo($x, $y) * -1;
-    	};
-    	
-    	return static::toEnumerable($this->orderByInner($sortSelector, $descAlgo));
+        $this->checkForFunctionOrThrow($sortSelector, 1, false);
+        $this->checkForFunctionOrThrow($algo, 2);
+         
+        $algo = static::getSortAlgoSafe($algo);
+        $descAlgo = function($x, $y) use ($algo) {
+            return $algo($x, $y) * -1;
+        };
+        
+        return static::toEnumerable($this->orderByInner($sortSelector, $descAlgo));
     }
     
     private function orderByInner($sortSelector, $algo) {
-    	$items = array();
-    	while ($this->valid()) {
-    		$i = $this->current();
-    		
-    		$newItem   = array();
-    		$newItem[] = $sortSelector($i);
-    		$newItem[] = $i;
-    		
-    		$items[] = $newItem;
-    		
-    		$this->next();
-    	}
-    	
-    	usort($items, function($x, $y) use ($algo) {
-    		              return $algo($x[0], $y[1]);
-    	              });
-    	
-    	foreach ($items as $i) {
-    		yield $i[1];
-    	}
+        $items = array();
+        while ($this->valid()) {
+            $i = $this->current();
+            
+            $newItem   = array();
+            $newItem[] = $sortSelector($i);
+            $newItem[] = $i;
+            
+            $items[] = $newItem;
+            
+            $this->next();
+        }
+        
+        usort($items, function($x, $y) use ($algo) {
+                          return $algo($x[0], $y[1]);
+                      });
+        
+        foreach ($items as $i) {
+            yield $i[1];
+        }
     }
     
     /**
@@ -593,8 +656,8 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::orderDescending()
      */
     public function orderDescending($algo = null) {
-    	return $this->orderByDescending(function($x) { return $x; },
-    	                                $algo);
+        return $this->orderByDescending(function($x) { return $x; },
+                                        $algo);
     }
     
     /**
@@ -602,7 +665,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::product()
      */
     public final function product($defValue = null) {
-    	return $this->multiply($defValue);
+        return $this->multiply($defValue);
     }
     
     /**

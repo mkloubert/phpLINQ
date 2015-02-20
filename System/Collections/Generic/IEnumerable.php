@@ -116,6 +116,16 @@ interface IEnumerable extends \Iterator, \Countable {
     function elementAtOrDefault($index, $defValue = null);
     
     /**
+     * Produces the difference between that sequence and another.
+     * 
+     * @param Traversable|array $second The items to exclude.
+     * @param callable $comparer The optional, custom item comparer to use.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function except($second, $comparer = null);
+    
+    /**
      * Returns the first item of that sequence.
      * 
      * @param callable|mixed $predicate The optional predicate to use.
@@ -138,6 +148,16 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The sequence of groups (@see IGrouping).
      */
     function groupBy($keySelector, $keyComparer = null);
+    
+    /**
+     * Produces the intersection of that sequence and another.
+     *
+     * @param Traversable|array $second The other items.
+     * @param callable $comparer The optional, custom item comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function intersect($second, $comparer = null);
     
     /**
      * Returns the last item of that sequence.

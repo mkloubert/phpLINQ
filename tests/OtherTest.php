@@ -55,6 +55,35 @@ class OtherTest extends TestCaseBase {
     }
     
     /**
+     * \System\Collections\Generic\IEnumerable::except()
+     */
+    public function testExcept() {
+    	$seq = Enumerable::fromValues(1, 2, 3, 4, 5);
+    	$exc = Enumerable::fromValues(4, 1);
+    	
+    	$a = $seq->except($exc)
+    	         ->toArray();
+    	
+    	$this->assertEquals(2, $a[0]);
+    	$this->assertEquals(3, $a[1]);
+    	$this->assertEquals(5, $a[2]);
+    }
+    
+    /**
+     * \System\Collections\Generic\IEnumerable::intersect()
+     */
+    public function testIntersect() {
+    	$seq1 = Enumerable::fromValues(1, 2, 3, 4, 5);
+    	$seq2 = Enumerable::fromValues(4, 1);
+    	 
+    	$a = $seq1->intersect($seq2)
+    	          ->toArray();
+    	 
+    	$this->assertEquals(1, $a[0]);
+    	$this->assertEquals(4, $a[1]);
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::where()
      */
     public function testWhere() {
