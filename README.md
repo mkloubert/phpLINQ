@@ -19,7 +19,7 @@ Create a sequence from an [array](http://php.net/manual/en/language.types.array.
 ```php
 use \System\Linq;
 
-$seq = Enumerable::fromValues(5979, 23979, null, 1781, 241279);
+$seq = Enumerable::fromValues(5979, 23979, null, 23979, 1781, 241279);
 
 $newSeq = $seq->select(function($item) {
                            return strval($item);
@@ -29,8 +29,9 @@ $newSeq = $seq->select(function($item) {
                           return !empty($item);
                       })    // filter out all values that are empty
               ->skip(1)    // skip the first element ('5979')
-              ->take(2);    // take the next 2 elements from current position
-                            // ('23979' and '1781')
+              ->take(3);    // take the next 2 elements from current position
+                            // ('23979', '23979' and '1781')
+              ->distinct()    // remove duplicates
               ->order();    // sort
                                     
 foreach ($newSeq as $item) {
