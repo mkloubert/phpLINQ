@@ -88,14 +88,12 @@ interface IEnumerable extends \Iterator, \Countable {
     function contains($item, $comparer = null);
     
     /**
-     * Returns the elements of the sequence or a single element with a
-     * default value if the sequence is empty.
-     * 
-     * @param mixed $defValue The default value.
+     * Returns the elements of the sequence or a sequence with default values if
+     * that sequence is empty.
      * 
      * @return IEnumerable The new sequence.
      */
-    function defaultIfEmpty($defValue = null);
+    function defaultIfEmpty();
     
     /**
      * Returns a distincted sequences.

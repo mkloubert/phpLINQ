@@ -227,10 +227,10 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::defaultIfEmpty()
      */
     public final function defaultIfEmpty($defValue = null) {
-    	return static::toEnumerable($this->defaultIfEmptyInner($defValue));
+    	return static::toEnumerable($this->defaultIfEmptyInner(func_get_args()));
     }
     
-    private function defaultIfEmptyInner($defValue) {
+    private function defaultIfEmptyInner($defValues) {
     	if ($this->valid()) {
     		do {
     			yield $this->current();
@@ -238,7 +238,9 @@ abstract class EnumerableBase implements IEnumerable {
     		} while ($this->valid());
     	} 
     	else {
-    		yield $defValue;
+    		foreach ($defValues as $i) {
+    			yield $i;
+    		}
     	}
     }
     

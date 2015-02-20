@@ -17,6 +17,23 @@ class OtherTest extends TestCaseBase {
         
         $this->assertEquals(10, count($seq3));
     }
+
+    /**
+     * \System\Collections\Generic\IEnumerable::defaultIfEmpty()
+     */
+    public function testDefaultIfEmpty() {
+        $seq1 = Enumerable::fromValues(5979, 23979);
+        $seq2 = Enumerable::createEmpty();
+    
+        $a1 = $seq1->defaultIfEmpty('TM', 'MK')->toArray();
+        $a2 = $seq2->defaultIfEmpty('TM', 'MK')->toArray();
+    
+        $diff1 = array_diff($a1, array(5979, 23979));
+        $this->assertTrue(empty($diff1));
+    
+        $diff2 = array_diff($seq2->toArray(), array('TM', 'MK'));
+        $this->assertTrue(empty($diff2));
+    }
     
     /**
      * \System\Collections\Generic\IEnumerable::distinct()
@@ -34,23 +51,6 @@ class OtherTest extends TestCaseBase {
         $this->assertTrue(empty($diff1));
         
         $diff2 = array_diff($a2, array(1, '1'));
-        $this->assertTrue(empty($diff2));
-    }
-    
-    /**
-     * \System\Collections\Generic\IEnumerable::defaultIfEmpty()
-     */
-    public function testDefaultIfEmpty() {
-        $seq1 = Enumerable::fromValues(5979, 23979);
-        $seq2 = Enumerable::createEmpty();
-        
-        $a1 = $seq1->defaultIfEmpty('TM')->toArray();
-        $a2 = $seq2->defaultIfEmpty('TM')->toArray();
-        
-        $diff1 = array_diff($a1, array(5979, 23979));
-        $this->assertTrue(empty($diff1));
-        
-        $diff2 = array_diff($seq2->toArray(), array('TM'));
         $this->assertTrue(empty($diff2));
     }
     
