@@ -525,9 +525,26 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::max()
      */
     public final function max($defValue = null) {
-        return $this->leftOrRight(function($left, $right) {
-            return max($left, $right);
-        }, $defValue);
+        $result = $defValue;
+        
+        $isFirst = true;
+        while ($this->valid()) {
+        	$i = $this->current();
+        	
+        	if (!$isFirst) {
+        		if ($i > $result) {
+        			$result = $i;
+        		}
+        	}
+        	else {
+        		$isFirst = false;
+        		$result = $i;
+        	}
+        	
+        	$this->next();
+        }
+        
+        return $result;
     }
     
     /**
@@ -535,9 +552,26 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::min()
      */
     public final function min($defValue = null) {
-        return $this->leftOrRight(function($left, $right) {
-            return min($left, $right);
-        }, $defValue);
+        $result = $defValue;
+        
+        $isFirst = true;
+        while ($this->valid()) {
+        	$i = $this->current();
+        	
+        	if (!$isFirst) {
+        		if ($i < $result) {
+        			$result = $i;
+        		}
+        	}
+        	else {
+        		$isFirst = false;
+        		$result = $i;
+        	}
+        	
+        	$this->next();
+        }
+        
+        return $result;
     }
     
     /**
@@ -551,12 +585,12 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $i = $this->current();
         
-            if ($isFirst) {
-                $result = $i;
-                $isFirst = false;
+            if (!$isFirst) {
+            	$result *= $i;
             }
             else {
-                $result *= $i;
+            	$isFirst = false;
+            	$result = $i;
             }
         
             $this->next();
@@ -682,7 +716,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::reverse()
      */
     public function reverse() {
-    	$i = 2147483647;
+    	$i = PHP_INT_MAX;
     	return $this->orderByDescending(function($x) use (&$i) {
     		                                return $i--;
     	                                });
