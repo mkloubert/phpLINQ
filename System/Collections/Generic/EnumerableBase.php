@@ -570,9 +570,9 @@ abstract class EnumerableBase implements IEnumerable {
     	while ($this->valid()) {
     		$i = $this->current();
     		
-    		$newItem            = new \stdClass();
-    		$newItem->sortValue = $sortSelector($i);
-    		$newItem->value     = $i;
+    		$newItem   = array();
+    		$newItem[] = $sortSelector($i);
+    		$newItem[] = $i;
     		
     		$items[] = $newItem;
     		
@@ -580,11 +580,11 @@ abstract class EnumerableBase implements IEnumerable {
     	}
     	
     	usort($items, function($x, $y) use ($algo) {
-    		              return $algo($x->sortValue, $y->sortValue);
+    		              return $algo($x[0], $y[1]);
     	              });
     	
-    	foreach ($items as $obj) {
-    		yield $obj->value;
+    	foreach ($items as $i) {
+    		yield $i[1];
     	}
     }
     
