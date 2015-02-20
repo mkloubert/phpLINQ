@@ -8,6 +8,19 @@ use \System\Linq\Enumerable as Enumerable;
 
 class ItemOrDefaultTest extends TestCaseBase {
     /**
+     * \System\Collections\Generic\IEnumerable::elementAtOrDefault()
+     */
+    public function testElementAtOrDefault() {
+        $seq1 = Enumerable::fromValues(23979, 5979);
+        $seq2 = Enumerable::fromValues();
+        $seq3 = Enumerable::fromValues('TM', 'MK');
+         
+        $this->assertEquals(5979, $seq1->elementAtOrDefault(1, 'TM'));
+        $this->assertEquals('TM', $seq2->elementAtOrDefault(0, 'TM'));
+        $this->assertEquals('xxx', $seq3->elementAtOrDefault(2, 'xxx'));
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::firstOrDefault()
      */
     public function testFirstOrDefault() {

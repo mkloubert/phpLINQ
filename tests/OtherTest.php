@@ -38,6 +38,23 @@ class OtherTest extends TestCaseBase {
     }
     
     /**
+     * \System\Collections\Generic\IEnumerable::defaultIfEmpty()
+     */
+    public function testDefaultIfEmpty() {
+        $seq1 = Enumerable::fromValues(5979, 23979);
+        $seq2 = Enumerable::createEmpty();
+        
+        $a1 = $seq1->defaultIfEmpty('TM')->toArray();
+        $a2 = $seq2->defaultIfEmpty('TM')->toArray();
+        
+        $diff1 = array_diff($a1, array(5979, 23979));
+        $this->assertTrue(empty($diff1));
+        
+        $diff2 = array_diff($seq2->toArray(), array('TM'));
+        $this->assertTrue(empty($diff2));
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::where()
      */
     public function testWhere() {

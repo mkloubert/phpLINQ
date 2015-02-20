@@ -88,6 +88,16 @@ interface IEnumerable extends \Iterator, \Countable {
     function contains($item, $comparer = null);
     
     /**
+     * Returns the elements of the sequence or a single element with a
+     * default value if the sequence is empty.
+     * 
+     * @param mixed $defValue The default value.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function defaultIfEmpty($defValue = null);
+    
+    /**
      * Returns a distincted sequences.
      * 
      * @param callable $comparer The optional comparer function.
@@ -95,6 +105,17 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function distinct($comparer = null);
+    
+    /**
+     * Returns an element at a specific position or a default
+     * value if not found.
+     * 
+     * @param Integer $index The zero-based index.
+     * @param mixed $defValue The value to return if element was not found.
+     * 
+     * @return mixed The value.
+     */
+    function elementAtOrDefault($index, $defValue = null);
     
     /**
      * Returns the first item of that sequence.
@@ -168,6 +189,11 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The filtered sequence.
      */
     function ofType($type);
+    
+    /**
+     * Alias of @see \System\Collections\Generic\IEnumerable::multiply()
+     */
+    function product($defValue = null);
     
     /**
      * Same as \Iterator::rewind() method.

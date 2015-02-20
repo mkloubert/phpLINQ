@@ -224,6 +224,26 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::defaultIfEmpty()
+     */
+    public final function defaultIfEmpty($defValue = null) {
+    	return static::toEnumerable($this->defaultIfEmptyInner($defValue));
+    }
+    
+    private function defaultIfEmptyInner($defValue) {
+    	if ($this->valid()) {
+    		do {
+    			yield $this->current();
+    			$this->next();
+    		} while ($this->valid());
+    	} 
+    	else {
+    		yield $defValue;
+    	}
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::distinct()
      */
     public function distinct($comparer = null) {
@@ -263,6 +283,26 @@ abstract class EnumerableBase implements IEnumerable {
         
             $this->next();
         }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::elementAtOrDefault()
+     */
+    public final function elementAtOrDefault($index, $defValue = null) {
+    	$result = $defValue;
+    	
+    	while (($index >= 0) && $this->valid()) {
+    		$i = $this->current();
+    		$this->next();
+    	
+    		if (0 == $index--) {
+    			$result = $i;
+    			break;
+    		}
+    	}
+    	
+    	return $result;
     }
     
     /**
@@ -465,6 +505,14 @@ abstract class EnumerableBase implements IEnumerable {
             
             return eval(sprintf('return %s;', $code));
         });
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::product()
+     */
+    public final function product($defValue = null) {
+    	return $this->multiply($defValue);
     }
     
     /**
