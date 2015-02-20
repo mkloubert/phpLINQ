@@ -102,7 +102,7 @@ $seq = new Enumerable(createIterator());
 ## TODO
 
 - [ ] groupJoin() method
-- [x ] join() method
+- [x] join() method
 - [x] reverse() method
 - [ ] moveNext() method
 - [x] sequenceEqual() method
