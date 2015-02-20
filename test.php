@@ -14,34 +14,52 @@ function __autoload($clsName) {
 
 use \System\Linq\Enumerable as Enumerable;
 
-class TestClass {
-    public function __toString() {
-        return "Yep";
+class Person {
+    public function __construct($name) {
+        $this->Name = $name;
     }
+
+    public $Name;
 }
 
-$seq1 = Enumerable::range(0, 100);
-
-$seq2 = $seq1->groupBy(function($item) {
-                           switch($item % 3) {
-                               case 1:
-                                   return 'ONE';
-                                   
-                               case 2:
-                                      return 'twO';
-                           }
-                           
-                           return 'Zero';
-                        });
-
-foreach ($seq2 as $grp) {
-    echo htmlentities($grp->key()); ?><br /><?php
-
-    foreach ($grp as $i) {
-        ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php
-        echo htmlentities($i); ?><br /><?php
+class Pet {
+    public function __construct($name, Person $owner) {
+        $this->Name = $name;
+        $this->Owner = $owner;
     }
+
+    public $Name;
+    public $Owner;
 }
+
+$persons = array(new Person("Tanja"),
+                 new Person("Marcel"),
+                 new Person("Yvonne"),
+                 new Person("Josefine"));
+
+$pets = array(new Pet("Gina"     , $persons[1]),
+              new Pet("Schnuffi" , $persons[1]),
+              new Pet("Schnuffel", $persons[2]),
+              new Pet("WauWau"   , $persons[0]),
+              new Pet("Lulu"     , $persons[3]),
+              new Pet("Asta"     , $persons[1]));
+
+$personSeq = Enumerable::fromArray($persons);
+$petSeq    = Enumerable::fromArray($pets);
+
+$joined = $personSeq->join($petSeq,
+                           function($person) { return $person->Name; },
+                           function($pet) { return $pet->Owner->Name; },
+                           function($person, $pet) {
+                               return sprintf('Owner: %s; Pet: %s',
+                                              $person->Name,
+                                              $pet->Name);
+                           });
+
+foreach ($joined as $item) {
+    echo htmlentities($item) . '<br />';
+}
+
 
 ?>
     </pre>

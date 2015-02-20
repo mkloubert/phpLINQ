@@ -426,6 +426,60 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::groupJoin()
+     */
+    public final function groupJoin($inner,
+    		                        $outerKeySelector, $innerKeySelector,
+    		                        $resultSelector,
+    		                        $keyComparer = null) {
+    	$this->checkForFunctionOrThrow($outerKeySelector, 1, false);
+    	$this->checkForFunctionOrThrow($innerKeySelector, 1, false);
+    	$this->checkForFunctionOrThrow($resultSelector, 2, false);
+    	$this->checkForFunctionOrThrow($keyComparer, 2, true);
+    	 
+    	$keyComparer = static::getComparerSafe($keyComparer);
+    	 
+    	return static::toEnumerable($this->groupJoinIterator(static::toEnumerable($inner),
+                                                             $outerKeySelector, $innerKeySelector,
+    			                                             $resultSelector,
+    			                                             $keyComparer));
+    }
+    
+    private function groupJoinIterator(IEnumerable $inner,
+    		                           $outerKeySelector, $innerKeySelector,
+    		                           $resultSelector,
+    		                           $keyComparer) {
+    	$keySelector = function($seqKey, $item) {
+    		return $item->key();
+    	};
+    	 
+    	$grpOuter = $this->groupBy($outerKeySelector)
+    	                 ->toDictionary($keySelector, $keyComparer);
+    	foreach ($grpOuter->keys() as $k) {
+    		$grpOuter[$k] = $grpOuter[$k]->getIterator();
+    	}
+    	
+    	$grpInner = $inner->groupBy($innerKeySelector)
+    	                  ->toDictionary($keySelector, $keyComparer);
+    	foreach ($grpInner->keys() as $k) {
+    		$grpInner[$k] = $grpInner[$k]->getIterator()
+    		                             ->toArray();
+    	}
+    	 
+    	foreach ($grpOuter as $entry) {
+    		$key = $entry->key();
+    	
+    		if (isset($grpInner[$key])) {
+    			foreach ($entry->value() as $o) {
+    				yield $resultSelector($o,
+    						              static::toEnumerable($grpInner[$key]));
+    			}
+    		}
+    	}
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::intersect()
      */
     public function intersect($second, $comparer = null) {
@@ -502,18 +556,12 @@ abstract class EnumerableBase implements IEnumerable {
     		                             ->toArray();
     	}
     	
-    	$grpOuter->reset();
-    	$grpInner->reset();
-    	
     	foreach ($grpOuter as $entry) {
     		$key = $entry->key();
     		
     		if (isset($grpInner[$key])) {
-    			$itemsOuter = $grpOuter[$key];
-    			$itemsInner = $grpInner[$key];
-    			
-    			foreach ($itemsOuter as $o) {
-    				foreach ($itemsInner as $i) {
+    			foreach ($entry->value() as $o) {
+    				foreach ($grpInner[$key] as $i) {
     					yield $resultSelector($o, $i);
     				}
     			}

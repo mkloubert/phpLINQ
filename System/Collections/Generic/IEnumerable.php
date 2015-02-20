@@ -150,6 +150,27 @@ interface IEnumerable extends \Iterator, \Countable {
     function groupBy($keySelector, $keyComparer = null);
     
     /**
+     * Correlates the elements of that sequence and another
+     * based on matching keys and groups them.
+     *
+     * @param Traversable|array $inner The other sequence.
+     * @param callable $outerKeySelector The key selector for the items of
+     *                                   that sequence.
+     * @param callable $innerKeySelector The key selector for the items of
+     *                                   the other sequence.
+     * @param callable $resultSelector The function that provides the result
+     *                                 value for two matching elements.
+     * @param callable $keyComparer The optional custom key function for
+     *                              comparing the keys of the two sequences.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function groupJoin($inner,
+    		           $outerKeySelector, $innerKeySelector,
+    		           $resultSelector,
+    		           $keyComparer = null);
+    
+    /**
      * Produces the set intersection of that sequence and another.
      *
      * @param Traversable|array $second The other items.
