@@ -679,6 +679,17 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::reverse()
+     */
+    public function reverse() {
+    	$i = 2147483647;
+    	return $this->orderByDescending(function($x) use (&$i) {
+    		                                return $i--;
+    	                                });
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \Iterator::rewind()
      */
     public abstract function rewind();
@@ -720,6 +731,38 @@ abstract class EnumerableBase implements IEnumerable {
         
             $this->next();
         }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::sequenceEqual()
+     */
+    public final function sequenceEqual($second, $comparer = null) {
+    	$comparer = static::getComparerSafe($comparer);
+    	
+    	$other = static::toEnumerable($second);
+    	
+    	while ($this->valid()) {
+    		$x = $this->current();
+    		$this->next();
+    		
+    		if (!$other->valid()) {
+    			return false;
+    		}
+    		
+    		$y = $other->current();
+    		$other->next();
+    		
+    		if (!$comparer($x, $y)) {
+    			return false;
+    		}
+    	}
+    	
+    	if ($other->valid()) {
+    		return false;
+    	}
+    	
+    	return true;
     }
     
     /**

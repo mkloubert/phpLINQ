@@ -84,6 +84,38 @@ class OtherTest extends TestCaseBase {
     }
     
     /**
+     * \System\Collections\Generic\IEnumerable::sequenceEqual()
+     */
+    public function testSequenceEqual() {
+    	$seq1_L = Enumerable::fromValues(1, 2, 3);
+    	$seq1_R = Enumerable::fromValues(1, 2, 3);
+    	
+    	$seq2_L = Enumerable::fromValues(1, 2, 3);
+    	$seq2_R = Enumerable::fromValues(1, 2);
+    	
+    	$seq3_L = Enumerable::fromValues(1, 2);
+    	$seq3_R = Enumerable::fromValues(1, 2, 3);
+    	
+    	$seq4_L = Enumerable::fromValues();
+    	$seq4_R = Enumerable::fromValues(1, 2, 3);
+    	
+    	$seq5_L = Enumerable::fromValues();
+    	$seq5_R = Enumerable::fromValues(1, 2, 3);
+    	
+    	$seq6_L = Enumerable::fromValues(1, 2, 3);
+    	$seq6_R = Enumerable::fromValues(10, 20, 30);
+    	
+    	$this->assertTrue($seq1_L->sequenceEqual($seq1_R));
+    	$this->assertFalse($seq2_L->sequenceEqual($seq2_R));
+    	$this->assertFalse($seq3_L->sequenceEqual($seq3_R));
+    	$this->assertFalse($seq4_L->sequenceEqual($seq4_R));
+    	$this->assertFalse($seq5_L->sequenceEqual($seq5_R));
+    	$this->assertTrue($seq6_L->sequenceEqual($seq6_R, function($x, $y) {
+    		return $x == $y / 10;
+    	}));
+    }
+    
+    /**
      * \System\Collections\Generic\IEnumerable::union()
      */
     public function testUnion() {

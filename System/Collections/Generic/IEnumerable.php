@@ -259,6 +259,13 @@ interface IEnumerable extends \Iterator, \Countable {
     function reset();
     
     /**
+     * Reverses the order of the sequence.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function reverse();
+    
+    /**
      * Selects each item of that sequence to a new type.
      * 
      * @param callable $selector The selector.
@@ -276,6 +283,17 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new / flatten sequence.
      */
     function selectMany($selector);
+    
+    /**
+     * Checks if the items of that sequence or all equal with the items of
+     * another one.
+     * 
+     * @param Traversable|array $second The other sequence.
+     * @param callable $comparer The optional custom item comparer to use.
+     * 
+     * @return boolean Are equal or not.
+     */
+    function sequenceEqual($second, $comparer = null);
     
     /**
      * Returns the one and only item of that sequence.
