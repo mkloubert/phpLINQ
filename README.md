@@ -61,17 +61,5 @@ $seq = new Enumerable(createIterator());
 
 ## TODO
 
-- [x] cast() method
-- [x] defaultIfEmpty() method
-- [x] distinct() method
-- [x] elementAtOrDefault() method
-- [ ] except() method
-- [x] groupBy() method
-- [ ] intersect() method
 - [ ] moveNext() method
-- [x] ofType() method
-- [x] orderBy() method
-- [x] orderByDescending() method
-- [x] skipWhile() method
-- [x] singleOrDefault() method
-- [x] takeWhile() method
+
