@@ -29,7 +29,7 @@ $newSeq = $seq->select(function($item) {
                           return !empty($item);
                       })    // filter out all values that are empty
               ->skip(1)    // skip the first element ('5979')
-              ->take(3);    // take the next 3 elements from current position
+              ->take(3)    // take the next 3 elements from current position
                             // ('23979', '23979' and '1781')
               ->distinct()    // remove duplicates
               ->order();    // sort
