@@ -98,7 +98,7 @@ $seq = new Enumerable(createIterator());
 
 ## TODO
 
-- [ ] groupBy() method
+- [ ] groupJoin() method
 - [ ] join() method
 - [ ] reverse() method
 - [ ] moveNext() method
