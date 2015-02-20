@@ -59,19 +59,42 @@ $seq = new Enumerable(createIterator());
 // ...
 ```
 
+## Implemented
+
+* [all()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.all()-method)
+* [any()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.any()-method)
+* [average()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.average()-method)
+* [cast()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.cast()-method)
+* [concat()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.concat()-method)
+* [contains()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.contains()-method)
+* [count()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.count()-method)
+* [defaultIfEmpty()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.defaultIfEmpty()-method)
+* [distinct()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.distinct()-method)
+* [elementAtOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.elementAtOrDefault()-method)
+* [except()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.except()-method)
+* [firstOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.firstOrDefault()-method)
+* [groupBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.groupBy()-method)
+* [intersect()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.intersect()-method)
+* [lastOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.lastOrDefault()-method)
+* [max()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.max()-method)
+* [min()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.min()-method)
+* [ofType()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.ofType()-method)
+* [orderBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderBy()-method)
+* [orderByDescending()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderByDescending()-method)
+* [select()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.select()-method)
+* [selectMany()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.selectMany()-method)
+* [singleOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.singleOrDefault()-method)
+* [skip()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skip()-method)
+* [skipWhile()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skipWhile()-method)
+* [sum()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.sum()-method)
+* [take()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.take()-method)
+* [takeWhile()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.takeWhile()-method)
+* [toArray()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.toArray()-method)
+* [toDictionary()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.toDictionary()-method)
+* [where()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.where()-method)
+
+
 ## TODO
 
-- [x] cast() method
-- [x] defaultIfEmpty() method
-- [x] distinct() method
-- [x] elementAtOrDefault() method
-- [ ] except() method
-- [x] groupBy() method
-- [ ] intersect() method
 - [ ] moveNext() method
-- [x] ofType() method
-- [x] orderBy() method
-- [x] orderByDescending() method
-- [x] skipWhile() method
-- [x] singleOrDefault() method
-- [x] takeWhile() method
+
