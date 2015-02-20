@@ -160,6 +160,25 @@ interface IEnumerable extends \Iterator, \Countable {
     function intersect($second, $comparer = null);
     
     /**
+     * Correlates the elements of that sequence and another
+     * based on matching keys.
+     * 
+     * @param Traversable|array $inner The other sequence.
+     * @param callable $outerKeySelector The key selector for the items of
+     *                                   that sequence.
+     * @param callable $innerKeySelector The key selector for the items of
+     *                                   the other sequence.
+     * @param callable $resultSelector The function that provides the result
+     *                                 value for two matching elements.
+     * @param callable $keyComparer The optional custom key function for
+     *                              comparing the keys of the two sequences.
+     */
+    function join($inner,
+    		      $outerKeySelector, $innerKeySelector,
+    		      $resultSelector,
+    		      $keyComparer = null);
+    
+    /**
      * Returns the last item of that sequence.
      *
      * @param callable|mixed $predicate The optional predicate to use.
