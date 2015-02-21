@@ -1120,7 +1120,7 @@ abstract class EnumerableBase implements IEnumerable {
         	
         	$key = $keySelector($i++, $ci);
         	if (is_null($key)) {
-        		$result[] = $i;
+        		$result[] = $ci;
         	}
         	else {
         		$result[$key] = $ci;
