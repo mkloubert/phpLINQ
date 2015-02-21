@@ -113,8 +113,8 @@ final class Lookup extends EnumerableBase implements ILookup {
 	public function offsetGet($key) {
 		$result = null;
 		if (isset($this->_dict[$key])) {
-			$seq = $this->_dict[$key]
-			            ->getIterator();
+			$result = $this->_dict[$key]
+			               ->getIterator();
 		}
 				
 		return $result;
