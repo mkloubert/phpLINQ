@@ -160,8 +160,26 @@ $pageTitle = 'Home';
   
   <div class="panel-body">
     <div class="list-group">
+      <a href="examples_select.php" class="list-group-item">select()</a>
+      <a href="examples_selectMany.php" class="list-group-item">selectMany()</a>
+      <a href="examples_sequenceEqual.php" class="list-group-item">sequenceEqual()</a>
       <a href="examples_singleOrDefault.php" class="list-group-item">singleOrDefault()</a>
+      <a href="examples_skip.php" class="list-group-item">skip()</a>
+      <a href="examples_skipWhile.php" class="list-group-item">skipWhile()</a>
       <a href="examples_sum.php" class="list-group-item">sum()</a>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">T</div>
+  
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="examples_take.php" class="list-group-item">take()</a>
+      <a href="examples_takeWhile.php" class="list-group-item">takeWhile()</a>
+      <a href="examples_toArray.php" class="list-group-item">toArray()</a>
+      <a href="examples_toDictionary.php" class="list-group-item">toDictionary()</a>
     </div>
   </div>
 </div>

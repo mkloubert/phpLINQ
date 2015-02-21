@@ -421,9 +421,11 @@ interface IEnumerable extends \Iterator, \Countable {
     /**
      * Returns the items of that sequence as new array.
      * 
+     * @param callable $keySelector The optional key selector to use.
+     * 
      * @return array That sequence as array.
      */
-    function toArray();
+    function toArray($keySelector = null);
     
     /**
      * Converts that sequence to an array that is similar to a hashtable

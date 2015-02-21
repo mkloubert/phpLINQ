@@ -368,6 +368,16 @@ abstract class EnumerableBase implements IEnumerable {
         return $comparer;
     }
     
+    private static function getKeySelectorSafe($keySelector) {
+    	if (is_null($keySelector)) {
+    		$keySelector = function($orgKey, $item) {
+    			return $orgKey;
+    		};
+    	}
+    
+    	return $keySelector;
+    }
+    
     private static function getSortAlgoSafe($algo) {
         if (is_null($algo)) {
             $algo = function($x, $y) {
@@ -1095,11 +1105,27 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::toArray()
      */
-    public final function toArray() {
+    public final function toArray($keySelector = null) {
+    	$this->checkForFunctionOrThrow($keySelector, 2);
+    	if (is_null($keySelector)) {
+    		$keySelector = function($index, $item) {
+    			return null;
+    		};
+    	}
+    	
+    	$i = 0;
         $result = array();
         while ($this->valid()) {
-            $result[] = $this->current();
-            
+        	$ci = $this->current();
+        	
+        	$key = $keySelector($i++, $ci);
+        	if (is_null($key)) {
+        		$result[] = $i;
+        	}
+        	else {
+        		$result[$key] = $ci;
+        	}
+
             $this->next();
         }
         
@@ -1114,6 +1140,8 @@ abstract class EnumerableBase implements IEnumerable {
         $this->checkForFunctionOrThrow($keySelector, 2);
         $this->checkForFunctionOrThrow($keyComparer, 2);
     
+        $keySelector = static::getKeySelectorSafe($keySelector);
+        
         $result = new Dictionary(null, $keyComparer);
         while ($this->valid()) {
             $i = $this->current();
@@ -1152,11 +1180,7 @@ abstract class EnumerableBase implements IEnumerable {
     		$elements = $this->select($elementSelector);
     	}
     	
-    	if (is_null($keySelector)) {
-    		$keySelector = function($orgKey, $i) {
-    			return $orgKey;
-    		};
-    	}
+    	$keySelector = static::getKeySelectorSafe($keySelector);
     	
     	$grps = $elements->groupBy($keySelector, $keyComparer);
     	
