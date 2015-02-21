@@ -21,7 +21,8 @@
 
 namespace System\Collections\Generic;
 
-use \System\Collections\IDictionary as IDictionary;
+use \System\Collections\IDictionary;
+use \System\Linq\ILookup;
 
 
 /**
@@ -434,6 +435,18 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IDictionary The hashtable / dictionary.
      */
     function toDictionary($keySelector = null, $keyComparer = null);
+    
+    /**
+     * Converts that sequence to a lookup object.
+     * 
+     * @param callable $keySelector The custom key selector to use.
+     * @param callable $keyComparer The custom key comparer to use.
+     * @param callable $elementSelector The custom element selector to use. 
+     * 
+     * @return ILookup The sequence as lookup.
+     */
+    function toLookup($keySelector = null, $keyComparer = null,
+    		          $elementSelector = null);
     
     /**
      * Produces the set union of that sequence and another.

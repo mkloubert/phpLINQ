@@ -21,8 +21,9 @@
 
 namespace System\Collections\Generic;
 
-use \System\Collections\Dictionary as Dictionary;
-use \System\Linq\Grouping as Grouping;
+use \System\Collections\Dictionary;
+use \System\Linq\Grouping;
+use \System\Linq\Lookup;
 
 
 /**
@@ -400,7 +401,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::groupBy()
      */
     public final function groupBy($keySelector, $keyComparer = null) {
-        $this->checkForFunctionOrThrow($keySelector, 1, false);
+        $this->checkForFunctionOrThrow($keySelector, 2, false);
         $this->checkForFunctionOrThrow($keyComparer, 2);
          
         return static::toEnumerable($this->groupByInner($keySelector,
@@ -412,7 +413,7 @@ abstract class EnumerableBase implements IEnumerable {
          
         while ($this->valid()) {
             $i = $this->current();
-            $k = $keySelector($i);
+            $k = $keySelector($this->key(), $i);
     
             if (!isset($dict[$k])) {
                 $dict[$k] = new Dictionary();
@@ -442,8 +443,7 @@ abstract class EnumerableBase implements IEnumerable {
     		                        $outerKeySelector, $innerKeySelector,
     		                        $resultSelector,
     		                        $keyComparer = null) {
-    	$this->checkForFunctionOrThrow($outerKeySelector, 1, false);
-    	$this->checkForFunctionOrThrow($innerKeySelector, 1, false);
+    	
     	$this->checkForFunctionOrThrow($resultSelector, 2, false);
     	$this->checkForFunctionOrThrow($keyComparer, 2, true);
     	 
@@ -533,8 +533,7 @@ abstract class EnumerableBase implements IEnumerable {
     		                   $outerKeySelector, $innerKeySelector,
     		                   $resultSelector,
     		                   $keyComparer = null) {
-    	$this->checkForFunctionOrThrow($outerKeySelector, 1, false);
-    	$this->checkForFunctionOrThrow($innerKeySelector, 1, false);
+    	
     	$this->checkForFunctionOrThrow($resultSelector, 2, false);
     	$this->checkForFunctionOrThrow($keyComparer, 2, true);
     	
@@ -1137,6 +1136,31 @@ abstract class EnumerableBase implements IEnumerable {
      */
     protected static function toEnumerable($input) {
         return false;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::toLookup()
+     */
+    public final function toLookup($keySelector = null, $keyComparer = null,
+    		                       $elementSelector = null) {
+    	
+    	$this->checkForFunctionOrThrow($elementSelector, 1);
+
+    	$elements = $this;
+    	if (!is_null($elementSelector)) {
+    		$elements = $this->select($elementSelector);
+    	}
+    	
+    	if (is_null($keySelector)) {
+    		$keySelector = function($orgKey, $i) {
+    			return $orgKey;
+    		};
+    	}
+    	
+    	$grps = $elements->groupBy($keySelector, $keyComparer);
+    	
+    	return new Lookup($grps);
     }
     
     private static function toPredeciateSafe($predicate, $defValue = true) {
