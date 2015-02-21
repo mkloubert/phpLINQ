@@ -27,6 +27,11 @@ use \System\Collections\Generic\IEnumerable;
 use \System\Collections\Dictionary;
 
 
+/**
+ * A lookup object.
+ * 
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 final class Lookup extends EnumerableBase implements ILookup {
 	/**
 	 * @var IDictionary
@@ -47,7 +52,7 @@ final class Lookup extends EnumerableBase implements ILookup {
 			$newDict = new Dictionary();
 			foreach ($grps as $g) {
 				$newDict->add($g->key(),
-						$g);
+						      $g);
 			}
 			
 			$this->_dict = $newDict;
