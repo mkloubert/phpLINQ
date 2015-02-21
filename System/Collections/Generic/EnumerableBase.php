@@ -776,7 +776,7 @@ abstract class EnumerableBase implements IEnumerable {
         }
         
         usort($items, function($x, $y) use ($algo) {
-                          return $algo($x[0], $y[1]);
+                          return $algo($x[0], $y[0]);
                       });
         
         foreach ($items as $i) {
@@ -816,9 +816,9 @@ abstract class EnumerableBase implements IEnumerable {
      */
     public final function reverse() {
     	$i = PHP_INT_MAX;
-    	return $this->orderByDescending(function($x) use (&$i) {
-    		                                return $i--;
-    	                                });
+    	return $this->orderBy(function($x) use (&$i) {
+    		                      return $i--;
+    	                      });
     }
     
     /**
