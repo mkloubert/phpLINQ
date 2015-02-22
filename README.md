@@ -4,7 +4,7 @@ A [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) concept for [P
 
 Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Framework) context.
 
-Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki) in the wiki or the [API](http://phplinq.marcel-kloubert.eu/) documentation.
+Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki) in the wiki or the [API](http://phplinq.marcel-kloubert.eu/api/) documentation.
 
 ## Requirements
 
