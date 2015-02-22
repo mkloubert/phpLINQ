@@ -57,7 +57,7 @@ interface IList extends \ArrayAccess, IEnumerable {
     function clear();
     
     /**
-     * Checks if th list contains an item.
+     * Checks if the list contains an item.
      * 
      * @param mixed $item The item to check.
      * 
@@ -83,17 +83,17 @@ interface IList extends \ArrayAccess, IEnumerable {
     function insert($index, $item);
     
     /**
-     * Gets a value indicating whether the dictionary object has a fixed size.
+     * Gets a value indicating whether the list object has a fixed size.
      */
     function isFixedSize();
     
     /**
-     * Gets a value indicating whether the dictionary object is read-only.
+     * Gets a value indicating whether the list object is read-only.
      */
     function isReadOnly();
     
     /**
-     * Gets a value indicating whether the dictionary object is thread-safe.
+     * Gets a value indicating whether the list object is thread-safe.
      */
     function isSynchronized();
     
