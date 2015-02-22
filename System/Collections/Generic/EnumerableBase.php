@@ -21,6 +21,7 @@
 
 namespace System\Collections\Generic;
 
+use \System\Collections\Collection;
 use \System\Collections\Dictionary;
 use \System\Linq\Grouping;
 use \System\Linq\Lookup;
@@ -273,7 +274,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::elementAtOrDefault()
      */
-    public final function elementAtOrDefault($index, $defValue = null) {
+    public function elementAtOrDefault($index, $defValue = null) {
         $result = $defValue;
         
         while (($index >= 0) && $this->valid()) {
@@ -351,7 +352,14 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
     
-    private static function getComparerSafe($comparer) {
+    /**
+     * Returns a non-null item comparer function.
+     * 
+     * @param callable $comparer The input value.
+     * 
+     * @return callable The comparer.
+     */
+    protected static function getComparerSafe($comparer) {
         if (is_null($comparer)) {
             $comparer = function($x, $y) {
                 return $x == $y;
@@ -1240,6 +1248,14 @@ abstract class EnumerableBase implements IEnumerable {
      */
     protected static function toEnumerable($input) {
         return false;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::toList()
+     */
+    public final function toList() {
+        return new Collection($this);
     }
     
     /**

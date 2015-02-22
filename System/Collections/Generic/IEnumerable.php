@@ -22,6 +22,7 @@
 namespace System\Collections\Generic;
 
 use \System\Collections\IDictionary;
+use \System\Collections\IList;
 use \System\Linq\ILookup;
 
 
@@ -448,6 +449,13 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IDictionary The hashtable / dictionary.
      */
     function toDictionary($keySelector = null, $keyComparer = null);
+    
+    /**
+     * Converts the sequence to a new list.
+     * 
+     * @return IList The new list.
+     */
+    function toList();
     
     /**
      * Converts that sequence to a lookup object.

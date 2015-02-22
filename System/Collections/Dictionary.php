@@ -21,9 +21,9 @@
 
 namespace System\Collections;
 
-use \System\Collections\DictionaryEntry as DictionaryEntry;
-use \System\Collections\Generic\EnumerableBase as EnumerableBase;
-use \System\Linq\Enumerable as Enumerable;
+use \System\Collections\DictionaryEntry;
+use \System\Collections\Generic\EnumerableBase;
+use \System\Linq\Enumerable;
 
 
 /**
@@ -110,15 +110,7 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         $this->_items = array();
     }
     
-    /**
-     * Check if two keys are equal.
-     * 
-     * @param mixed $x The left key.
-     * @param mixed $y The right key.
-     * 
-     * @return boolean Are equal or not.
-     */
-    protected function compareKeys($x, $y) {
+    private function compareKeys($x, $y) {
         $kc = $this->_keyComparer;
         
         return $kc($x, $y);
@@ -156,6 +148,19 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         }
         
         return;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \System\Collections\Generic\EnumerableBase::elementAtOrDefault()
+     */
+    public final function elementAtOrDefault($index, $defValue = null) {
+        if (isset($this->_items[$index])) {
+            return $this->_items[$index]
+                        ->value;
+        }
+        
+        return $defValue;
     }
     
     /**
