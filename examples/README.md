@@ -1,3 +1,3 @@
 # phpLINQ examples
 
-Run the [https://github.com/mkloubert/phpLINQ/blob/master/examples/index.php](index.php) from your server to see live examples in action.
+Run the [index.php](https://github.com/mkloubert/phpLINQ/blob/master/examples/index.php) script from your browser to see live examples in action.
