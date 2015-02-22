@@ -295,6 +295,17 @@ interface IEnumerable extends \Iterator, \Countable {
     function product($defValue = null);
     
     /**
+     * Randomizes the order of the sequence.
+     * 
+     * @param number|callable $seed The seed value / function.
+     * @param callable $randomizer The function that provides the random
+     *                             sort / order value.
+     * 
+     * @return IEnumerable The new sequence.
+     */
+    function randomize($seed = null, $randomizer = null);
+    
+    /**
      * Same as \Iterator::rewind() method.
      * 
      * @return IEnumerable The current sequence.

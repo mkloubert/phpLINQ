@@ -150,6 +150,7 @@ $pageTitle = 'Home';
   
   <div class="panel-body">
     <div class="list-group">
+      <a href="examples_randomize.php" class="list-group-item">randomize()</a>
       <a href="examples_reverse.php" class="list-group-item">reverse()</a>
     </div>
   </div>

@@ -850,6 +850,48 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::randomize()
+     */
+    public final function randomize($seed = null, $randomizer = null) {
+        if (0 === static::getFuncParamCount($randomizer)) {
+            $oldRandomizer = $randomizer;
+            
+            $randomizer = function($index, $item) use ($oldRandomizer) {
+                 return $oldRandomizer();
+            };
+        }
+        
+        $this->checkForFunctionOrThrow($randomizer, 2);
+        
+        if (is_null($randomizer)) {
+            // default
+            
+            $randomizer = function($index, $item) {
+                return mt_rand();
+            };
+        }
+        
+        if (!is_null($seed)) {
+            // seed
+            
+            $seeder = $seed;
+            if (!is_callable($seeder)) {
+                $seeder = function() use ($seed) {
+                    mt_srand($seed);
+                };
+            }
+            
+            $seeder();
+        }
+        
+        $index = 0;
+        return $this->orderBy(function($item) use (&$index, $randomizer) {
+                                  return $randomizer($index++, $item);
+                              });
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::reverse()
      */
     public final function reverse() {
