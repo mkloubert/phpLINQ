@@ -185,6 +185,7 @@ $pageTitle = 'Home';
       <a href="examples_toDictionary.php" class="list-group-item">toDictionary()</a>
       <a href="examples_tolist.php" class="list-group-item">toList()</a>
       <a href="examples_toLookup.php" class="list-group-item">toLookup()</a>
+      <a href="examples_toSet.php" class="list-group-item">toSet()</a>
     </div>
   </div>
 </div>
