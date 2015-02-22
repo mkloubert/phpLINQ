@@ -26,9 +26,9 @@ $examples[1]->title = 'Custom selector';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $mySelector = function($item) {
-	return strtolower($item);
+    return strtolower($item);
 };
-		
+        
 $seq = Enumerable::fromValues("TM", "MK", "YS", "Js");
 
 echo $seq->stringConcat($mySelector);

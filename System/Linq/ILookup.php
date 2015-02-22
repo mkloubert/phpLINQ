@@ -31,12 +31,12 @@ use \System\Collections\Generic\IEnumerable as IEnumerable;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 interface ILookup extends \Countable, \ArrayAccess, IEnumerable {
-	/**
-	 * Checks if a key exists in that lookup or not.
-	 * 
-	 * @param mixed $key The key to check.
-	 * 
-	 * @return boolean Exists or not.
-	 */
-	function containsKey($key);
+    /**
+     * Checks if a key exists in that lookup or not.
+     * 
+     * @param mixed $key The key to check.
+     * 
+     * @return boolean Exists or not.
+     */
+    function containsKey($key);
 }

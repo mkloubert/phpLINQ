@@ -20,9 +20,9 @@ $seq = Enumerable::fromValues(3, 5, 1, 4, 2);
 $orderedSeq = $seq->orderByDescending(function($x) {
                                           return $x;
                                       });
-		
+        
 foreach ($orderedSeq as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 
@@ -32,14 +32,14 @@ $examples[1]->title = 'Custom algorithm';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $myAlgorithm = function($x, $y) {
-	if ($x > $y)
-	    return -1;
-	else if ($x < $y)
-	    return 1;
-	
-	return 0;
+    if ($x > $y)
+        return -1;
+    else if ($x < $y)
+        return 1;
+    
+    return 0;
 };
-		
+        
 $seq = Enumerable::fromValues(3, 5, 1, 4, 2);
 
 $orderedSeq = $seq->orderByDescending(function($x) {
@@ -47,7 +47,7 @@ $orderedSeq = $seq->orderByDescending(function($x) {
                                       }, $myAlgorithm);
 
 foreach ($orderedSeq as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 

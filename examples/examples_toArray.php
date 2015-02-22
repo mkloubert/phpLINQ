@@ -18,7 +18,7 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 $arr = $seq->toArray();
-		
+        
 echo var_export($arr);
 ';
 
@@ -28,15 +28,15 @@ $examples[1]->title = 'Custom key selector';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $myKeySelector = function($i) {
-	return "x::" . trim($i);
+    return "x::" . trim($i);
 };
-		
+        
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
-		
+        
 $arr = $seq->toArray(function($index, $item) {
-	                     return "x::" . trim($index);
+                         return "x::" . trim($index);
                      });
-		
+        
 echo var_export($arr);
 ';
 

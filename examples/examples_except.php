@@ -14,7 +14,7 @@ $pageTitle = 'except()';
 $examples[] = new Example();
 $examples[0]->title = 'Default behavior';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq           = Enumerable::fromValues(1, 2, 3, 4, 5);
 $excludeThese1 = Enumerable::fromValues(2, "5");
 $excludeThese2 = array(1, 3);
@@ -29,9 +29,9 @@ $showSequence = function($seq) {
 
 echo "Sequence:\n";
 $showSequence($seq->except($excludeThese1));
-		
+        
 echo "\n";
-		
+        
 echo "Array:\n";
 $showSequence($seq->reset()
                   ->except($excludeThese2));
@@ -41,16 +41,16 @@ $showSequence($seq->reset()
 $examples[] = new Example();
 $examples[1]->title = 'Custom comparer';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq           = Enumerable::fromValues(1, 2, 3, 4, 5);
 $excludeThese1 = Enumerable::fromValues(2, "5");
 $excludeThese2 = array("1", 3);
 
 
 $myComparer = function($x, $y) {
-	return $x === $y;
+    return $x === $y;
 };
-		
+        
 $showSequence = function($seq) {
     foreach ($seq as $item) {
         echo "{$item}\n"; 
@@ -61,9 +61,9 @@ $showSequence = function($seq) {
 echo "Sequence:\n";
 $showSequence($seq->except($excludeThese1,
                            $myComparer));
-		
+        
 echo "\n";
-		
+        
 echo "Array:\n";
 $showSequence($seq->reset()
                   ->except($excludeThese2,

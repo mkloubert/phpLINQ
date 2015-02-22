@@ -17,10 +17,10 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 foreach ($seq->skipWhile(function($x) {
-		                     return $x < 4;
-		                 }) as $item) {
-		
-	echo "{$item}\n";
+                             return $x < 4;
+                         }) as $item) {
+        
+    echo "{$item}\n";
 }
 ';
 

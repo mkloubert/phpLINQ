@@ -17,7 +17,7 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 foreach ($seq->skip(2) as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 

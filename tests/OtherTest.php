@@ -58,82 +58,82 @@ class OtherTest extends TestCaseBase {
      * \System\Collections\Generic\IEnumerable::except()
      */
     public function testExcept() {
-    	$seq = Enumerable::fromValues(1, 2, 3, 4, 5);
-    	$exc = Enumerable::fromValues(4, 1);
-    	
-    	$a = $seq->except($exc)
-    	         ->toArray();
-    	
-    	$this->assertEquals(2, $a[0]);
-    	$this->assertEquals(3, $a[1]);
-    	$this->assertEquals(5, $a[2]);
+        $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
+        $exc = Enumerable::fromValues(4, 1);
+        
+        $a = $seq->except($exc)
+                 ->toArray();
+        
+        $this->assertEquals(2, $a[0]);
+        $this->assertEquals(3, $a[1]);
+        $this->assertEquals(5, $a[2]);
     }
     
     /**
      * \System\Collections\Generic\IEnumerable::intersect()
      */
     public function testIntersect() {
-    	$seq1 = Enumerable::fromValues(1, 2, 3, 4, 5);
-    	$seq2 = Enumerable::fromValues(4, 1);
-    	 
-    	$a = $seq1->intersect($seq2)
-    	          ->toArray();
-    	 
-    	$this->assertEquals(1, $a[0]);
-    	$this->assertEquals(4, $a[1]);
+        $seq1 = Enumerable::fromValues(1, 2, 3, 4, 5);
+        $seq2 = Enumerable::fromValues(4, 1);
+         
+        $a = $seq1->intersect($seq2)
+                  ->toArray();
+         
+        $this->assertEquals(1, $a[0]);
+        $this->assertEquals(4, $a[1]);
     }
     
     /**
      * \System\Collections\Generic\IEnumerable::sequenceEqual()
      */
     public function testSequenceEqual() {
-    	$seq1_L = Enumerable::fromValues(1, 2, 3);
-    	$seq1_R = Enumerable::fromValues(1, 2, 3);
-    	
-    	$seq2_L = Enumerable::fromValues(1, 2, 3);
-    	$seq2_R = Enumerable::fromValues(1, 2);
-    	
-    	$seq3_L = Enumerable::fromValues(1, 2);
-    	$seq3_R = Enumerable::fromValues(1, 2, 3);
-    	
-    	$seq4_L = Enumerable::fromValues();
-    	$seq4_R = Enumerable::fromValues(1, 2, 3);
-    	
-    	$seq5_L = Enumerable::fromValues();
-    	$seq5_R = Enumerable::fromValues(1, 2, 3);
-    	
-    	$seq6_L = Enumerable::fromValues(1, 2, 3);
-    	$seq6_R = Enumerable::fromValues(10, 20, 30);
-    	
-    	$this->assertTrue($seq1_L->sequenceEqual($seq1_R));
-    	$this->assertFalse($seq2_L->sequenceEqual($seq2_R));
-    	$this->assertFalse($seq3_L->sequenceEqual($seq3_R));
-    	$this->assertFalse($seq4_L->sequenceEqual($seq4_R));
-    	$this->assertFalse($seq5_L->sequenceEqual($seq5_R));
-    	$this->assertTrue($seq6_L->sequenceEqual($seq6_R, function($x, $y) {
-    		return $x == $y / 10;
-    	}));
+        $seq1_L = Enumerable::fromValues(1, 2, 3);
+        $seq1_R = Enumerable::fromValues(1, 2, 3);
+        
+        $seq2_L = Enumerable::fromValues(1, 2, 3);
+        $seq2_R = Enumerable::fromValues(1, 2);
+        
+        $seq3_L = Enumerable::fromValues(1, 2);
+        $seq3_R = Enumerable::fromValues(1, 2, 3);
+        
+        $seq4_L = Enumerable::fromValues();
+        $seq4_R = Enumerable::fromValues(1, 2, 3);
+        
+        $seq5_L = Enumerable::fromValues();
+        $seq5_R = Enumerable::fromValues(1, 2, 3);
+        
+        $seq6_L = Enumerable::fromValues(1, 2, 3);
+        $seq6_R = Enumerable::fromValues(10, 20, 30);
+        
+        $this->assertTrue($seq1_L->sequenceEqual($seq1_R));
+        $this->assertFalse($seq2_L->sequenceEqual($seq2_R));
+        $this->assertFalse($seq3_L->sequenceEqual($seq3_R));
+        $this->assertFalse($seq4_L->sequenceEqual($seq4_R));
+        $this->assertFalse($seq5_L->sequenceEqual($seq5_R));
+        $this->assertTrue($seq6_L->sequenceEqual($seq6_R, function($x, $y) {
+            return $x == $y / 10;
+        }));
     }
     
     /**
      * \System\Collections\Generic\IEnumerable::union()
      */
     public function testUnion() {
-    	$seq1 = Enumerable::fromValues(5, 3, 9, 7, 5, 9, 3, 7);
-    	$seq2 = Enumerable::fromValues(8, 3, 6, 4, 4, 9, 1, 0);
+        $seq1 = Enumerable::fromValues(5, 3, 9, 7, 5, 9, 3, 7);
+        $seq2 = Enumerable::fromValues(8, 3, 6, 4, 4, 9, 1, 0);
     
-    	$a = $seq1->union($seq2)
-    	          ->toArray();
+        $a = $seq1->union($seq2)
+                  ->toArray();
     
-    	$this->assertEquals(5, $a[0]);
-    	$this->assertEquals(3, $a[1]);
-    	$this->assertEquals(9, $a[2]);
-    	$this->assertEquals(7, $a[3]);
-    	$this->assertEquals(8, $a[4]);
-    	$this->assertEquals(6, $a[5]);
-    	$this->assertEquals(4, $a[6]);
-    	$this->assertEquals(1, $a[7]);
-    	$this->assertEquals(0, $a[8]);
+        $this->assertEquals(5, $a[0]);
+        $this->assertEquals(3, $a[1]);
+        $this->assertEquals(9, $a[2]);
+        $this->assertEquals(7, $a[3]);
+        $this->assertEquals(8, $a[4]);
+        $this->assertEquals(6, $a[5]);
+        $this->assertEquals(4, $a[6]);
+        $this->assertEquals(1, $a[7]);
+        $this->assertEquals(0, $a[8]);
     }
     
     /**
@@ -152,18 +152,18 @@ class OtherTest extends TestCaseBase {
      * \System\Collections\Generic\IEnumerable::zip()
      */
     public function testZip() {
-    	$seq1 = Enumerable::fromValues(1, 2, 3, 4);
-    	$seq2 = Enumerable::fromValues('one', 'two', 'three');
+        $seq1 = Enumerable::fromValues(1, 2, 3, 4);
+        $seq2 = Enumerable::fromValues('one', 'two', 'three');
     
-    	$a = $seq1->zip($seq2, function($x, $y) {
-    		                       return sprintf('%s %s', $x, $y);
-    	                       })
-    	          ->toArray();
+        $a = $seq1->zip($seq2, function($x, $y) {
+                                   return sprintf('%s %s', $x, $y);
+                               })
+                  ->toArray();
     
-    	$this->assertEquals(3, count($a));
-    	
-    	$this->assertEquals('1 one'  , $a[0]);
-    	$this->assertEquals('2 two'  , $a[1]);
-    	$this->assertEquals('3 three', $a[2]);
+        $this->assertEquals(3, count($a));
+        
+        $this->assertEquals('1 one'  , $a[0]);
+        $this->assertEquals('2 two'  , $a[1]);
+        $this->assertEquals('3 three', $a[2]);
     }
 }

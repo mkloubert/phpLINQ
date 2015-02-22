@@ -21,10 +21,10 @@ $showSeqence = function($seq) {
         echo "\n";
     }
 };
-		
+        
 // sequence of integers
 $intSeq = Enumerable::fromValues(1, 2, 3);
-		
+        
 echo "intSeq:\n";
 $showSeqence($intSeq);
 

@@ -66,15 +66,15 @@ class SortTests extends TestCaseBase {
      * \System\Collections\Generic\IEnumerable::reverse()
      */
     public function testReverse() {
-    	$seq1 = Enumerable::fromValues(1, 2, 3, 2, 7);
-    	
-    	$a = $seq1->reverse()
-    	          ->toArray();
-    	
-    	$this->assertEquals($a[0], 7);
-    	$this->assertEquals($a[1], 2);
-    	$this->assertEquals($a[2], 3);
-    	$this->assertEquals($a[3], 2);
-    	$this->assertEquals($a[4], 1);
+        $seq1 = Enumerable::fromValues(1, 2, 3, 2, 7);
+        
+        $a = $seq1->reverse()
+                  ->toArray();
+        
+        $this->assertEquals($a[0], 7);
+        $this->assertEquals($a[1], 2);
+        $this->assertEquals($a[2], 3);
+        $this->assertEquals($a[3], 2);
+        $this->assertEquals($a[4], 1);
     }
 }

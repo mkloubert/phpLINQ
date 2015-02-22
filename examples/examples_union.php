@@ -29,9 +29,9 @@ $examples[1]->title = 'Custom comparer';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $myComparer = function($x, $y) {
-	return $x === $y;
+    return $x === $y;
 };
-		
+        
 $seq1 = Enumerable::fromValues(5, 3, 9, 7, 5, 9, 3, 7);
 $seq2 = Enumerable::fromValues(8, 3, 6, 4, "4", 9, 1, 0);
 

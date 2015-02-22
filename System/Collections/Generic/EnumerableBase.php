@@ -369,13 +369,13 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private static function getKeySelectorSafe($keySelector) {
-    	if (is_null($keySelector)) {
-    		$keySelector = function($orgKey, $item) {
-    			return $orgKey;
-    		};
-    	}
+        if (is_null($keySelector)) {
+            $keySelector = function($orgKey, $item) {
+                return $orgKey;
+            };
+        }
     
-    	return $keySelector;
+        return $keySelector;
     }
     
     private static function getSortAlgoSafe($algo) {
@@ -397,13 +397,13 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private static function getStringSelectorSafe($selector) {
-    	if (is_null($selector)) {
-    		$selector = function($x) {
-    			return strval($x);
-    		};
-    	}
-    	
-    	return $selector;
+        if (is_null($selector)) {
+            $selector = function($x) {
+                return strval($x);
+            };
+        }
+        
+        return $selector;
     }
     
     /**
@@ -450,52 +450,53 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::groupJoin()
      */
     public final function groupJoin($inner,
-    		                        $outerKeySelector, $innerKeySelector,
-    		                        $resultSelector,
-    		                        $keyComparer = null) {
-    	
-    	$this->checkForFunctionOrThrow($resultSelector, 2, false);
-    	$this->checkForFunctionOrThrow($keyComparer, 2, true);
-    	 
-    	$keyComparer = static::getComparerSafe($keyComparer);
-    	 
-    	return static::toEnumerable($this->groupJoinIterator(static::toEnumerable($inner),
+                                    $outerKeySelector, $innerKeySelector,
+                                    $resultSelector,
+                                    $keyComparer = null) {
+        
+        $this->checkForFunctionOrThrow($resultSelector, 2, false);
+        $this->checkForFunctionOrThrow($keyComparer, 2, true);
+         
+        $keyComparer = static::getComparerSafe($keyComparer);
+         
+        return static::toEnumerable($this->groupJoinIterator(static::toEnumerable($inner),
                                                              $outerKeySelector, $innerKeySelector,
-    			                                             $resultSelector,
-    			                                             $keyComparer));
+                                                             $resultSelector,
+                                                             $keyComparer));
     }
     
     private function groupJoinIterator(IEnumerable $inner,
-    		                           $outerKeySelector, $innerKeySelector,
-    		                           $resultSelector,
-    		                           $keyComparer) {
-    	$keySelector = function($seqKey, $item) {
-    		return $item->key();
-    	};
-    	 
-    	$grpOuter = $this->groupBy($outerKeySelector)
-    	                 ->toDictionary($keySelector, $keyComparer);
-    	foreach ($grpOuter->keys() as $k) {
-    		$grpOuter[$k] = $grpOuter[$k]->getIterator();
-    	}
-    	
-    	$grpInner = $inner->groupBy($innerKeySelector)
-    	                  ->toDictionary($keySelector, $keyComparer);
-    	foreach ($grpInner->keys() as $k) {
-    		$grpInner[$k] = $grpInner[$k]->getIterator()
-    		                             ->toArray();
-    	}
-    	 
-    	foreach ($grpOuter as $entry) {
-    		$key = $entry->key();
-    	
-    		if (isset($grpInner[$key])) {
-    			foreach ($entry->value() as $o) {
-    				yield $resultSelector($o,
-    						              static::toEnumerable($grpInner[$key]));
-    			}
-    		}
-    	}
+                                       $outerKeySelector, $innerKeySelector,
+                                       $resultSelector,
+                                       $keyComparer) {
+
+        $keySelector = function($seqKey, $item) {
+            return $item->key();
+        };
+         
+        $grpOuter = $this->groupBy($outerKeySelector)
+                         ->toDictionary($keySelector, $keyComparer);
+        foreach ($grpOuter->keys() as $k) {
+            $grpOuter[$k] = $grpOuter[$k]->getIterator();
+        }
+        
+        $grpInner = $inner->groupBy($innerKeySelector)
+                          ->toDictionary($keySelector, $keyComparer);
+        foreach ($grpInner->keys() as $k) {
+            $grpInner[$k] = $grpInner[$k]->getIterator()
+                                         ->toArray();
+        }
+         
+        foreach ($grpOuter as $entry) {
+            $key = $entry->key();
+        
+            if (isset($grpInner[$key])) {
+                foreach ($entry->value() as $o) {
+                    yield $resultSelector($o,
+                                          static::toEnumerable($grpInner[$key]));
+                }
+            }
+        }
     }
     
     /**
@@ -540,55 +541,55 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::join()
      */
     public final function join($inner,
-    		                   $outerKeySelector, $innerKeySelector,
-    		                   $resultSelector,
-    		                   $keyComparer = null) {
-    	
-    	$this->checkForFunctionOrThrow($resultSelector, 2, false);
-    	$this->checkForFunctionOrThrow($keyComparer, 2, true);
-    	
-    	$keyComparer = static::getComparerSafe($keyComparer);
-    	
-    	return static::toEnumerable($this->joinIterator(static::toEnumerable($inner),
-    			                                        $outerKeySelector, $innerKeySelector,
-    			                                        $resultSelector,
-    			                                        $keyComparer));
+                               $outerKeySelector, $innerKeySelector,
+                               $resultSelector,
+                               $keyComparer = null) {
+        
+        $this->checkForFunctionOrThrow($resultSelector, 2, false);
+        $this->checkForFunctionOrThrow($keyComparer, 2, true);
+        
+        $keyComparer = static::getComparerSafe($keyComparer);
+        
+        return static::toEnumerable($this->joinIterator(static::toEnumerable($inner),
+                                                        $outerKeySelector, $innerKeySelector,
+                                                        $resultSelector,
+                                                        $keyComparer));
     }
     
     private function joinIterator(IEnumerable $inner,
-    		                      $outerKeySelector, $innerKeySelector,
-    		                      $resultSelector,
-    		                      $keyComparer) {
-    	
-    	$keySelector = function($seqKey, $item) {
-    		return $item->key();
-    	};
-    	
-    	$grpOuter = $this->groupBy($outerKeySelector)
-    	                 ->toDictionary($keySelector, $keyComparer);
-    	foreach ($grpOuter->keys() as $k) {
-    		$grpOuter[$k] = $grpOuter[$k]->getIterator()
-    		                             ->toArray();
-    	}
+                                  $outerKeySelector, $innerKeySelector,
+                                  $resultSelector,
+                                  $keyComparer) {
+        
+        $keySelector = function($seqKey, $item) {
+            return $item->key();
+        };
+        
+        $grpOuter = $this->groupBy($outerKeySelector)
+                         ->toDictionary($keySelector, $keyComparer);
+        foreach ($grpOuter->keys() as $k) {
+            $grpOuter[$k] = $grpOuter[$k]->getIterator()
+                                         ->toArray();
+        }
 
-    	$grpInner = $inner->groupBy($innerKeySelector)
-    	                  ->toDictionary($keySelector, $keyComparer);
-    	foreach ($grpInner->keys() as $k) {
-    		$grpInner[$k] = $grpInner[$k]->getIterator()
-    		                             ->toArray();
-    	}
-    	
-    	foreach ($grpOuter as $entry) {
-    		$key = $entry->key();
-    		
-    		if (isset($grpInner[$key])) {
-    			foreach ($entry->value() as $o) {
-    				foreach ($grpInner[$key] as $i) {
-    					yield $resultSelector($o, $i);
-    				}
-    			}
-    		}
-    	}
+        $grpInner = $inner->groupBy($innerKeySelector)
+                          ->toDictionary($keySelector, $keyComparer);
+        foreach ($grpInner->keys() as $k) {
+            $grpInner[$k] = $grpInner[$k]->getIterator()
+                                         ->toArray();
+        }
+        
+        foreach ($grpOuter as $entry) {
+            $key = $entry->key();
+            
+            if (isset($grpInner[$key])) {
+                foreach ($entry->value() as $o) {
+                    foreach ($grpInner[$key] as $i) {
+                        yield $resultSelector($o, $i);
+                    }
+                }
+            }
+        }
     }
     
     /**
@@ -638,19 +639,19 @@ abstract class EnumerableBase implements IEnumerable {
         
         $isFirst = true;
         while ($this->valid()) {
-        	$i = $this->current();
-        	
-        	if (!$isFirst) {
-        		if ($i > $result) {
-        			$result = $i;
-        		}
-        	}
-        	else {
-        		$isFirst = false;
-        		$result = $i;
-        	}
-        	
-        	$this->next();
+            $i = $this->current();
+            
+            if (!$isFirst) {
+                if ($i > $result) {
+                    $result = $i;
+                }
+            }
+            else {
+                $isFirst = false;
+                $result = $i;
+            }
+            
+            $this->next();
         }
         
         return $result;
@@ -665,19 +666,19 @@ abstract class EnumerableBase implements IEnumerable {
         
         $isFirst = true;
         while ($this->valid()) {
-        	$i = $this->current();
-        	
-        	if (!$isFirst) {
-        		if ($i < $result) {
-        			$result = $i;
-        		}
-        	}
-        	else {
-        		$isFirst = false;
-        		$result = $i;
-        	}
-        	
-        	$this->next();
+            $i = $this->current();
+            
+            if (!$isFirst) {
+                if ($i < $result) {
+                    $result = $i;
+                }
+            }
+            else {
+                $isFirst = false;
+                $result = $i;
+            }
+            
+            $this->next();
         }
         
         return $result;
@@ -695,11 +696,11 @@ abstract class EnumerableBase implements IEnumerable {
             $i = $this->current();
         
             if (!$isFirst) {
-            	$result *= $i;
+                $result *= $i;
             }
             else {
-            	$isFirst = false;
-            	$result = $i;
+                $isFirst = false;
+                $result = $i;
             }
         
             $this->next();
@@ -825,10 +826,10 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::reverse()
      */
     public final function reverse() {
-    	$i = PHP_INT_MAX;
-    	return $this->orderBy(function($x) use (&$i) {
-    		                      return $i--;
-    	                      });
+        $i = PHP_INT_MAX;
+        return $this->orderBy(function($x) use (&$i) {
+                                  return $i--;
+                              });
     }
     
     /**
@@ -881,33 +882,33 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::sequenceEqual()
      */
     public final function sequenceEqual($second, $comparer = null) {
-    	$this->checkForFunctionOrThrow($comparer, 2);
-    	
-    	$comparer = static::getComparerSafe($comparer);
-    	
-    	$other = static::toEnumerable($second);
-    	
-    	while ($this->valid()) {
-    		$x = $this->current();
-    		$this->next();
-    		
-    		if (!$other->valid()) {
-    			return false;
-    		}
-    		
-    		$y = $other->current();
-    		$other->next();
-    		
-    		if (!$comparer($x, $y)) {
-    			return false;
-    		}
-    	}
-    	
-    	if ($other->valid()) {
-    		return false;
-    	}
-    	
-    	return true;
+        $this->checkForFunctionOrThrow($comparer, 2);
+        
+        $comparer = static::getComparerSafe($comparer);
+        
+        $other = static::toEnumerable($second);
+        
+        while ($this->valid()) {
+            $x = $this->current();
+            $this->next();
+            
+            if (!$other->valid()) {
+                return false;
+            }
+            
+            $y = $other->current();
+            $other->next();
+            
+            if (!$comparer($x, $y)) {
+                return false;
+            }
+        }
+        
+        if ($other->valid()) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -991,7 +992,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::stringConcat()
      */
     public final function stringConcat($selector = null) {
-    	return $this->stringJoin('', $selector);
+        return $this->stringJoin('', $selector);
     }
     
     /**
@@ -999,27 +1000,27 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::stringJoin()
      */
     public final function stringJoin($separator, $selector = null) {
-    	$this->checkForFunctionOrThrow($selector);
-    	
-    	$selector = static::getStringSelectorSafe($selector);
-    	
-    	$result = '';
-    	
-    	$isFirst = true;
-    	while ($this->valid()) {
-    		if (!$isFirst) {
-    			$result .= strval($separator);
-    		}
-    		else {
-    			$isFirst = false;
-    		}
-    		
-    		$result .= $selector($this->current());
-    		
-    		$this->next();
-    	}
-    	
-    	return $result;
+        $this->checkForFunctionOrThrow($selector);
+        
+        $selector = static::getStringSelectorSafe($selector);
+        
+        $result = '';
+        
+        $isFirst = true;
+        while ($this->valid()) {
+            if (!$isFirst) {
+                $result .= strval($separator);
+            }
+            else {
+                $isFirst = false;
+            }
+            
+            $result .= $selector($this->current());
+            
+            $this->next();
+        }
+        
+        return $result;
     }
     
     /**
@@ -1106,25 +1107,25 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::toArray()
      */
     public final function toArray($keySelector = null) {
-    	$this->checkForFunctionOrThrow($keySelector, 2);
-    	if (is_null($keySelector)) {
-    		$keySelector = function($index, $item) {
-    			return null;
-    		};
-    	}
-    	
-    	$i = 0;
+        $this->checkForFunctionOrThrow($keySelector, 2);
+        if (is_null($keySelector)) {
+            $keySelector = function($index, $item) {
+                return null;
+            };
+        }
+        
+        $i = 0;
         $result = array();
         while ($this->valid()) {
-        	$ci = $this->current();
-        	
-        	$key = $keySelector($i++, $ci);
-        	if (is_null($key)) {
-        		$result[] = $ci;
-        	}
-        	else {
-        		$result[$key] = $ci;
-        	}
+            $ci = $this->current();
+            
+            $key = $keySelector($i++, $ci);
+            if (is_null($key)) {
+                $result[] = $ci;
+            }
+            else {
+                $result[$key] = $ci;
+            }
 
             $this->next();
         }
@@ -1171,20 +1172,20 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::toLookup()
      */
     public final function toLookup($keySelector = null, $keyComparer = null,
-    		                       $elementSelector = null) {
-    	
-    	$this->checkForFunctionOrThrow($elementSelector, 1);
+                                   $elementSelector = null) {
+        
+        $this->checkForFunctionOrThrow($elementSelector, 1);
 
-    	$elements = $this;
-    	if (!is_null($elementSelector)) {
-    		$elements = $this->select($elementSelector);
-    	}
-    	
-    	$keySelector = static::getKeySelectorSafe($keySelector);
-    	
-    	$grps = $elements->groupBy($keySelector, $keyComparer);
-    	
-    	return new Lookup($grps);
+        $elements = $this;
+        if (!is_null($elementSelector)) {
+            $elements = $this->select($elementSelector);
+        }
+        
+        $keySelector = static::getKeySelectorSafe($keySelector);
+        
+        $grps = $elements->groupBy($keySelector, $keyComparer);
+        
+        return new Lookup($grps);
     }
     
     private static function toPredeciateSafe($predicate, $defValue = true) {
@@ -1202,33 +1203,33 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::union()
      */
     public final function union($second, $comparer = null) {
-    	return $this->concat($second)
-    	            ->distinct($comparer);
+        return $this->concat($second)
+                    ->distinct($comparer);
     }
     
     private function unionInner(IEnumerable $second, $comparer) {
-    	$temp = array();
-    	
-    	$seqences = array($this, $second);
-    	foreach ($seqences as $seq) {
-    		while($seq->valid()) {
-    			$i = $seq->current();
-    			
-    			$alreadyInList = false;
-    			foreach ($temp as $ti) {
-    			    if ($comparer($ti, $i)) {
-    			    	$alreadyInList = true;
-    			    	break;
-    			    }
-    			}
-    			
-    			if (!$alreadyInList) {
-    				
-    			}
-    			
-    			$seq->next();
-    		}
-    	}
+        $temp = array();
+        
+        $seqences = array($this, $second);
+        foreach ($seqences as $seq) {
+            while($seq->valid()) {
+                $i = $seq->current();
+                
+                $alreadyInList = false;
+                foreach ($temp as $ti) {
+                    if ($comparer($ti, $i)) {
+                        $alreadyInList = true;
+                        break;
+                    }
+                }
+                
+                if (!$alreadyInList) {
+                    
+                }
+                
+                $seq->next();
+            }
+        }
     }
     
     /**
@@ -1264,19 +1265,19 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::zip()
      */
     public final function zip($second, $selector) {
-    	$this->checkForFunctionOrThrow($selector, 2, false);
-    	
-    	return static::toEnumerable($this->zipInner(static::toEnumerable($second),
-    			                                    $selector));
+        $this->checkForFunctionOrThrow($selector, 2, false);
+        
+        return static::toEnumerable($this->zipInner(static::toEnumerable($second),
+                                                    $selector));
     }
     
     private function zipInner(IEnumerable $second, $selector) {
-    	while ($this->valid() && $second->valid()) {
-    		yield $selector($this->current(),
-    					    $second->current());
-    		
-    		$this->next();
-    		$second->next();
-    	}
+        while ($this->valid() && $second->valid()) {
+            yield $selector($this->current(),
+                            $second->current());
+            
+            $this->next();
+            $second->next();
+        }
     }
 }

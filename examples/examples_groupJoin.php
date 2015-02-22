@@ -33,7 +33,7 @@ class Pet {
     public $Owner;
 }
 
-		
+        
 $persons = array(new Person("Tanja"),
                  new Person("Marcel"),
                  new Person("Yvonne"),
@@ -46,20 +46,20 @@ $pets = array(new Pet("Gina"     , $persons[1]),
               new Pet("Lulu"     , $persons[3]),
               new Pet("Sparky"   , $persons[0]),
               new Pet("Asta"     , $persons[1]));
-		
+        
 $personSeq = Enumerable::fromArray($persons);
 $petSeq    = Enumerable::fromArray($pets);
 
 $joined = $personSeq->groupJoin($petSeq,
-		                        // outer key
+                                // outer key
                                 function($orgKey, $person) {
-		                            return $person->Name;
+                                    return $person->Name;
                                 },
-		                        // inner key
+                                // inner key
                                 function($orgKey, $pet) {
-		                            return $pet->Owner->Name;
+                                    return $pet->Owner->Name;
                                 },
-		                        // result value for matching items
+                                // result value for matching items
                                 function($person, $pets) {
                                     $petList = $pets->stringJoin(\'", "\',
                                                                  function($pet) {
@@ -70,9 +70,9 @@ $joined = $personSeq->groupJoin($petSeq,
                                                    $person->Name,
                                                    $petList);
                                 });
-		
+        
 foreach ($joined as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 

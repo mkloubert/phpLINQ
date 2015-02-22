@@ -23,22 +23,22 @@ $seq5 = Enumerable::fromValues(6, 7, 8);
 $seq6 = Enumerable::createEmpty();
 $seq7 = Enumerable::createEmpty();
 $seq8 = Enumerable::fromValues(1, "2", 3);
-											
+                                            
 
 $res1 = $seq1->sequenceEqual($seq2);
 $res2 = $seq1->reset()
-		     ->sequenceEqual($seq3);
+             ->sequenceEqual($seq3);
 $res3 = $seq1->reset()
-		     ->sequenceEqual($seq4);
+             ->sequenceEqual($seq4);
 $res4 = $seq1->reset()
-		     ->sequenceEqual($seq5);
+             ->sequenceEqual($seq5);
 $res5 = $seq1->reset()
-		     ->sequenceEqual($seq6);
+             ->sequenceEqual($seq6);
 $res6 = $seq6->reset()
-		     ->sequenceEqual($seq7);
+             ->sequenceEqual($seq7);
 $res7 = $seq1->reset()
-		     ->sequenceEqual($seq8);
-				
+             ->sequenceEqual($seq8);
+                
 echo "res1 = " . var_export($res1, true);
 echo "\n";
 echo "res2 = " . var_export($res2, true);
@@ -61,7 +61,7 @@ $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 
 $myComparer = function($x, $y) {
-	return $x === $y;
+    return $x === $y;
 };
 
 
@@ -73,21 +73,21 @@ $seq5 = Enumerable::fromValues(6, 7, 8);
 $seq6 = Enumerable::createEmpty();
 $seq7 = Enumerable::createEmpty();
 $seq8 = Enumerable::fromValues(1, "2", 3);
-						
+                        
 
 $res1 = $seq1->sequenceEqual($seq2, $myComparer);
 $res2 = $seq1->reset()
-		     ->sequenceEqual($seq3, $myComparer);
+             ->sequenceEqual($seq3, $myComparer);
 $res3 = $seq1->reset()
-		     ->sequenceEqual($seq4, $myComparer);
+             ->sequenceEqual($seq4, $myComparer);
 $res4 = $seq1->reset()
-		     ->sequenceEqual($seq5, $myComparer);
+             ->sequenceEqual($seq5, $myComparer);
 $res5 = $seq1->reset()
-		     ->sequenceEqual($seq6, $myComparer);
+             ->sequenceEqual($seq6, $myComparer);
 $res6 = $seq6->reset()
-		     ->sequenceEqual($seq7, $myComparer);
+             ->sequenceEqual($seq7, $myComparer);
 $res7 = $seq1->reset()
-		     ->sequenceEqual($seq8, $myComparer);
+             ->sequenceEqual($seq8, $myComparer);
 
 
 echo "res1 = " . var_export($res1, true);

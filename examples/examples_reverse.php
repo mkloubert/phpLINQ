@@ -15,9 +15,9 @@ $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq = Enumerable::range(1, 25);
-	
+    
 foreach ($seq->reverse() as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 
 ';

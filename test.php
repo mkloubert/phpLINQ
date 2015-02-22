@@ -55,7 +55,7 @@ $joined = $personSeq->groupJoin($petSeq,
                                return sprintf('Owner: %s; Pets: %s',
                                               $person->Name,
                                               $pets->stringJoin(', ',
-                                              		            function($pet) { return $pet->Name; }));
+                                                                  function($pet) { return $pet->Name; }));
                            });
 
 foreach ($joined as $item) {

@@ -14,7 +14,7 @@ $pageTitle = 'contains()';
 $examples[] = new Example();
 $examples[0]->title = 'Default behavior';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
 
@@ -49,7 +49,7 @@ $seq = Enumerable::fromValues(1, 2, 3);
 $myComparer = function($x, $y) {
     return $x === $y;
 };
-		
+        
 
 // exists
 $res1 = $seq->contains(1, $myComparer);

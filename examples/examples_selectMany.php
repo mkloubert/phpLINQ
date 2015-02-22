@@ -18,11 +18,11 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 $newSeq = $seq->selectMany(function($x) {
-		                       return array($x, $x * 10, $x * 100);
-		                   });
-		
+                               return array($x, $x * 10, $x * 100);
+                           });
+        
 foreach ($newSeq as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 
@@ -32,15 +32,15 @@ $examples[1]->title = 'Iterator example';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq = Enumerable::fromValues(6, 7, 8, 9, 10);
-	
+    
 $newSeq = $seq->selectMany(function($x) {
-	                           yield $x;
-	                           yield $x * 10;
-	                           yield $x * 100;
+                               yield $x;
+                               yield $x * 10;
+                               yield $x * 100;
                            });
 
 foreach ($newSeq as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 

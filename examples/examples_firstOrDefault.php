@@ -13,7 +13,7 @@ $pageTitle = 'firstOrDefault()';
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
 
@@ -21,9 +21,9 @@ $seq2 = Enumerable::createEmpty();
 $res1 = $seq1->firstOrDefault("TM");
 // no item matches
 $res2 = $seq1->reset()
-		     ->firstOrDefault(function($x) {
-		                          return $x > 3;
-		                      }, "TM");
+             ->firstOrDefault(function($x) {
+                                  return $x > 3;
+                              }, "TM");
 // empty (NULL is default value)
 $res3 = $seq2->firstOrDefault();
 

@@ -18,16 +18,16 @@ $seq = Enumerable::fromValues("TM", "MK", "YS", "JS");
 
 $i = 0;
 $newSeq = $seq->select(function($x) use (&$i) {
-		                   $result        = new \stdClass();
-		                   $result->index = $i++;
-		                   $result->value = $x;
-		
-		                   return $result;
-		               });
-		
+                           $result        = new \stdClass();
+                           $result->index = $i++;
+                           $result->value = $x;
+        
+                           return $result;
+                       });
+        
 foreach ($newSeq as $item) {
-	echo "[{$item->index}]: " . var_export($item->value, true);
-	echo "\n";
+    echo "[{$item->index}]: " . var_export($item->value, true);
+    echo "\n";
 }
 ';
 

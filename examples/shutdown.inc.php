@@ -40,11 +40,11 @@ ob_end_clean();
     }
     
     #exampleTab .tab-pane {
-    	padding: 0.5em;
+        padding: 0.5em;
     }
     
     #navBarBottomContent {
-    	line-height: 4em;
+        line-height: 4em;
     }
     
     </style>
@@ -76,18 +76,18 @@ ob_end_clean();
      <?php
 
          foreach ($examples as $e) {
-         	$elementId = 'phpLINQExample' . trim($e->id);
+             $elementId = 'phpLINQExample' . trim($e->id);
 
-         	$title = trim($e->title);
-         	if (empty($title)) {
-         		$title = 'Example #' . trim($e->id + 1);
-         	}
-         	
-         	?>
-         	<li class="<?php echo $e->id != 0 ? '' : 'active'; ?>">
-         	  <a href="#<?php echo $elementId; ?>" data-toggle="tab"><?php echo htmlentities($title); ?></a>
-         	</li>
-         	<?php
+             $title = trim($e->title);
+             if (empty($title)) {
+                 $title = 'Example #' . trim($e->id + 1);
+             }
+             
+             ?>
+             <li class="<?php echo $e->id != 0 ? '' : 'active'; ?>">
+               <a href="#<?php echo $elementId; ?>" data-toggle="tab"><?php echo htmlentities($title); ?></a>
+             </li>
+             <?php
          }
      
      ?>
@@ -97,19 +97,19 @@ ob_end_clean();
      <?php
 
          foreach ($examples as $e) {
-         	$elementId = 'phpLINQExample' . trim($e->id);
+             $elementId = 'phpLINQExample' . trim($e->id);
 
-         	?>
-         	<div class="tab-pane <?php echo $e->id != 0 ? '' : 'active'; ?>" id="<?php echo $elementId; ?>">
-         	    <?php
-         	    
-         	    $desc = trim($e->description);
-         	    if (!empty($desc)) {
-         	    	?><p><?php echo htmlentities($desc); ?></p><?php
-         	    }
-         	    
-         	    ?>
-         	
+             ?>
+             <div class="tab-pane <?php echo $e->id != 0 ? '' : 'active'; ?>" id="<?php echo $elementId; ?>">
+                 <?php
+                 
+                 $desc = trim($e->description);
+                 if (!empty($desc)) {
+                     ?><p><?php echo htmlentities($desc); ?></p><?php
+                 }
+                 
+                 ?>
+             
                 <h1>Code:</h1>
                 <pre style="background-color: transparent;"><code class="php"><?php echo parseForHtmlOutput($e->sourceCode); ?></code></pre>
                 
@@ -154,9 +154,9 @@ ob_end_clean();
     
     <script type="text/javascript">
 
-	$(document).ready(function() {
-		hljs.initHighlighting();
-	});
+    $(document).ready(function() {
+        hljs.initHighlighting();
+    });
 
     </script>
   </body>

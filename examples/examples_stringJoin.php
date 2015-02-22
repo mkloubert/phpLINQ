@@ -26,9 +26,9 @@ $examples[1]->title = 'Custom selector';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $mySelector = function($item) {
-	return strtoupper($item);
+    return strtoupper($item);
 };
-		
+        
 $seq = Enumerable::fromValues("tm", "mk", "ys", "js");
 
 echo $seq->stringJoin("; ", $mySelector);

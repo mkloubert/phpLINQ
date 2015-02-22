@@ -13,7 +13,7 @@ $pageTitle = 'singleOrDefault()';
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1);
 $seq2 = Enumerable::createEmpty();
 $seq3 = Enumerable::fromValues(1, 2);
@@ -21,15 +21,15 @@ $seq3 = Enumerable::fromValues(1, 2);
 $res1 = $seq1->singleOrDefault("TM");
 // no item matches
 $res2 = $seq1->reset()
-		     ->singleOrDefault(function($x) {
-		                           return $x > 3;
-		                       }, "TM");
+             ->singleOrDefault(function($x) {
+                                   return $x > 3;
+                               }, "TM");
 // more than one element
 try {
-	$res3 = $seq3->singleOrDefault();
+    $res3 = $seq3->singleOrDefault();
 }
 catch (\Exception $ex) {
-	$res3 = "EXCEPTION: " . $ex->getMessage();
+    $res3 = "EXCEPTION: " . $ex->getMessage();
 }
 
 echo "res1: " . var_export($res1, true);

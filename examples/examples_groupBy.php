@@ -14,7 +14,7 @@ $pageTitle = 'groupBy()';
 $examples[] = new Example();
 $examples[0]->title = 'Default behavior';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq = Enumerable::fromValues(true, 5979, "", "TM", false, "23979", "MK", null);
 
 $grps = $seq->groupBy(function($orgKey, $item) {
@@ -41,10 +41,10 @@ foreach ($grps as $g) {
     // enumerate elements of current group
     foreach ($g as $item) {
         echo "\n";
-		echo "\t" . var_export($item, true);
+        echo "\t" . var_export($item, true);
     }
-		
-	echo "\n";
+        
+    echo "\n";
 }
 ';
 
@@ -54,11 +54,11 @@ $examples[1]->title = 'Custom key comparer';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq = Enumerable::range(1, 10);
-		
+        
 $myKeyComparer = function($x, $y) {
-	return ($x % 2) == ($y % 2);
+    return ($x % 2) == ($y % 2);
 };
-		
+        
 $grps = $seq->groupBy(function($orgKey, $item) {
                           return $item % 5;
                       }, $myKeyComparer);
@@ -71,10 +71,10 @@ foreach ($grps as $g) {
     // enumerate elements of current group
     foreach ($g as $item) {
         echo "\n";
-		echo "\t" . var_export($item, true);
+        echo "\t" . var_export($item, true);
     }
 
-	echo "\n";
+    echo "\n";
 }
 ';
 

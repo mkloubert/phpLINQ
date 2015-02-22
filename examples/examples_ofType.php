@@ -15,9 +15,9 @@ $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 class MyClass {
-	public function __toString() {
-		return "MyClass";
-	}
+    public function __toString() {
+        return "MyClass";
+    }
 }
 
 $showSeqence = function($seq) {
@@ -30,7 +30,7 @@ $showSeqence = function($seq) {
 
 // sequence of integers
 $seq = Enumerable::fromValues(1, "2", 3, new MyClass());
-		
+        
 echo "integers:\n";
 $showSeqence($seq->ofType("integer"));
 

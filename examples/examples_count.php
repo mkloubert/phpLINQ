@@ -13,17 +13,17 @@ $pageTitle = 'count()';
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
 
-		
+        
 $res1 = $seq1->count();
 $res2 = $seq2->count();
 
 $seq1->reset();
 $seq2->reset();
-		
+        
 // BETTER WAY to do this
 $res3 = count($seq1);
 $res4 = count($seq2);

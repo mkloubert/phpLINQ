@@ -13,7 +13,7 @@ $pageTitle = 'defaultIfEmpty()';
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
 
@@ -34,7 +34,7 @@ echo "\n";
 // empty, so take default values
 echo "seq2:\n";
 $showSequence($seq2);
-		
+        
 echo "\n";
 
 // where() makes new sequence empty

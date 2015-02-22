@@ -167,9 +167,9 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function groupJoin($inner,
-    		           $outerKeySelector, $innerKeySelector,
-    		           $resultSelector,
-    		           $keyComparer = null);
+                       $outerKeySelector, $innerKeySelector,
+                       $resultSelector,
+                       $keyComparer = null);
     
     /**
      * Produces the set intersection of that sequence and another.
@@ -198,9 +198,9 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return IEnumerable The new sequence.
      */
     function join($inner,
-    		      $outerKeySelector, $innerKeySelector,
-    		      $resultSelector,
-    		      $keyComparer = null);
+                  $outerKeySelector, $innerKeySelector,
+                  $resultSelector,
+                  $keyComparer = null);
     
     /**
      * Returns the last item of that sequence.
@@ -448,7 +448,7 @@ interface IEnumerable extends \Iterator, \Countable {
      * @return ILookup The sequence as lookup.
      */
     function toLookup($keySelector = null, $keyComparer = null,
-    		          $elementSelector = null);
+                      $elementSelector = null);
     
     /**
      * Produces the set union of that sequence and another.

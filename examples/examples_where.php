@@ -17,11 +17,11 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 $filtered = $seq->where(function($x) {
-		                    return $x % 2 == 1;
-		                });
-		
+                            return $x % 2 == 1;
+                        });
+        
 foreach ($filtered as $item) {
-	echo "{$item}\n";
+    echo "{$item}\n";
 }
 ';
 

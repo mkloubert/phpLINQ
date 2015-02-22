@@ -21,13 +21,13 @@ $seq = Enumerable::fromValues(1, 2, 3);
 $res1 = $seq->all(function($x) {
                       return $x < 3;
                   });
-		
+        
 // all items match
 $res2 = $seq->reset()
             ->all(function($x) {
                       return $x < 4;
                   });
-			
+            
 echo "res1 = " . var_export($res1, true);
 echo "\n";
 echo "res2 = " . var_export($res2, true);

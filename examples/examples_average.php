@@ -16,12 +16,12 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
-		
+        
 // not empty
-$res1 = $seq1->average("MK");		
+$res1 = $seq1->average("MK");        
 // empty
 $res2 = $seq2->average("TM");
-			
+            
 echo "res1 = " . var_export($res1, true);
 echo "\n";
 echo "res2 = " . var_export($res2, true);

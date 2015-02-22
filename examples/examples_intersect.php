@@ -14,41 +14,41 @@ $pageTitle = 'intersect()';
 $examples[] = new Example();
 $examples[0]->title = 'Default behavior';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3, 4, 5);
 $seq2 = Enumerable::fromValues(3, 2);
 $seq3 = Enumerable::fromValues(6, 7);
 $seq4 = Enumerable::createEmpty();
 $seq5 = Enumerable::fromValues("2", 5);
-		
+        
 
 $showSequence = function($seq) {
-	foreach ($seq as $item) {
-		echo "{$item}\n";
-	}
+    foreach ($seq as $item) {
+        echo "{$item}\n";
+    }
 };
 
 
 echo "seq1 + seq2:\n";
 $showSequence($seq1->intersect($seq2));
-		
+        
 echo "\n";
-		
+        
 echo "seq1 + seq3:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq3));
+                   ->intersect($seq3));
 
 echo "\n";
-		
+        
 echo "seq1 + seq4:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq4));
-		
+                   ->intersect($seq4));
+        
 echo "\n";
-		
+        
 echo "seq1 + seq5:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq5));
+                   ->intersect($seq5));
 ';
 
 // example #2
@@ -64,13 +64,13 @@ $seq5 = Enumerable::fromValues("2", 5);
 
 
 $myComparer = function($x, $y) {
-	return $x === $y;
+    return $x === $y;
 };
 
 $showSequence = function($seq) {
-	foreach ($seq as $item) {
-		echo "{$item}\n";
-	}
+    foreach ($seq as $item) {
+        echo "{$item}\n";
+    }
 };
 
 
@@ -81,19 +81,19 @@ echo "\n";
 
 echo "seq1 + seq3:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq3, $myComparer));
+                   ->intersect($seq3, $myComparer));
 
 echo "\n";
 
 echo "seq1 + seq4:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq4, $myComparer));
-		
+                   ->intersect($seq4, $myComparer));
+        
 echo "\n";
-		
+        
 echo "seq1 + seq5:\n";
 $showSequence($seq1->reset()
-		           ->intersect($seq5, $myComparer));
+                   ->intersect($seq5, $myComparer));
 ';
 
 

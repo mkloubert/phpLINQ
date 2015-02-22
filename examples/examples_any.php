@@ -21,7 +21,7 @@ $seq = Enumerable::fromValues(1, 2, 3);
 $res1 = $seq->any(function($x) {
                       return $x < 1;
                   });
-		
+        
 // 2nd item matches
 $res2 = $seq->reset()
             ->any(function($x) {

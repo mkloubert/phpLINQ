@@ -13,7 +13,7 @@ $pageTitle = 'lastOrDefault()';
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::createEmpty();
 
@@ -21,9 +21,9 @@ $seq2 = Enumerable::createEmpty();
 $res1 = $seq1->lastOrDefault("TM");
 // no item matches
 $res2 = $seq1->reset()
-		     ->lastOrDefault(function($x) {
-		                         return $x > 3;
-		                     }, "TM");
+             ->lastOrDefault(function($x) {
+                                 return $x > 3;
+                             }, "TM");
 // empty (NULL is default value)
 $res3 = $seq2->lastOrDefault();
 

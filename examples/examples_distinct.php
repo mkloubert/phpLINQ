@@ -14,7 +14,7 @@ $pageTitle = 'distinct()';
 $examples[] = new Example();
 $examples[0]->title = 'Default behavior';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
+    
 $seq = Enumerable::fromValues(1, 2, "1", 3);
 
 foreach ($seq->distinct() as $item) {
