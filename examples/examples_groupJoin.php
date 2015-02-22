@@ -52,11 +52,11 @@ $petSeq    = Enumerable::fromArray($pets);
 
 $joined = $personSeq->groupJoin($petSeq,
                                 // outer key
-                                function($orgKey, $person) {
+                                function($person) {
                                     return $person->Name;
                                 },
                                 // inner key
-                                function($orgKey, $pet) {
+                                function($pet) {
                                     return $pet->Owner->Name;
                                 },
                                 // result value for matching items

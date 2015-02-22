@@ -17,7 +17,7 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
     
 $seq = Enumerable::fromValues(true, 5979, "", "TM", false, "23979", "MK", null);
 
-$grps = $seq->groupBy(function($orgKey, $item) {
+$grps = $seq->groupBy(function($item) {
                           if (is_numeric($item)) {
                               return "number";
                           }
@@ -59,7 +59,7 @@ $myKeyComparer = function($x, $y) {
     return ($x % 2) == ($y % 2);
 };
         
-$grps = $seq->groupBy(function($orgKey, $item) {
+$grps = $seq->groupBy(function($item) {
                           return $item % 5;
                       }, $myKeyComparer);
 

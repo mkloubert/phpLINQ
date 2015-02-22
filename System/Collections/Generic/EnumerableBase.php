@@ -129,20 +129,13 @@ abstract class EnumerableBase implements IEnumerable {
             }
         }    
         else {
-            if (is_callable($obj)) {
-                // OK, seems to be a function
-                
-                $r = new \ReflectionFunction($obj);
-                if (count($r->getParameters()) == $argCount) {
-                    // has the right number of arguments
-                    // so anything is OK
-                    
-                    return;
-                }
+            $funcParamCount = static::getFuncParamCount($obj);
+            if (is_numeric($funcParamCount)) {
+                return $argCount == $funcParamCount;
             }
         }
         
-        $this->throwException(sprintf('Function with %s arguments required!',
+        $this->throwException(sprintf('Function with %s argument(s) required!',
                                       $argCount));
     }
     
@@ -368,6 +361,38 @@ abstract class EnumerableBase implements IEnumerable {
         return $comparer;
     }
     
+    private static function getFuncParamCount($func) {
+        if (is_null($func)) {
+            return null;
+        }
+        
+        if (is_callable($func)) {
+            $r = new \ReflectionFunction($func);
+            
+            return count($r->getParameters());
+        }
+        
+        return false;
+    }
+
+    private static function getKeySelectorOrWrap($keySelector) {
+        if (is_null($keySelector)) {
+            return null;
+        }
+        
+        $result = $keySelector;
+        
+        if (1 === static::getFuncParamCount($result)) {
+            $orgKeySelector = $result;
+            
+            $result = function($orgKey, $item) use ($orgKeySelector) {
+                return $orgKeySelector($item);
+            };
+        }
+        
+        return $result;
+    }
+    
     private static function getKeySelectorSafe($keySelector) {
         if (is_null($keySelector)) {
             $keySelector = function($orgKey, $item) {
@@ -411,6 +436,8 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::groupBy()
      */
     public final function groupBy($keySelector, $keyComparer = null) {
+        $keySelector = static::getKeySelectorOrWrap($keySelector);
+        
         $this->checkForFunctionOrThrow($keySelector, 2, false);
         $this->checkForFunctionOrThrow($keyComparer, 2);
          
@@ -1107,8 +1134,12 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::toArray()
      */
     public final function toArray($keySelector = null) {
+        $keySelector = static::getKeySelectorOrWrap($keySelector);
+        
         $this->checkForFunctionOrThrow($keySelector, 2);
         if (is_null($keySelector)) {
+            // default
+            
             $keySelector = function($index, $item) {
                 return null;
             };
@@ -1138,6 +1169,8 @@ abstract class EnumerableBase implements IEnumerable {
      * @see \System\Collections\Generic\IEnumerable::toDictionary()
      */
     public function toDictionary($keySelector = null, $keyComparer = null) {
+        $keySelector = static::getKeySelectorOrWrap($keySelector);
+        
         $this->checkForFunctionOrThrow($keySelector, 2);
         $this->checkForFunctionOrThrow($keyComparer, 2);
     
@@ -1181,9 +1214,8 @@ abstract class EnumerableBase implements IEnumerable {
             $elements = $this->select($elementSelector);
         }
         
-        $keySelector = static::getKeySelectorSafe($keySelector);
-        
-        $grps = $elements->groupBy($keySelector, $keyComparer);
+        $grps = $elements->groupBy($keySelector,
+                                   $keyComparer);
         
         return new Lookup($grps);
     }

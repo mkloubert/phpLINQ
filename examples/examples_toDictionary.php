@@ -30,14 +30,12 @@ foreach ($dict->keys() as $key) {
 $examples[] = new Example();
 $examples[1]->title = 'Custom key selector';
 $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
-
-$myKeySelector = function($orgKey, $item) {
-    return "key::" . trim($orgKey);
-};
-        
+      
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
-$dict = $seq->toDictionary($myKeySelector);
+$dict = $seq->toDictionary(function($orgKey, $item) {
+                               return "key::" . trim($orgKey);
+                           });
         
 foreach ($dict->keys() as $key) {
     echo "[{$key}] = " . var_export($dict[$key], true) . "\n";
