@@ -166,6 +166,8 @@ $pageTitle = 'Home';
       <a href="examples_singleOrDefault.php" class="list-group-item">singleOrDefault()</a>
       <a href="examples_skip.php" class="list-group-item">skip()</a>
       <a href="examples_skipWhile.php" class="list-group-item">skipWhile()</a>
+      <a href="examples_stringConcat.php" class="list-group-item">stringConcat()</a>
+      <a href="examples_stringJoin.php" class="list-group-item">stringJoin()</a>
       <a href="examples_sum.php" class="list-group-item">sum()</a>
     </div>
   </div>
@@ -180,6 +182,37 @@ $pageTitle = 'Home';
       <a href="examples_takeWhile.php" class="list-group-item">takeWhile()</a>
       <a href="examples_toArray.php" class="list-group-item">toArray()</a>
       <a href="examples_toDictionary.php" class="list-group-item">toDictionary()</a>
+      <a href="examples_toLookup.php" class="list-group-item">toLookup()</a>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">U</div>
+  
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="examples_union.php" class="list-group-item">union()</a>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">W</div>
+  
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="examples_where.php" class="list-group-item">where()</a>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Z</div>
+  
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="examples_zip.php" class="list-group-item">zip()</a>
     </div>
   </div>
 </div>

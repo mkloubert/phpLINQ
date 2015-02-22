@@ -82,7 +82,8 @@ final class Lookup extends EnumerableBase implements ILookup {
 	 */
 	public function current() {
 		return $this->_dict
-		            ->current();
+		            ->current()
+		            ->value();
 	}
 	
 	/**
