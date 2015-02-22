@@ -440,8 +440,7 @@ interface IEnumerable extends \Iterator, \Countable {
     function toArray($keySelector = null);
     
     /**
-     * Converts that sequence to an array that is similar to a hashtable
-     * or dictionary.
+     * Converts that sequence to a new dictionary.
      * 
      * @param callable $keySelector The optional key selector to use.
      * @param callable $keyComparer The optional key comparer to use.
@@ -458,7 +457,7 @@ interface IEnumerable extends \Iterator, \Countable {
     function toList();
     
     /**
-     * Converts that sequence to a lookup object.
+     * Converts that sequence to a new lookup object.
      * 
      * @param callable $keySelector The custom key selector to use.
      * @param callable $keyComparer The custom key comparer to use.
@@ -468,6 +467,15 @@ interface IEnumerable extends \Iterator, \Countable {
      */
     function toLookup($keySelector = null, $keyComparer = null,
                       $elementSelector = null);
+    
+    /**
+     * Returns a new set of that sequence.
+     * 
+     * @param callable $comparer The custom item comparer to use.
+     * 
+     * @return ISet The new set.
+     */
+    function toSet($comparer = null);
     
     /**
      * Produces the set union of that sequence and another.

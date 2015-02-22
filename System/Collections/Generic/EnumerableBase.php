@@ -1290,6 +1290,21 @@ abstract class EnumerableBase implements IEnumerable {
     
     /**
      * (non-PHPdoc)
+     * @see \System\Collections\Generic\IEnumerable::toSet()
+     */
+    public final function toSet($comparer = null) {
+        $result = new Set($comparer);
+        while ($this->valid()) {
+            $result->add($this->current());
+            
+            $this->next();
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see \System\Collections\Generic\IEnumerable::union()
      */
     public final function union($second, $comparer = null) {

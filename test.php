@@ -12,11 +12,10 @@ function __autoload($clsName) {
     require_once './' . str_replace('\\', '/', $clsName) . '.php';
 }
 
-use \System\Linq\Enumerable as Enumerable;
+use \System\Collections\Generic\Set;
 
-$seq = Enumerable::range(1, 10);
+$s = new Set();
 
-$list = $seq->toList();
 
 ?>
     </pre>
