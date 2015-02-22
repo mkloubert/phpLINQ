@@ -12,6 +12,8 @@ Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki)
 
 ## Examples
 
+A complete list can be found at the [live example page](https://github.com/mkloubert/phpLINQ/tree/master/examples).
+
 ### Example 1
 
 Create a sequence from a list of values.
