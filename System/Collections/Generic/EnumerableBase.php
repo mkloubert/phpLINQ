@@ -1312,31 +1312,6 @@ abstract class EnumerableBase implements IEnumerable {
                     ->distinct($comparer);
     }
     
-    private function unionInner(IEnumerable $second, $comparer) {
-        $temp = array();
-        
-        $seqences = array($this, $second);
-        foreach ($seqences as $seq) {
-            while($seq->valid()) {
-                $i = $seq->current();
-                
-                $alreadyInList = false;
-                foreach ($temp as $ti) {
-                    if ($comparer($ti, $i)) {
-                        $alreadyInList = true;
-                        break;
-                    }
-                }
-                
-                if (!$alreadyInList) {
-                    
-                }
-                
-                $seq->next();
-            }
-        }
-    }
-    
     /**
      * (non-PHPdoc)
      * @see \Iterator::valid()
