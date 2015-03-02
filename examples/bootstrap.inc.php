@@ -6,9 +6,26 @@
 
 
 function __autoload($clsName) {
-    require_once '../' . 
-                 str_replace("\\", DIRECTORY_SEPARATOR, $clsName) . 
-                 '.php';    
+	$classFilePrefix = '..' . 
+			           DIRECTORY_SEPARATOR .
+                       str_replace("\\", DIRECTORY_SEPARATOR, $clsName);
+	
+	$classFile = $classFilePrefix . '.php';
+	if (!isPHP_5_5()) {
+		// pre PHP 5.5
+		
+		$classFilePHP53 = $classFilePrefix . '.PHP5.3.php';
+		if (file_exists($classFilePHP53)) {
+			// use specific "pre file"
+			$classFile = $classFilePHP53;
+		}
+	}
+	
+    require_once $classFile;    
+}
+
+function isPHP_5_5() {
+	return version_compare(PHP_VERSION, '5.5.0', '>=');
 }
 
 function parseForHtmlOutput($str) {

@@ -28,7 +28,7 @@ use \System\Linq\Lookup;
 
 
 /**
- * A basic sequence.
+ * A basic sequence (PHP 5.3).
  * 
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
@@ -153,19 +153,23 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function concatInner($iterator) {
+    	$result = array();
+    	
         // first this elements
         while ($this->valid()) {
-            yield $this->current();
+            $result[] = $this->current();
     
             $this->next();
         }
     
         // now other elements
         while ($iterator->valid()) {
-            yield $iterator->current();
+            $result[] = $iterator->current();
     
             $iterator->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -209,7 +213,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \Iterator::current()
      */
-    public abstract function current();
+    // public abstract function current();
     
     /**
      * (non-PHPdoc)
@@ -220,17 +224,21 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function defaultIfEmptyInner($defValues) {
+    	$result = array();
+    	
         if ($this->valid()) {
             do {
-                yield $this->current();
+                $result[] = $this->current();
                 $this->next();
             } while ($this->valid());
         } 
         else {
             foreach ($defValues as $i) {
-                yield $i;
+                $result[] = $i;
             }
         }
+        
+        return $result;
     }
     
     /**
@@ -246,6 +254,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function distinctInner($comparer) {
+    	$result = array();
+    	
         $temp = array();
         while ($this->valid()) {
             $i = $this->current();
@@ -263,11 +273,13 @@ abstract class EnumerableBase implements IEnumerable {
         
             if (!$alreadyInList) {
                 $temp[] = $i;
-                yield $i;
+                $result[] = $i;
             }
         
             $this->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -304,18 +316,22 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function exceptInner(IEnumerable $second, $comparer) {
-         $itemsToExclude = static::toEnumerable($second->distinct($comparer)
+    	$result = array();
+    	
+        $itemsToExclude = static::toEnumerable($second->distinct($comparer)
                                                        ->toArray());
          
-         while ($this->valid()) {
-             $i = $this->current();
-             if (!$itemsToExclude->reset()
-                                 ->contains($i, $comparer)) {
-                 yield $i;
-             }
+        while ($this->valid()) {
+            $i = $this->current();
+            if (!$itemsToExclude->reset()
+                                ->contains($i, $comparer)) {
+                $result[] = $i;
+            }
              
-             $this->next();
-         }
+            $this->next();
+        }
+        
+        return $result;
     }
     
     /**
@@ -454,6 +470,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     private function groupByInner($keySelector, $keyComparer) {
+    	$result = array();
+    	
         $dict = new Dictionary(null, $keyComparer);
          
         while ($this->valid()) {
@@ -471,13 +489,15 @@ abstract class EnumerableBase implements IEnumerable {
         }
     
         foreach ($dict as $entry) {
-            yield new Grouping($entry->key(),
-                               $entry->value()
-                                     ->reset()
-                                     ->select(function($i) {
-                                                  return $i->value();
-                                              }));
+            $result[] = new Grouping($entry->key(),
+                                     $entry->value()
+                                           ->reset()
+                                           ->select(function($i) {
+                                                        return $i->value();
+                                                    }));
         }
+        
+        return $result;
     }
     
     /**
@@ -505,6 +525,8 @@ abstract class EnumerableBase implements IEnumerable {
                                        $resultSelector,
                                        $keyComparer) {
 
+    	$result = array();
+    	
         $keySelector = function($seqKey, $item) {
             return $item->key();
         };
@@ -527,11 +549,13 @@ abstract class EnumerableBase implements IEnumerable {
         
             if (isset($grpInner[$key])) {
                 foreach ($entry->value() as $o) {
-                    yield $resultSelector($o,
-                                          static::toEnumerable($grpInner[$key]));
+                    $result[] = $resultSelector($o,
+                                                static::toEnumerable($grpInner[$key]));
                 }
             }
         }
+        
+        return $result;
     }
     
     /**
@@ -548,6 +572,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function intersectInner(IEnumerable $second, $comparer) {
+    	$result = array();
+    	
         $secondArray = $second->distinct($comparer)
                               ->toArray();
     
@@ -561,7 +587,7 @@ abstract class EnumerableBase implements IEnumerable {
                     continue; 
                 }
                 
-                yield $ci;
+                $result[] = $ci;
                 unset($secondArray[$k]);
                 
                 break;
@@ -569,6 +595,8 @@ abstract class EnumerableBase implements IEnumerable {
                      
             $this->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -596,6 +624,8 @@ abstract class EnumerableBase implements IEnumerable {
                                   $resultSelector,
                                   $keyComparer) {
         
+    	$result = array();
+    	
         $keySelector = function($seqKey, $item) {
             return $item->key();
         };
@@ -620,18 +650,20 @@ abstract class EnumerableBase implements IEnumerable {
             if (isset($grpInner[$key])) {
                 foreach ($entry->value() as $o) {
                     foreach ($grpInner[$key] as $i) {
-                        yield $resultSelector($o, $i);
+                        $result[] = $resultSelector($o, $i);
                     }
                 }
             }
         }
+        
+        return $result;
     }
     
     /**
      * (non-PHPdoc)
      * @see \Iterator::key()
      */
-    public abstract function key();
+    // public abstract function key();
 
     /**
      * (non-PHPdoc)
@@ -748,7 +780,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \Iterator::next()
      */
-    public abstract function next();
+    // public abstract function next();
 
     /**
      * (non-PHPdoc)
@@ -808,6 +840,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function orderByInner($sortSelector, $algo) {
+    	$result = array();
+    	
         $items = array();
         while ($this->valid()) {
             $i = $this->current();
@@ -826,8 +860,10 @@ abstract class EnumerableBase implements IEnumerable {
                       });
         
         foreach ($items as $i) {
-            yield $i[1];
+            $result[] = $i[1];
         }
+        
+        return $result;
     }
     
     /**
@@ -913,7 +949,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \Iterator::rewind()
      */
-    public abstract function rewind();
+    // public abstract function rewind();
     
     /**
      * (non-PHPdoc)
@@ -926,11 +962,15 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function selectInner($selector) {
+    	$result = array();
+    	
         while ($this->valid()) {
-            yield $selector($this->current());
+            $result[] = $selector($this->current());
         
             $this->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -944,14 +984,18 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function selectManyInner($selector) {
+    	$result = array();
+    	
         while ($this->valid()) {
             $items = $selector($this->current());
             foreach ($items as $i) {
-                yield $i;
+                $result[] = $i;
             }
         
             $this->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -1052,6 +1096,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function skipWhileInner($predicate) {
+    	$result = array();
+    	
         while ($this->valid()) {
             $i = $this->current();
             $this->next();
@@ -1060,8 +1106,10 @@ abstract class EnumerableBase implements IEnumerable {
                 continue;
             }
     
-            yield $i;
+            $result[] = $i;
         }
+        
+        return $result;
     }
     
     /**
@@ -1150,6 +1198,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function takeWhileInner($predicate) {
+    	$result = array();
+    	
         while ($this->valid()) {
             $i = $this->current();
             $this->next();
@@ -1158,8 +1208,10 @@ abstract class EnumerableBase implements IEnumerable {
                 break;
             }
     
-            yield $i;
+            $result[] = $i;
         }
+        
+        return $result;
     }
     
     /**
@@ -1316,7 +1368,7 @@ abstract class EnumerableBase implements IEnumerable {
      * (non-PHPdoc)
      * @see \Iterator::valid()
      */
-    public abstract function valid();
+    // public abstract function valid();
     
     /**
      * (non-PHPdoc)
@@ -1329,15 +1381,19 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function whereInner($predicate) {
+    	$result = array();
+    	
         while ($this->valid()) {
             $i = $this->current();
             
             if ($predicate($i)) {
-                yield $i;
+                $result[] = $i;
             }
             
             $this->next();
         }
+        
+        return $result;
     }
     
     /**
@@ -1352,12 +1408,16 @@ abstract class EnumerableBase implements IEnumerable {
     }
     
     private function zipInner(IEnumerable $second, $selector) {
+    	$result = array();
+    	
         while ($this->valid() && $second->valid()) {
-            yield $selector($this->current(),
-                            $second->current());
+            $result[] = $selector($this->current(),
+                                  $second->current());
             
             $this->next();
             $second->next();
         }
+        
+        return $result;
     }
 }

@@ -326,6 +326,14 @@ final class Dictionary extends EnumerableBase implements IDictionary {
      * @see \System\Collections\Generic\EnumerableBase::toEnumerable()
      */
     protected static function toEnumerable($input) {
+        if ($input instanceof IEnumerable) {
+    		return $input;
+    	}
+    	
+    	if (is_array($input)) {
+    		$input = new \ArrayIterator($input);
+    	}
+    	
         return new Enumerable($input);
     }
     

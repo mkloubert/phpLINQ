@@ -110,7 +110,8 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         $this->_items = array();
     }
     
-    private function compareKeys($x, $y) {
+    // this needs to be public in PHP 5.3
+    public function compareKeys($x, $y) {
         $kc = $this->_keyComparer;
         
         return $kc($x, $y);
@@ -330,6 +331,14 @@ final class Dictionary extends EnumerableBase implements IDictionary {
      * @see \System\Collections\Generic\EnumerableBase::toEnumerable()
      */
     protected static function toEnumerable($input) {
+    	if ($input instanceof IEnumerable) {
+    		return $input;
+    	}
+    	
+    	if (is_array($input)) {
+    		$input = new \ArrayIterator($input);
+    	}
+    	
         return new Enumerable($input);
     }
     
