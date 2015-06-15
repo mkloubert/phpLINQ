@@ -117,8 +117,8 @@ class Enumerable extends EnumerableBase {
      *
      * @param number $start The start value.
      * @param number $count The number of values.
-     * @param number|callable The value for increasing each value or
-     *                        a function that provides that value.
+     * @param int|callable The value for increasing each value or
+     *                     a function that provides that value.
      *
      * @return \System\Linq\Enumerable The new instance.
      */

@@ -865,7 +865,7 @@ abstract class EnumerableBase implements IEnumerable {
             $oldRandomizer = $randomizer;
             
             $randomizer = function($index, $item) use ($oldRandomizer) {
-                 return $oldRandomizer();
+                 return call_user_func($oldRandomizer);
             };
         }
         
