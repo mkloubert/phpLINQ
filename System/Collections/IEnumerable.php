@@ -30,6 +30,16 @@ namespace System\Collections;
  */
 interface IEnumerable extends \Countable, \Iterator, \Serializable {
     /**
+     * Applies an accumulator function over the sequence.
+     *
+     * @param callable $accumulator An accumulator function to be invoked on each element.
+     * @param mixed $defValue The value to return if sequence is empty.
+     *
+     * @return mixed The final accumulator value.
+     */
+    function aggregate($accumulator, $defValue = null);
+
+    /**
      * Concats the items of that sequence with one or more others.
      *
      * @param mixed $items... The items to append.
@@ -55,6 +65,35 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return IEnumerable The new sequence.
      */
     function distinct($equalityComparer = null);
+
+    /**
+     * Gets the maximum value of that sequence.
+     *
+     * @param mixed $defValue The default value if sequence is empty.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return mixed The maximum value.
+     */
+    function max($defValue = null, $comparer = null);
+
+    /**
+     * Gets the minimum value of that sequence.
+     *
+     * @param mixed $defValue The default value if sequence is empty.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return mixed The maximum value.
+     */
+    function min($defValue = null, $comparer = null);
+
+    /**
+     * Calculates the product of the items.
+     *
+     * @param mixed $defValue The default value if sequence is empty.
+     *
+     * @return mixed The product of the items.
+     */
+    function product($defValue = null);
 
     /**
      * Extension of \Iterator::rewind() that returns the sequence itself after operation.
@@ -97,6 +136,15 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return IEnumerable The new instance.
      */
     function skipWhile($predicate);
+
+    /**
+     * Calculates the sum of the items.
+     *
+     * @param mixed $defValue The default value if sequence is empty.
+     *
+     * @return mixed The sum of the items.
+     */
+    function sum($defValue = null);
 
     /**
      * Takes a specific number of items from that sequence.

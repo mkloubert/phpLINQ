@@ -45,6 +45,29 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
 
+    public final function aggregate($accumulator, $defValue = null) {
+        return $this->aggregateInner($accumulator, $defValue);
+    }
+
+    protected function aggregateInner(callable $accumulator, $defValue) {
+        $result = $defValue;
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (!$ctx->isFirst) {
+                $result = call_user_func($accumulator,
+                                         $result, $ctx->value, $ctx);
+            }
+            else {
+                $result = $ctx->value;
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Returns an object / value as iterator.
      *
@@ -236,6 +259,30 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     /**
+     * Keeps sure that a comparer function is NOT (null).
+     *
+     * @param callable $comparer The input value.
+     *
+     * @return callable The output value.
+     */
+    protected static function getComparerSafe(callable $comparer = null) {
+        if (is_null($comparer)) {
+            $comparer = function($x, $y) {
+                if ($x > $y) {
+                    return 1;
+                }
+                else if ($x < $y) {
+                    return -1;
+                }
+
+                return 0;
+            };
+        }
+
+        return $comparer;
+    }
+
+    /**
      * Keeps sure that a equality comparer is NOT (null).
      *
      * @param callable $equalityComparer The input value.
@@ -256,8 +303,38 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->_i->key();
     }
 
+    public final function max($defValue = null, $comparer = null) {
+        $comparer = static::getComparerSafe($comparer);
+
+        return $this->aggregate(function($result, $item) use ($comparer) {
+                                    // check if result item is smaller
+                                    // than the current one
+
+                                    return call_user_func($comparer, $result, $item) < 0 ? $item
+                                                                                         : $result;
+                                }, $defValue);
+    }
+
+    public final function min($defValue = null, $comparer = null) {
+        $comparer = static::getComparerSafe($comparer);
+
+        return $this->aggregate(function($result, $item) use ($comparer) {
+                                    // check if result item is greater
+                                    // than the current one
+
+                                    return call_user_func($comparer, $result, $item) < 0 ? $item
+                                                                                         : $result;
+                                }, $defValue);
+    }
+
     public function next() {
         $this->_i->next();
+    }
+
+    public final function product($defValue = null) {
+        return $this->aggregate(function($result, $item) {
+                                    return $result * $item;
+                                }, $defValue);
     }
 
     public final function reset() {
@@ -330,6 +407,12 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $this;
+    }
+
+    public final function sum($defValue = null) {
+        return $this->aggregate(function($result, $item) {
+                                    return $result + $item;
+                                }, $defValue);
     }
 
     public final function take($count) {

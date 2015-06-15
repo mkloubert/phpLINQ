@@ -40,9 +40,12 @@ spl_autoload_register(function($clsName) {
 use \System\Linq\Enumerable;
 
 $seq1 = Enumerable::fromValues(1, 2, 4, 3, 4)
-                  ->take(3);
+                  ;
 
 echo "{$seq1->runtimeVersion()}<br /><br />";
+echo $seq1->aggregate(function ($result, $item) {
+    return md5(strval($result) . strval($item));
+});
 
 foreach ($seq1->distinct() as $i) {
     echo "{$i}<br />";
