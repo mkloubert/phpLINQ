@@ -81,6 +81,42 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function selectMany($selector);
 
     /**
+     * Skip a specific number of items in that sequence.
+     *
+     * @param int $count The number of items to skip.
+     *
+     * @return IEnumerable That instance.
+     */
+    function skip($count);
+
+    /**
+     * Skips the first items of that sequence while they are match a condition.
+     *
+     * @param callable $predicate The predicate.
+     *
+     * @return IEnumerable The new instance.
+     */
+    function skipWhile($predicate);
+
+    /**
+     * Takes a specific number of items from that sequence.
+     *
+     * @param int $count The number of items to take.
+     *
+     * @return IEnumerable The new instance.
+     */
+    function take($count);
+
+    /**
+     * Takes the first items of that sequence while they are match a condition.
+     *
+     * @param callable $predicate The predicate.
+     *
+     * @return IEnumerable The new instance.
+     */
+    function takeWhile($predicate);
+
+    /**
      * Converts that sequence to a PHP array.
      *
      * @param callable|null $keySelector The custom key selector.

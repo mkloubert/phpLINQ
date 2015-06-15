@@ -39,7 +39,8 @@ spl_autoload_register(function($clsName) {
 
 use \System\Linq\Enumerable;
 
-$seq1 = Enumerable::fromValues(1, 2, 4, 3, 4);
+$seq1 = Enumerable::fromValues(1, 2, 4, 3, 4)
+                  ->take(3);
 
 echo "{$seq1->runtimeVersion()}<br /><br />";
 

@@ -304,6 +304,64 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->toJson();
     }
 
+    public final function skip($count) {
+        return $this->skipWhile(function($x, $ctx) use ($count) {
+                                    return $ctx->index < $count;
+                                });
+    }
+
+    public final function skipWhile($predicate) {
+        return static::create($this->skipWhileInner($predicate));
+    }
+
+    protected function skipWhileInner($predicate) {
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++, false);
+
+            if (call_user_func($predicate,
+                               $ctx->value, $ctx)) {
+
+                $this->next();
+            }
+            else {
+                break;
+            }
+        }
+
+        return $this;
+    }
+
+    public final function take($count) {
+        return $this->takeWhile(function($x, $ctx) use ($count) {
+                                    return $ctx->index < $count;
+                                });
+    }
+
+    public final function takeWhile($predicate) {
+        return static::create($this->takeWhileInner($predicate));
+    }
+
+    /**
+     * @see EnumerableBase::takeWhile()
+     */
+    protected function takeWhileInner(callable $predicate) {
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++, false);
+
+            if (call_user_func($predicate,
+                               $ctx->value, $ctx)) {
+
+                yield $ctx->value;
+                $this->next();
+            }
+            else {
+                break;
+            }
+        }
+    }
+
     public function toArray($keySelector = null) {
         if (is_null($keySelector)) {
             $keySelector = function ($key, $value, $index) {
