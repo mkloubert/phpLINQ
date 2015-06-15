@@ -1,23 +1,48 @@
-<html>
-  <head>
-  </head>
-  
-  <body>
-    <pre>
 <?php
 
-error_reporting(E_ALL);
+/**
+ *  LINQ concept for PHP
+ *  Copyright (C) 2015  Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ *
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation; either
+ *    version 3.0 of the License, or (at your option) any later version.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *    Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with this library.
+ */
 
-function __autoload($clsName) {
-    require_once './' . str_replace('\\', '/', $clsName) . '.php';
+
+/**
+ * Autoloader.
+ *
+ * @param string $clsName Name of the class to load.
+ *
+ * @author Marcel Kloubert <marcel.kloubert@gmx.net>
+ */
+spl_autoload_register(function($clsName) {
+    $file = realpath(__DIR__ . DIRECTORY_SEPARATOR .
+                     str_replace('\\', DIRECTORY_SEPARATOR, $clsName) .
+                     '.php');
+
+    if (false !== $file) {
+        require_once $file;
+    }
+});
+
+
+use \System\Linq\Enumerable;
+
+$seq1 = Enumerable::fromValues(1, 2, 4, 3, 4);
+
+echo "{$seq1->runtimeVersion()}<br /><br />";
+
+foreach ($seq1->distinct() as $i) {
+    echo "{$i}<br />";
 }
-
-use \System\Collections\Generic\Set;
-
-$s = new Set();
-
-
-?>
-    </pre>
-  </body>
-</html>
