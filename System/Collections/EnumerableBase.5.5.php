@@ -406,6 +406,23 @@ abstract class EnumerableBase implements IEnumerable {
         return "5.5";
     }
 
+    public final function select($selector) {
+        return static::create($this->selectInner($selector));
+    }
+
+    /**
+     * @see EnumerableBase::select()
+     */
+    protected function selectInner(callable $selector) {
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            yield call_user_func($selector,
+                                 $ctx->value, $ctx);
+        }
+    }
+
     public final function selectMany($selector) {
         return static::create($this->selectManyInner($selector));
     }

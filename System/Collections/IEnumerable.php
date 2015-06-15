@@ -124,6 +124,15 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function runtimeVersion();
 
     /**
+     * Projects each element of that sequence to a new sequence.
+     *
+     * @param callable $selector The selector to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function select($selector);
+
+    /**
      * Projects each element of that sequence to an IEnumerable
      * and flattens the resulting sequences into one sequence.
      *
