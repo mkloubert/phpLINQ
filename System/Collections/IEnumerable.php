@@ -101,6 +101,53 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function min($defValue = null, $comparer = null);
 
     /**
+     * Filters all items of a specific type.
+     *
+     * @param string $type The name of the type.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function ofType($type);
+
+    /**
+     * Orders the items of that sequence ascending by using the items as sort value.
+     *
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function order($comparer = null);
+
+    /**
+     * Orders the items of that sequence ascending by using a specific sort value.
+     *
+     * @param callable $selector The selector for the sort values.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function orderBy($selector, $comparer = null);
+
+    /**
+     * Orders the items of that sequence descending by using a specific sort value.
+     *
+     * @param callable $selector The selector for the sort values.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function orderByDescending($selector, $comparer = null);
+
+    /**
+     * Orders the items of that sequence descending by using the items as sort value.
+     *
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function orderDescending($comparer = null);
+
+    /**
      * Calculates the product of the items.
      *
      * @param mixed $defValue The default value if sequence is empty.
@@ -110,11 +157,28 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function product($defValue = null);
 
     /**
+     * Randomizes the order of that sequence.
+     *
+     * @param callable $seeder The custom function that initializes the random number generator.
+     * @param callable $randProvider The custom function that provides the random values.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function randomize($seeder = null, $randProvider = null);
+
+    /**
      * Extension of \Iterator::rewind() that returns the sequence itself after operation.
      *
-     * @return IEnumerable
+     * @return IEnumerable The sequence itself.
      */
     function reset();
+
+    /**
+     * Returns the items of that sequence in reverse order.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function reverse();
 
     /**
      * Gets the runtime version the sequence is designed for.
@@ -141,6 +205,30 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return IEnumerable The new sequence.
      */
     function selectMany($selector);
+
+    /**
+     * Checks if another sequence has the same elements as that sequence.
+     *
+     * @param mixed $other The other sequence.
+     * @param callable $equalityComparer The custom equality comparer to use.
+     *
+     * @return bool Both are equal or not.
+     */
+    function sequenceEqual($other, $equalityComparer = null);
+
+    /**
+     * Returns the one and only matching element in that sequence.
+     *
+     * @param mixed $predicate The custom predicate to use.
+     *                         If there is only one submitted argument and this variable contains
+     *                         no callable, it is set to (null) and its origin value is written to $defValue.
+     * @param mixed $defValue The default value if element was not found.
+     *
+     * @return mixed The found element or the default value.
+     *
+     * @throws \Exception Sequence contains more than one element.
+     */
+    function singleOrDefault($predicate = null, $defValue = null);
 
     /**
      * Skip a specific number of items in that sequence.
@@ -219,7 +307,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     /**
      * Filters the items of that sequence.
      *
-     * @param $predicate
+     * @param callable $predicate The filter predicate to use.
      *
      * @return IEnumerable The filtered sequence.
      */

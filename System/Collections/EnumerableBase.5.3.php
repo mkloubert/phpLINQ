@@ -319,6 +319,23 @@ abstract class EnumerableBase implements IEnumerable {
         return $equalityComparer;
     }
 
+    /**
+     * Keeps sure that a predicate function is NOT (null).
+     *
+     * @param callable $predicate The input value.
+     *
+     * @return callable The output value.
+     */
+    protected static function getPredicateSafe($predicate) {
+        if (is_null($predicate)) {
+            $predicate = function() {
+                return true;
+            };
+        }
+
+        return $predicate;
+    }
+
     public function isEmpty() {
         return !$this->valid();
     }
@@ -359,10 +376,90 @@ abstract class EnumerableBase implements IEnumerable {
         $this->_i->next();
     }
 
+    public function ofType($type) {
+        $type = trim($type);
+
+        return $this->where(function($x) use ($type) {
+                                if (empty($type)) {
+                                    return is_null($x);
+                                }
+
+                                if (is_object($x)) {
+                                    if (class_exists($type)) {
+                                        $reflect = new \ReflectionClass($type);
+
+                                        return $reflect->isInstance($x);
+                                    }
+                                }
+
+                                return gettype($x) == $type;
+                            });
+    }
+
+    public final function order($comparer = null) {
+        return $this->orderBy(function($x) {
+                                  return $x;
+                              }, $comparer);
+    }
+
+    public function orderBy($selector, $comparer = null) {
+        $comparer = static::getComparerSafe($comparer);
+
+        $result = $this->select(function($x, $ctx) use ($selector) {
+                                    $result         = new \stdClass();
+                                    $result->sortBy = call_user_func($selector,
+                                                                     $x, $ctx);
+                                    $result->value  = $x;
+
+                                    return $result;
+                                })
+                       ->toArray();
+
+        uasort($result, function($x, $y) use ($comparer) {
+                            return call_user_func($comparer,
+                                                  $x->sortBy, $y->sortBy);
+                        });
+
+        return static::create($result)
+                     ->select(function($x) {
+                                  return $x->value;
+                              });
+    }
+
+    public final function orderByDescending($selector, $comparer = null) {
+        $comparer = static::getComparerSafe($comparer);
+
+        return $this->orderBy($selector,
+                              function($x, $y) use ($comparer) {
+                                  return -1 * call_user_func($comparer,
+                                                             $x, $y);
+                              });
+    }
+
+    public final function orderDescending($comparer = null) {
+        return $this->orderByDescending(function($x) {
+                                            return $x;
+                                        }, $comparer);
+    }
+
     public final function product($defValue = null) {
         return $this->aggregate(function($result, $item) {
                                     return $result * $item;
                                 }, $defValue);
+    }
+
+    public function randomize($seeder = null, $randProvider = null) {
+        if (is_null($randProvider)) {
+            $randProvider = function () {
+                return mt_rand();
+            };
+        }
+
+        if (!is_null($seeder)) {
+            call_user_func($seeder);
+        }
+
+        return $this->orderBy($randProvider);
     }
 
     /**
@@ -398,11 +495,17 @@ abstract class EnumerableBase implements IEnumerable {
         return $this;
     }
 
+    public final function reverse() {
+        return $this->orderBy(function($x, $ctx) {
+                                  return PHP_INT_MAX - $ctx->index;
+                              });
+    }
+
     public function rewind() {
         $this->_i->rewind();
     }
 
-    public function runtimeVersion() {
+    public final function runtimeVersion() {
         return "5.3";
     }
 
@@ -458,8 +561,67 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
 
+    public final function sequenceEqual($other, $equalityComparer = null) {
+        $equalityComparer = static::getEqualComparerSafe($equalityComparer);
+
+        if (is_null($other)) {
+            $other = array();
+        }
+
+        $other = static::asIterator($other);
+
+        while ($this->valid()) {
+            $x = $this->current();
+
+            if (!$other->valid()) {
+                // that sequence has more items
+                return false;
+            }
+
+            $y = $other->current();
+
+            if (!call_user_func($equalityComparer, $x, $y)) {
+                // both items are NOT equal
+                return false;
+            }
+        }
+
+        if ($other->valid()) {
+            // other has more items
+            return false;
+        }
+
+        return true;
+    }
+
     public function serialize() {
         return $this->toJson();
+    }
+
+    public final function singleOrDefault($predicate = null, $defValue = null) {
+        static::updatePredicateAndDefaultValue(func_num_args(),
+                                               $predicate, $defValue);
+
+        $predicate = static::getPredicateSafe($predicate);
+
+        $result = $defValue;
+
+        $index = 0;
+        $hasAlreadyBeenFound = false;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (call_user_func($predicate, $ctx->value, $ctx)) {
+                if ($hasAlreadyBeenFound) {
+                    throw new \Exception('Sequence contains more than one matching element!');
+                }
+
+                $result              = $ctx->value;
+                $hasAlreadyBeenFound = true;
+            }
+        }
+
+        return $result;
     }
 
     public final function skip($count) {
@@ -469,6 +631,13 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function skipWhile($predicate) {
+        return static::create($this->skipWhileInner($predicate));
+    }
+
+    /**
+     * @see EnumerableBase::skipWhile()
+     */
+    protected function skipWhileInner($predicate) {
         $index = 0;
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++, false);
@@ -483,7 +652,7 @@ abstract class EnumerableBase implements IEnumerable {
             }
         }
 
-        return $this;
+        return $this->toArray();
     }
 
     public final function sum($defValue = null) {
@@ -528,7 +697,7 @@ abstract class EnumerableBase implements IEnumerable {
 
     public function toArray($keySelector = null) {
         if (is_null($keySelector)) {
-            $keySelector = function ($key, $value, $index) {
+            $keySelector = function() {
                 return null;
             };
         }
@@ -581,6 +750,26 @@ abstract class EnumerableBase implements IEnumerable {
     public function union($second, $equalityComparer = null) {
         return $this->concat($second)
                     ->distinct($equalityComparer);
+    }
+
+    /**
+     * Updates the variables $predicate and $defValue by the submitted arguments of a method / function.
+     *
+     * @param int $argCount The number of submitted arguments.
+     * @param mixed $predicate The predicate.
+     *                         If there is only one submitted argument and this variable contains
+     *                         no callable, it is set to (null) and its origin value is written to $defValue.
+     * @param mixed $defValue The value that contains the default value.
+     */
+    protected static function updatePredicateAndDefaultValue($argCount, &$predicate, &$defValue) {
+        if (1 == $argCount) {
+            if (!is_callable($predicate)) {
+                // use $predicate as default value
+
+                $defValue  = $predicate;
+                $predicate = null;
+            }
+        }
     }
 
     public function unserialize($serialized) {
