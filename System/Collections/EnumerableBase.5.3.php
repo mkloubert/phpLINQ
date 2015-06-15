@@ -321,7 +321,7 @@ abstract class EnumerableBase implements IEnumerable {
                                     // check if result item is greater
                                     // than the current one
 
-                                    return call_user_func($comparer, $result, $item) < 0 ? $item
+                                    return call_user_func($comparer, $result, $item) > 0 ? $item
                                                                                          : $result;
                                 }, $defValue);
     }
