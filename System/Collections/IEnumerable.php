@@ -67,6 +67,20 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function distinct($equalityComparer = null);
 
     /**
+     * Gets if that sequence does not contain items anymore.
+     *
+     * @return bool Is empty or not.
+     */
+    function isEmpty();
+
+    /**
+     * Gets if that sequence still contains items or not.
+     *
+     * @return bool Is empty (false) or not (true).
+     */
+    function isNotEmpty();
+
+    /**
      * Gets the maximum value of that sequence.
      *
      * @param mixed $defValue The default value if sequence is empty.

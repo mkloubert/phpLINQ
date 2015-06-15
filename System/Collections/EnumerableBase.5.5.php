@@ -108,6 +108,26 @@ abstract class EnumerableBase implements IEnumerable {
         return new \ArrayIterator($arr);
     }
 
+    /**
+     * Builds a new sequence by using a factory function.
+     *
+     * @param int $count The number of items to build.
+     * @param callable $itemFactory The function that builds an item.
+     *
+     * @return static The new sequence.
+     */
+    public static function build($count, callable $itemFactory) {
+        $items = array();
+
+        $index = 0;
+        while ($index < $count) {
+            $items[] = call_user_func($itemFactory,
+                                      $index++);
+        }
+
+        return static::create($items);
+    }
+
     public final function concat() {
         return static::create($this->concatInner(func_get_args()));
     }
@@ -299,6 +319,14 @@ abstract class EnumerableBase implements IEnumerable {
         return $equalityComparer;
     }
 
+    public function isEmpty() {
+        return !$this->valid();
+    }
+
+    public final function isNotEmpty() {
+        return !$this->isEmpty();
+    }
+
     public function key() {
         return $this->_i->key();
     }
@@ -335,6 +363,34 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->aggregate(function($result, $item) {
                                     return $result * $item;
                                 }, $defValue);
+    }
+
+    /**
+     * Creates a sequence with a range of numbers.
+     *
+     * @param number $start The start value.
+     * @param number $count The number of items.
+     * @param int|callable $increaseBy The increase value or the function that provides that value.
+     *
+     * @return static The new sequence.
+     */
+    public static function range($start, $count, $increaseBy = 1) {
+        $increaseFunc = $increaseBy;
+        if (!is_callable($increaseFunc)) {
+            $increaseFunc = function() use ($increaseBy) {
+                return $increaseBy;
+            };
+        }
+
+        return static::build($count,
+                             function($index) use (&$start, $increaseFunc) {
+                                 $result = $start;
+
+                                 $start += call_user_func($increaseFunc,
+                                                          $result, $index);
+
+                                 return $result;
+                             });
     }
 
     public final function reset() {
