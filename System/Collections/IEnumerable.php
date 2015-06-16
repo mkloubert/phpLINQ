@@ -184,6 +184,22 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function groupBy($keySelector, $keyEqualityComparer = null);
 
     /**
+     * Correlates the elements of that sequence and another based on matching keys and groups items.
+     *
+     * @param mixed $inner The other sequence.
+     * @param callable $outerKeySelector The key selector for the items of that sequence.
+     * @param callable $innerKeySelector The key selector for the items of the other sequence.
+     * @param callable $resultSelector The function that provides the result value for two matching elements.
+     * @param callable $keyEqualityComparer The custom equality function for the keys.
+     *
+     * @return static The joined sequence.
+     */
+    function groupJoin($inner,
+                       $outerKeySelector, $innerKeySelector,
+                       $resultSelector,
+                       $keyEqualityComparer = null);
+
+    /**
      * Returns the intersection of this sequence and another.
      *
      * @param mixed $second The second sequence.
@@ -214,14 +230,14 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @param callable $outerKeySelector The key selector for the items of that sequence.
      * @param callable $innerKeySelector The key selector for the items of the other sequence.
      * @param callable $resultSelector The function that provides the result value for two matching elements.
-     * @param callable $keyEqualFunc The custom equality function for the keys.
+     * @param callable $keyEqualityComparer The custom equality function for the keys.
      *
      * @return IEnumerable The joined sequence.
      */
     function join($inner,
                   $outerKeySelector, $innerKeySelector,
                   $resultSelector,
-                  $keyEqualFunc = null);
+                  $keyEqualityComparer = null);
 
     /**
      * Joins all elements of that sequence to one string.

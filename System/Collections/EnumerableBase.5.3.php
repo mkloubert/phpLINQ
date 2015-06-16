@@ -537,6 +537,71 @@ abstract class EnumerableBase implements IEnumerable {
                               });
     }
 
+    public final function groupJoin($inner,
+                                    $outerKeySelector, $innerKeySelector,
+                                    $resultSelector,
+                                    $keyEqualityComparer = null) {
+
+        return static::create($this->groupJoinInner($inner,
+                                                    $outerKeySelector, $innerKeySelector,
+                                                    $resultSelector,
+                                                    $keyEqualityComparer));
+    }
+
+    /**
+     * @see EnumerableBase::groupJoin()
+     */
+    protected function groupJoinInner($inner,
+                                      $outerKeySelector, $innerKeySelector,
+                                      $resultSelector,
+                                      $keyEqualityComparer) {
+
+        if (!($inner instanceof IEnumerable)) {
+            $inner = static::create($inner);
+        }
+
+        $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
+
+        $createGrpsForSequence = function(IEnumerable $seq, $keySelector) {
+            return $seq->groupBy(function ($item, $ctx) use ($keySelector) {
+                                     return call_user_func($keySelector,
+                                                           $item, $ctx);
+                                     })
+                       ->select(function(IGrouping $x) {
+                                    $result         = new \stdClass();
+                                    $result->key    = $x->key();
+                                    $result->values = $x->getIterator();
+
+                                    return $result;
+                                })
+                       ->toArray();
+        };
+
+        $outerGrps = call_user_func($createGrpsForSequence,
+                                    $this, $outerKeySelector);
+        $innerGrps = call_user_func($createGrpsForSequence,
+                                    $inner, $innerKeySelector);
+
+        $result = array();
+
+        foreach ($outerGrps as $outerGrp) {
+            foreach ($innerGrps as $innerGrp) {
+                if (!call_user_func($keyEqualityComparer,
+                    $outerGrp->key, $innerGrp->key)) {
+
+                    continue;
+                }
+
+                foreach ($outerGrp->values as $outerVal) {
+                    $result[] = call_user_func($resultSelector,
+                                               $outerVal, $innerGrp->values, $outerGrp->key, $innerGrp->key);
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public final function intersect($second, $equalityComparer = null) {
         return static::create($this->intersectInner($second, $equalityComparer));
     }
@@ -606,7 +671,9 @@ abstract class EnumerableBase implements IEnumerable {
                                  $resultSelector,
                                  $keyEqualityComparer) {
 
-        $inner = static::create($inner);
+        if (!($inner instanceof IEnumerable)) {
+            $inner = static::create($inner);
+        }
 
         $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
 
@@ -616,7 +683,7 @@ abstract class EnumerableBase implements IEnumerable {
                                                            $item, $ctx);
                                  })
                        ->select(function(IGrouping $x) {
-                                    $result         = new stdClass();
+                                    $result         = new \stdClass();
                                     $result->key    = $x->key();
                                     $result->values = $x->getIterator()
                                                         ->toArray();
