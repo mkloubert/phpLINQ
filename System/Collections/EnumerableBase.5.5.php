@@ -68,6 +68,43 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
 
+    public final function all($predicate) {
+        return $this->allInner($predicate);
+    }
+
+    /**
+     * @see EnumerableBase::all()
+     */
+    protected function allInner(callable $predicate) {
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (!call_user_func($predicate, $ctx->item, $ctx)) {
+                return false;
+            }
+        }
+
+        // no item found that does not match
+        return true;
+    }
+
+    public final function any($predicate = null) {
+        $predicate = static::getPredicateSafe($predicate);
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (call_user_func($predicate, $ctx->value, $ctx)) {
+                return true;
+            }
+        }
+
+        // no matching item found
+        return false;
+    }
+
     /**
      * Returns an object / value as iterator.
      *
@@ -108,6 +145,19 @@ abstract class EnumerableBase implements IEnumerable {
         return new \ArrayIterator($arr);
     }
 
+    public final function average($defValue = null) {
+        $divisor  = 0;
+        $dividend = $this->each(function($x, $ctx) use (&$divisor) {
+                                $divisor = $ctx->index + 1;
+
+                                $ctx->result = !$ctx->isFirst ? $ctx->result + $x
+                                                              : $x;
+                            });
+
+        return $divisor > 0 ? floatval($dividend) / floatval($divisor)
+                            : $defValue;
+    }
+
     /**
      * Builds a new sequence by using a factory function.
      *
@@ -126,6 +176,14 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return static::create($items);
+    }
+
+    public final function cast($type) {
+        $code = sprintf('return (%s)$x;', trim($type));
+
+        return $this->select(function($x) use ($code) {
+                                 return eval($code);
+                             });
     }
 
     public final function concat() {
@@ -346,7 +404,7 @@ abstract class EnumerableBase implements IEnumerable {
 
         $index = 0;
         while ($this->valid()) {
-            $ctx = static::createBasicContext($this, $index++);
+            $ctx = static::createContextObject($this, $index++);
 
             if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 return $ctx->value;
@@ -603,7 +661,7 @@ abstract class EnumerableBase implements IEnumerable {
 
         $index = 0;
         while ($this->valid()) {
-            $ctx = static::createBasicContext($this, $index++);
+            $ctx = static::createContextObject($this, $index++);
 
             if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 $result = $ctx->value;

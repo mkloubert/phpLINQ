@@ -64,6 +64,36 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
 
+    public final function all($predicate) {
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (!call_user_func($predicate, $ctx->item, $ctx)) {
+                return false;
+            }
+        }
+
+        // no item found that does not match
+        return true;
+    }
+
+    public final function any($predicate = null) {
+        $predicate = static::getPredicateSafe($predicate);
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            if (call_user_func($predicate, $ctx->value, $ctx)) {
+                return true;
+            }
+        }
+
+        // no matching item found
+        return false;
+    }
+
     /**
      * Returns an object / value as iterator.
      *
@@ -104,6 +134,19 @@ abstract class EnumerableBase implements IEnumerable {
         return new \ArrayIterator($arr);
     }
 
+    public final function average($defValue = null) {
+        $count = 0;
+        $sum = $this->each(function($x, $ctx) use (&$count) {
+                               $count = $ctx->index + 1;
+
+                               $ctx->result = !$ctx->isFirst ? $ctx->result + $x
+                                                             : $x;
+                           });
+
+        return $count > 0 ? floatval($sum) / floatval($count)
+                          : $defValue;
+    }
+
     /**
      * Builds a new sequence by using a factory function.
      *
@@ -122,6 +165,14 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return static::create($items);
+    }
+
+    public final function cast($type) {
+        $code = sprintf('return (%s)$x;', trim($type));
+
+        return $this->select(function($x) use ($code) {
+                                 return eval($code);
+                             });
     }
 
     public final function concat() {

@@ -40,6 +40,44 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function aggregate($accumulator, $defValue = null);
 
     /**
+     * Checks if all items match a condition.
+     * An empty sequence will return (true).
+     *
+     * @param callable $predicate The predicate to use.
+     *
+     * @return bool All items match condition.
+     */
+    function all($predicate);
+
+    /**
+     * Checks if there is at least one element that matches a condition.
+     *
+     * @param callable $predicate The predicate to use. If (null) at least one element must exist to return (true).
+     *
+     * @return bool One element found.
+     */
+    function any($predicate = null);
+
+    /**
+     * Calculates the average value of all values of that sequence.
+     *
+     * @param mixed $defValue The default value if sequence is empty.
+     *
+     * @return mixed The average value or the default.
+     */
+    function average($defValue = null);
+
+    /**
+     * Casts the items of that sequence.
+     *
+     * @param string $type The name of the target type.
+     *                     (http://php.net/manual/en/language.types.type-juggling.php)
+     *
+     * @return IEnumerable The casted sequence.
+     */
+    function cast($type);
+
+    /**
      * Concats the items of that sequence with one or more others.
      *
      * @param mixed $items... The items to append.
@@ -62,7 +100,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      *
      * @param mixed $item... The items for the default sequence.
      *
-     * @return static The default instance or that sequence if it is not empty.
+     * @return IEnumerable The default instance or that sequence if it is not empty.
      */
     function defaultIfEmpty();
 
@@ -71,7 +109,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      *
      * @param mixed $items The items for the default sequence.
      *
-     * @return static The default instance or that sequence if it is not empty.
+     * @return IEnumerable The default instance or that sequence if it is not empty.
      */
     function defaultIfEmpty2($items);
 
