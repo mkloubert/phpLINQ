@@ -220,6 +220,19 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->_i->current();
     }
 
+    public final function defaultIfEmpty() {
+        return call_user_func(array($this, 'defaultIfEmpty2'),
+                              func_get_args());
+    }
+
+    public final function defaultIfEmpty2($items) {
+        if ($this->isEmpty()) {
+            return static::create($items);
+        }
+
+        return $this;
+    }
+
     public final function distinct($equalityComparer = null) {
         return static::create($this->distinctInner($equalityComparer));
     }
@@ -254,6 +267,93 @@ abstract class EnumerableBase implements IEnumerable {
 
             $this->next();
         }
+    }
+
+    public final function each($action, $defResult = null) {
+        return $this->eachInner($action, $defResult);
+    }
+
+    /**
+     * @see EnumerableBase::each()
+     */
+    public final function eachInner(callable $action, $defResult) {
+        $result = $defResult;
+
+        $index   = 0;
+        $prevVal = null;
+        $val     = null;
+        while ($this->valid()) {
+            $ctx          = static::createContextObject($this, $index++);
+            $ctx->cancel  = false;
+            $ctx->nextVal = null;
+            $ctx->prevVal = $prevVal;
+            $ctx->result  = $result;
+            $ctx->val     = $val;
+
+            call_user_func($action,
+                           $ctx->value, $ctx);
+
+            $result  = $ctx->result;
+
+            if ($ctx->cancel) {
+                break;
+            }
+
+            $prevVal = $ctx->nextVal;
+            $val     = $ctx->val;
+        }
+
+        return $result;
+    }
+
+    public final function elementAtOrDefault($index, $defValue = null) {
+        return $this->skip($index)
+                    ->firstOrDefault(null, $defValue);
+    }
+
+    public final function except($second, $equalityComparer = null) {
+        return static::create($this->exceptInner($second, $equalityComparer));
+    }
+
+    /**
+     * @see EnumerableBase::except()
+     */
+    protected function exceptInner($second, callable $equalityComparer = null) {
+        if (is_null($second)) {
+            $second = array();
+        }
+
+        $itemsToExclude = static::create($second)
+                                ->distinct($equalityComparer);
+
+        while ($this->valid()) {
+            $curItem = $this->current();
+            if (!$itemsToExclude->reset()
+                                ->contains($curItem, $equalityComparer)) {
+
+                yield $curItem;
+            }
+
+            $this->next();
+        }
+    }
+
+    public final function firstOrDefault($predicateOrDefValue = null, $defValue = null) {
+        static::updatePredicateAndDefaultValue(func_num_args(),
+                                               $predicateOrDefValue, $defValue);
+
+        $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createBasicContext($this, $index++);
+
+            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
+                return $ctx->value;
+            }
+        }
+
+        return $defValue;
     }
 
     /**
@@ -336,6 +436,89 @@ abstract class EnumerableBase implements IEnumerable {
         return $predicate;
     }
 
+    public final function groupBy($keySelector, $keyEqualityComparer = null) {
+        return $this->groupByInner($keySelector, $keyEqualityComparer);
+    }
+
+    /**
+     * @see EnumerableBase::groupBy()
+     */
+    protected function groupByInner(callable $keySelector, callable $keyEqualityComparer = null) {
+        $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
+
+        $groups = array();
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            $key = call_user_func($keySelector,
+                                  $ctx->value, $ctx);
+
+            $grp = null;
+            foreach ($groups as $g) {
+                if (call_user_func($keyEqualityComparer, $g->key, $key)) {
+                    $grp = $g;
+                    break;
+                }
+            }
+
+            if (is_null($grp)) {
+                $grp         = new \stdClass();
+                $grp->key    = $key;
+                $grp->values = array();
+
+                $groups[] = $grp;
+            }
+
+            $grp->values[] = $ctx->value;
+        }
+
+        return static::create($groups)
+                     ->select(function($x) {
+                                  return new Grouping($x->key,
+                                                      static::create($x->values));
+                              });
+    }
+
+    public final function intersect($second, $equalityComparer = null) {
+        return static::create($this->intersectInner($second, $equalityComparer));
+    }
+
+    /**
+     * @see EnumerableBase::intersect()
+     */
+    protected function intersectInner($second, $equalityComparer) {
+        if (is_null($second)) {
+            $second = array();
+        }
+
+        $equalityComparer = static::getEqualComparerSafe($equalityComparer);
+
+        $secondArray = static::create($second)
+                             ->distinct($equalityComparer)
+                             ->toArray();
+
+        while ($this->valid()) {
+            $curItem = $this->current();
+
+            // search for matching item in second sequence
+            foreach ($secondArray as $k => $v) {
+                if (!call_user_func($equalityComparer, $v, $curItem)) {
+                    // not found
+                    continue;
+                }
+
+                unset($secondArray[$k]);
+                yield $curItem;
+
+                break;
+            }
+
+            $this->next();
+        }
+    }
+
     public function isEmpty() {
         return !$this->valid();
     }
@@ -344,8 +527,90 @@ abstract class EnumerableBase implements IEnumerable {
         return !$this->isEmpty();
     }
 
+    public final function join($inner,
+                               $outerKeySelector, $innerKeySelector,
+                               $resultSelector,
+                               $keyEqualityComparer = null) {
+
+        return $this->joinInner($inner,
+            $outerKeySelector, $innerKeySelector,
+            $resultSelector,
+            $keyEqualityComparer);
+    }
+
+    /**
+     * @see EnumerableBase::join()
+     */
+    protected function joinInner($inner,
+                                 callable $outerKeySelector, callable $innerKeySelector,
+                                 callable $resultSelector,
+                                 callable $keyEqualityComparer = null) {
+
+        $inner = static::create($inner);
+
+        $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
+
+        $createGrpsForSequence = function(IEnumerable $seq, $keySelector) {
+            return $seq->groupBy(function ($item, $ctx) use ($keySelector) {
+                                     return call_user_func($keySelector,
+                                                           $item, $ctx);
+                                 })
+                       ->select(function(IGrouping $grp) {
+                                    $result         = new \stdClass();
+                                    $result->key    = $grp->key();
+                                    $result->values = $grp->getIterator()
+                                                          ->toArray();
+
+                                    return $result;
+                                })
+                       ->toArray();
+        };
+
+        $outerGrps = call_user_func($createGrpsForSequence,
+                                    $this, $outerKeySelector);
+        $innerGrps = call_user_func($createGrpsForSequence,
+                                    $inner, $innerKeySelector);
+
+        foreach ($outerGrps as $outerGrp) {
+            foreach ($innerGrps as $innerGrp) {
+                if (!call_user_func($keyEqualityComparer,
+                                    $outerGrp->key, $innerGrp->key)) {
+
+                    continue;
+                }
+
+                foreach ($outerGrp->values as $outerVal) {
+                    foreach ($innerGrp->values as $innerVal) {
+                        yield call_user_func($resultSelector,
+                                             $outerVal, $innerVal, $outerGrp->key, $innerGrp->key);
+                    }
+                }
+            }
+        }
+    }
+
     public function key() {
         return $this->_i->key();
+    }
+
+    public final function lastOrDefault($predicateOrDefValue = null, $defValue = null) {
+        static::updatePredicateAndDefaultValue(func_num_args(),
+                                               $predicateOrDefValue, $defValue);
+
+        $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
+
+        $result = $defValue;
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createBasicContext($this, $index++);
+
+            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
+                $result = $ctx->value;
+            }
+        }
+
+        return $result;
     }
 
     public final function max($defValue = null, $comparer = null) {
@@ -594,11 +859,11 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->toJson();
     }
 
-    public final function singleOrDefault($predicate = null, $defValue = null) {
+    public final function singleOrDefault($predicateOrDefValue = null, $defValue = null) {
         static::updatePredicateAndDefaultValue(func_num_args(),
-                                               $predicate, $defValue);
+                                               $predicateOrDefValue, $defValue);
 
-        $predicate = static::getPredicateSafe($predicate);
+        $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
 
         $result = $defValue;
 
@@ -607,7 +872,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicate, $ctx->value, $ctx)) {
+            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 if ($hasAlreadyBeenFound) {
                     throw new \Exception('Sequence contains more than one matching element!');
                 }

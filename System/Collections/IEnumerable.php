@@ -58,6 +58,24 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function concatValues();
 
     /**
+     * Returns a default sequence if that sequence is empty.
+     *
+     * @param mixed $item... The items for the default sequence.
+     *
+     * @return static The default instance or that sequence if it is not empty.
+     */
+    function defaultIfEmpty();
+
+    /**
+     * Returns a default sequence if that sequence is empty.
+     *
+     * @param mixed $items The items for the default sequence.
+     *
+     * @return static The default instance or that sequence if it is not empty.
+     */
+    function defaultIfEmpty2($items);
+
+    /**
      * Removes duplicates.
      *
      * @param callable|null $equalityComparer The custom equality comparer.
@@ -65,6 +83,36 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return IEnumerable The new sequence.
      */
     function distinct($equalityComparer = null);
+
+    /**
+     * Iterates over that sequence by using a callable.
+     *
+     * @param callable $action The action to invoke for each item.
+     * @param mixed $defResult The initial / default result.
+     *
+     * @return mixed The current result value from the iteration.
+     */
+    function each($action, $defResult = null);
+
+    /**
+     * Returns an element at a specific position.
+     *
+     * @param int $index The zero based index.
+     * @param mixed $defValue The value to return if element was not found.
+     *
+     * @return mixed The element or the default value.
+     */
+    function elementAtOrDefault($index, $defValue = null);
+
+    /**
+     * Returns the items of that sequence except the items of other one.
+     *
+     * @param mixed $second The other sequence.
+     * @param callable $equalityComparer The custom equaler function.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function except($second, $equalityComparer = null);
 
     /**
      * Returns the first matching value of that sequence or a default value if not found.
@@ -113,6 +161,22 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function isNotEmpty();
 
     /**
+     * Correlates the elements of that sequence and another based on matching keys.
+     *
+     * @param mixed $inner The other sequence.
+     * @param callable $outerKeySelector The key selector for the items of that sequence.
+     * @param callable $innerKeySelector The key selector for the items of the other sequence.
+     * @param callable $resultSelector The function that provides the result value for two matching elements.
+     * @param callable $keyEqualFunc The custom equality function for the keys.
+     *
+     * @return IEnumerable The joined sequence.
+     */
+    function join($inner,
+                  $outerKeySelector, $innerKeySelector,
+                  $resultSelector,
+                  $keyEqualFunc = null);
+
+    /**
      * Returns the last matching value of that sequence or a default value if not found.
      *
      * @param mixed $predicateOrDefValue The custom predicate to use.
@@ -140,7 +204,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @param mixed $defValue The default value if sequence is empty.
      * @param callable $comparer The custom comparer to use.
      *
-     * @return mixed The maximum value.
+     * @return mixed The minimum value.
      */
     function min($defValue = null, $comparer = null);
 
