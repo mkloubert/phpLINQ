@@ -6,6 +6,12 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki) in the wiki or the [API](http://phplinq.marcel-kloubert.eu/api/) documentation.
 
+## Refactoring
+
+The library is currently refactored!
+
+The documentation describes the following code pf the following commit: [8e7f16c](https://github.com/mkloubert/phpLINQ/commit/8e7f16c0d6ca8d42fb37977f9ab29491ae796afe)
+
 ## Requirements
 
 * PHP 5.5+ (because it uses [Generator syntax](http://php.net/manual/en/language.generators.syntax.php))
