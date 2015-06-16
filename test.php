@@ -35,6 +35,3 @@ spl_autoload_register(function($clsName) {
         require_once $file;
     }
 });
-
-$r = class_exists('\System\Linq\Enumerable');
-echo $r;

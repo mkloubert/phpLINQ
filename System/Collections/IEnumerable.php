@@ -87,6 +87,15 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function concat();
 
     /**
+     * Joins all elements of that sequence to one string.
+     *
+     * @param string $defValue The value to return if sequence is empty.
+     *
+     * @return string The generated string.
+     */
+    function concatToString($defValue = '');
+
+    /**
      * Concats the items of that sequence with a list of values.
      *
      * @param mixed $items... The items to append.
@@ -213,6 +222,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
                   $outerKeySelector, $innerKeySelector,
                   $resultSelector,
                   $keyEqualFunc = null);
+
+    /**
+     * Joins all elements of that sequence to one string.
+     *
+     * @param string $separator The separator to use.
+     * @param string $defValue The value to return if sequence is empty.
+     *
+     * @return string The generated string.
+     */
+    function joinToString($separator, $defValue = '');
 
     /**
      * Returns the last matching value of that sequence or a default value if not found.

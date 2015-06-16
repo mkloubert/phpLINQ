@@ -44,6 +44,10 @@ abstract class EnumerableBase implements IEnumerable {
         $this->_i = $i;
     }
 
+    public function __toString() {
+        return $this->toJson();
+    }
+
 
     public final function aggregate($accumulator, $defValue = null) {
         $result = $defValue;
@@ -199,6 +203,10 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $result;
+    }
+
+    public final function concatToString($defValue = '') {
+        return $this->joinToString('', $defValue);
     }
 
     public function concatValues() {
@@ -643,6 +651,14 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $result;
+    }
+
+    public function joinToString($separator, $defValue = '') {
+        if (!$this->valid()) {
+            return $defValue;
+        }
+
+        return implode($separator, $this->toArray());
     }
 
     public function key() {
