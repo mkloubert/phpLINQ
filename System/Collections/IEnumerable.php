@@ -67,6 +67,38 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function distinct($equalityComparer = null);
 
     /**
+     * Returns the first matching value of that sequence or a default value if not found.
+     *
+     * @param mixed $predicateOrDefValue The custom predicate to use.
+     *                                   If there is only one submitted argument and this variable contains
+     *                                   no callable, it is set to (null) and its origin value is written to $defValue.
+     * @param mixed $defValue The default value to return if value was not found.
+     *
+     * @return mixed The first matching value or the default value.
+     */
+    function firstOrDefault($predicateOrDefValue = null, $defValue = null);
+
+    /**
+     * Groups the items of that sequence.
+     *
+     * @param callable $keySelector The key selector.
+     * @param callable $keyEqualityComparer The custom equality function for the keys.
+     *
+     * @return IEnumerable The grouped items as a sequence of IGrouping items.
+     */
+    function groupBy($keySelector, $keyEqualityComparer = null);
+
+    /**
+     * Returns the intersection of this sequence and another.
+     *
+     * @param mixed $second The second sequence.
+     * @param callable $equalityComparer The custom equaler function.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function intersect($second, $equalityComparer = null);
+
+    /**
      * Gets if that sequence does not contain items anymore.
      *
      * @return bool Is empty or not.
@@ -79,6 +111,18 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return bool Is empty (false) or not (true).
      */
     function isNotEmpty();
+
+    /**
+     * Returns the last matching value of that sequence or a default value if not found.
+     *
+     * @param mixed $predicateOrDefValue The custom predicate to use.
+     *                                   If there is only one submitted argument and this variable contains
+     *                                   no callable, it is set to (null) and its origin value is written to $defValue.
+     * @param mixed $defValue The default value to return if value was not found.
+     *
+     * @return mixed The last matching value or the default value.
+     */
+    function lastOrDefault($predicateOrDefValue = null, $defValue = null);
 
     /**
      * Gets the maximum value of that sequence.
@@ -219,16 +263,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     /**
      * Returns the one and only matching element in that sequence.
      *
-     * @param mixed $predicate The custom predicate to use.
-     *                         If there is only one submitted argument and this variable contains
-     *                         no callable, it is set to (null) and its origin value is written to $defValue.
+     * @param mixed $predicateOrDefValue The custom predicate to use.
+     *                                   If there is only one submitted argument and this variable contains
+     *                                   no callable, it is set to (null) and its origin value is written to $defValue.
      * @param mixed $defValue The default value if element was not found.
      *
      * @return mixed The found element or the default value.
      *
      * @throws \Exception Sequence contains more than one element.
      */
-    function singleOrDefault($predicate = null, $defValue = null);
+    function singleOrDefault($predicateOrDefValue = null, $defValue = null);
 
     /**
      * Skip a specific number of items in that sequence.
