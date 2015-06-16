@@ -10,7 +10,7 @@ Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki)
 
 The library is currently refactored!
 
-The documentation describes the following code pf the following commit: [8e7f16c](https://github.com/mkloubert/phpLINQ/commit/8e7f16c0d6ca8d42fb37977f9ab29491ae796afe)
+The documentation describes the following code of the following commit: [8e7f16c](https://github.com/mkloubert/phpLINQ/commit/8e7f16c0d6ca8d42fb37977f9ab29491ae796afe)
 
 ## Requirements
 
