@@ -19,37 +19,25 @@
  */
 
 
-namespace System\Collections;
+namespace System\Linq;
+
+use \System\Collections\IEnumerable;
 
 
 /**
- * A simple grouped iterator.
+ * Describes an object that defines an indexer, counter and boolean search
+ * method for data structures that map keys to sequences of values.
  *
- * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ * @package System\Linq
  */
-final class Grouping implements IGrouping {
-    private $_iterator;
-    private $_key;
-
-
+interface ILookup extends \Countable, \ArrayAccess, IEnumerable {
     /**
-     * Initializes a new instance of that class.
+     * Checks if a key exists in that lookup or not.
      *
-     * @param mixed $key The key.
-     * @param \Iterator $iterator The underlying iterator.
+     * @param mixed $key The key to check.
+     *
+     * @return boolean Exists or not.
      */
-    public function __construct($key, \Iterator $iterator) {
-        $this->_key      = $key;
-        $this->_iterator = $iterator;
-    }
-
-
-    public final function getIterator() {
-        return $this->_iterator;
-    }
-
-    public function key() {
-        return $this->_key;
-    }
+    function containsKey($key);
 }

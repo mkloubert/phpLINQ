@@ -19,20 +19,50 @@
  */
 
 
-namespace System\Collections;
+namespace System\Collections\Generic;
 
 
 /**
- * Describes a grouped iterator.
+ * Describes a set.
  *
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IGrouping extends \IteratorAggregate {
+interface ISet extends IEnumerable {
     /**
-     * Gets the underlying key.
+     * Adds a new item.
      *
-     * @return mixed The key.
+     * @param mixed $item The item to add.
+     *
+     * @return bool Item was added or not.
      */
-    function key();
+    function add($item);
+
+    /**
+     * Removes all items.
+     */
+    function clear();
+
+    /**
+     * Checks if the set contains an item.
+     *
+     * @param mixed $item The item to check.
+     *
+     * @return boolean Contains item or not.
+     */
+    function containsItem($item);
+
+    /**
+     * Gets a value indicating whether the set object is read-only.
+     */
+    function isReadOnly();
+
+    /**
+     * Removes an item.
+     *
+     * @param mixed $item The item to remove.
+     *
+     * @return boolean The item was removed or not.
+     */
+    function remove($item);
 }

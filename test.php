@@ -35,3 +35,11 @@ spl_autoload_register(function($clsName) {
         require_once $file;
     }
 });
+
+
+$seq = \System\Linq\Enumerable::fromValues(1, 2, 3, 4);
+$list = $seq->toList();
+
+foreach ($list as $i) {
+    echo "{$i}<br />";
+}

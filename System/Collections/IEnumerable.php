@@ -22,6 +22,10 @@
 namespace System\Collections;
 
 
+use \System\Collections\Generic\ISet;
+use \System\Linq\ILookup;
+
+
 /**
  * Describes a sequence.
  *
@@ -466,6 +470,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function toArray($keySelector = null);
 
     /**
+     * Converts that sequence to a new dictionary.
+     *
+     * @param callable $keySelector The custom key selector to use.
+     * @param callable $keyEqualityComparer The custom key equality comparer to use.
+     *
+     * @return IDictionary The hashtable / dictionary.
+     */
+    function toDictionary($keySelector = null, $keyEqualityComparer = null);
+
+    /**
      * Converts that sequence to a JSON string.
      *
      * @param callable|null $keySelector The custom key selector.
@@ -474,6 +488,34 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
      * @return string The sequence as JSON string.
      */
     function toJson($keySelector = null, $options = null);
+
+    /**
+     * Converts the sequence to a new list.
+     *
+     * @return IList The new list.
+     */
+    function toList();
+
+    /**
+     * Converts that sequence to a new lookup object.
+     *
+     * @param callable $keySelector The custom key selector to use.
+     * @param callable $keyEqualityComparer The custom key comparer to use.
+     * @param callable $elementSelector The custom element selector to use.
+     *
+     * @return ILookup The sequence as lookup.
+     */
+    function toLookup($keySelector = null, $keyEqualityComparer = null,
+                      $elementSelector = null);
+
+    /**
+     * Returns a new set of that sequence.
+     *
+     * @param callable $equalityComparer The custom item comparer to use.
+     *
+     * @return ISet The new set.
+     */
+    function toSet($equalityComparer = null);
 
     /**
      * Produces the set union of that sequence and another.

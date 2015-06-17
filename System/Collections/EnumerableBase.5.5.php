@@ -22,6 +22,10 @@
 namespace System\Collections;
 
 
+use \System\Linq\Grouping;
+use \System\Linq\Lookup;
+
+
 /**
  * A basic sequence.
  *
@@ -372,7 +376,7 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
 
-    public final function elementAtOrDefault($index, $defValue = null) {
+    public function elementAtOrDefault($index, $defValue = null) {
         return $this->skip($index)
                     ->firstOrDefault(null, $defValue);
     }
@@ -553,9 +557,9 @@ abstract class EnumerableBase implements IEnumerable {
                                     $keyEqualityComparer = null) {
 
         return static::create($this->groupJoinInner($inner,
-            $outerKeySelector, $innerKeySelector,
-            $resultSelector,
-            $keyEqualityComparer));
+                                                    $outerKeySelector, $innerKeySelector,
+                                                    $resultSelector,
+                                                    $keyEqualityComparer));
     }
 
     /**
@@ -573,18 +577,15 @@ abstract class EnumerableBase implements IEnumerable {
         $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
 
         $createGrpsForSequence = function(IEnumerable $seq, callable $keySelector) {
-            return $seq->groupBy(function ($item, $ctx) use ($keySelector) {
-                                     return call_user_func($keySelector,
-                                                           $item, $ctx);
-                                 })
-                        ->select(function(IGrouping $x) {
-                                     $result         = new \stdClass();
-                                     $result->key    = $x->key();
-                                     $result->values = $x->getIterator();
+            return $seq->groupBy($keySelector)
+                       ->select(function(IGrouping $x) {
+                                    $result         = new \stdClass();
+                                    $result->key    = $x->key();
+                                    $result->values = $x->getIterator();
 
-                                     return $result;
-                                 })
-                        ->toArray();
+                                    return $result;
+                                })
+                       ->toArray();
         };
 
         $outerGrps = call_user_func($createGrpsForSequence,
@@ -1093,6 +1094,23 @@ abstract class EnumerableBase implements IEnumerable {
         }
     }
 
+    /**
+     * Throws an exception for that sequence.
+     *
+     * @param string $message The message.
+     * @param int $code The code.
+     * @param \Exception $previous The inner/previous exception.
+     *
+     * @throws EnumerableException The thrown exception.
+     */
+    protected function throwException($message = null,
+                                      $code = 0,
+                                      \Exception $previous = null) {
+
+        throw new EnumerableException($this,
+                                      $message, $code, $previous);
+    }
+
     public function toArray($keySelector = null) {
         if (is_null($keySelector)) {
             $keySelector = function() {
@@ -1116,6 +1134,27 @@ abstract class EnumerableBase implements IEnumerable {
             else {
                 $result[$key] = $ctx->value;
             }
+        }
+
+        return $result;
+    }
+
+    public function toDictionary($keySelector = null, $keyEqualityComparer = null) {
+        if (is_null($keySelector)) {
+            $keySelector = function($key) {
+                return $key;
+            };
+        }
+
+        $result = new Dictionary(null, $keyEqualityComparer);
+
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++);
+
+            $result->add(call_user_func($keySelector,
+                                        $ctx->key, $ctx->value, $ctx),
+                         $ctx->value);
         }
 
         return $result;
@@ -1145,7 +1184,35 @@ abstract class EnumerableBase implements IEnumerable {
                            (int)$options);
     }
 
-    public function union($second, $equalityComparer = null) {
+    public final function toList() {
+        return new Collection($this);
+    }
+
+    public final function toLookup($keySelector = null, $keyEqualityComparer = null,
+                                   $elementSelector = null) {
+
+        $elements = $this;
+        if (!is_null($elementSelector)) {
+            $elements = $this->select($elementSelector);
+        }
+
+        return new Lookup($elements->groupBy($keySelector,
+                                             $keyEqualityComparer));
+    }
+
+    public final function toSet($equalityComparer = null) {
+        $result = new Set($equalityComparer);
+
+        while ($this->valid()) {
+            $result->add($this->current());
+
+            $this->next();
+        }
+
+        return $result;
+    }
+
+    public final function union($second, $equalityComparer = null) {
         return $this->concat($second)
                     ->distinct($equalityComparer);
     }
