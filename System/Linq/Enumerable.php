@@ -29,11 +29,48 @@ namespace System\Linq;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class Enumerable extends \System\Collections\EnumerableBase {
-    protected static function createEnumerable($items = null) {
+    /**
+     * Creates a new instance.
+     *
+     * @param mixed $items The initial items.
+     *
+     * @return Enumerable The new instance.
+     */
+    public static function create($items = null) {
+        if (is_null($items)) {
+            $items = new \EmptyIterator();
+        }
+
+        return new static(static::asIterator($items));
+    }
+
+    public static function createEnumerable($items = null) {
         if (is_null($items)) {
             $items = new \EmptyIterator();
         }
 
         return new self(static::asIterator($items));
+    }
+
+    /**
+     * Creates a new instance from JSON data.
+     *
+     * @param string $json The JSON data.
+     *
+     * @return Enumerable The new instance.
+     */
+    public static function fromJson($json) {
+        return static::create(json_decode($json, true));
+    }
+
+    /**
+     * Creates a new instance from a list of values.
+     *
+     * @param mixed $value... The initial values.
+     *
+     * @return Enumerable The new instance.
+     */
+    public static function fromValues() {
+        return static::create(func_get_args());
     }
 }

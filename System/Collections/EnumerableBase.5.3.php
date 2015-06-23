@@ -232,37 +232,6 @@ abstract class EnumerableBase implements IEnumerable {
         return $result;
     }
 
-
-    /**
-     * Creates a new instance.
-     *
-     * @param mixed $items The initial items.
-     *
-     * @return static The new instance.
-     */
-    public static function create($items = null) {
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
-
-        return new static(static::asIterator($items));
-    }
-
-    /**
-     * Creates a new sequence.
-     *
-     * @param mixed $items The items of the sequence.
-     *
-     * @return IEnumerable The new sequence.
-     */
-    public static function createEnumerable($items = null) {
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
-
-        return new static(static::asIterator($items));
-    }
-
     /**
      * Creates a basic context object for callables.
      *
@@ -291,6 +260,21 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a new sequence.
+     *
+     * @param mixed $items The items of the sequence.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    public static function createEnumerable($items = null) {
+        if (is_null($items)) {
+            $items = new \EmptyIterator();
+        }
+
+        return new static(static::asIterator($items));
     }
 
     public function current() {
@@ -429,28 +413,6 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $defValue;
-    }
-
-    /**
-     * Creates a new instance from JSON data.
-     *
-     * @param string $json The JSON data.
-     *
-     * @return static The new instance.
-     */
-    public static function fromJson($json) {
-        return static::createEnumerable(json_decode($json, true));
-    }
-
-    /**
-     * Creates a new instance from a list of values.
-     *
-     * @param mixed $value... The initial values.
-     *
-     * @return static The new instance.
-     */
-    public static function fromValues() {
-        return static::createEnumerable(func_get_args());
     }
 
     /**
