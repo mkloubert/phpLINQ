@@ -54,7 +54,7 @@ $newSeq = $seq->select(function($item) {
                 ->reverse();
 
 foreach ($newSeq as $item) {
-    echo "{$item}<br />";
+    // echo "{$item}<br />";
 }
 
 $dict    = new \System\Collections\Dictionary();
@@ -70,6 +70,26 @@ $list[] = 1;
 $list[] = 3;
 
 foreach ($list as $item) {
-    echo "{$item}";
+    // echo "{$item}";
 }
 
+$dict2 = new \System\Collections\Dictionary(function (\stdClass $x, \stdClass $y) {
+                                                return $x->key == $y->key;
+                                            });
+
+$key1      = new \stdClass();
+$key1->key = 1;
+
+$key2      = new \stdClass();
+$key2->key = 2;
+
+$key3      = new \stdClass();
+$key3->key = '1';
+
+$dict2[$key1] = 1000;
+$dict2[$key2] = 2000;
+$dict2[$key3] = 3000;
+
+foreach ($dict2 as $item) {
+    echo "{$item->value()}<br />";
+}

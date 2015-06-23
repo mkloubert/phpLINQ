@@ -40,8 +40,8 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
      *
      * @param mixed $items The initial items.
      *                     If there is only one argument and the value is callable, it
-     *                     is used as key comparer.
-     * @param callable $keyEqualityComparer The optional key comparer.
+     *                     is used as key equality comparer.
+     * @param callable $keyEqualityComparer The optional key equality comparer.
      */
     public function __construct($items = null, $keyEqualityComparer = null) {
         if (1 == func_num_args()) {
