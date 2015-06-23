@@ -25,6 +25,7 @@ namespace System\Linq;
 use \System\Collections\Dictionary;
 use \System\Collections\EnumerableBase;
 use \System\Collections\IDictionary;
+use \System\Collections\IEnumerable;
 
 
 /**
