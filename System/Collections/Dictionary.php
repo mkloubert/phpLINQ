@@ -84,7 +84,7 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         $this->_items = array();
     }
 
-    protected function compareKeys($x, $y) {
+    private function compareKeys($x, $y) {
         return call_user_func($this->_keyEqualityComparer,
                               $x, $y);
     }

@@ -1110,8 +1110,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $key   = call_user_func($keySelector,
-                                    $ctx->key, $ctx->value, $ctx);
+            $key = call_user_func($keySelector,
+                                  $ctx->key, $ctx->value, $ctx);
 
             if (is_null($key)) {
                 // autokey

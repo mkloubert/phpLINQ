@@ -37,20 +37,30 @@ spl_autoload_register(function($clsName) {
 });
 
 
-$seq = \System\Linq\Enumerable::range(1, 1000);
+$seq = \System\Linq\Enumerable::fromValues(5979, 23979, null, 23979, 1781, 241279);
 
-$lookup = $seq->toLookup(function($item) {
-                            return 0 == $item % 2 ? "g" : "u";
-                         });
+$newSeq = $seq->select(function($item) {
+                            return strval($item);
+                        })    // transform all values
+                              // to string
+              ->where(function($item) {
+                         return !empty($item);
+                })    // filter out all values that are empty
+                ->skip(1)    // skip the first element ('5979')
+                ->take(3)    // take the next 3 elements from current position
+                             // ('23979', '23979' and '1781')
+                ->distinct()    // remove duplicates
+                ->order()    // sort
+                ->reverse();
 
-$list = $seq->toList();
+foreach ($newSeq as $item) {
+    echo "{$item}<br />";
+}
 
-$list->clear();
-$list->addItems(1, 2, 3);
-$list->remove(2);
-$list->removeAt(1);
-$list->add(1000);
+$dict    = new \System\Collections\Dictionary();
+$dict['PZ'] = 19861222;
+$dict['MK'] = 19790923;
 
-foreach ($lookup['u'] as $i) {
-    echo "{$i}<br />";
+foreach ($dict as $entry) {
+    // echo "{$entry->key()} => {$entry->value()}";
 }
