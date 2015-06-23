@@ -244,6 +244,7 @@ abstract class EnumerableBase implements IEnumerable {
     protected static function createContextObject(\Iterator $i, $index = null, $invokeNext = true) {
         $result           = new \stdClass();
         $result->index    = $index;
+        $result->isFirst  = null;
         $result->isLast   = null;
         $result->iterator = $i;
         $result->key      = $i->key();
