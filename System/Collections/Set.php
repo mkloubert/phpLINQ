@@ -28,10 +28,8 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-final class Set extends EnumerableBase implements ISet {
+final class Set extends ArrayCollectionBase implements ISet {
     private $_equalityComparer;
-    private $_items;
-    private $_iterator;
 
 
     /**
@@ -77,10 +75,6 @@ final class Set extends EnumerableBase implements ISet {
         return false;
     }
 
-    public function count() {
-        return count($this->_items);
-    }
-
     public function isReadOnly() {
         return false;
     }
@@ -97,9 +91,5 @@ final class Set extends EnumerableBase implements ISet {
 
         // not found
         return false;
-    }
-
-    public function rewind() {
-        $this->_iterator = new \ArrayIterator($this->_items);
     }
 }

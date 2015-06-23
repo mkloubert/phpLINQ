@@ -22,14 +22,16 @@
 namespace System\Collections;
 
 
+use \System\Linq\Enumerable;
+
+
 /**
  * A common hashtable / dictionary (PHP 5.3).
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-final class Dictionary extends EnumerableBase implements IDictionary {
-    private $_items;
+final class Dictionary extends ArrayCollectionBase implements IDictionary {
     private $_keyEqualityComparer;
 
 
@@ -82,38 +84,28 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         $this->_items = array();
     }
 
-    private function compareKeys($x, $y) {
+    protected function compareKeys($x, $y) {
         return call_user_func($this->_keyEqualityComparer,
                               $x, $y);
     }
 
     public function containsKey($key) {
-        return $this->keys()
-                    ->any(function($x, $ctx) use ($key) {
-                              return $ctx->sequence
-                                         ->compareKeys($x, $key);
-                          });
-    }
+        foreach ($this->keys() as $dictKey) {
+            if ($this->compareKeys($dictKey, $key)) {
+                return true;
+            }
+        }
 
-    public function count() {
-        return count($this->_items);
+        return false;
     }
 
     public function current() {
-        $i = $this->_i->current();
-        if (is_object($i)) {
-            return new DictionaryEntry($i->key, $i->value);
-        }
-    }
-
-    public final function elementAtOrDefault($index, $defValue = null) {
-        if (isset($this->_items[$index])) {
-            $i = $this->_items[$index];
-
-            return new DictionaryEntry($i->key, $i->value);
+        if (!$this->valid()) {
+            return;
         }
 
-        return $defValue;
+        $i = parent::current();
+        return new DictionaryEntry($i->key, $i->value);
     }
 
     private function indexOfByOffset($offset) {
@@ -138,11 +130,16 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         return false;
     }
 
+    public function key() {
+        return $this->valid() ? $this->current()->key()
+                              : $this->getEOFKey();
+    }
+
     public function keys() {
-        return static::create($this->_items)
-                     ->select(function($x) {
-                                  return $x->key;
-                              });
+        return Enumerable::create($this->_items)
+                         ->select(function($x) {
+                                      return $x->key;
+                                  });
     }
 
     public function offsetExists($offset) {
@@ -198,14 +195,10 @@ final class Dictionary extends EnumerableBase implements IDictionary {
         return false;
     }
 
-    public function rewind() {
-        $this->_i = new \ArrayIterator($this->_items);
-    }
-
     public function values() {
-        return static::create($this->_items)
-                     ->select(function($x) {
-                                  return $x->value;
-                              });
+        return Enumerable::create($this->_items)
+                         ->select(function($x) {
+                                      return $x->value;
+                                  });
     }
 }

@@ -544,10 +544,13 @@ abstract class EnumerableBase implements IEnumerable {
             $grp->values[] = $ctx->value;
         }
 
+        $cls = new \ReflectionObject($this);
+
         return static::create($groups)
-                     ->select(function($x) {
-                                  return new Grouping($x->key,
-                                                      static::create($x->values));
+                     ->select(function($x) use ($cls) {
+                                 return new Grouping($x->key,
+                                                     call_user_func(array($cls->getName(), 'create'),
+                                                                    $x->values));
                               });
     }
 

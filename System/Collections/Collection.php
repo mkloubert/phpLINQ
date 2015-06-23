@@ -28,9 +28,8 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-final class Collection extends EnumerableBase implements IList {
+final class Collection extends ArrayCollectionBase implements IList {
     private $_equalityComparer;
-    private $_items;
 
 
     /**
@@ -80,18 +79,6 @@ final class Collection extends EnumerableBase implements IList {
 
     public function containsItem($item) {
         return $this->indexOf($item) > -1;
-    }
-
-    public final function count() {
-        return count($this->_items);
-    }
-
-    public function elementAtOrDefault($index, $defValue = null) {
-        if (isset($this->_items[$index])) {
-            return $this->_items[$index];
-        }
-
-        return $defValue;
     }
 
     public function indexOf($item) {
@@ -185,10 +172,6 @@ final class Collection extends EnumerableBase implements IList {
         }
 
         $this->throwIndexOfOfRange($index);
-    }
-
-    public function rewind() {
-        $this->_i = new \ArrayIterator($this->_items);
     }
 
     private function throwIndexOfOfRange($index) {

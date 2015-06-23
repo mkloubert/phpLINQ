@@ -37,9 +37,20 @@ spl_autoload_register(function($clsName) {
 });
 
 
-$seq = \System\Linq\Enumerable::fromValues(1, 2, 3, 4);
+$seq = \System\Linq\Enumerable::range(1, 1000);
+
+$lookup = $seq->toLookup(function($item) {
+                            return 0 == $item % 2 ? "g" : "u";
+                         });
+
 $list = $seq->toList();
 
-foreach ($list as $i) {
+$list->clear();
+$list->addItems(1, 2, 3);
+$list->remove(2);
+$list->removeAt(1);
+$list->add(1000);
+
+foreach ($lookup['u'] as $i) {
     echo "{$i}<br />";
 }

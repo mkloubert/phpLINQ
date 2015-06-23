@@ -47,22 +47,28 @@ interface IDictionary extends \ArrayAccess, IEnumerable {
      *
      * @param mixed $key The kex to check.
      *
-     * @return boolean Key exsists or not.
+     * @return bool Key exsists or not.
      */
     function containsKey($key);
 
     /**
-     *  Gets a value indicating whether the dictionary object has a fixed size.
+     * Gets a value indicating whether the dictionary object has a fixed size.
+     *
+     * @return bool Has a fixed size or not.
      */
     function isFixedSize();
 
     /**
-     *  Gets a value indicating whether the dictionary object is read-only.
+     * Gets a value indicating whether the dictionary object is read-only.
+     *
+     * @return bool Is read-only or not.
      */
     function isReadOnly();
 
     /**
-     *  Gets a value indicating whether the dictionary object is thread-safe.
+     * Gets a value indicating whether the dictionary object is thread-safe.
+     *
+     * @return bool Is synchronized or not.
      */
     function isSynchronized();
 
@@ -83,7 +89,7 @@ interface IDictionary extends \ArrayAccess, IEnumerable {
      *
      * @param mixed $key The key.
      *
-     * @return boolean Entry was removed or not.
+     * @return bool Entry was removed or not.
      */
     function removeKey($key);
 
