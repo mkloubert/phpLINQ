@@ -172,7 +172,7 @@ abstract class EnumerableBase implements IEnumerable {
                                       $index++);
         }
 
-        return static::create($items);
+        return static::createEnumerable($items);
     }
 
     public final function cast($type) {
@@ -184,7 +184,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function concat() {
-        return static::create($this->concatInner(func_get_args()));
+        return static::createEnumerable($this->concatInner(func_get_args()));
     }
 
     /**
@@ -249,6 +249,21 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     /**
+     * Creates a new sequence.
+     *
+     * @param mixed $items The items of the sequence.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    public static function createEnumerable($items = null) {
+        if (is_null($items)) {
+            $items = new \EmptyIterator();
+        }
+
+        return new static(static::asIterator($items));
+    }
+
+    /**
      * Creates a basic context object for callables.
      *
      * @param \Iterator $i The underlying iterator.
@@ -289,14 +304,14 @@ abstract class EnumerableBase implements IEnumerable {
 
     public final function defaultIfEmpty2($items) {
         if ($this->isEmpty()) {
-            return static::create($items);
+            return static::createEnumerable($items);
         }
 
         return $this;
     }
 
     public final function distinct($equalityComparer = null) {
-        return static::create($this->distinctInner($equalityComparer));
+        return static::createEnumerable($this->distinctInner($equalityComparer));
     }
 
     /**
@@ -368,7 +383,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function except($second, $equalityComparer = null) {
-        return static::create($this->exceptInner($second, $equalityComparer));
+        return static::createEnumerable($this->exceptInner($second, $equalityComparer));
     }
 
     /**
@@ -379,7 +394,7 @@ abstract class EnumerableBase implements IEnumerable {
             $second = array();
         }
 
-        $itemsToExclude = static::create($second)
+        $itemsToExclude = static::createEnumerable($second)
                                 ->distinct($equalityComparer);
 
         $result = array();
@@ -424,7 +439,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return static The new instance.
      */
     public static function fromJson($json) {
-        return static::create(json_decode($json, true));
+        return static::createEnumerable(json_decode($json, true));
     }
 
     /**
@@ -435,7 +450,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return static The new instance.
      */
     public static function fromValues() {
-        return static::create(func_get_args());
+        return static::createEnumerable(func_get_args());
     }
 
     /**
@@ -536,10 +551,10 @@ abstract class EnumerableBase implements IEnumerable {
 
         $cls = new \ReflectionObject($this);
 
-        return static::create($groups)
+        return static::createEnumerable($groups)
                      ->select(function($x) use ($cls) {
                                   return new Grouping($x->key,
-                                                      call_user_func(array($cls->getName(), 'create'),
+                                                      call_user_func(array($cls->getName(), 'createEnumerable'),
                                                                      $x->values));
                               });
     }
@@ -549,10 +564,10 @@ abstract class EnumerableBase implements IEnumerable {
                                     $resultSelector,
                                     $keyEqualityComparer = null) {
 
-        return static::create($this->groupJoinInner($inner,
-                                                    $outerKeySelector, $innerKeySelector,
-                                                    $resultSelector,
-                                                    $keyEqualityComparer));
+        return static::createEnumerable($this->groupJoinInner($inner,
+                                                              $outerKeySelector, $innerKeySelector,
+                                                              $resultSelector,
+                                                              $keyEqualityComparer));
     }
 
     /**
@@ -564,7 +579,7 @@ abstract class EnumerableBase implements IEnumerable {
                                       $keyEqualityComparer) {
 
         if (!($inner instanceof IEnumerable)) {
-            $inner = static::create($inner);
+            $inner = static::createEnumerable($inner);
         }
 
         $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
@@ -607,7 +622,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function intersect($second, $equalityComparer = null) {
-        return static::create($this->intersectInner($second, $equalityComparer));
+        return static::createEnumerable($this->intersectInner($second, $equalityComparer));
     }
 
     /**
@@ -620,7 +635,7 @@ abstract class EnumerableBase implements IEnumerable {
 
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
-        $secondArray = static::create($second)
+        $secondArray = static::createEnumerable($second)
                              ->distinct($equalityComparer)
                              ->toArray();
 
@@ -676,7 +691,7 @@ abstract class EnumerableBase implements IEnumerable {
                                  $keyEqualityComparer) {
 
         if (!($inner instanceof IEnumerable)) {
-            $inner = static::create($inner);
+            $inner = static::createEnumerable($inner);
         }
 
         $keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
@@ -828,7 +843,7 @@ abstract class EnumerableBase implements IEnumerable {
                                                   $x->sortBy, $y->sortBy);
                         });
 
-        return static::create($result)
+        return static::createEnumerable($result)
                      ->select(function($x) {
                                   return $x->value;
                               });
@@ -918,7 +933,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function select($selector) {
-        return static::create($this->selectInner($selector));
+        return static::createEnumerable($this->selectInner($selector));
     }
 
     /**
@@ -939,7 +954,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function selectMany($selector) {
-        return static::create($this->selectManyInner($selector));
+        return static::createEnumerable($this->selectManyInner($selector));
     }
 
     /**
@@ -1039,7 +1054,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function skipWhile($predicate) {
-        return static::create($this->skipWhileInner($predicate));
+        return static::createEnumerable($this->skipWhileInner($predicate));
     }
 
     /**
@@ -1076,7 +1091,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function takeWhile($predicate) {
-        return static::create($this->takeWhileInner($predicate));
+        return static::createEnumerable($this->takeWhileInner($predicate));
     }
 
     /**
@@ -1258,7 +1273,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function where($predicate) {
-        return static::create($this->whereInner($predicate));
+        return static::createEnumerable($this->whereInner($predicate));
     }
 
     /**
@@ -1282,7 +1297,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function zip($second, $selector) {
-        return static::create($this->zipInner($second, $selector));
+        return static::createEnumerable($this->zipInner($second, $selector));
     }
 
     /**

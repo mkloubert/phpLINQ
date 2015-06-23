@@ -29,4 +29,11 @@ namespace System\Linq;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class Enumerable extends \System\Collections\EnumerableBase {
+    protected static function createEnumerable($items = null) {
+        if (is_null($items)) {
+            $items = new \EmptyIterator();
+        }
+
+        return new self(static::asIterator($items));
+    }
 }
