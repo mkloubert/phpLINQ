@@ -361,6 +361,10 @@ abstract class EnumerableBase implements IEnumerable {
             $second = array();
         }
 
+        if (!is_array($second)) {
+            $second = iterator_to_array($second);
+        }
+
         $itemsToExclude = static::createEnumerable($second)
                                 ->distinct($equalityComparer);
 
