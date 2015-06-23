@@ -28,7 +28,27 @@ namespace System\Linq;
  * @package System\Linq
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Enumerable extends \System\Collections\EnumerableBase {
+final class Enumerable extends \System\Collections\EnumerableBase {
+    /**
+     * Builds a new sequence by using a factory function.
+     *
+     * @param int $count The number of items to build.
+     * @param callable $itemFactory The function that builds an item.
+     *
+     * @return static The new sequence.
+     */
+    public static function build($count, $itemFactory) {
+        $items = array();
+
+        $index = 0;
+        while ($index < $count) {
+            $items[] = call_user_func($itemFactory,
+                                      $index++);
+        }
+
+        return static::createEnumerable($items);
+    }
+
     /**
      * Creates a new instance.
      *
@@ -72,5 +92,33 @@ class Enumerable extends \System\Collections\EnumerableBase {
      */
     public static function fromValues() {
         return static::create(func_get_args());
+    }
+
+    /**
+     * Creates a sequence with a range of numbers.
+     *
+     * @param number $start The start value.
+     * @param number $count The number of items.
+     * @param int|callable $increaseBy The increase value or the function that provides that value.
+     *
+     * @return static The new sequence.
+     */
+    public static function range($start, $count, $increaseBy = 1) {
+        $increaseFunc = $increaseBy;
+        if (!is_callable($increaseFunc)) {
+            $increaseFunc = function() use ($increaseBy) {
+                return $increaseBy;
+            };
+        }
+
+        return static::build($count,
+                             function($index) use (&$start, $increaseFunc) {
+                                 $result = $start;
+
+                                 $start += call_user_func($increaseFunc,
+                                                          $result, $index);
+
+                                 return $result;
+                             });
     }
 }

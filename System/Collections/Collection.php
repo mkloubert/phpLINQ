@@ -143,12 +143,11 @@ final class Collection extends ArrayCollectionBase implements IList {
             return;
         }
 
-        if ($this->offsetExists($index)) {
-            $this->_items[$index] = $value;
-            return;
+        if (!$this->offsetExists($index)) {
+            $this->throwIndexOfOfRange($index);
         }
 
-        $this->throwIndexOfOfRange($index);
+        $this->_items[$index] = $value;
     }
 
     public function offsetUnset($index) {

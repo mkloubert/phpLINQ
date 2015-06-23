@@ -107,7 +107,7 @@ abstract class EnumerableBase implements IEnumerable {
      *
      * @param mixed $obj The object to convert / cast.
      *
-     * @return \Iterator|null
+     * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
     protected static function asIterator($obj) {
         if (is_null($obj)) {
@@ -115,18 +115,20 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         if ($obj instanceof \Iterator) {
+            // nothing to convert
             return $obj;
         }
 
         $arr = $obj;
 
-        if (!is_array($obj)) {
+        if (!is_array($arr)) {
             $arr = array();
 
             if (is_string($obj)) {
                 // char sequence
 
-                for ($i = 0; $i < strlen($obj); $i++) {
+                $len = strlen($obj);
+                for ($i = 0; $i < $len; $i++) {
                     $arr[] = $obj[$i];
                 }
             }
@@ -153,26 +155,6 @@ abstract class EnumerableBase implements IEnumerable {
 
         return $count > 0 ? floatval($sum) / floatval($count)
                           : $defValue;
-    }
-
-    /**
-     * Builds a new sequence by using a factory function.
-     *
-     * @param int $count The number of items to build.
-     * @param callable $itemFactory The function that builds an item.
-     *
-     * @return static The new sequence.
-     */
-    public static function build($count, $itemFactory) {
-        $items = array();
-
-        $index = 0;
-        while ($index < $count) {
-            $items[] = call_user_func($itemFactory,
-                                      $index++);
-        }
-
-        return static::createEnumerable($items);
     }
 
     public final function cast($type) {
@@ -846,34 +828,6 @@ abstract class EnumerableBase implements IEnumerable {
         }
 
         return $this->orderBy($randProvider);
-    }
-
-    /**
-     * Creates a sequence with a range of numbers.
-     *
-     * @param number $start The start value.
-     * @param number $count The number of items.
-     * @param int|callable $increaseBy The increase value or the function that provides that value.
-     *
-     * @return static The new sequence.
-     */
-    public static function range($start, $count, $increaseBy = 1) {
-        $increaseFunc = $increaseBy;
-        if (!is_callable($increaseFunc)) {
-            $increaseFunc = function() use ($increaseBy) {
-                return $increaseBy;
-            };
-        }
-
-        return static::build($count,
-                             function($index) use (&$start, $increaseFunc) {
-                                 $result = $start;
-
-                                 $start += call_user_func($increaseFunc,
-                                                          $result, $index);
-
-                                 return $result;
-                             });
     }
 
     public final function reset() {

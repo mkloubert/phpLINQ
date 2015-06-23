@@ -64,3 +64,12 @@ $dict['MK'] = 19790923;
 foreach ($dict as $entry) {
     // echo "{$entry->key()} => {$entry->value()}";
 }
+
+$list = new \System\Collections\Collection();
+$list[] = 1;
+$list[] = 3;
+
+foreach ($list as $item) {
+    echo "{$item}";
+}
+
