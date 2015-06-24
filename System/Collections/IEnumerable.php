@@ -109,6 +109,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function concatValues();
 
     /**
+     * Checks if an item exists in that sequence.
+     *
+     * @param mixed $item The item to check.
+     * @param callable $equalityComparer The custom equality comparer to use.
+     *
+     * @return bool Sequence contains item or not.
+     */
+    function contains($item, $equalityComparer = null);
+
+    /**
      * Returns a default sequence if that sequence is empty.
      *
      * @param mixed $item... The items for the default sequence.

@@ -77,7 +77,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (!call_user_func($predicate, $ctx->item, $ctx)) {
+            if (!call_user_func($predicate, $ctx->value, $ctx)) {
                 return false;
             }
         }
@@ -197,6 +197,15 @@ abstract class EnumerableBase implements IEnumerable {
 
     public function concatValues() {
         return $this->concat(func_get_args());
+    }
+
+    public final function contains($item, $equalityComparer = null) {
+        $equalityComparer = static::getEqualComparerSafe($equalityComparer);
+
+        return $this->any(function($x) use ($item, $equalityComparer) {
+                              return call_user_func($equalityComparer,
+                                                    $x, $item);
+                          });
     }
 
     public function count() {
@@ -365,16 +374,26 @@ abstract class EnumerableBase implements IEnumerable {
             $second = iterator_to_array($second);
         }
 
+        $equalityComparer = static::getEqualComparerSafe($equalityComparer);
+
         $itemsToExclude = static::createEnumerable($second)
-                                ->distinct($equalityComparer);
+                                ->distinct($equalityComparer)
+                                ->toArray();
 
         $result = array();
 
         while ($this->valid()) {
             $curItem = $this->current();
-            if (!$itemsToExclude->reset()
-                                ->contains($curItem, $equalityComparer)) {
 
+            $found = false;
+            foreach ($itemsToExclude as $ite) {
+                if (call_user_func($equalityComparer, $ite, $curItem)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
                 $result[] = $curItem;
             }
 
@@ -916,6 +935,7 @@ abstract class EnumerableBase implements IEnumerable {
 
         while ($this->valid()) {
             $x = $this->current();
+            $this->next();
 
             if (!$other->valid()) {
                 // that sequence has more items
@@ -923,6 +943,7 @@ abstract class EnumerableBase implements IEnumerable {
             }
 
             $y = $other->current();
+            $other->next();
 
             if (!call_user_func($equalityComparer, $x, $y)) {
                 // both items are NOT equal
