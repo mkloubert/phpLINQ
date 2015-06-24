@@ -23,6 +23,7 @@ namespace System\Collections;
 
 
 use \System\Linq\Grouping;
+use \System\Linq\IGrouping;
 use \System\Linq\Lookup;
 
 
