@@ -26,11 +26,11 @@ foreach ($newSeq as $item) {
 }
 ';
 
-// example #2
-$examples[] = new Example();
-$examples[1]->title = 'Iterator example';
 
 if (isPHP_5_5()) {
+    // example #2
+    $examples[] = new Example();
+    $examples[1]->title = 'Generator example';
     $examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq = Enumerable::fromValues(6, 7, 8, 9, 10);
@@ -45,22 +45,6 @@ foreach ($newSeq as $item) {
     echo "{$item}\n";
 }
 ';
-}
-else {
-	$examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
-	
-$seq = Enumerable::fromValues(6, 7, 8, 9, 10);
-	
-$newSeq = $seq->selectMany(function($x) {
-                               return array($x,
-                                            $x * 10,
-                                            $x * 100);
-                           });
-	
-foreach ($newSeq as $item) {
-    echo "{$item}\n";
-}
-';	
 }
 
 require_once './shutdown.inc.php';

@@ -329,14 +329,14 @@ abstract class EnumerableBase implements IEnumerable {
 
         $index   = 0;
         $prevVal = null;
-        $val     = null;
+        $tag     = null;
         while ($this->valid()) {
             $ctx          = static::createContextObject($this, $index++);
             $ctx->cancel  = false;
             $ctx->nextVal = null;
             $ctx->prevVal = $prevVal;
             $ctx->result  = $result;
-            $ctx->val     = $val;
+            $ctx->tag     = $tag;
 
             call_user_func($action,
                            $ctx->value, $ctx);
@@ -348,7 +348,7 @@ abstract class EnumerableBase implements IEnumerable {
             }
 
             $prevVal = $ctx->nextVal;
-            $val     = $ctx->val;
+            $tag     = $ctx->tag;
         }
 
         return $result;

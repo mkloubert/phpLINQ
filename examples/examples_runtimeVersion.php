@@ -8,23 +8,16 @@
 require_once './bootstrap.inc.php';
 
 
-$pageTitle = 'average()';
+$pageTitle = 'runtimeVersion()';
 
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
-$seq1 = Enumerable::range(1, 100);
-$seq2 = Enumerable::create();
-        
-// not empty
-$res1 = $seq1->average("MK");        
-// empty
-$res2 = $seq2->average("TM");
-            
-echo "res1 = " . var_export($res1, true);
-echo "\n";
-echo "res2 = " . var_export($res2, true);
+$seq = Enumerable::create();
+
+echo var_export($seq->runtimeVersion(), true);
 ';
+
 
 require_once './shutdown.inc.php';

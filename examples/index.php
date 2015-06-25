@@ -48,6 +48,7 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_defaultIfEmpty.php" class="list-group-item">defaultIfEmpty()</a>
+      <a href="examples_defaultIfEmpty2.php" class="list-group-item">defaultIfEmpty2()</a>
       <a href="examples_distinct.php" class="list-group-item">distinct()</a>
     </div>
   </div>
@@ -58,6 +59,7 @@ $pageTitle = 'Home';
   
   <div class="panel-body">
     <div class="list-group">
+      <a href="examples_each.php" class="list-group-item">each()</a>
       <a href="examples_elementAtOrDefault.php" class="list-group-item">elementAtOrDefault()</a>
       <a href="examples_except.php" class="list-group-item">except()</a>
     </div>
@@ -133,8 +135,10 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_ofType.php" class="list-group-item">ofType()</a>
+      <a href="examples_order.php" class="list-group-item">order()</a>
       <a href="examples_orderBy.php" class="list-group-item">orderBy()</a>
       <a href="examples_orderByDescending.php" class="list-group-item">orderByDescending()</a>
+      <a href="examples_orderDescending.php" class="list-group-item">orderDescending()</a>
     </div>
   </div>
 </div>
@@ -156,6 +160,7 @@ $pageTitle = 'Home';
     <div class="list-group">
       <a href="examples_randomize.php" class="list-group-item">randomize()</a>
       <a href="examples_reverse.php" class="list-group-item">reverse()</a>
+      <a href="examples_runtimeVersion.php" class="list-group-item">runtimeVersion()</a>
     </div>
   </div>
 </div>
@@ -185,7 +190,8 @@ $pageTitle = 'Home';
       <a href="examples_takeWhile.php" class="list-group-item">takeWhile()</a>
       <a href="examples_toArray.php" class="list-group-item">toArray()</a>
       <a href="examples_toDictionary.php" class="list-group-item">toDictionary()</a>
-      <a href="examples_tolist.php" class="list-group-item">toList()</a>
+      <a href="examples_toJson.php" class="list-group-item">toJson()</a>
+      <a href="examples_toList.php" class="list-group-item">toList()</a>
       <a href="examples_toLookup.php" class="list-group-item">toLookup()</a>
       <a href="examples_toSet.php" class="list-group-item">toSet()</a>
     </div>
