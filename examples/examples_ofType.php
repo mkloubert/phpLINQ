@@ -28,7 +28,6 @@ $showSeqence = function($seq) {
     }
 };
 
-// sequence of integers
 $seq = Enumerable::fromValues(1, "2", 3, new MyClass());
         
 echo "integers:\n";
@@ -36,7 +35,7 @@ $showSeqence($seq->ofType("integer"));
 
 echo "\n";
 
-// cast to strings
+// MyClass object only
 echo "MyClass:\n";
 $showSeqence($seq->reset()
                  ->ofType("MyClass"));
