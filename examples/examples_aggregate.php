@@ -13,7 +13,6 @@ $pageTitle = 'aggregate()';
 
 // example #1
 $examples[] = new Example();
-$examples[0]->description = 'The example shows that empty sequences always return TRUE.';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq1 = Enumerable::fromValues(1, 2, 3);

@@ -8,18 +8,16 @@
 require_once './bootstrap.inc.php';
 
 
-$pageTitle = 'concat()';
+$pageTitle = 'concatValues()';
 
 
 // example #1
 $examples[] = new Example();
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
-$seq1 = Enumerable::fromValues(1, 2, 3);
-$seq2 = Enumerable::create();
-$seq3 = Enumerable::fromValues(4, 5, 6);
+$seq = Enumerable::fromValues(1, 2, 3);
 
-$concated = $seq1->concat($seq2, $seq3);
+$concated = $seq->concatValues(4, 5, 6);
 
 foreach ($concated as $item) {
     echo "{$item}\n";
