@@ -34,6 +34,7 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_cast.php" class="list-group-item">cast()</a>
+      <a href="examples_concat.php" class="list-group-item">concat()</a>
       <a href="examples_concatToString.php" class="list-group-item">concatToString()</a>
       <a href="examples_contains.php" class="list-group-item">contains()</a>
     </div>

@@ -18,20 +18,13 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::create();
+$seq3 = Enumerable::fromValues(4, 5, 6);
 
-$sumAccumulator = function($result, $item) {
-    return $result + $item;
-};
+$concated = $seq1->concat($seq2, $seq3);
 
-$res1 = $seq1->aggregate($sumAccumulator, "TM");
-
-// empty
-$res2 = $seq2->aggregate($sumAccumulator, "TM");
-
-echo "res1 = " . var_export($res1, true);
-echo "\n";
-echo "res2 = " . var_export($res2, true);
-';
+foreach ($concated as $item) {
+    echo "{$item}\n";
+}';
 
 
 require_once './shutdown.inc.php';
