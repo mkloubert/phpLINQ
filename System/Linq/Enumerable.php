@@ -274,7 +274,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
     /**
      * Scans a directory.
      *
-     * @param string $dir The path of the directory to scann.
+     * @param string $dir The path of the directory to scan.
      * @param bool $group Group items or not. The result is a Lookup object if (true).
      *
      * @return IEnumerable|ILookup The ordered list of files and subdirectories or (false) if
