@@ -60,7 +60,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @param int $count The number of items to build.
      * @param callable $itemFactory The function that builds an item.
      *
-     * @return static The new sequence.
+     * @return Enumerable The new sequence.
      */
     public static function build($count, $itemFactory) {
         $items = array();
@@ -106,7 +106,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             $tag     = $ctx->tag;
         }
 
-        return static::create($items);
+        return self::create($items);
     }
 
     /**
@@ -120,7 +120,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @param callable $seeder The optional function that initializes the random
      *                         number generator.
      *
-     * @return static The new instance.
+     * @return Enumerable The new instance.
      */
     public static function buildRandom($count, $maxOrSeeder = null, $min = null, $seeder = null) {
         if (2 == func_num_args()) {
@@ -142,10 +142,10 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             call_user_func($seeder);
         }
 
-        return static::build($count,
-                             function () use ($min, $maxOrSeeder) {
-                                 return mt_rand($min, $maxOrSeeder - 1);
-                             });
+        return self::build($count,
+                           function () use ($min, $maxOrSeeder) {
+                               return mt_rand($min, $maxOrSeeder - 1);
+                           });
     }
 
     /**
@@ -153,7 +153,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      *
      * @param callable $itemFactoryPredicate The function that is used to build the items.
      *
-     * @return static the new instance.
+     * @return Enumerable the new instance.
      */
     public static function buildWhile($itemFactoryPredicate) {
         $items = array();
@@ -195,7 +195,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
         }
         while(true);
 
-        return static::create($items);
+        return self::create($items);
     }
 
     /**
@@ -210,7 +210,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             $items = new \EmptyIterator();
         }
 
-        return new static(static::asIterator($items));
+        return new self(static::asIterator($items));
     }
 
     public static function createEnumerable($items = null) {
@@ -229,7 +229,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function fromJson($json) {
-        return static::create(json_decode($json, true));
+        return self::create(json_decode($json, true));
     }
 
     /**
@@ -240,7 +240,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function fromValues() {
-        return static::create(func_get_args());
+        return self::create(func_get_args());
     }
 
     /**
@@ -250,7 +250,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @param number $count The number of items.
      * @param int|callable $increaseBy The increase value or the function that provides that value.
      *
-     * @return static The new sequence.
+     * @return Enumerable The new sequence.
      */
     public static function range($start, $count, $increaseBy = 1) {
         $increaseFunc = $increaseBy;
@@ -260,15 +260,15 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             };
         }
 
-        return static::build($count,
-                             function($index, $ctx) use (&$start, $increaseFunc) {
-                                 $result = $start;
+        return self::build($count,
+                           function($index, $ctx) use (&$start, $increaseFunc) {
+                               $result = $start;
 
-                                 $start += call_user_func($increaseFunc,
-                                                          $result, $ctx);
+                               $start += call_user_func($increaseFunc,
+                                                        $result, $ctx);
 
-                                 return $result;
-                             });
+                               return $result;
+                           });
     }
 
     /**
@@ -288,40 +288,40 @@ final class Enumerable extends \System\Collections\EnumerableBase {
 
         $dir = $dir . DIRECTORY_SEPARATOR;
 
-        $result = static::create(scandir($dir))
-                        ->where(function($x) {
-                                    return !('.' == $x || '..' == $x);
-                                })
-                        ->select(function($x) use ($dir) {
-                                     $result           = new \stdClass();
-                                     $result->fullPath = realpath($dir . DIRECTORY_SEPARATOR . $x);
-                                     $result->name     = $x;
-                                     $result->parent   = $dir;
-                                     $result->realPath = $result->fullPath;
+        $result = self::create(scandir($dir))
+                      ->where(function($x) {
+                                  return !('.' == $x || '..' == $x);
+                              })
+                      ->select(function($x) use ($dir) {
+                                   $result           = new \stdClass();
+                                   $result->fullPath = realpath($dir . DIRECTORY_SEPARATOR . $x);
+                                   $result->name     = $x;
+                                   $result->parent   = $dir;
+                                   $result->realPath = $result->fullPath;
 
-                                     $result->isLink = @is_link($result->fullPath) ? true : false;
-                                     if ($result->isLink) {
-                                         $result->realPath = @readlink($result->fullPath);
-                                         if (false === $result->realPath) {
-                                             $result->realPath = $result->fullPath;
-                                         }
-                                     }
+                                   $result->isLink = @is_link($result->fullPath) ? true : false;
+                                   if ($result->isLink) {
+                                       $result->realPath = @readlink($result->fullPath);
+                                       if (false === $result->realPath) {
+                                           $result->realPath = $result->fullPath;
+                                       }
+                                   }
 
-                                     $result->type = null;
-                                     if (is_dir($result->realPath)) {
-                                         $result->type = Enumerable::TYPE_DIR;
-                                     }
-                                     else if (is_file($result->realPath)) {
-                                         $result->type = Enumerable::TYPE_FILE;
-                                     }
+                                   $result->type = null;
+                                   if (is_dir($result->realPath)) {
+                                       $result->type = Enumerable::TYPE_DIR;
+                                   }
+                                   else if (is_file($result->realPath)) {
+                                       $result->type = Enumerable::TYPE_FILE;
+                                   }
 
-                                     return $result;
-                                 })
-                        ->orderBy(function ($x) {
-                                      return sprintf('%s %s',
-                                                     Enumerable::TYPE_DIR == $x->type ? 0 : 1,
-                                                     $x->name);
-                                  }, 'strcasecmp');
+                                   return $result;
+                               })
+                      ->orderBy(function ($x) {
+                                    return sprintf('%s %s',
+                                                   Enumerable::TYPE_DIR == $x->type ? 0 : 1,
+                                                   $x->name);
+                                }, 'strcasecmp');
 
         if ($group) {
             $result = $result->toLookup(function($x) {
