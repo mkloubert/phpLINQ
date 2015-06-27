@@ -22,6 +22,9 @@
 namespace System\Linq;
 
 
+use \System\Collections\IEnumerable;
+
+
 /**
  * A sequence.
  *
@@ -244,5 +247,65 @@ final class Enumerable extends \System\Collections\EnumerableBase {
 
                                  return $result;
                              });
+    }
+
+    /**
+     * Scans a directory.
+     *
+     * @param string $dir The path of the directory to scann.
+     * @param bool $group Group items or not. The result is a Lookup object if (true).
+     *
+     * @return IEnumerable|ILookup The ordered list of files and subdirectories or (false) if
+     *                             directory does not exist.
+     */
+    public static function scanDir($dir, $group = false) {
+        $dir = realpath($dir);
+        if (!is_dir($dir)) {
+            return false;
+        }
+
+        $dir = $dir . DIRECTORY_SEPARATOR;
+
+        $result = static::create(scandir($dir))
+                        ->where(function($x) {
+                                    return !('.' == $x || '..' == $x);
+                                })
+                        ->select(function($x) use ($dir) {
+                                     $result           = new \stdClass();
+                                     $result->fullPath = realpath($dir . DIRECTORY_SEPARATOR . $x);
+                                     $result->name     = $x;
+                                     $result->parent   = $dir;
+
+                                     $result->type = null;
+                                     if (is_dir($result->fullPath)) {
+                                         $result->type = 'dir';
+                                     }
+                                     else if (is_file($result->fullPath)) {
+                                         $result->type = 'file';
+                                     }
+
+                                     return $result;
+                                 })
+                        ->orderBy(function ($x) {
+                                      return trim(strtolower(sprintf('%s %s',
+                                                                     is_dir($x->fullPath) ? 0 : 1,
+                                                                     $x->name)));
+                                  });
+
+        if ($group) {
+            $result = $result->toLookup(function($x) {
+                                            switch ($x->type) {
+                                                case 'dir':
+                                                    return 'dirs';
+
+                                                case 'file':
+                                                    return 'files';
+                                            }
+
+                                            return 'other';
+                                        });
+        }
+
+        return $result;
     }
 }

@@ -241,6 +241,7 @@ $pageTitle = 'Home';
   
   <div class="panel-body">
     <div class="list-group">
+      <a href="examples_scanDir.php" class="list-group-item">scanDir()</a>
       <a href="examples_select.php" class="list-group-item">select()</a>
       <a href="examples_selectMany.php" class="list-group-item">selectMany()</a>
       <a href="examples_sequenceEqual.php" class="list-group-item">sequenceEqual()</a>
