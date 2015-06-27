@@ -18,13 +18,13 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::fromValues(1, 2, 3);
 
 // no item matches
-$res1 = $seq->any(function($x) {
+$res1 = $seq->any(function($x, $ctx) {
                       return $x < 1;
                   });
         
 // 2nd item matches
 $res2 = $seq->reset()
-            ->any(function($x) {
+            ->any(function($x, $ctx) {
                       return $x == 2;
                   });
 
@@ -50,7 +50,7 @@ $seq1 = Enumerable::create();
 $seq2 = Enumerable::fromValues(1, 2, 3);
 
 // empty
-$res1 = $seq1->any(function($x) {
+$res1 = $seq1->any(function($x, $ctx) {
                        return $x < 3;
                    });
 
@@ -58,7 +58,7 @@ $res1 = $seq1->any(function($x) {
 $res2 = $seq2->where(function($x) {
                          return is_string($x);
                      })
-             ->any(function($x) {
+             ->any(function($x, $ctx) {
                        return $x <= 3;
                    });
 

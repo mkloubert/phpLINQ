@@ -620,8 +620,8 @@ abstract class EnumerableBase implements IEnumerable {
                     continue;
                 }
 
-                $result[] = $curItem;
                 unset($secondArray[$k]);
+                $result[] = $curItem;
 
                 break;
             }

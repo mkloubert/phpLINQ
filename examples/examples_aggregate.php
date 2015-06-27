@@ -18,7 +18,7 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq1 = Enumerable::fromValues(1, 2, 3);
 $seq2 = Enumerable::create();
 
-$sumAccumulator = function($result, $item) {
+$sumAccumulator = function($result, $item, $ctx) {
     return $result + $item;
 };
 

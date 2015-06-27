@@ -48,6 +48,9 @@ ob_end_clean();
     }
     
     </style>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
   </head>
   <body>
      <nav class="navbar navbar-default navbar-fixed-top">
@@ -140,13 +143,10 @@ ob_end_clean();
      
      <nav class="navbar navbar-default navbar-fixed-bottom">
        <div class="container-fluid" id="navBarBottomContent">
-           Examples of <a href="https://github.com/mkloubert/phpLINQ/" target="_blank">phpLINQ</a>; syntax highlighting supported by <a href="https://highlightjs.org/" target="_blank">highlight.js</a>; <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> theme provided by <a href="http://bootswatch.com/" target="_blank">bootswatch.com</a>.
+           Examples of <a href="https://github.com/mkloubert/phpLINQ/" target="_blank">phpLINQ</a>; syntax highlighting supported by <a href="https://highlightjs.org/" target="_blank">highlight.js</a>; code editor provided by <a href="https://codemirror.net/" target="_blank">Codemirror</a>; <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> theme provided by <a href="http://bootswatch.com/" target="_blank">bootswatch.com</a>.
        </div>
      </nav>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     

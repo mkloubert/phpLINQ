@@ -45,6 +45,9 @@ $seq = \System\Linq\Enumerable::buildWhile(function($ctx) use ($count) {
                                                return $ctx->index < $count;
                                            });
 
-foreach ($seq as $item) {
-    echo "{$item}<br />";
+$arr1 = array(1, 2, 3, 4, 5);
+array_splice($arr1, 1, 2);
+
+foreach ($arr1 as $key => $item) {
+    echo "{$key} => {$item}<br />";
 }

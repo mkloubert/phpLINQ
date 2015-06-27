@@ -11,9 +11,64 @@ require_once './bootstrap.inc.php';
 $pageTitle = 'Home';
 
 ?>
+
+<link href="css/codemirror.css" rel="stylesheet">
+<link href="css/vibrant-ink.css" rel="stylesheet">
+
+<style type="text/css">
+    .CodeMirror {
+        height: 400px;
+    }
+
+    .CodeMirror pre {
+        padding: 0 4px 0 1em !important;
+    }
+
+    #phpLINQTestCodeResult {
+        background-color: black;
+        color: white;
+        height: 400px;
+        overflow: auto;
+    }
+</style>
+
+<script type="text/javascript" src="js/codemirror-compressed.js"></script>
+
 <ol class="breadcrumb">
   <li class="active">Home</li>
 </ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Try it (scroll down to see the links to the examples)</div>
+
+    <div class="panel-body">
+        <div id="phpLINQTestCodeAlerts" style="display: none;"></div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="50%">Code</th>
+                    <th width="50%">Result</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><textarea id="phpLINQTestCodeEditor"></textarea></td>
+                    <td><pre id="phpLINQTestCodeResult"></pre></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input id="phpLINQExecuteBtn" class="btn btn-primary" type="button" value="Execute" onclick="phplinq_ExecuteCode()" />&nbsp;
+                        <input id="phpLINQResetBtn" class="btn btn-warning" type="button" value="Reset" onclick="phplinq_ResetCode(true)" />
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="panel panel-default">
   <div class="panel-heading">A</div>
@@ -243,6 +298,136 @@ $pageTitle = 'Home';
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    var codeEditor;
+
+    $(function() {
+        codeEditor = CodeMirror.fromTextArea(document.getElementById('phpLINQTestCodeEditor'), {
+            lineNumbers: true,
+            mode: 'text/x-php',
+            theme: 'vibrant-ink'
+        });
+
+        phplinq_ResetCode(false);
+    });
+
+    function phplinq_ExecuteCode() {
+        var resultArea = $('#phpLINQTestCodeResult');
+
+        var executeBtn = $('#phpLINQExecuteBtn');
+        var resetBtn = $('#phpLINQResetBtn');
+
+        $.ajax({
+           'url': 'execcode.php',
+           'data': {
+               'code': codeEditor.getValue()
+           },
+           'type': 'POST',
+           'beforeSend': function() {
+               resultArea.html('');
+               phplinq_HideAlert();
+
+               executeBtn.prop('disabled', true);
+               resetBtn.prop('disabled', true);
+           },
+           'success': function(result) {
+               switch (result.code) {
+                   case 0:
+                       resultArea.text(phplinq_ParseResultForOutput(result.data.content));
+                       phplinq_ShowSuccess('Code was executed after ' + result.data.duration + ' seconds.');
+                       break;
+
+                   case -1:
+                       phplinq_ShowError('EXCEPTION: ' + result.data.msg);
+                       break;
+
+                   case -2:
+                       phplinq_ShowError('ERROR: ' + result.data.msg);
+                       break;
+
+                   default:
+                       phplinq_ShowWarning('Unknown result: [' + result.code + '] ' + result.msg);
+                       break;
+               }
+           },
+           'error': function(jqXHR, textStatus, errorThrown) {
+               phplinq_ShowError('AJAX ERROR: ' + textStatus);
+           },
+           'complete': function() {
+               executeBtn.prop('disabled', false);
+               resetBtn.prop('disabled', false);
+           }
+        });
+    }
+
+    function phplinq_HideAlert() {
+        var alertArea = $('#phpLINQTestCodeAlerts');
+        alertArea.hide();
+    }
+
+    function phplinq_ParseResultForOutput(str) {
+        return String(str);
+    }
+
+    function phplinq_ResetCode(showQuestion) {
+        if (showQuestion && !confirm("Are you sure to reset the editor's content with the initial source code?")) {
+            return;
+        }
+
+        var newEditorValue = "use \\System\\Collections\\Collection;\n" +
+                             "use \\System\\Collections\\Dictionary;\n" +
+                             "use \\System\\Collections\\Set;\n" +
+                             "use \\System\\Linq\\Enumerable;\n" +
+                             "\n" +
+                             "\n" +
+                             '$seq = Enumerable::fromValues(5979, 23979, null, 23979, 1781, 241279);\n' +
+                             "\n" +
+                             '$newSeq = $seq->select(function($item) {' + "\n" +
+                             '                           return strval($item);' + "\n" +
+                             '                       })' + "\n" +
+                             '              ->where(function($item) {' + "\n" +
+                             '                          return !empty($item);' + "\n" +
+                             '                      })' + "\n" +
+                             '              ->skip(1)' + "\n" +
+                             '              ->take(3)' + "\n" +
+                             '              ->distinct()' + "\n" +
+                             '              ->order();' + "\n" +
+                             "\n" +
+                             'foreach ($newSeq as $key => $item) {' + "\n" +
+                             '    echo sprintf("[%s] :: [%s] %s\\n",' + "\n" +
+                             '                 $key, gettype($item), $item);' + "\n" +
+                             '}';
+
+        codeEditor.setValue(newEditorValue);
+    }
+
+    function phplinq_ShowAlert(str, type) {
+        var alertArea = $('#phpLINQTestCodeAlerts');
+        alertArea.html('');
+
+        var newAlert = $('<div class="alert alert-' + type + '" role="alert"></div>');
+        newAlert.text(str);
+
+        alertArea.append(newAlert);
+
+        alertArea.show();
+    }
+
+    function phplinq_ShowError(str) {
+        phplinq_ShowAlert(str, 'danger');
+    }
+
+    function phplinq_ShowSuccess(str) {
+        phplinq_ShowAlert(str, 'success');
+    }
+
+    function phplinq_ShowWarning(str) {
+        phplinq_ShowAlert(str, 'warning');
+    }
+
+
+</script>
 <?php
 
 require_once './shutdown.inc.php';
