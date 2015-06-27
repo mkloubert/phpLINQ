@@ -17,6 +17,7 @@ $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 $seq = Enumerable::range(1, 10);
 
 $result = $seq->each(function($x, $ctx) {
+                         //  $ctx->addItem  => add item or not (is TRUE by default)
                          //  $ctx->cancel   => cancel operation or not (is FALSE by default)
                          //  $ctx->index    => zero based index
                          //  $ctx->isFirst  => indicates if this is the first element or not

@@ -37,59 +37,14 @@ spl_autoload_register(function($clsName) {
 });
 
 
-$seq = \System\Linq\Enumerable::fromValues(5979, 23979, null, 23979, 1781, 241279);
+$count = 10;
+$seq = \System\Linq\Enumerable::buildWhile(function($ctx) use ($count) {
+                                               $ctx->newItem = $ctx->index + 1;
+                                               $ctx->addItem = 0 == $ctx->newItem % 2;
 
-$newSeq = $seq->select(function($item) {
-                            return strval($item);
-                        })    // transform all values
-                              // to string
-              ->where(function($item) {
-                         return !empty($item);
-                })    // filter out all values that are empty
-                ->skip(1)    // skip the first element ('5979')
-                ->take(3)    // take the next 3 elements from current position
-                             // ('23979', '23979' and '1781')
-                ->distinct()    // remove duplicates
-                ->order()    // sort
-                ->reverse();
+                                               return $ctx->index < $count;
+                                           });
 
-foreach ($newSeq as $item) {
-    // echo "{$item}<br />";
-}
-
-$dict    = new \System\Collections\Dictionary();
-$dict['PZ'] = 19861222;
-$dict['MK'] = 19790923;
-
-foreach ($dict as $entry) {
-    // echo "{$entry->key()} => {$entry->value()}";
-}
-
-$list = new \System\Collections\Collection();
-$list[] = 1;
-$list[] = 3;
-
-foreach ($list as $item) {
-    // echo "{$item}";
-}
-
-$dict2 = new \System\Collections\Dictionary(function (\stdClass $x, \stdClass $y) {
-                                                return $x->key == $y->key;
-                                            });
-
-$key1      = new \stdClass();
-$key1->key = 1;
-
-$key2      = new \stdClass();
-$key2->key = 2;
-
-$key3      = new \stdClass();
-$key3->key = '1';
-
-$dict2[$key1] = 1000;
-$dict2[$key2] = 2000;
-$dict2[$key3] = 3000;
-
-foreach ($dict2 as $item) {
-    echo "{$item->value()}<br />";
+foreach ($seq as $item) {
+    echo "{$item}<br />";
 }

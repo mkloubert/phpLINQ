@@ -29,6 +29,18 @@ $pageTitle = 'Home';
 </div>
 
 <div class="panel panel-default">
+    <div class="panel-heading">B</div>
+
+    <div class="panel-body">
+        <div class="list-group">
+            <a href="examples_build.php" class="list-group-item">build()</a>
+            <a href="examples_buildRandom.php" class="list-group-item">buildRandom()</a>
+            <a href="examples_buildWhile.php" class="list-group-item">buildWhile()</a>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
   <div class="panel-heading">C</div>
   
   <div class="panel-body">
@@ -38,6 +50,7 @@ $pageTitle = 'Home';
       <a href="examples_concatToString.php" class="list-group-item">concatToString()</a>
       <a href="examples_concatValues.php" class="list-group-item">concatValues()</a>
       <a href="examples_contains.php" class="list-group-item">contains()</a>
+      <a href="examples_create.php" class="list-group-item">create()</a>
     </div>
   </div>
 </div>
@@ -72,6 +85,8 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_firstOrDefault.php" class="list-group-item">firstOrDefault()</a>
+      <a href="examples_fromJson.php" class="list-group-item">fromJson()</a>
+      <a href="examples_fromValues.php" class="list-group-item">fromValues()</a>
     </div>
   </div>
 </div>
@@ -159,6 +174,7 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_randomize.php" class="list-group-item">randomize()</a>
+      <a href="examples_range.php" class="list-group-item">range()</a>
       <a href="examples_reverse.php" class="list-group-item">reverse()</a>
       <a href="examples_runtimeVersion.php" class="list-group-item">runtimeVersion()</a>
     </div>

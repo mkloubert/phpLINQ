@@ -19,7 +19,7 @@ $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
 
 $arr = $seq->toArray();
         
-echo var_export($arr);
+echo var_export($arr, true);
 ';
 
 // example #2
@@ -33,11 +33,11 @@ $myKeySelector = function($i) {
         
 $seq = Enumerable::fromValues(1, 2, 3, 4, 5);
         
-$arr = $seq->toArray(function($index, $item) {
-                         return "x::" . trim($index);
+$arr = $seq->toArray(function($key, $item, $ctx) {
+                         return "x::" . trim($key);
                      });
         
-echo var_export($arr);
+echo var_export($arr, true);
 ';
 
 require_once './shutdown.inc.php';
