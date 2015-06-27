@@ -30,6 +30,13 @@ $pageTitle = 'Home';
         height: 400px;
         overflow: auto;
     }
+
+    .phpLINQAjaxLoader {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 157px;
+    }
 </style>
 
 <script type="text/javascript" src="js/codemirror-compressed.js"></script>
@@ -326,7 +333,7 @@ $pageTitle = 'Home';
            },
            'type': 'POST',
            'beforeSend': function() {
-               resultArea.html('');
+               resultArea.html('<img class="phpLINQAjaxLoader" src="img/ajax-loader.gif" />');
                phplinq_HideAlert();
 
                executeBtn.prop('disabled', true);
