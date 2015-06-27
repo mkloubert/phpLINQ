@@ -318,10 +318,10 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                      return $result;
                                  })
                         ->orderBy(function ($x) {
-                                      return trim(strtolower(sprintf('%s %s',
-                                                                     Enumerable::TYPE_DIR == $x->type ? 0 : 1,
-                                                                     $x->name)));
-                                  });
+                                      return sprintf('%s %s',
+                                                     Enumerable::TYPE_DIR == $x->type ? 0 : 1,
+                                                     $x->name);
+                                  }, 'strcasecmp');
 
         if ($group) {
             $result = $result->toLookup(function($x) {
