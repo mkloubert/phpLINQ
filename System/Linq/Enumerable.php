@@ -33,6 +33,16 @@ use \System\Collections\IEnumerable;
  */
 final class Enumerable extends \System\Collections\EnumerableBase {
     /**
+     * Directory type
+     */
+    const TYPE_DIR  = 'dir';
+    /**
+     * File type
+     */
+    const TYPE_FILE = 'file';
+
+
+    /**
      * Builds a new sequence by using a factory function.
      *
      * @param int $count The number of items to build.
@@ -275,30 +285,39 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                      $result->fullPath = realpath($dir . DIRECTORY_SEPARATOR . $x);
                                      $result->name     = $x;
                                      $result->parent   = $dir;
+                                     $result->realPath = $result->fullPath;
+
+                                     $result->isLink = @is_link($result->fullPath) ? true : false;
+                                     if ($result->isLink) {
+                                         $result->realPath = @readlink($result->fullPath);
+                                         if (false === $result->realPath) {
+                                             $result->realPath = $result->fullPath;
+                                         }
+                                     }
 
                                      $result->type = null;
-                                     if (is_dir($result->fullPath)) {
-                                         $result->type = 'dir';
+                                     if (is_dir($result->realPath)) {
+                                         $result->type = Enumerable::TYPE_DIR;
                                      }
-                                     else if (is_file($result->fullPath)) {
-                                         $result->type = 'file';
+                                     else if (is_file($result->realPath)) {
+                                         $result->type = Enumerable::TYPE_FILE;
                                      }
 
                                      return $result;
                                  })
                         ->orderBy(function ($x) {
                                       return trim(strtolower(sprintf('%s %s',
-                                                                     is_dir($x->fullPath) ? 0 : 1,
+                                                                     is_dir($x->realPath) ? 0 : 1,
                                                                      $x->name)));
                                   });
 
         if ($group) {
             $result = $result->toLookup(function($x) {
                                             switch ($x->type) {
-                                                case 'dir':
+                                                case Enumerable::TYPE_DIR:
                                                     return 'dirs';
 
-                                                case 'file':
+                                                case Enumerable::TYPE_FILE:
                                                     return 'files';
                                             }
 
