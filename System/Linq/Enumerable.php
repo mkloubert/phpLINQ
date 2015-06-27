@@ -33,6 +33,18 @@ use \System\Collections\IEnumerable;
  */
 final class Enumerable extends \System\Collections\EnumerableBase {
     /**
+     * Group for directories
+     */
+    const GROUP_DIRS  = 'dirs';
+    /**
+     * Group for files
+     */
+    const GROUP_FILES = 'files';
+    /**
+     * Group for other types
+     */
+    const GROUP_OTHERS = 'other';
+    /**
      * Directory type
      */
     const TYPE_DIR  = 'dir';
@@ -315,13 +327,13 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             $result = $result->toLookup(function($x) {
                                             switch ($x->type) {
                                                 case Enumerable::TYPE_DIR:
-                                                    return 'dirs';
+                                                    return Enumerable::GROUP_DIRS;
 
                                                 case Enumerable::TYPE_FILE:
-                                                    return 'files';
+                                                    return Enumerable::GROUP_FILES;
                                             }
 
-                                            return 'other';
+                                            return Enumerable::GROUP_OTHERS;
                                         });
         }
 
