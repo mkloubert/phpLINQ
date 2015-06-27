@@ -35,7 +35,7 @@ $pageTitle = 'Home';
         display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 157px;
+        margin-top: 150px;
     }
 </style>
 
