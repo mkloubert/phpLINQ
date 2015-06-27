@@ -319,7 +319,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                  })
                         ->orderBy(function ($x) {
                                       return trim(strtolower(sprintf('%s %s',
-                                                                     is_dir($x->realPath) ? 0 : 1,
+                                                                     Enumerable::TYPE_DIR == $x->type ? 0 : 1,
                                                                      $x->name)));
                                   });
 
