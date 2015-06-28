@@ -446,6 +446,18 @@ abstract class EnumerableBase implements IEnumerable {
         return $comparer;
     }
 
+    public function format($format) {
+        $args = $this->toArray();
+
+        return preg_replace_callback('/({)(\d+)(})/i',
+                                     function($match) use (&$args) {
+                                         $i = intval($match[1]);
+
+                                         return isset($args[$i]) ? strval($args[$i])
+                                                                 : $match[0];
+                                     }, $format);
+    }
+
     /**
      * Keeps sure that a equality comparer is NOT (null).
      *

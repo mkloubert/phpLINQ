@@ -147,6 +147,7 @@ $pageTitle = 'Home';
   <div class="panel-body">
     <div class="list-group">
       <a href="examples_firstOrDefault.php" class="list-group-item">firstOrDefault()</a>
+      <a href="examples_format.php" class="list-group-item">format()</a>
       <a href="examples_fromJson.php" class="list-group-item">fromJson()</a>
       <a href="examples_fromValues.php" class="list-group-item">fromValues()</a>
     </div>
@@ -340,6 +341,8 @@ $pageTitle = 'Home';
                resetBtn.prop('disabled', true);
            },
            'success': function(result) {
+               resultArea.html('');
+
                switch (result.code) {
                    case 0:
                        resultArea.text(phplinq_ParseResultForOutput(result.data.content));

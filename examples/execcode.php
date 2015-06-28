@@ -51,4 +51,3 @@ $result['data'] = array(
     'duration' => $end - $start,
 );
 $result['msg']  = 'OK';
-

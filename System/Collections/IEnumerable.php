@@ -188,6 +188,18 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function firstOrDefault($predicateOrDefValue = null, $defValue = null);
 
     /**
+     * Returns a formatted string based on the items of that sequence.
+     *
+     * @param string $format The format string.
+     *                       The format is similar to the Format Item Syntax (Index Component)
+     *                       of the .NET framework
+     *                       (https://msdn.microsoft.com/en-us/library/txafckwd%28v=vs.110%29.aspx).
+     *
+     * @return string The formatted string.
+     */
+    function format($format);
+
+    /**
      * Groups the items of that sequence.
      *
      * @param callable $keySelector The key selector.
