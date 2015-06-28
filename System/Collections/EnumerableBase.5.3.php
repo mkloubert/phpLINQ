@@ -449,7 +449,7 @@ abstract class EnumerableBase implements IEnumerable {
     public function format($format) {
         $args = $this->toArray();
 
-        return preg_replace_callback('/({)(\d+)(})/i',
+        return preg_replace_callback('/{(\d+)}/i',
                                      function($match) use (&$args) {
                                          $i = intval($match[1]);
 
