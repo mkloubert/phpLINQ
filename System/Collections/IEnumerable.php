@@ -22,7 +22,6 @@
 namespace System\Collections;
 
 
-use \System\Collections\ISet;
 use \System\Linq\ILookup;
 
 
