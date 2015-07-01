@@ -200,12 +200,7 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
     }
 
     public function unserialize($serialized) {
-        $arr = json_decode($serialized, true);
-
-        $this->_items = array();
-        foreach ($arr as $item) {
-            $this->_items[] = (object)$item;
-        }
+        $this->_items = json_decode($serialized, false);
     }
 
     public function values() {

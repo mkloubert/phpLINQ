@@ -48,12 +48,14 @@ interface ISet extends IEnumerable {
      *
      * @param mixed $item The item to check.
      *
-     * @return boolean Contains item or not.
+     * @return bool Contains item or not.
      */
     function containsItem($item);
 
     /**
      * Gets a value indicating whether the set object is read-only.
+     *
+     * @return bool Is read-only or not.
      */
     function isReadOnly();
 
@@ -62,7 +64,7 @@ interface ISet extends IEnumerable {
      *
      * @param mixed $item The item to remove.
      *
-     * @return boolean The item was removed or not.
+     * @return bool The item was removed or not.
      */
     function remove($item);
 }
