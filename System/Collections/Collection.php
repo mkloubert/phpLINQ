@@ -98,7 +98,7 @@ final class Collection extends ArrayCollectionBase implements IList {
 
     public function insert($index, $item) {
         if (!$this->offsetExists($index)) {
-            $this->throwIndexOfOfRange($index);
+            $this->throwIndexOutOfRange($index);
         }
 
         $newItems = array();
@@ -134,7 +134,7 @@ final class Collection extends ArrayCollectionBase implements IList {
             return $this->_items[$index];
         }
 
-        $this->throwIndexOfOfRange($index);
+        $this->throwIndexOutOfRange($index);
     }
 
     public function offsetSet($index, $value) {
@@ -144,7 +144,7 @@ final class Collection extends ArrayCollectionBase implements IList {
         }
 
         if (!$this->offsetExists($index)) {
-            $this->throwIndexOfOfRange($index);
+            $this->throwIndexOutOfRange($index);
         }
 
         $this->_items[$index] = $value;
@@ -170,10 +170,10 @@ final class Collection extends ArrayCollectionBase implements IList {
             return;
         }
 
-        $this->throwIndexOfOfRange($index);
+        $this->throwIndexOutOfRange($index);
     }
 
-    private function throwIndexOfOfRange($index) {
+    private function throwIndexOutOfRange($index) {
         $this->throwException(sprintf("Index '%s' not found!",
                                       $index));
     }
