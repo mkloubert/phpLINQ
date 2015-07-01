@@ -253,6 +253,7 @@ $pageTitle = 'Home';
       <a href="examples_select.php" class="list-group-item">select()</a>
       <a href="examples_selectMany.php" class="list-group-item">selectMany()</a>
       <a href="examples_sequenceEqual.php" class="list-group-item">sequenceEqual()</a>
+      <a href="examples_serialize.php" class="list-group-item">serialize()</a>
       <a href="examples_singleOrDefault.php" class="list-group-item">singleOrDefault()</a>
       <a href="examples_skip.php" class="list-group-item">skip()</a>
       <a href="examples_skipWhile.php" class="list-group-item">skipWhile()</a>
