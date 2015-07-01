@@ -49,5 +49,11 @@ $arr1 = array(1, 2, 3, 4, 5);
 array_splice($arr1, 1, 2);
 
 foreach ($arr1 as $key => $item) {
-    echo "{$key} => {$item}<br />";
+//    echo "{$key} => {$item}<br />";
 }
+
+$test = new \stdClass();
+$test->A = 1000;
+$test->B = 2000;
+
+echo serialize($test);

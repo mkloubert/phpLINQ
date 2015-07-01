@@ -199,6 +199,15 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return false;
     }
 
+    public function unserialize($serialized) {
+        $arr = json_decode($serialized, true);
+
+        $this->_items = array();
+        foreach ($arr as $item) {
+            $this->_items[] = (object)$item;
+        }
+    }
+
     public function values() {
         return Enumerable::create($this->_items)
                          ->select(function($x) {

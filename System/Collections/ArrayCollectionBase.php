@@ -82,11 +82,11 @@ abstract class ArrayCollectionBase extends EnumerableBase {
         $this->_key = 0;
     }
 
-    public final function serialize() {
+    public function serialize() {
         return json_encode($this->_items);
     }
 
-    public final function unserialize($serialized) {
+    public function unserialize($serialized) {
         $arr = json_decode($serialized, true);
 
         $this->_items = $arr;
