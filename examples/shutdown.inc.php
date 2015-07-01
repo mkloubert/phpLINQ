@@ -115,7 +115,13 @@ ob_end_clean();
              
                 <h1>Code:</h1>
                 <pre style="background-color: transparent;"><code class="php"><?php echo parseForHtmlOutput($e->sourceCode); ?></code></pre>
-                
+
+                <form action="index.php" method="POST">
+                    <input type="hidden" name="initalTestCode" value="<?= htmlspecialchars($e->sourceCode) ?>" />
+
+                    <button class="btn btn-primary">Play with it</button>
+                </form>
+
                 <h1>Result:</h1>
                 <pre style="background-color: black; color: white;"><?php
                 

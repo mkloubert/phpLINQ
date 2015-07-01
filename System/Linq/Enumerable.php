@@ -286,8 +286,6 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             return false;
         }
 
-        $dir = $dir . DIRECTORY_SEPARATOR;
-
         $result = self::create(scandir($dir))
                       ->where(function($x) {
                                   return !('.' == $x || '..' == $x);
@@ -298,6 +296,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                    $result->name     = $x;
                                    $result->parent   = $dir;
                                    $result->realPath = $result->fullPath;
+                                   $result->size     = null;
 
                                    $result->isLink = @is_link($result->fullPath) ? true : false;
                                    if ($result->isLink) {
@@ -313,6 +312,21 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                    }
                                    else if (is_file($result->realPath)) {
                                        $result->type = Enumerable::TYPE_FILE;
+
+                                       $result->size = @filesize($result->realPath);
+                                   }
+
+                                   $result->canRead  = is_readable($result->realPath);
+                                   $result->canWrite = is_writable($result->realPath);
+
+                                   $result->lastAccess = fileatime($result->realPath);
+                                   if (false !== $result->lastAccess) {
+                                       $result->lastAccess = (new \DateTime())->setTimestamp($result->lastAccess);
+                                   }
+
+                                   $result->lastWrite = filectime($result->realPath);
+                                   if (false !== $result->lastWrite) {
+                                       $result->lastWrite = (new \DateTime())->setTimestamp($result->lastWrite);
                                    }
 
                                    return $result;

@@ -318,7 +318,23 @@ $pageTitle = 'Home';
             theme: 'vibrant-ink'
         });
 
+        <?php
+            if (!isset($_POST['initalTestCode'])) {
+                ?>
+
         phplinq_ResetCode(false);
+
+                <?php
+            }
+            else {
+                ?>
+
+        codeEditor.setValue(<?= json_encode($_POST['initalTestCode']) ?>);
+
+                <?php
+            }
+?>
+
     });
 
     function phplinq_ExecuteCode() {

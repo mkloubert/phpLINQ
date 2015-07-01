@@ -28,7 +28,11 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-final class DictionaryEntry {
+final class DictionaryEntry implements \Serializable {
+    const ARRAY_KEY_KEY   = 'key';
+    const ARRAY_KEY_VALUE = 'value';
+
+
     private $_key;
     private $_value;
 
@@ -54,6 +58,11 @@ final class DictionaryEntry {
         return $this->_key;
     }
 
+    public function serialize() {
+        return json_encode(array(self::ARRAY_KEY_KEY   => $this->key(),
+                                 self::ARRAY_KEY_VALUE => $this->value()));
+    }
+
     /**
      * Gets the value.
      *
@@ -61,5 +70,13 @@ final class DictionaryEntry {
      */
     public function value() {
         return $this->_value;
+    }
+
+    public function unserialize($serialized) {
+        $arr = json_decode($serialized, true);
+
+        $this->__construct($arr[self::ARRAY_KEY_KEY],
+                           $arr[self::ARRAY_KEY_VALUE]);
+        unset($arr);
     }
 }

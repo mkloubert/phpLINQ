@@ -1212,10 +1212,10 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function unserialize($serialized) {
-        $temp = static::fromJson($serialized);
+        $arr = json_decode($serialized, true);
 
-        $this->__construct($temp->_i);
-        unset($temp);
+        $this->__construct(new \ArrayIterator($arr));
+        unset($arr);
     }
 
     public function valid() {
