@@ -149,7 +149,7 @@ ob_end_clean();
      
      <nav class="navbar navbar-default navbar-fixed-bottom">
        <div class="container-fluid" id="navBarBottomContent">
-           Examples of <a href="https://github.com/mkloubert/phpLINQ/" target="_blank">phpLINQ</a>; syntax highlighting supported by <a href="https://highlightjs.org/" target="_blank">highlight.js</a>; code editor provided by <a href="https://codemirror.net/" target="_blank">Codemirror</a>; <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> theme provided by <a href="http://bootswatch.com/" target="_blank">bootswatch.com</a>.
+           Examples of <a href="https://github.com/mkloubert/phpLINQ/" target="_blank">phpLINQ</a>; syntax highlighting supported by <a href="https://highlightjs.org/" target="_blank">highlight.js</a>; code editor realized by <a href="https://codemirror.net/" target="_blank">Codemirror</a>; <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> theme provided by <a href="http://bootswatch.com/" target="_blank">bootswatch.com</a>.
        </div>
      </nav>
 

@@ -28,7 +28,7 @@ use \System\Linq\Enumerable;
 /**
  * A common hashtable / dictionary (PHP 5.3).
  *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 final class Dictionary extends ArrayCollectionBase implements IDictionary {

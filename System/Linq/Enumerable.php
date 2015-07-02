@@ -53,7 +53,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      */
     const TYPE_FILE = 'file';
 
-
+    
     /**
      * Builds a new sequence by using a factory function.
      *

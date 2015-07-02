@@ -52,8 +52,7 @@ foreach ($arr1 as $key => $item) {
 //    echo "{$key} => {$item}<br />";
 }
 
-$test = new \stdClass();
-$test->A = 1000;
-$test->B = 2000;
+$a = new \DateTime('1979-09-23');
+$b = new \DateTime('1986-12-22');
 
-echo serialize($test);
+echo var_export($a < $b);
