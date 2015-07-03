@@ -63,8 +63,12 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
     public function addRange($items) {
-        foreach ($items as $i) {
-            $this->_items[] = $i;
+        $i = static::asIterator($items, true);
+
+        while ($i->valid()) {
+            $this->_items[] = $i->current();
+
+            $i->next();
         }
     }
 

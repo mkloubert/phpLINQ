@@ -118,12 +118,18 @@ abstract class EnumerableBase implements IEnumerable {
      * Returns an object / value as iterator.
      *
      * @param mixed $obj The object to convert / cast.
+     * @param bool $emptyIfNull Return empty iterator if $obj is (null) or return (null).
      *
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
-    protected static function asIterator($obj) {
+    protected static function asIterator($obj, $emptyIfNull = false) {
         if (is_null($obj)) {
-            return null;
+            if (!$emptyIfNull) {
+                return null;
+            }
+            else {
+                $obj = new \EmptyIterator();
+            }
         }
 
         if ($obj instanceof \Iterator) {
