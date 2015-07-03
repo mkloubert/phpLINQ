@@ -278,11 +278,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return IEnumerable The new sequence.
      */
     public static function createEnumerable($items = null) {
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
-
-        return new static(static::asIterator($items));
+        return new static(static::asIterator($items, true));
     }
 
     public function current() {
@@ -941,11 +937,7 @@ abstract class EnumerableBase implements IEnumerable {
     public final function sequenceEqual($other, $equalityComparer = null) {
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
-        if (is_null($other)) {
-            $other = array();
-        }
-
-        $other = static::asIterator($other);
+        $other = static::asIterator($other, true);
 
         while ($this->valid()) {
             $x = $this->current();
@@ -1256,10 +1248,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see EnumerableBase::zip()
      */
     protected function zipInner($second, callable $selector) {
-        $second = static::asIterator($second);
-        if (is_null($second)) {
-            $second = new \EmptyIterator();
-        }
+        $second = static::asIterator($second, true);
 
         $index = 0;
         while ($this->valid() && $second->valid()) {

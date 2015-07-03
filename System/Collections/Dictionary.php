@@ -51,11 +51,8 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
             }
         }
 
-        // keep sure to have an iterator.
-        $items = static::asIterator($items);
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
+        // keep sure to have an iterator
+        $items = static::asIterator($items, true);
 
         $this->_keyEqualityComparer = static::getEqualComparerSafe($keyEqualityComparer);
 
