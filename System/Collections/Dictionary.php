@@ -108,8 +108,15 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
             return;
         }
 
-        $i = parent::current();
-        return new DictionaryEntry($i->key, $i->value);
+        return self::objectToEntry(parent::current());
+    }
+
+    public function elementAtOrDefault($index, $defValue = null) {
+        if (isset($this->_items[$index])) {
+            return self::objectToEntry($this->_items[$index]);
+        }
+
+        return $defValue;
     }
 
     private function indexOfByOffset($offset) {
@@ -144,6 +151,11 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
                          ->select(function($x) {
                                       return $x->key;
                                   });
+    }
+
+    private static function objectToEntry(\stdClass $obj) {
+        return new DictionaryEntry($obj->key,
+                                   $obj->value);
     }
 
     public function offsetExists($offset) {

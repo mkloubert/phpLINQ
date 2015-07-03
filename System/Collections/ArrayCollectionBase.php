@@ -48,7 +48,7 @@ abstract class ArrayCollectionBase extends EnumerableBase {
         return $result;
     }
 
-    public final function elementAtOrDefault($index, $defValue = null) {
+    public function elementAtOrDefault($index, $defValue = null) {
         if (isset($this->_items[$index])) {
             return $this->_items[$index];
         }
@@ -87,9 +87,7 @@ abstract class ArrayCollectionBase extends EnumerableBase {
     }
 
     public function unserialize($serialized) {
-        $arr = json_decode($serialized, true);
-
-        $this->_items = $arr;
+        $this->_items = json_decode($serialized, true);
     }
 
     public final function valid() {

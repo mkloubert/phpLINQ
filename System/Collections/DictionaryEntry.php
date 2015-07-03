@@ -23,7 +23,7 @@ namespace System\Collections;
 
 
 /**
- * Stores a data for a dictionary entry.
+ * Stores data for a dictionary entry.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
