@@ -321,12 +321,14 @@ final class Enumerable extends \System\Collections\EnumerableBase {
 
                                    $result->lastAccess = fileatime($result->realPath);
                                    if (false !== $result->lastAccess) {
-                                       $result->lastAccess = (new \DateTime())->setTimestamp($result->lastAccess);
+                                       $lat = new \DateTime();
+                                       $result->lastAccess = $lat->setTimestamp($result->lastAccess);
                                    }
 
                                    $result->lastWrite = filectime($result->realPath);
                                    if (false !== $result->lastWrite) {
-                                       $result->lastWrite = (new \DateTime())->setTimestamp($result->lastWrite);
+                                       $lwt = new \DateTime();
+                                       $result->lastWrite = $lwt->setTimestamp($result->lastWrite);
                                    }
 
                                    return $result;
