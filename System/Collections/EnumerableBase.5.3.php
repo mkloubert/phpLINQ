@@ -868,8 +868,8 @@ abstract class EnumerableBase implements IEnumerable {
         return $this->orderBy($randProvider);
     }
 
-    public final function reset() {
-        $this->rewind();
+    public function reset() {
+        $this->_i->rewind();
         return $this;
     }
 
@@ -879,8 +879,8 @@ abstract class EnumerableBase implements IEnumerable {
                               });
     }
 
-    public function rewind() {
-        $this->_i->rewind();
+    public final function rewind() {
+        // deactivate
     }
 
     public final function runtimeVersion() {

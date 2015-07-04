@@ -78,8 +78,9 @@ abstract class ArrayCollectionBase extends EnumerableBase {
         ++$this->_key;
     }
 
-    public final function rewind() {
+    public final function reset() {
         $this->_key = 0;
+        return $this;
     }
 
     public function serialize() {
