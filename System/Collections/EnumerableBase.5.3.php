@@ -1007,19 +1007,12 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function skipWhile($predicate) {
-        return static::createEnumerable($this->skipWhileInner($predicate));
-    }
-
-    /**
-     * @see EnumerableBase::skipWhile()
-     */
-    protected function skipWhileInner($predicate) {
         $index = 0;
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++, false);
 
             if (call_user_func($predicate,
-                               $ctx->value, $ctx)) {
+                $ctx->value, $ctx)) {
 
                 $this->next();
             }
@@ -1028,7 +1021,7 @@ abstract class EnumerableBase implements IEnumerable {
             }
         }
 
-        return $this->toArray();
+        return $this;
     }
 
     public final function sum($defValue = null) {

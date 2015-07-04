@@ -1002,7 +1002,21 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function skipWhile($predicate) {
-        return static::createEnumerable($this->skipWhileInner($predicate));
+        $index = 0;
+        while ($this->valid()) {
+            $ctx = static::createContextObject($this, $index++, false);
+
+            if (call_user_func($predicate,
+                               $ctx->value, $ctx)) {
+
+                $this->next();
+            }
+            else {
+                break;
+            }
+        }
+
+        return $this;
     }
 
     /**
