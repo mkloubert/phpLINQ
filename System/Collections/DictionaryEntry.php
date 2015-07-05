@@ -59,8 +59,8 @@ final class DictionaryEntry implements \Serializable {
     }
 
     public function serialize() {
-        return json_encode(array(self::ARRAY_KEY_KEY   => $this->key(),
-                                 self::ARRAY_KEY_VALUE => $this->value()));
+        return \json_encode(array(self::ARRAY_KEY_KEY   => $this->key(),
+                                  self::ARRAY_KEY_VALUE => $this->value()));
     }
 
     /**
@@ -73,7 +73,7 @@ final class DictionaryEntry implements \Serializable {
     }
 
     public function unserialize($serialized) {
-        $arr = json_decode($serialized, true);
+        $arr = \json_decode($serialized, true);
 
         $this->__construct($arr[self::ARRAY_KEY_KEY],
                            $arr[self::ARRAY_KEY_VALUE]);

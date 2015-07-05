@@ -44,7 +44,7 @@ final class Collection extends ArrayCollectionBase implements IList {
         $this->_equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
         $this->clear();
-        if (!is_null($items)) {
+        if (!\is_null($items)) {
             $this->addRange($items);
         }
 
@@ -59,7 +59,7 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
     public function addItems() {
-        $this->addRange(func_get_args());
+        $this->addRange(\func_get_args());
     }
 
     public function addRange($items) {
@@ -77,8 +77,8 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
     private function compareItems($x, $y) {
-        return call_user_func($this->_equalityComparer,
-                              $x, $y);
+        return \call_user_func($this->_equalityComparer,
+                               $x, $y);
     }
 
     public function containsItem($item) {
@@ -106,7 +106,7 @@ final class Collection extends ArrayCollectionBase implements IList {
         }
 
         $newItems = array();
-        for ($i = 0; $i < count($this->_items); $i++) {
+        for ($i = 0; $i < \count($this->_items); $i++) {
             if ($i == $index) {
                 $newItems[] = $item;
             }
@@ -142,7 +142,7 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
     public function offsetSet($index, $value) {
-        if (is_null($index)) {
+        if (\is_null($index)) {
             $this->add($value);
             return;
         }
@@ -170,7 +170,7 @@ final class Collection extends ArrayCollectionBase implements IList {
 
     public function removeAt($index) {
         if ($this->offsetExists($index)) {
-            array_splice($this->_items, $index, 1);
+            \array_splice($this->_items, $index, 1);
             return;
         }
 
@@ -178,7 +178,7 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
     private function throwIndexOutOfRange($index) {
-        $this->throwException(sprintf("Index '%s' not found!",
-                                      $index));
+        $this->throwException(\sprintf("Index '%s' not found!",
+                                       $index));
     }
 }

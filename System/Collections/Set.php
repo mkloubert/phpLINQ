@@ -59,8 +59,8 @@ final class Set extends ArrayCollectionBase implements ISet {
     }
 
     private function compareItems($x, $y) {
-        return call_user_func($this->_equalityComparer,
-                              $x, $y);
+        return \call_user_func($this->_equalityComparer,
+                               $x, $y);
     }
 
     public function containsItem($item) {
@@ -84,7 +84,7 @@ final class Set extends ArrayCollectionBase implements ISet {
             if ($this->compareItems($item, $value)) {
                 // found
 
-                array_splice($this->_items, $index, 1);
+                \array_splice($this->_items, $index, 1);
                 return true;
             }
         }

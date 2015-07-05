@@ -44,8 +44,8 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
      * @param callable $keyEqualityComparer The optional key equality comparer.
      */
     public function __construct($items = null, $keyEqualityComparer = null) {
-        if (1 == func_num_args()) {
-            if (is_callable($items)) {
+        if (1 == \func_num_args()) {
+            if (\is_callable($items)) {
                 $keyEqualityComparer = $items;
                 $items               = null;
             }
@@ -86,8 +86,8 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
     }
 
     private function compareKeys($x, $y) {
-        return call_user_func($this->_keyEqualityComparer,
-                              $x, $y);
+        return \call_user_func($this->_keyEqualityComparer,
+                               $x, $y);
     }
 
     public function containsKey($key) {
@@ -170,11 +170,10 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
 
     public function offsetSet($offset, $value) {
         $doAdd = false;
-        if (is_null($offset)) {
-            // find next index
-
+        if (\is_null($offset)) {
             $doAdd = true;
 
+            // find next index
             $offset = $this->count();
             while ($this->containsKey($offset)) {
                 ++$offset;
@@ -201,7 +200,7 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
     public function removeKey($key) {
         $i = $this->indexOfByOffset($key);
         if (false !== $i) {
-            array_splice($this->_items, $i, 1);
+            \array_splice($this->_items, $i, 1);
             return true;
         }
 
@@ -209,7 +208,7 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
     }
 
     public function unserialize($serialized) {
-        $this->_items = json_decode($serialized, false);
+        $this->_items = \json_decode($serialized, false);
     }
 
     public function values() {

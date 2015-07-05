@@ -40,7 +40,7 @@ abstract class ArrayCollectionBase extends EnumerableBase {
 
 
     public final function count() {
-        return count($this->_items);
+        return \count($this->_items);
     }
 
     public function current() {
@@ -71,7 +71,7 @@ abstract class ArrayCollectionBase extends EnumerableBase {
     }
 
     public final function next() {
-        if ($this->_key >= count($this->_items)) {
+        if ($this->_key >= \count($this->_items)) {
             $this->throwException("No more items available!");
         }
 
@@ -84,14 +84,14 @@ abstract class ArrayCollectionBase extends EnumerableBase {
     }
 
     public function serialize() {
-        return json_encode($this->_items);
+        return \json_encode($this->_items);
     }
 
     public function unserialize($serialized) {
-        $this->_items = json_decode($serialized, true);
+        $this->_items = \json_decode($serialized, true);
     }
 
     public final function valid() {
-        return $this->_key < count($this->_items);
+        return $this->_key < \count($this->_items);
     }
 }
