@@ -105,16 +105,7 @@ final class Collection extends ArrayCollectionBase implements IList {
             $this->throwIndexOutOfRange($index);
         }
 
-        $newItems = array();
-        for ($i = 0; $i < \count($this->_items); $i++) {
-            if ($i == $index) {
-                $newItems[] = $item;
-            }
-
-            $newItems[] = $this->_items[$i];
-        }
-
-        $this->_items = $newItems;
+        \array_splice($this->_items, $index, 0, array($item));
     }
 
     public function isFixedSize() {

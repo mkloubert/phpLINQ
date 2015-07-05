@@ -62,8 +62,8 @@ abstract class EnumerableBase implements IEnumerable {
             $ctx = static::createContextObject($this, $index++);
 
             if (!$ctx->isFirst) {
-                $result = call_user_func($accumulator,
-                                         $result, $ctx->value, $ctx);
+                $result = \call_user_func($accumulator,
+                                          $result, $ctx->value, $ctx);
             }
             else {
                 $result = $ctx->value;
@@ -78,7 +78,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (!call_user_func($predicate, $ctx->value, $ctx)) {
+            if (!\call_user_func($predicate, $ctx->value, $ctx)) {
                 return false;
             }
         }
@@ -94,7 +94,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicate, $ctx->value, $ctx)) {
+            if (\call_user_func($predicate, $ctx->value, $ctx)) {
                 return true;
             }
         }
@@ -112,7 +112,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
     protected static function asIterator($obj, $emptyIfNull = false) {
-        if (is_null($obj)) {
+        if (\is_null($obj)) {
             if (!$emptyIfNull) {
                 return null;
             }
@@ -128,13 +128,13 @@ abstract class EnumerableBase implements IEnumerable {
 
         $arr = $obj;
 
-        if (!is_array($arr)) {
+        if (!\is_array($arr)) {
             $arr = array();
 
-            if (is_string($obj)) {
+            if (\is_string($obj)) {
                 // char sequence
 
-                $len = strlen($obj);
+                $len = \strlen($obj);
                 for ($i = 0; $i < $len; $i++) {
                     $arr[] = $obj[$i];
                 }
@@ -160,12 +160,12 @@ abstract class EnumerableBase implements IEnumerable {
                                                              : $x;
                            });
 
-        return $count > 0 ? floatval($sum) / floatval($count)
+        return $count > 0 ? \floatval($sum) / \floatval($count)
                           : $defValue;
     }
 
     public final function cast($type) {
-        $code = sprintf('return (%s)$x;', trim($type));
+        $code = \sprintf('return (%s)$x;', \trim($type));
 
         return $this->select(function($x) use ($code) {
                                  return eval($code);
@@ -173,7 +173,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function concat() {
-        return static::createEnumerable($this->concatInner(func_get_args()));
+        return static::createEnumerable($this->concatInner(\func_get_args()));
     }
 
     /**
@@ -183,10 +183,7 @@ abstract class EnumerableBase implements IEnumerable {
         $result = $this->toArray();
 
         foreach ($itemLists as $items) {
-            $iterator = static::asIterator($items);
-            if (is_null($iterator)) {
-                continue;
-            }
+            $iterator = static::asIterator($items, true);
 
             while ($iterator->valid()) {
                 $result[] = $iterator->current();
@@ -203,15 +200,15 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function concatValues() {
-        return $this->concat(func_get_args());
+        return $this->concat(\func_get_args());
     }
 
     public final function contains($item, $equalityComparer = null) {
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
         return $this->any(function($x) use ($item, $equalityComparer) {
-                              return call_user_func($equalityComparer,
-                                                    $x, $item);
+                              return \call_user_func($equalityComparer,
+                                                     $x, $item);
                           });
     }
 
@@ -248,7 +245,7 @@ abstract class EnumerableBase implements IEnumerable {
         $result->key      = $i->key();
         $result->value    = $i->current();
 
-        if (!is_null($result->index)) {
+        if (!\is_null($result->index)) {
             $result->isFirst = 0 == $result->index;
         }
 
@@ -277,8 +274,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function defaultIfEmpty() {
-        return call_user_func(array($this, 'defaultIfEmpty2'),
-                              func_get_args());
+        return \call_user_func(array($this, 'defaultIfEmpty2'),
+                               \func_get_args());
     }
 
     public final function defaultIfEmpty2($items) {
@@ -307,8 +304,8 @@ abstract class EnumerableBase implements IEnumerable {
             // search for duplicate
             $alreadyInList = false;
             foreach ($result as $ri) {
-                if (call_user_func($equalityComparer,
-                                   $ci, $ri)) {
+                if (\call_user_func($equalityComparer,
+                                    $ci, $ri)) {
                     // found duplicate
 
                     $alreadyInList = true;
@@ -340,8 +337,8 @@ abstract class EnumerableBase implements IEnumerable {
             $ctx->result  = $result;
             $ctx->tag     = $tag;
 
-            call_user_func($action,
-                           $ctx->value, $ctx);
+            \call_user_func($action,
+                            $ctx->value, $ctx);
 
             $result = $ctx->result;
 
@@ -369,12 +366,12 @@ abstract class EnumerableBase implements IEnumerable {
      * @see EnumerableBase::except()
      */
     protected function exceptInner($second, $equalityComparer = null) {
-        if (is_null($second)) {
+        if (\is_null($second)) {
             $second = array();
         }
 
-        if (!is_array($second)) {
-            $second = iterator_to_array($second);
+        if (!\is_array($second)) {
+            $second = \iterator_to_array($second);
         }
 
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
@@ -390,7 +387,7 @@ abstract class EnumerableBase implements IEnumerable {
 
             $found = false;
             foreach ($itemsToExclude as $ite) {
-                if (call_user_func($equalityComparer, $ite, $curItem)) {
+                if (\call_user_func($equalityComparer, $ite, $curItem)) {
                     $found = true;
                     break;
                 }
@@ -407,7 +404,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function firstOrDefault($predicateOrDefValue = null, $defValue = null) {
-        static::updatePredicateAndDefaultValue(func_num_args(),
+        static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
         $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
@@ -416,12 +413,24 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
+            if (\call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 return $ctx->value;
             }
         }
 
         return $defValue;
+    }
+
+    public function format($format) {
+        $args = $this->toArray();
+
+        return \preg_replace_callback('/{(\d+)}/i',
+                                      function($match) use (&$args) {
+                                          $i = \intval($match[1]);
+
+                                          return isset($args[$i]) ? \strval($args[$i])
+                                                                  : $match[0];
+                                      }, $format);
     }
 
     /**
@@ -432,7 +441,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getComparerSafe($comparer) {
-        if (is_null($comparer)) {
+        if (\is_null($comparer)) {
             $comparer = function($x, $y) {
                 if ($x > $y) {
                     return 1;
@@ -448,18 +457,6 @@ abstract class EnumerableBase implements IEnumerable {
         return $comparer;
     }
 
-    public function format($format) {
-        $args = $this->toArray();
-
-        return preg_replace_callback('/{(\d+)}/i',
-                                     function($match) use (&$args) {
-                                         $i = intval($match[1]);
-
-                                         return isset($args[$i]) ? strval($args[$i])
-                                                                 : $match[0];
-                                     }, $format);
-    }
-
     /**
      * Keeps sure that a equality comparer is NOT (null).
      *
@@ -468,7 +465,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getEqualComparerSafe($equalityComparer) {
-        if (is_null($equalityComparer)) {
+        if (\is_null($equalityComparer)) {
             $equalityComparer = function($x, $y) {
                 return $x == $y;
             };
@@ -485,7 +482,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getPredicateSafe($predicate) {
-        if (is_null($predicate)) {
+        if (\is_null($predicate)) {
             $predicate = function() {
                 return true;
             };
@@ -510,18 +507,18 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $key = call_user_func($keySelector,
-                                  $ctx->value, $ctx);
+            $key = \call_user_func($keySelector,
+                                   $ctx->value, $ctx);
 
             $grp = null;
             foreach ($groups as $g) {
-                if (call_user_func($keyEqualityComparer, $g->key, $key)) {
+                if (\call_user_func($keyEqualityComparer, $g->key, $key)) {
                     $grp = $g;
                     break;
                 }
             }
 
-            if (is_null($grp)) {
+            if (\is_null($grp)) {
                 $grp         = new \stdClass();
                 $grp->key    = $key;
                 $grp->values = array();
@@ -537,8 +534,8 @@ abstract class EnumerableBase implements IEnumerable {
         return static::createEnumerable($groups)
                      ->select(function($x) use ($cls) {
                                   return new Grouping($x->key,
-                                                      call_user_func(array($cls->getName(), 'createEnumerable'),
-                                                                     $x->values));
+                                                      \call_user_func(array($cls->getName(), 'createEnumerable'),
+                                                                      $x->values));
                               });
     }
 
@@ -579,24 +576,24 @@ abstract class EnumerableBase implements IEnumerable {
                        ->toArray();
         };
 
-        $outerGrps = call_user_func($createGrpsForSequence,
-                                    $this, $outerKeySelector);
-        $innerGrps = call_user_func($createGrpsForSequence,
-                                    $inner, $innerKeySelector);
+        $outerGrps = \call_user_func($createGrpsForSequence,
+                                     $this, $outerKeySelector);
+        $innerGrps = \call_user_func($createGrpsForSequence,
+                                     $inner, $innerKeySelector);
 
         $result = array();
 
         foreach ($outerGrps as $outerGrp) {
             foreach ($innerGrps as $innerGrp) {
-                if (!call_user_func($keyEqualityComparer,
-                                    $outerGrp->key, $innerGrp->key)) {
+                if (!\call_user_func($keyEqualityComparer,
+                                     $outerGrp->key, $innerGrp->key)) {
 
                     continue;
                 }
 
                 foreach ($outerGrp->values as $outerVal) {
-                    $result[] = call_user_func($resultSelector,
-                                               $outerVal, $innerGrp->values, $outerGrp->key, $innerGrp->key);
+                    $result[] = \call_user_func($resultSelector,
+                                                $outerVal, $innerGrp->values, $outerGrp->key, $innerGrp->key);
                 }
             }
         }
@@ -612,7 +609,7 @@ abstract class EnumerableBase implements IEnumerable {
      * @see EnumerableBase::intersect()
      */
     protected function intersectInner($second, $equalityComparer) {
-        if (is_null($second)) {
+        if (\is_null($second)) {
             $second = array();
         }
 
@@ -629,7 +626,7 @@ abstract class EnumerableBase implements IEnumerable {
 
             // search for matching item in second sequence
             foreach ($secondArray as $k => $v) {
-                if (!call_user_func($equalityComparer, $v, $curItem)) {
+                if (!\call_user_func($equalityComparer, $v, $curItem)) {
                     // not found
                     continue;
                 }
@@ -681,8 +678,8 @@ abstract class EnumerableBase implements IEnumerable {
 
         $createGrpsForSequence = function(IEnumerable $seq, $keySelector) {
             return $seq->groupBy(function ($item, $ctx) use ($keySelector) {
-                                     return call_user_func($keySelector,
-                                                           $item, $ctx);
+                                     return \call_user_func($keySelector,
+                                                            $item, $ctx);
                                  })
                        ->select(function(IGrouping $x) {
                                     $result         = new \stdClass();
@@ -695,25 +692,25 @@ abstract class EnumerableBase implements IEnumerable {
                        ->toArray();
         };
 
-        $outerGrps = call_user_func($createGrpsForSequence,
-                                    $this, $outerKeySelector);
-        $innerGrps = call_user_func($createGrpsForSequence,
-                                    $inner, $innerKeySelector);
+        $outerGrps = \call_user_func($createGrpsForSequence,
+                                     $this, $outerKeySelector);
+        $innerGrps = \call_user_func($createGrpsForSequence,
+                                     $inner, $innerKeySelector);
 
         $result = array();
 
         foreach ($outerGrps as $outerGrp) {
             foreach ($innerGrps as $innerGrp) {
-                if (!call_user_func($keyEqualityComparer,
-                                    $outerGrp->key, $innerGrp->key)) {
+                if (!\call_user_func($keyEqualityComparer,
+                                     $outerGrp->key, $innerGrp->key)) {
 
                     continue;
                 }
 
                 foreach ($outerGrp->values as $outerVal) {
                     foreach ($innerGrp->values as $innerVal) {
-                        $result[] = call_user_func($resultSelector,
-                                                   $outerVal, $innerVal, $outerGrp->key, $innerGrp->key);
+                        $result[] = \call_user_func($resultSelector,
+                                                    $outerVal, $innerVal, $outerGrp->key, $innerGrp->key);
                     }
                 }
             }
@@ -727,7 +724,7 @@ abstract class EnumerableBase implements IEnumerable {
             return $defValue;
         }
 
-        return implode($separator, $this->toArray());
+        return \implode($separator, $this->toArray());
     }
 
     public function key() {
@@ -735,7 +732,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function lastOrDefault($predicateOrDefValue = null, $defValue = null) {
-        static::updatePredicateAndDefaultValue(func_num_args(),
+        static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
         $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
@@ -746,7 +743,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
+            if (\call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 $result = $ctx->value;
             }
         }
@@ -761,8 +758,8 @@ abstract class EnumerableBase implements IEnumerable {
                                     // check if result item is smaller
                                     // than the current one
 
-                                    return call_user_func($comparer, $result, $curItem) < 0 ? $curItem
-                                                                                            : $result;
+                                    return \call_user_func($comparer, $result, $curItem) < 0 ? $curItem
+                                                                                             : $result;
                                 }, $defValue);
     }
 
@@ -773,8 +770,8 @@ abstract class EnumerableBase implements IEnumerable {
                                     // check if result item is greater
                                     // than the current one
 
-                                    return call_user_func($comparer, $result, $item) > 0 ? $item
-                                                                                         : $result;
+                                    return \call_user_func($comparer, $result, $item) > 0 ? $item
+                                                                                          : $result;
                                 }, $defValue);
     }
 
@@ -783,22 +780,22 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function ofType($type) {
-        $type = trim($type);
+        $type = \trim($type);
 
         return $this->where(function($x) use ($type) {
                                 if (empty($type)) {
-                                    return is_null($x);
+                                    return \is_null($x);
                                 }
 
-                                if (is_object($x)) {
-                                    if (class_exists($type)) {
+                                if (\is_object($x)) {
+                                    if (\class_exists($type)) {
                                         $reflect = new \ReflectionClass($type);
 
                                         return $reflect->isInstance($x);
                                     }
                                 }
 
-                                return gettype($x) == $type;
+                                return \gettype($x) == $type;
                             });
     }
 
@@ -813,18 +810,18 @@ abstract class EnumerableBase implements IEnumerable {
 
         $result = $this->select(function($x, $ctx) use ($selector) {
                                     $result         = new \stdClass();
-                                    $result->sortBy = call_user_func($selector,
-                                                                     $x, $ctx);
+                                    $result->sortBy = \call_user_func($selector,
+                                                                      $x, $ctx);
                                     $result->value  = $x;
 
                                     return $result;
                                 })
                        ->toArray();
 
-        uasort($result, function($x, $y) use ($comparer) {
-                            return call_user_func($comparer,
-                                                  $x->sortBy, $y->sortBy);
-                        });
+        \uasort($result, function($x, $y) use ($comparer) {
+                             return \call_user_func($comparer,
+                                                    $x->sortBy, $y->sortBy);
+                         });
 
         return static::createEnumerable($result)
                      ->select(function($x) {
@@ -837,8 +834,8 @@ abstract class EnumerableBase implements IEnumerable {
 
         return $this->orderBy($selector,
                               function($x, $y) use ($comparer) {
-                                  return -1 * call_user_func($comparer,
-                                                             $x, $y);
+                                  return -1 * \call_user_func($comparer,
+                                                              $x, $y);
                               });
     }
 
@@ -855,14 +852,14 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function randomize($seeder = null, $randProvider = null) {
-        if (is_null($randProvider)) {
+        if (\is_null($randProvider)) {
             $randProvider = function () {
-                return mt_rand();
+                return \mt_rand();
             };
         }
 
-        if (!is_null($seeder)) {
-            call_user_func($seeder);
+        if (!\is_null($seeder)) {
+            \call_user_func($seeder);
         }
 
         return $this->orderBy($randProvider);
@@ -901,8 +898,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $result[] = call_user_func($selector,
-                                       $ctx->value, $ctx);
+            $result[] = \call_user_func($selector,
+                                        $ctx->value, $ctx);
         }
 
         return $result;
@@ -922,10 +919,10 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $iterator = static::asIterator(call_user_func($selector,
-                                                          $ctx->value, $ctx));
+            $iterator = static::asIterator(\call_user_func($selector,
+                                                           $ctx->value, $ctx));
 
-            if (is_null($iterator)) {
+            if (\is_null($iterator)) {
                 continue;
             }
 
@@ -956,7 +953,7 @@ abstract class EnumerableBase implements IEnumerable {
             $y = $other->current();
             $other->next();
 
-            if (!call_user_func($equalityComparer, $x, $y)) {
+            if (!\call_user_func($equalityComparer, $x, $y)) {
                 // both items are NOT equal
                 return false;
             }
@@ -975,7 +972,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public final function singleOrDefault($predicateOrDefValue = null, $defValue = null) {
-        static::updatePredicateAndDefaultValue(func_num_args(),
+        static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
         $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
@@ -987,7 +984,7 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
+            if (\call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 if ($hasAlreadyBeenFound) {
                     throw new \Exception('Sequence contains more than one matching element!');
                 }
@@ -1011,8 +1008,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++, false);
 
-            if (call_user_func($predicate,
-                $ctx->value, $ctx)) {
+            if (\call_user_func($predicate,
+                                $ctx->value, $ctx)) {
 
                 $this->next();
             }
@@ -1050,8 +1047,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++, false);
 
-            if (call_user_func($predicate,
-                               $ctx->value, $ctx)) {
+            if (\call_user_func($predicate,
+                                $ctx->value, $ctx)) {
 
                 $result[] = $ctx->value;
                 $this->next();
@@ -1082,7 +1079,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function toArray($keySelector = null) {
-        if (is_null($keySelector)) {
+        if (\is_null($keySelector)) {
             $keySelector = function() {
                 return null;
             };
@@ -1094,10 +1091,10 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $key = call_user_func($keySelector,
-                                  $ctx->key, $ctx->value, $ctx);
+            $key = \call_user_func($keySelector,
+                                   $ctx->key, $ctx->value, $ctx);
 
-            if (is_null($key)) {
+            if (\is_null($key)) {
                 // autokey
                 $result[] = $ctx->value;
             }
@@ -1110,7 +1107,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function toDictionary($keySelector = null, $keyEqualityComparer = null) {
-        if (is_null($keySelector)) {
+        if (\is_null($keySelector)) {
             $keySelector = function($key) {
                 return $key;
             };
@@ -1122,8 +1119,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            $result->add(call_user_func($keySelector,
-                                        $ctx->key, $ctx->value, $ctx),
+            $result->add(\call_user_func($keySelector,
+                                         $ctx->key, $ctx->value, $ctx),
                          $ctx->value);
         }
 
@@ -1131,8 +1128,8 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function toJson($keySelector = null, $options = null) {
-        if (func_num_args() == 1) {
-            if (!is_null($keySelector) && !is_callable($keySelector)) {
+        if (\func_num_args() == 1) {
+            if (!\is_null($keySelector) && !\is_callable($keySelector)) {
                 // swap values
 
                 $options     = $keySelector;
@@ -1140,18 +1137,18 @@ abstract class EnumerableBase implements IEnumerable {
             }
         }
 
-        if (is_null($keySelector)) {
+        if (\is_null($keySelector)) {
             $keySelector = function($key) {
                 return $key;
             };
         }
 
-        if (is_null($options)) {
+        if (\is_null($options)) {
             $options = 0;
         }
 
-        return json_encode($this->toArray($keySelector),
-                           (int)$options);
+        return \json_encode($this->toArray($keySelector),
+                            (int)$options);
     }
 
     public final function toList() {
@@ -1162,7 +1159,7 @@ abstract class EnumerableBase implements IEnumerable {
                                    $elementSelector = null) {
 
         $elements = $this;
-        if (!is_null($elementSelector)) {
+        if (!\is_null($elementSelector)) {
             $elements = $this->select($elementSelector);
         }
 
@@ -1198,7 +1195,7 @@ abstract class EnumerableBase implements IEnumerable {
      */
     protected static function updatePredicateAndDefaultValue($argCount, &$predicate, &$defValue) {
         if (1 == $argCount) {
-            if (!is_callable($predicate)) {
+            if (!\is_callable($predicate)) {
                 // use $predicate as default value
 
                 $defValue  = $predicate;
@@ -1208,7 +1205,7 @@ abstract class EnumerableBase implements IEnumerable {
     }
 
     public function unserialize($serialized) {
-        $arr = json_decode($serialized, true);
+        $arr = \json_decode($serialized, true);
 
         $this->__construct(new \ArrayIterator($arr));
         unset($arr);
@@ -1232,8 +1229,8 @@ abstract class EnumerableBase implements IEnumerable {
         while ($this->valid()) {
             $ctx = static::createContextObject($this, $index++);
 
-            if (call_user_func($predicate,
-                               $ctx->value, $ctx)) {
+            if (\call_user_func($predicate,
+                                $ctx->value, $ctx)) {
 
                 $result[] = $ctx->value;
             }
@@ -1260,8 +1257,8 @@ abstract class EnumerableBase implements IEnumerable {
             $ctx2 = static::createContextObject($second, $index);
             ++$index;
 
-            $result[] = call_user_func($selector,
-                                       $ctx1->value, $ctx2->value, $ctx1, $ctx2);
+            $result[] = \call_user_func($selector,
+                                        $ctx1->value, $ctx2->value, $ctx1, $ctx2);
         }
 
         return $result;

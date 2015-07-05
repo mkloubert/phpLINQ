@@ -37,22 +37,10 @@ spl_autoload_register(function($clsName) {
 });
 
 
-$count = 10;
-$seq = \System\Linq\Enumerable::buildWhile(function($ctx) use ($count) {
-                                               $ctx->newItem = $ctx->index + 1;
-                                               $ctx->addItem = 0 == $ctx->newItem % 2;
+$coll = new \System\Collections\Collection();
+$coll->addItems(1, 2, 4);
+$coll->insert(2, 3);
 
-                                               return $ctx->index < $count;
-                                           });
-
-$arr1 = array(1, 2, 3, 4, 5);
-array_splice($arr1, 1, 2);
-
-foreach ($arr1 as $key => $item) {
-//    echo "{$key} => {$item}<br />";
+foreach ($coll as $key => $item) {
+    echo "{$key} => {$item}<br />";
 }
-
-$a = new \DateTime('1979-09-23');
-$b = new \DateTime('1986-12-22');
-
-echo var_export($a < $b);
