@@ -45,7 +45,7 @@ final class Grouping implements IGrouping {
     }
 
 
-    public final function getIterator() {
+    public function getIterator() {
         return $this->_iterator;
     }
 

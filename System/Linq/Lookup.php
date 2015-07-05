@@ -71,7 +71,7 @@ final class Lookup extends EnumerableBase implements ILookup {
     }
 
     public function count() {
-        return count($this->_dict);
+        return \count($this->_dict);
     }
 
     public function current() {

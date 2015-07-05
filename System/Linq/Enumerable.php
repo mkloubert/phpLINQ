@@ -82,8 +82,8 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             $ctx->prevVal = $prevVal;
             $ctx->tag     = $tag;
 
-            $newItem = call_user_func($itemFactory,
-                                      $index, $ctx);
+            $newItem = \call_user_func($itemFactory,
+                                       $index, $ctx);
 
             $index++;
 
@@ -92,7 +92,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             }
 
             if ($ctx->addItem) {
-                if (is_null($ctx->newKey)) {
+                if (\is_null($ctx->newKey)) {
                     // auto key
                     $items[] = $newItem;
                 }
@@ -123,28 +123,28 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function buildRandom($count, $maxOrSeeder = null, $min = null, $seeder = null) {
-        if (2 == func_num_args()) {
-            if (is_callable($maxOrSeeder)) {
+        if (2 == \func_num_args()) {
+            if (\is_callable($maxOrSeeder)) {
                 $seeder      = $maxOrSeeder;
                 $maxOrSeeder = null;
             }
         }
 
-        if (is_null($min)) {
+        if (\is_null($min)) {
             $min = 0;
         }
 
-        if (is_null($maxOrSeeder)) {
-            $maxOrSeeder =  mt_getrandmax();
+        if (\is_null($maxOrSeeder)) {
+            $maxOrSeeder = \mt_getrandmax();
         }
 
-        if (!is_null($seeder)) {
-            call_user_func($seeder);
+        if (!\is_null($seeder)) {
+            \call_user_func($seeder);
         }
 
         return self::build($count,
                            function () use ($min, $maxOrSeeder) {
-                               return mt_rand($min, $maxOrSeeder - 1);
+                               return \mt_rand($min, $maxOrSeeder - 1);
                            });
     }
 
@@ -174,14 +174,14 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             $ctx->prevVal = $prevVal;
             $ctx->tag     = $tag;
 
-            $newItem = call_user_func($itemFactoryPredicate, $ctx);
+            $newItem = \call_user_func($itemFactoryPredicate, $ctx);
             if ($ctx->cancel) {
                 // do not continue
                 break;
             }
 
             if ($ctx->addItem) {
-                if (is_null($ctx->newKey)) {
+                if (\is_null($ctx->newKey)) {
                     // auto key
                     $items[] = $newItem;
                 }
@@ -206,19 +206,11 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function create($items = null) {
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
-
-        return new self(static::asIterator($items));
+        return new self(static::asIterator($items, true));
     }
 
     public static function createEnumerable($items = null) {
-        if (is_null($items)) {
-            $items = new \EmptyIterator();
-        }
-
-        return new self(static::asIterator($items));
+        return new self(static::asIterator($items, true));
     }
 
     /**
@@ -229,7 +221,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function fromJson($json) {
-        return self::create(json_decode($json, true));
+        return self::create(\json_decode($json, true));
     }
 
     /**
@@ -240,7 +232,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      * @return Enumerable The new instance.
      */
     public static function fromValues() {
-        return self::create(func_get_args());
+        return self::create(\func_get_args());
     }
 
     /**
@@ -254,7 +246,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      */
     public static function range($start, $count, $increaseBy = 1) {
         $increaseFunc = $increaseBy;
-        if (!is_callable($increaseFunc)) {
+        if (!\is_callable($increaseFunc)) {
             $increaseFunc = function() use ($increaseBy) {
                 return $increaseBy;
             };
@@ -264,8 +256,8 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                            function($index, $ctx) use (&$start, $increaseFunc) {
                                $result = $start;
 
-                               $start += call_user_func($increaseFunc,
-                                                        $result, $ctx);
+                               $start += \call_user_func($increaseFunc,
+                                                         $result, $ctx);
 
                                return $result;
                            });
@@ -281,51 +273,51 @@ final class Enumerable extends \System\Collections\EnumerableBase {
      *                             directory does not exist.
      */
     public static function scanDir($dir, $group = false) {
-        $dir = realpath($dir);
-        if (!is_dir($dir)) {
+        $dir = \realpath($dir);
+        if (!\is_dir($dir)) {
             return false;
         }
 
-        $result = self::create(scandir($dir))
+        $result = self::create(\scandir($dir))
                       ->where(function($x) {
                                   return !('.' == $x || '..' == $x);
                               })
                       ->select(function($x) use ($dir) {
                                    $result           = new \stdClass();
-                                   $result->fullPath = realpath($dir . DIRECTORY_SEPARATOR . $x);
+                                   $result->fullPath = \realpath($dir . DIRECTORY_SEPARATOR . $x);
                                    $result->name     = $x;
                                    $result->parent   = $dir;
                                    $result->realPath = $result->fullPath;
                                    $result->size     = null;
 
-                                   $result->isLink = @is_link($result->fullPath) ? true : false;
+                                   $result->isLink = @\is_link($result->fullPath) ? true : false;
                                    if ($result->isLink) {
-                                       $result->realPath = @readlink($result->fullPath);
+                                       $result->realPath = @\readlink($result->fullPath);
                                        if (false === $result->realPath) {
                                            $result->realPath = $result->fullPath;
                                        }
                                    }
 
                                    $result->type = null;
-                                   if (is_dir($result->realPath)) {
+                                   if (\is_dir($result->realPath)) {
                                        $result->type = Enumerable::TYPE_DIR;
                                    }
-                                   else if (is_file($result->realPath)) {
+                                   else if (\is_file($result->realPath)) {
                                        $result->type = Enumerable::TYPE_FILE;
 
-                                       $result->size = @filesize($result->realPath);
+                                       $result->size = @\filesize($result->realPath);
                                    }
 
-                                   $result->canRead  = is_readable($result->realPath);
-                                   $result->canWrite = is_writable($result->realPath);
+                                   $result->canRead  = \is_readable($result->realPath);
+                                   $result->canWrite = \is_writable($result->realPath);
 
-                                   $result->lastAccess = fileatime($result->realPath);
+                                   $result->lastAccess = \fileatime($result->realPath);
                                    if (false !== $result->lastAccess) {
                                        $lat = new \DateTime();
                                        $result->lastAccess = $lat->setTimestamp($result->lastAccess);
                                    }
 
-                                   $result->lastWrite = filectime($result->realPath);
+                                   $result->lastWrite = \filectime($result->realPath);
                                    if (false !== $result->lastWrite) {
                                        $lwt = new \DateTime();
                                        $result->lastWrite = $lwt->setTimestamp($result->lastWrite);
@@ -334,9 +326,9 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                    return $result;
                                })
                       ->orderBy(function ($x) {
-                                    return sprintf('%s %s',
-                                                   Enumerable::TYPE_DIR == $x->type ? 0 : 1,
-                                                   $x->name);
+                                    return \sprintf('%s %s',
+                                                    Enumerable::TYPE_DIR == $x->type ? '0' : '1',
+                                                    $x->name);
                                 }, 'strcasecmp');
 
         if ($group) {
