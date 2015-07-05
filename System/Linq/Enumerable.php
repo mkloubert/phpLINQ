@@ -329,7 +329,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
                                     return \sprintf('%s %s',
                                                     Enumerable::TYPE_DIR == $x->type ? '0' : '1',
                                                     $x->name);
-                                }, 'strcasecmp');
+                                }, "\\strcasecmp");
 
         if ($group) {
             $result = $result->toLookup(function($x) {
