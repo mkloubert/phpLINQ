@@ -51,7 +51,7 @@ final class Lookup extends EnumerableBase implements ILookup {
             $this->_dict = $grps;
         }
         else {
-            $grps = static::asIterator($grps);
+            $grps = static::asIterator($grps, true);
 
             $this->_dict = new Dictionary();
             while ($grps->valid()) {
