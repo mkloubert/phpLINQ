@@ -475,7 +475,7 @@ abstract class EnumerableBase implements IEnumerable {
      *
      * @return callable The output value.
      */
-    protected static function getEqualComparerSafe($equalityComparer) {
+    protected static function getEqualComparerSafe(callable $equalityComparer = null) {
         if (\is_null($equalityComparer)) {
             $equalityComparer = function($x, $y) {
                 return $x == $y;
