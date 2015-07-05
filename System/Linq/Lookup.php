@@ -51,12 +51,17 @@ final class Lookup extends EnumerableBase implements ILookup {
             $this->_dict = $grps;
         }
         else {
-            $newDict = new Dictionary();
-            foreach ($grps as $g) {
-                $newDict->add($g->key(), $g);
-            }
+            $grps = static::asIterator($grps);
 
-            $this->_dict = $newDict;
+            $this->_dict = new Dictionary();
+            while ($grps->valid()) {
+                $g = $grps->current();
+
+                $this->_dict
+                     ->add($g->key(), $g);
+
+                $grps->next();
+            }
         }
     }
 
@@ -87,17 +92,12 @@ final class Lookup extends EnumerableBase implements ILookup {
     }
 
     public function offsetGet($key) {
-        $result = null;
         if (isset($this->_dict[$key])) {
-            $result = $this->_dict[$key]
-                           ->getIterator();
+            return $this->_dict[$key]
+                        ->getIterator();
         }
 
-        if (is_null($result)) {
-            $this->throwException('Key not found!');
-        }
-
-        return $result;
+        $this->throwException('Key not found!');
     }
 
     public function offsetSet($key, $value) {
@@ -108,8 +108,9 @@ final class Lookup extends EnumerableBase implements ILookup {
         unset($this->_dict[$key]);
     }
 
-    public function rewind() {
-        $this->_dict->rewind();
+    public function reset() {
+        $this->_dict->reset();
+        return $this;
     }
 
     public function valid() {
