@@ -112,6 +112,10 @@ abstract class EnumerableBase implements IEnumerable {
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
     protected static function asIterator($obj, $emptyIfNull = false) {
+        if ($obj instanceof \IteratorAggregate) {
+            $obj = $obj->getIterator();
+        }
+
         if (\is_null($obj)) {
             if (!$emptyIfNull) {
                 return null;
