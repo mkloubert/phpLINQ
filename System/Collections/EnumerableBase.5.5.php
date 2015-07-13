@@ -817,7 +817,7 @@ abstract class EnumerableBase implements IEnumerable {
 
         $result = $this->select(function($x, $ctx) use ($selector) {
                                     $result         = new \stdClass();
-                                    $result->sortBy = call_user_func($selector,
+                                    $result->sortBy = \call_user_func($selector,
                                                                       $x, $ctx);
                                     $result->value  = $x;
 
