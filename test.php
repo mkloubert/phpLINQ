@@ -37,10 +37,15 @@ spl_autoload_register(function($clsName) {
 });
 
 
-$coll = new \System\Collections\Collection();
-$coll->addItems(1, 2, 4);
-$coll->insert(2, 3);
+$coll = new \System\Collections\Dictionary();
+$coll->add('TM', '19790905');
+$coll->add('JS', '19810701');
 
-foreach ($coll as $key => $item) {
-    echo "{$key} => {$item}<br />";
+$arr = array('PZ', 'MK');
+$coll->appendToArray($arr, true);
+
+foreach ($arr as $key => $item) {
+    echo var_export($item, true);
+
+    // echo "{$key}<br />";
 }

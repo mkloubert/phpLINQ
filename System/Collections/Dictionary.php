@@ -81,6 +81,23 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         $this->_items[] = $newEntry;
     }
 
+    public function appendToArray(array &$arr, $withKeys = false) {
+        while ($this->valid()) {
+            $item = $this->current();
+
+            if (!$withKeys) {
+                $arr[] = $item->value();
+            }
+            else {
+                $arr[$item->key()] = $item->value();
+            }
+
+            $this->next();
+        }
+
+        return $this;
+    }
+
     public function clear() {
         $this->_items = array();
     }

@@ -62,6 +62,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable {
     function any($predicate = null);
 
     /**
+     * Appends the items of that sequence to an array.
+     *
+     * @param array $arr The target array.
+     * @param bool $withKeys Also apply keys or not.
+     *
+     * @return IEnumerable That instance.
+     */
+    function appendToArray(array &$arr, $withKeys = false);
+
+    /**
      * Calculates the average value of all values of that sequence.
      *
      * @param mixed $defValue The default value if sequence is empty.

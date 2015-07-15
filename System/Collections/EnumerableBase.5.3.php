@@ -103,6 +103,23 @@ abstract class EnumerableBase implements IEnumerable {
         return false;
     }
 
+    public function appendToArray(array &$arr, $withKeys = false) {
+        while ($this->valid()) {
+            $item = $this->current();
+
+            if (!$withKeys) {
+                $arr[] = $item;
+            }
+            else {
+                $arr[$this->key()] = $item;
+            }
+
+            $this->next();
+        }
+
+        return $this;
+    }
+
     /**
      * Returns an object / value as iterator.
      *
