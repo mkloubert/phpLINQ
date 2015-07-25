@@ -51,10 +51,6 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         $this->_i = $i;
     }
 
-    public function __toString() {
-        return $this->toJson();
-    }
-
 
     public final function aggregate($accumulator, $defValue = null) {
         $result = $defValue;
@@ -1214,6 +1210,10 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
 
         return $result;
+    }
+
+    public function toString() {
+        return $this->toJson();
     }
 
     public final function union($second, $equalityComparer = null) {
