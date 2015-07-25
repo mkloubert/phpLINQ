@@ -31,7 +31,7 @@ use \System\Collections\IEnumerable;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Linq
  */
-interface ILookup extends \Countable, \ArrayAccess, IEnumerable, \System\ObjectInterface {
+interface ILookup extends \Countable, \ArrayAccess, IEnumerable {
     /**
      * Checks if a key exists in that lookup or not.
      *

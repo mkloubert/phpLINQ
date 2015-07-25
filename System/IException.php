@@ -23,10 +23,10 @@ namespace System;
 
 
 /**
- * Describes an object.
+ * Describes an exception.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface ObjectInterface {
+interface IException extends IObject {
 }

@@ -23,10 +23,25 @@ namespace System;
 
 
 /**
- * Describes an exception.
+ * Describes an object.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface ExceptionInterface extends ObjectInterface {
+interface IObject {
+    /**
+     * Compares that object with another.
+     *
+     * @param mixed $other The other object / value.
+     *
+     * @return bool Are equal or not.
+     */
+    function equals($other);
+
+    /**
+     * Returns the string representation of that object.
+     *
+     * @return string The string representation of that object.
+     */
+    function toString();
 }

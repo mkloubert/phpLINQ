@@ -22,6 +22,8 @@
 namespace System\Collections;
 
 
+use \System\IComparable;
+use \System\IObject;
 use \System\Linq\Grouping;
 use \System\Linq\IGrouping;
 use \System\Linq\Lookup;
@@ -464,6 +466,13 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
     protected static function getComparerSafe($comparer) {
         if (\is_null($comparer)) {
             $comparer = function($x, $y) {
+                if ($x instanceof IComparable) {
+                    return $x->compareTo($y);
+                }
+                else if ($y instanceof IComparable) {
+                    return $y->compareTo($x) * -1;
+                }
+
                 if ($x > $y) {
                     return 1;
                 }
@@ -488,6 +497,13 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
     protected static function getEqualComparerSafe($equalityComparer) {
         if (\is_null($equalityComparer)) {
             $equalityComparer = function($x, $y) {
+                if ($x instanceof IObject) {
+                    return $x->equals($y);
+                }
+                else if ($y instanceof IObject) {
+                    return $y->equals($x);
+                }
+
                 return $x == $y;
             };
         }

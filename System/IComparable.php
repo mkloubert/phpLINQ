@@ -23,39 +23,20 @@ namespace System;
 
 
 /**
- * An exception.
+ * Describes an object that can be compared with another object or value
+ * (for sort operations e.g.)
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+interface IComparable extends IObject {
     /**
-     * Initializes a new instance of that class.
+     * @param $other
      *
-     * @param string $message The message.
-     * @param int $code The code.
-     * @param \Exception $innerException The inner exception.
+     * @return int The sort value.
+     *             Smaller than 0 means that this object is smaller than $other.
+     *             Greater than 0 means that this object is greater than $other.
+     *             0 means that this object is as great as $other.
      */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                $code = 0) {
-
-        parent::__construct($message, $code, $innerException);
-    }
-
-    /**
-     * Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString();
-    }
-
-
-    public function equals($other) {
-        return $this == $other;
-    }
-
-    public function toString() {
-        return parent::__toString();
-    }
+    function compareTo($other);
 }

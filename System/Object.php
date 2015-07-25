@@ -28,6 +28,20 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Object implements ObjectInterface {
+class Object implements IObject {
+    /**
+     * Object::toString()
+     */
+    public final function __toString() {
+        return $this->toString();
+    }
 
+
+    public function equals($other) {
+        return $this == $other;
+    }
+
+    public function toString() {
+        return \get_class($this);
+    }
 }
