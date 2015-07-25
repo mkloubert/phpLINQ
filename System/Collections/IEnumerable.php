@@ -31,7 +31,7 @@ use \System\Linq\ILookup;
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IEnumerable extends \Countable, \Iterator, \Serializable {
+interface IEnumerable extends \Countable, \Iterator, \Serializable, \System\ObjectInterface {
     /**
      * Applies an accumulator function over the sequence.
      *

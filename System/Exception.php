@@ -19,37 +19,27 @@
  */
 
 
-namespace System\Linq;
+namespace System;
 
 
 /**
- * A simple grouped iterator.
+ * An exception.
  *
- * @package System\Linq
+ * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-final class Grouping extends \System\Object implements IGrouping {
-    private $_iterator;
-    private $_key;
-
-
+class Exception extends \Exception implements ExceptionInterface {
     /**
      * Initializes a new instance of that class.
      *
-     * @param mixed $key The key.
-     * @param \Iterator $iterator The underlying iterator.
+     * @param string $message The message.
+     * @param int $code The code.
+     * @param \Exception $innerException The inner exception.
      */
-    public function __construct($key, \Iterator $iterator) {
-        $this->_key      = $key;
-        $this->_iterator = $iterator;
-    }
+    public function __construct($message = null,
+                                \Exception $innerException = null,
+                                $code = 0) {
 
-
-    public function getIterator() {
-        return $this->_iterator;
-    }
-
-    public function key() {
-        return $this->_key;
+        parent::__construct($message, $code, $innerException);
     }
 }

@@ -19,9 +19,9 @@
  */
 
 
-if (version_compare(PHP_VERSION, '5.5') < 0) {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'EnumerableBase.5.3.php';
+if (version_compare(\PHP_VERSION, '5.5') < 0) {
+    require __DIR__ . \DIRECTORY_SEPARATOR . 'EnumerableBase.5.3.php';
 }
 else {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'EnumerableBase.5.5.php';
+    require __DIR__ . \DIRECTORY_SEPARATOR . 'EnumerableBase.5.5.php';
 }

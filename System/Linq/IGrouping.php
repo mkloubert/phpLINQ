@@ -28,7 +28,7 @@ namespace System\Linq;
  * @package System\Linq
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IGrouping extends \IteratorAggregate {
+interface IGrouping extends \IteratorAggregate, \System\ObjectInterface {
     /**
      * Gets the underlying key.
      *

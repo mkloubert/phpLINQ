@@ -28,7 +28,7 @@ namespace System\Collections;
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class EnumerableException extends \Exception {
+class EnumerableException extends \System\Exception {
     /**
      * @var IEnumerable
      */
@@ -40,17 +40,17 @@ class EnumerableException extends \Exception {
      *
      * @param IEnumerable $seq The underlying sequence.
      * @param string $message The message.
+     * @param \Exception $innerException The inner exception.
      * @param int $code The code.
-     * @param \Exception $previous The inner/previous exception.
      */
     public function __construct(IEnumerable $seq,
                                 $message = null,
-                                $code = 0,
-                                \Exception $previous = null) {
-
-        parent::__construct($message, $code, $previous);
+                                \Exception $innerException = null,
+                                $code = 0) {
 
         $this->_sequence = $seq;
+
+        parent::__construct($message, $innerException, $code);
     }
 
 

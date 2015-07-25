@@ -28,7 +28,7 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-final class DictionaryEntry implements \Serializable {
+final class DictionaryEntry extends \System\Object implements \Serializable {
     const ARRAY_KEY_KEY   = 'key';
     const ARRAY_KEY_VALUE = 'value';
 

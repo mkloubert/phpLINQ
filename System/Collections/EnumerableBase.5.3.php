@@ -33,7 +33,7 @@ use \System\Linq\Lookup;
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-abstract class EnumerableBase implements IEnumerable {
+abstract class EnumerableBase extends \System\Object implements IEnumerable {
     /**
      * @var \Iterator
      */
@@ -1096,7 +1096,7 @@ abstract class EnumerableBase implements IEnumerable {
                                       \Exception $previous = null) {
 
         throw new EnumerableException($this,
-                                      $message, $code, $previous);
+                                      $message, $previous, $code);
     }
 
     public function toArray($keySelector = null) {
