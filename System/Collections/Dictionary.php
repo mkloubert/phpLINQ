@@ -69,6 +69,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function add($key, $value) {
         if ($this->containsKey($key)) {
             $this->throwException('Key already exists.');
@@ -81,6 +84,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         $this->_items[] = $newEntry;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function appendToArray(array &$arr, $withKeys = false) {
         while ($this->valid()) {
             $item = $this->current();
@@ -98,6 +104,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function clear() {
         $this->_items = array();
     }
@@ -107,6 +116,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
                                $x, $y);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function containsKey($key) {
         foreach ($this->keys() as $dictKey) {
             if ($this->compareKeys($dictKey, $key)) {
@@ -117,6 +129,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function current() {
         if (!$this->valid()) {
             return;
@@ -125,8 +140,11 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return self::objectToEntry(parent::current());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function elementAtOrDefault($index, $defValue = null) {
-        if (isset($this->_items[$index])) {
+        if (\array_key_exists($index, $this->_items)) {
             return self::objectToEntry($this->_items[$index]);
         }
 
@@ -143,23 +161,38 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isFixedSize() {
         return $this->isReadOnly();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isReadOnly() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isSynchronized() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->valid() ? $this->current()->key()
                               : $this->getEOFKey();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function keys() {
         return Enumerable::create($this->_items)
                          ->select(function($x) {
@@ -172,10 +205,16 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
                                    $obj->value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($offset) {
         return $this->containsKey($offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetGet($offset) {
         $i = $this->indexOfByOffset($offset);
         if (false !== $i) {
@@ -185,6 +224,9 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         $this->throwException('Key not found!');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetSet($offset, $value) {
         $doAdd = false;
         if (\is_null($offset)) {
@@ -206,14 +248,23 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetUnset($offset) {
         $this->removeKey($offset);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function remove($key) {
         return $this->removeKey($key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function removeKey($key) {
         $i = $this->indexOfByOffset($key);
         if (false !== $i) {
@@ -224,10 +275,16 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function unserialize($serialized) {
         $this->_items = \json_decode($serialized, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function values() {
         return Enumerable::create($this->_items)
                          ->select(function($x) {

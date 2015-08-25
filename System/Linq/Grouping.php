@@ -45,10 +45,16 @@ final class Grouping extends \System\Object implements IGrouping {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function getIterator() {
         return $this->_iterator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->_key;
     }

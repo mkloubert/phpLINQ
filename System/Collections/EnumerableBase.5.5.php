@@ -52,6 +52,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public final function aggregate($accumulator, $defValue = null) {
         $result = $defValue;
 
@@ -71,6 +74,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function all($predicate) {
         return $this->allInner($predicate);
     }
@@ -92,6 +98,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function any($predicate = null) {
         $predicate = static::getPredicateSafe($predicate);
 
@@ -108,6 +117,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function appendToArray(array &$arr, $withKeys = false) {
         while ($this->valid()) {
             $item = $this->current();
@@ -177,6 +189,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return new \ArrayIterator($arr);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function average($defValue = null) {
         $divisor  = 0;
         $dividend = $this->each(function($x, $ctx) use (&$divisor) {
@@ -190,6 +205,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                             : $defValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function cast($type) {
         $code = \sprintf('return (%s)$x;', \trim($type));
 
@@ -198,6 +216,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                              });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function concat() {
         return static::createEnumerable($this->concatInner(\func_get_args()));
     }
@@ -223,14 +244,23 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function concatToString($defValue = '') {
         return $this->joinToString('', $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function concatValues() {
         return $this->concat(\func_get_args());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function contains($item, $equalityComparer = null) {
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
@@ -240,6 +270,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                           });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function count() {
         if ($this->_i instanceof \Countable) {
             return $this->_i->count();
@@ -297,15 +330,24 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return new static(static::asIterator($items, true));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function current() {
         return $this->_i->current();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function defaultIfEmpty() {
         return \call_user_func(array($this, 'defaultIfEmpty2'),
                                \func_get_args());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function defaultIfEmpty2($items) {
         if ($this->isEmpty()) {
             return static::createEnumerable($items);
@@ -314,6 +356,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function distinct($equalityComparer = null) {
         return static::createEnumerable($this->distinctInner($equalityComparer));
     }
@@ -350,6 +395,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function each($action, $defResult = null) {
         return $this->eachInner($action, $defResult);
     }
@@ -387,11 +435,17 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function elementAtOrDefault($index, $defValue = null) {
         return $this->skip($index)
                     ->firstOrDefault(null, $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function except($second, $equalityComparer = null) {
         return static::createEnumerable($this->exceptInner($second, $equalityComparer));
     }
@@ -433,6 +487,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function firstOrDefault($predicateOrDefValue = null, $defValue = null) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
@@ -451,6 +508,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $defValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function format($format) {
         $args = $this->toArray();
 
@@ -535,6 +595,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $predicate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function groupBy($keySelector, $keyEqualityComparer = null) {
         return $this->groupByInner($keySelector, $keyEqualityComparer);
     }
@@ -583,6 +646,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                               });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function groupJoin($inner,
                                     $outerKeySelector, $innerKeySelector,
                                     $resultSelector,
@@ -641,6 +707,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function intersect($second, $equalityComparer = null) {
         return static::createEnumerable($this->intersectInner($second, $equalityComparer));
     }
@@ -679,14 +748,23 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isEmpty() {
         return !$this->valid();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function isNotEmpty() {
         return !$this->isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function join($inner,
                                $outerKeySelector, $innerKeySelector,
                                $resultSelector,
@@ -751,6 +829,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function joinToString($separator, $defValue = '') {
         if (!$this->valid()) {
             return $defValue;
@@ -759,10 +840,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return \implode($separator, $this->toArray());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->_i->key();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function lastOrDefault($predicateOrDefValue = null, $defValue = null) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
@@ -783,6 +870,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function max($defValue = null, $comparer = null) {
         $comparer = static::getComparerSafe($comparer);
 
@@ -795,6 +885,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                 }, $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function min($defValue = null, $comparer = null) {
         $comparer = static::getComparerSafe($comparer);
 
@@ -807,10 +900,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                 }, $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function next() {
         $this->_i->next();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function ofType($type) {
         $type = \trim($type);
 
@@ -835,12 +934,18 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                             });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function order($comparer = null) {
         return $this->orderBy(function($x) {
                                   return $x;
                               }, $comparer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function orderBy($selector, $comparer = null) {
         $comparer = static::getComparerSafe($comparer);
 
@@ -865,6 +970,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                               });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function orderByDescending($selector, $comparer = null) {
         $comparer = static::getComparerSafe($comparer);
 
@@ -875,18 +983,27 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                               });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function orderDescending($comparer = null) {
         return $this->orderByDescending(function($x) {
                                             return $x;
                                         }, $comparer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function product($defValue = null) {
         return $this->aggregate(function($result, $item) {
                                     return $result * $item;
                                 }, $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function randomize($seeder = null, $randProvider = null) {
         if (\is_null($randProvider)) {
             $randProvider = function () {
@@ -901,17 +1018,26 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $this->orderBy($randProvider);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function reset() {
         $this->_i->rewind();
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function reverse() {
         return $this->orderBy(function($x, $ctx) {
                                   return PHP_INT_MAX - $ctx->index;
                               });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function rewind() {
         // deactivate
     }
@@ -920,6 +1046,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return "5.5";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function select($selector) {
         return static::createEnumerable($this->selectInner($selector));
     }
@@ -937,6 +1066,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function selectMany($selector) {
         return static::createEnumerable($this->selectManyInner($selector));
     }
@@ -964,6 +1096,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function sequenceEqual($other, $equalityComparer = null) {
         $equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
@@ -995,10 +1130,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function serialize() {
         return $this->toJson();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function singleOrDefault($predicateOrDefValue = null, $defValue = null) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
@@ -1025,12 +1166,18 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function skip($count) {
         return $this->skipWhile(function($x, $ctx) use ($count) {
                                     return $ctx->index < $count;
                                 });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function skipWhile($predicate) {
         $index = 0;
         while ($this->valid()) {
@@ -1049,18 +1196,27 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function sum($defValue = null) {
         return $this->aggregate(function($result, $item) {
                                     return $result + $item;
                                 }, $defValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function take($count) {
         return $this->takeWhile(function($x, $ctx) use ($count) {
                                     return $ctx->index < $count;
                                 });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function takeWhile($predicate) {
         return static::createEnumerable($this->takeWhileInner($predicate));
     }
@@ -1102,6 +1258,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                       $message, $previous, $code);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toArray($keySelector = null) {
         if (\is_null($keySelector)) {
             $keySelector = function() {
@@ -1130,6 +1289,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toDictionary($keySelector = null, $keyEqualityComparer = null) {
         if (\is_null($keySelector)) {
             $keySelector = function($key) {
@@ -1151,6 +1313,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toJson($keySelector = null, $options = null) {
         if (\func_num_args() == 1) {
             if (!\is_null($keySelector) && !\is_callable($keySelector)) {
@@ -1175,10 +1340,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                             (int)$options);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function toList() {
         return new Collection($this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function toLookup($keySelector = null, $keyEqualityComparer = null,
                                    $elementSelector = null) {
 
@@ -1191,6 +1362,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                              $keyEqualityComparer));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function toSet($equalityComparer = null) {
         $result = new Set($equalityComparer);
 
@@ -1203,10 +1377,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toString() {
         return $this->toJson();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function union($second, $equalityComparer = null) {
         return $this->concat($second)
                     ->distinct($equalityComparer);
@@ -1232,6 +1412,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function unserialize($serialized) {
         $arr = \json_decode($serialized, true);
 
@@ -1239,10 +1422,16 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         unset($arr);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function valid() {
         return $this->_i->valid();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function where($predicate) {
         return static::createEnumerable($this->whereInner($predicate));
     }
@@ -1263,6 +1452,9 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function zip($second, $selector) {
         return static::createEnumerable($this->zipInner($second, $selector));
     }

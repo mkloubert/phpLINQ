@@ -45,6 +45,9 @@ final class Set extends ArrayCollectionBase implements ISet {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function add($item) {
         if (!$this->containsItem($item)) {
             $this->_items[] = $item;
@@ -54,6 +57,9 @@ final class Set extends ArrayCollectionBase implements ISet {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function clear() {
         $this->_items = array();
     }
@@ -63,6 +69,9 @@ final class Set extends ArrayCollectionBase implements ISet {
                                $x, $y);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function containsItem($item) {
         foreach ($this->_items as $i) {
             if ($this->compareItems($item, $i)) {
@@ -75,10 +84,16 @@ final class Set extends ArrayCollectionBase implements ISet {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isReadOnly() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function remove($item) {
         foreach ($this->_items as $index => $value) {
             if ($this->compareItems($item, $value)) {

@@ -29,6 +29,9 @@ namespace System;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 final class Comparable extends ObjectWrapper implements IComparable {
+    /**
+     * {@inheritDoc}
+     */
     public function compareTo($other) {
         if ($other instanceof IObject) {
             if ($other->equals($this)) {

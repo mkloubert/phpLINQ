@@ -45,6 +45,9 @@ class ObjectWrapper extends Object {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function equals($other) {
         return $this->getWrappedValue() == $other;
     }
@@ -58,6 +61,9 @@ class ObjectWrapper extends Object {
         return $this->_wrappedValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function toString() {
         return \strval($this->getWrappedValue());
     }

@@ -37,10 +37,16 @@ class Object implements IObject {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function equals($other) {
         return $this == $other;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toString() {
         return \get_class($this);
     }

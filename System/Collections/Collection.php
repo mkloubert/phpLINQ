@@ -52,16 +52,25 @@ final class Collection extends ArrayCollectionBase implements IList {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function add($item) {
         $this->_items[] = $item;
 
         return $this->count() - 1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function addItems() {
         $this->addRange(\func_get_args());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function addRange($items) {
         $i = static::asIterator($items, true);
 
@@ -72,6 +81,9 @@ final class Collection extends ArrayCollectionBase implements IList {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function clear() {
         $this->_items = array();
     }
@@ -81,10 +93,16 @@ final class Collection extends ArrayCollectionBase implements IList {
                                $x, $y);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function containsItem($item) {
         return $this->indexOf($item) > -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function indexOf($item) {
         $index = -1;
         foreach ($this->_items as $i) {
@@ -100,6 +118,9 @@ final class Collection extends ArrayCollectionBase implements IList {
         return -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function insert($index, $item) {
         if (!$this->offsetExists($index)) {
             $this->throwIndexOutOfRange($index);
@@ -108,22 +129,37 @@ final class Collection extends ArrayCollectionBase implements IList {
         \array_splice($this->_items, $index, 0, array($item));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isFixedSize() {
         return $this->isReadOnly();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isReadOnly() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isSynchronized() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($index) {
         return isset($this->_items[$index]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetGet($index) {
         if ($this->offsetExists($index)) {
             return $this->_items[$index];
@@ -132,6 +168,9 @@ final class Collection extends ArrayCollectionBase implements IList {
         $this->throwIndexOutOfRange($index);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetSet($index, $value) {
         if (\is_null($index)) {
             $this->add($value);
@@ -145,10 +184,16 @@ final class Collection extends ArrayCollectionBase implements IList {
         $this->_items[$index] = $value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetUnset($index) {
         $this->removeAt($index);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function remove($item) {
         $index = $this->indexOf($item);
         if ($index > -1) {
@@ -159,6 +204,9 @@ final class Collection extends ArrayCollectionBase implements IList {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function removeAt($index) {
         if ($this->offsetExists($index)) {
             \array_splice($this->_items, $index, 1);

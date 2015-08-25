@@ -39,17 +39,26 @@ abstract class ArrayCollectionBase extends EnumerableBase {
     private $_key = 0;
 
 
+    /**
+     * {@inheritDoc}
+     */
     public final function count() {
         return \count($this->_items);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function current() {
         $result = $this->_items[$this->_key];
         return $result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function elementAtOrDefault($index, $defValue = null) {
-        if (isset($this->_items[$index])) {
+        if (\array_key_exists($index, $this->_items)) {
             return $this->_items[$index];
         }
 
@@ -65,11 +74,17 @@ abstract class ArrayCollectionBase extends EnumerableBase {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->valid() ? $this->_key
                               : $this->getEOFKey();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function next() {
         if ($this->_key >= \count($this->_items)) {
             $this->throwException("No more items available!");
@@ -78,19 +93,31 @@ abstract class ArrayCollectionBase extends EnumerableBase {
         ++$this->_key;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function reset() {
         $this->_key = 0;
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function serialize() {
         return \json_encode($this->_items);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function unserialize($serialized) {
         $this->_items = \json_decode($serialized, true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public final function valid() {
         return $this->_key < \count($this->_items);
     }

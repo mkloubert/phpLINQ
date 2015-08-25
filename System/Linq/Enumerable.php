@@ -209,6 +209,9 @@ final class Enumerable extends \System\Collections\EnumerableBase {
         return new self(static::asIterator($items, true));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function createEnumerable($items = null) {
         return new self(static::asIterator($items, true));
     }

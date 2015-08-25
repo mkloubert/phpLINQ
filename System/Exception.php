@@ -51,10 +51,16 @@ class Exception extends \Exception implements IException {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function equals($other) {
         return $this == $other;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toString() {
         return parent::__toString();
     }

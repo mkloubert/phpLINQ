@@ -66,31 +66,52 @@ final class Lookup extends EnumerableBase implements ILookup {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     public function containsKey($key) {
         return $this->offsetExists($key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function count() {
         return \count($this->_dict);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function current() {
         return $this->_dict->current()
                            ->value();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->_dict->key();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function next() {
         return $this->_dict->next();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($key) {
         return isset($this->_dict[$key]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetGet($key) {
         if (isset($this->_dict[$key])) {
             return $this->_dict[$key]
@@ -100,19 +121,31 @@ final class Lookup extends EnumerableBase implements ILookup {
         $this->throwException('Key not found!');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetSet($key, $value) {
         $this->_dict[$key] = $value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetUnset($key) {
         unset($this->_dict[$key]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function reset() {
         $this->_dict->reset();
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function valid() {
         return $this->_dict->valid();
     }

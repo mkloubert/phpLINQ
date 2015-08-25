@@ -30,6 +30,9 @@ namespace System;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 final class ExactObjectWrapper extends ObjectWrapper {
+    /**
+     * {@inheritDoc}
+     */
     public function equals($other) {
         return $this->getWrappedValue() === $other;
     }

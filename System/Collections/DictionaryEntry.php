@@ -58,6 +58,9 @@ final class DictionaryEntry extends \System\Object implements \Serializable {
         return $this->_key;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function serialize() {
         return \json_encode(array(self::ARRAY_KEY_KEY   => $this->key(),
                                   self::ARRAY_KEY_VALUE => $this->value()));
@@ -72,6 +75,9 @@ final class DictionaryEntry extends \System\Object implements \Serializable {
         return $this->_value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function unserialize($serialized) {
         $arr = \json_decode($serialized, true);
 
