@@ -113,7 +113,7 @@ final class Lookup extends EnumerableBase implements ILookup {
      * {@inheritDoc}
      */
     public function offsetGet($key) {
-        if (isset($this->_dict[$key])) {
+        if ($this->_dict->offsetExists($key)) {
             return $this->_dict[$key]
                         ->getIterator();
         }
