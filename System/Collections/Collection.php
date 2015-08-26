@@ -154,7 +154,7 @@ final class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public function offsetExists($index) {
-        return isset($this->_items[$index]);
+        return \array_key_exists($index, $this->_items);
     }
 
     /**

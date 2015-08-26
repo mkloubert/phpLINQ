@@ -507,8 +507,8 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                       function($match) use (&$args) {
                                           $i = \intval($match[1]);
 
-                                          return isset($args[$i]) ? \strval($args[$i])
-                                                                  : $match[0];
+                                          return \array_key_exists($i, $args) ? \strval($args[$i])
+                                                                              : $match[0];
                                       }, $format);
     }
 
