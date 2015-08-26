@@ -1031,7 +1031,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      */
     public final function reverse() {
         return $this->orderBy(function($x, $ctx) {
-                                  return PHP_INT_MAX - $ctx->index;
+                                  return \PHP_INT_MAX - $ctx->index;
                               });
     }
 
@@ -1155,7 +1155,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
 
             if (\call_user_func($predicateOrDefValue, $ctx->value, $ctx)) {
                 if ($hasAlreadyBeenFound) {
-                    throw new \Exception('Sequence contains more than one matching element!');
+                    $this->throwException('Sequence contains more than one matching element!');
                 }
 
                 $result              = $ctx->value;
