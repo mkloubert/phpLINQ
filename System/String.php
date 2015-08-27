@@ -122,8 +122,8 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
             $targetEnc = \iconv_get_encoding('internal_encoding');
         }
 
-        return static::asString(\iconv($srcEnc, $targetEnc,
-                                       static::valueToString($str)));
+        return new static(\iconv($srcEnc, $targetEnc,
+                                 static::valueToString($str)));
     }
 
     /**
@@ -143,8 +143,8 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
             $srcEnc = \iconv_get_encoding('internal_encoding');
         }
 
-        return static::asString(\iconv($srcEnc, $targetEnc,
-                                       $this->getWrappedValue()));
+        return new static(\iconv($srcEnc, $targetEnc,
+                                 $this->getWrappedValue()));
     }
 
     /**
@@ -174,6 +174,10 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      * {@inheritDoc}
      */
     public function equals($other) {
+        if (\is_string($other)) {
+            return $this->getWrappedValue() === $other;
+        }
+
         if ($other instanceof \System\ObjectWrapper) {
             return $this->getWrappedValue() === $other->getWrappedValue();
         }
