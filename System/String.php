@@ -30,7 +30,7 @@ use \System\Linq\Enumerable;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class String extends \System\ObjectWrapper implements \Countable, IComparable, \IteratorAggregate, \Serializable {
+class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, IComparable, \IteratorAggregate, \Serializable {
     /**
      * Value for an index that tells that a string was not found.
      */
@@ -289,6 +289,24 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
     }
 
     /**
+     * Gets if the string is empty or not.
+     *
+     * @return bool Is empty or not.
+     */
+    public function isEmpty() {
+        return $this->length() < 1;
+    }
+
+    /**
+     * Gets if the string is NOT empty.
+     *
+     * @return bool Is empty (false) or not (true).
+     */
+    public function isNotEmpty() {
+        return !$this->isEmpty();
+    }
+
+    /**
      * Checks if a string is (null) or empty.
      *
      * @param string $str The string to check.
@@ -328,6 +346,41 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
      */
     public function length() {
         return $this->count();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetExists($index) {
+        return ($index >= 0) &&
+               ($index < $this->length());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetGet($index) {
+        $this->throwIfIndexOutOfRange($index);
+
+        return $this->_wrappedValue[$index];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetSet($index, $value) {
+        $this->throwIfIndexOutOfRange($index);
+
+        $this->_wrappedValue[$index] = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetUnset($index) {
+        $this->throwIfIndexOutOfRange($index);
+
+        $this->_wrappedValue[$index] = "\\0";
     }
 
     /**
@@ -376,6 +429,19 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
      */
     public function startsWith($expr, $ignoreCase = false) {
         return 0 === $this->invokeFindStringFunc($expr, $ignoreCase);
+    }
+
+    /**
+     * Throws an exception if an index value is out of range.
+     *
+     * @param int $index The value to check.
+     *
+     * @throws ArgumentOutOfRangeException
+     */
+    protected function throwIfIndexOutOfRange($index) {
+        if (($index < 0) || ($index >= $this->length())) {
+            throw new ArgumentOutOfRangeException('index');
+        }
     }
 
     /**
