@@ -30,7 +30,7 @@ use \System\Linq\Enumerable;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class String extends \System\ObjectWrapper implements \Countable, \Serializable, \IteratorAggregate {
+class String extends \System\ObjectWrapper implements \Countable, IComparable, \IteratorAggregate, \Serializable {
     /**
      * Initializes a new instance of that class.
      *
@@ -52,6 +52,82 @@ class String extends \System\ObjectWrapper implements \Countable, \Serializable,
                                    \func_get_args());
     }
 
+
+    /**
+     * Returns a value as a String object.
+     *
+     * @param mixed $val The value to convert/case.
+     * @param bool $nullAsEmpty If (true) an empty string will be returned instead of a (null) reference.
+     *
+     * @return static
+     */
+    public static function asString($val, $nullAsEmpty = true) {
+        if (null === $val) {
+            if ($nullAsEmpty) {
+                $val = '';
+            }
+        }
+
+        if (null === $val) {
+            return $val;
+        }
+
+        if ($val instanceof static) {
+            return $val;
+        }
+
+        return new static($val);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function compareTo($other) {
+        return \strcmp($this, $other);
+    }
+
+    /**
+     * Creates a string that is stored in a specific encoding (s. \iconv()).
+     *
+     * @param mixed $str The string to convert.
+     * @param string $srcEnc The source encoding. If not defined the input encoding is used.
+     * @param string $targetEnc The target encoding. If not defined the internal encoding is used.
+     *
+     * @return static
+     */
+    public static function convertFrom($str, $srcEnc = null, $targetEnc = null) {
+        if (static::isNullOrWhitespace($srcEnc)) {
+            $srcEnc = \iconv_get_encoding('input_encoding');
+        }
+
+        if (static::isNullOrWhitespace($targetEnc)) {
+            $targetEnc = \iconv_get_encoding('internal_encoding');
+        }
+
+        return static::asString(\iconv($srcEnc, $targetEnc,
+                                       static::valueToString($str)));
+    }
+
+    /**
+     * Converts a string to a new encoding (s. \iconv()).
+     *
+     * @param string $targetEnc The target encoding. If not defined the output encoding is used.
+     * @param string $srcEnc The source encoding. If not defined the internal encoding is used.
+     *
+     * @return static
+     */
+    public function convertTo($targetEnc = null, $srcEnc = null) {
+        if (static::isNullOrWhitespace($targetEnc)) {
+            $targetEnc = \iconv_get_encoding('output_encoding');
+        }
+
+        if (static::isNullOrWhitespace($srcEnc)) {
+            $srcEnc = \iconv_get_encoding('internal_encoding');
+        }
+
+        return static::asString(\iconv($srcEnc, $targetEnc,
+                                       $this->getWrappedValue()));
+    }
 
     /**
      * {@inheritDoc}

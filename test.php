@@ -36,6 +36,27 @@ spl_autoload_register(function($clsName) {
     }
 });
 
+class A {
+    public static function isEqual($val) {
+        return $val instanceof static;
+    }
+
+    public function __toString() {
+        return static::class;
+    }
+}
+
+class B extends A {
+    public function __toString() {
+        return static::class;
+    }
+}
+
+$a = new A();
+$b = new B();
+
+die(var_export(strcmp($a, $b)));
+
 
 $coll = new \System\Collections\Dictionary();
 $coll->add('TM', '19790905');
