@@ -24,6 +24,7 @@ namespace System\Collections;
 
 use \System\IComparable;
 use \System\IObject;
+use \System\String as ClrString;
 use \System\Linq\Grouping;
 use \System\Linq\IGrouping;
 use \System\Linq\Lookup;
@@ -501,15 +502,8 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function format($format) {
-        $args = $this->toArray();
-
-        return \preg_replace_callback('/{(\d+)}/i',
-                                      function($match) use (&$args) {
-                                          $i = \intval($match[1]);
-
-                                          return \array_key_exists($i, $args) ? \strval($args[$i])
-                                                                              : $match[0];
-                                      }, $format);
+        return ClrString::formatArray($format,
+                                      $this);
     }
 
     /**
