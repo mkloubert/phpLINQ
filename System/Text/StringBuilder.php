@@ -98,10 +98,7 @@ class StringBuilder extends \System\String {
      * @return $this
      */
     public function appendValuesArray($values = null) {
-        $values = Enumerable::create($values)
-                            ->toArray();
-
-        foreach ($values as $v) {
+        foreach (Enumerable::create($values) as $v) {
             $this->append($v);
         }
 
