@@ -346,6 +346,18 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
     }
 
     /**
+     * Checks if a value is a string or a String object.
+     *
+     * @param mixed $val The value to check.
+     *
+     * @return bool Is string or not.
+     */
+    public static function isString($val) {
+        return \is_string($val) ||
+               ($val instanceof String);
+    }
+
+    /**
      * Gets the length of the string.
      *
      * @return int The length of that string.
