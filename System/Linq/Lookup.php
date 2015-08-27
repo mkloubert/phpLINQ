@@ -39,6 +39,8 @@ final class Lookup extends EnumerableBase implements ILookup {
      * Initializes a new instance of that class.
      *
      * @param IEnumerable $grps The sequence of groupings.
+     *
+     * @throws \System\ArgumentException
      */
     public function __construct($grps) {
         $dict = $grps;
@@ -49,6 +51,10 @@ final class Lookup extends EnumerableBase implements ILookup {
             $dict = new Dictionary();
             while ($grps->valid()) {
                 $g = $grps->current();
+                if (!$g instanceof IGrouping) {
+                    throw new \System\ArgumentException('grps',
+                                                        'Sequence contains at least one item that is no grouping!');
+                }
 
                 $dict->add($g->key(), $g);
 
@@ -87,8 +93,8 @@ final class Lookup extends EnumerableBase implements ILookup {
      */
     public function offsetGet($key) {
         if ($this->offsetExists($key)) {
-            return $this->_i[$key]
-                        ->getIterator();
+            return $this->_i->offsetGet($key)
+                            ->getIterator();
         }
 
         $this->throwException('Key not found!');

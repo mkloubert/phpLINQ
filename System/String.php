@@ -32,6 +32,12 @@ use \System\Linq\Enumerable;
  */
 class String extends \System\ObjectWrapper implements \Countable, IComparable, \IteratorAggregate, \Serializable {
     /**
+     * Value for an index that tells that a string was not found.
+     */
+    const NOT_FOUND_INDEX = -1;
+
+
+    /**
      * Initializes a new instance of that class.
      *
      * @param string $value The value.
@@ -219,6 +225,49 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
      */
     public function getIterator() {
         return Enumerable::create($this->getWrappedValue());
+    }
+
+    /**
+     * Finds the first occurrence of a string expression.
+     *
+     * @param string $expr The string to search for.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int $offset The offset.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    public function indexOf($expr, $ignoreCase = false, $offset = 0) {
+        $result = $this->invokeFindStringFunc($expr, $ignoreCase, $offset);
+
+        return false !== $result ? $result
+                                 : static::NOT_FOUND_INDEX;
+    }
+
+    /**
+     * Finds the first occurrence of a char list.
+     *
+     * @param $chars The list of chars.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int $offset The offset.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    public function indexOfAny($chars, $ignoreCase = false, $offset = 0) {
+        $chars = static::valueToString($chars);
+        $charCount = \strlen($chars);
+
+        $result = static::NOT_FOUND_INDEX;
+
+        for ($i = 0; $i < $charCount; $i++) {
+            $result = $this->indexOf($chars[$i], $ignoreCase, $offset);
+
+            if (static::NOT_FOUND_INDEX != $result) {
+                // found
+                break;
+            }
+        }
+
+        return $result;
     }
 
     /**
