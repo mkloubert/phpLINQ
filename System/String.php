@@ -406,7 +406,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
                 $value = $value->format($format);
             }
             else if ($value instanceof \DateInterval) {
-                $value = $value->format($value);
+                $value = $value->format($format);
             }
             else {
                 $handled = false;
