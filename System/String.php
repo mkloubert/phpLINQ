@@ -203,8 +203,10 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      * @return string The formatted string.
      */
     public static function formatArray($format, $args) {
-        $args = Enumerable::create($args)
-                          ->toArray();
+        if (!\is_array($args)) {
+            $args = Enumerable::create($args)
+                              ->toArray();
+        }
 
         return \preg_replace_callback('/{(\d+)(\:[^}]*)?}/i',
                                       function($match) use ($args) {
