@@ -62,7 +62,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
     /**
      * Returns a value as a String object.
      *
-     * @param mixed $val The value to convert/case.
+     * @param mixed $val The value to convert/cast.
      * @param bool $nullAsEmpty If (true) an empty string will be returned instead of a (null) reference.
      *
      * @return static
