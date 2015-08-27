@@ -235,8 +235,8 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
         $str = $this->getWrappedValue();
         $func = !$ignoreCase ? 'strpos' : 'stripos';
 
-        return call_user_func($func,
-                              $str, $expr, $offset);
+        return \call_user_func($func,
+                               $str, $expr, $offset);
     }
 
     /**
@@ -393,7 +393,7 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
             $args[] = static::valueToString($charlist);
         }
 
-        return new static(call_user_func_array($func, $args));
+        return new static(\call_user_func_array($func, $args));
     }
 
     /**
