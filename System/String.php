@@ -75,7 +75,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
         }
 
         if (null === $val) {
-            return $val;
+            return null;
         }
 
         if ($val instanceof static) {
