@@ -30,7 +30,7 @@ use \System\Linq\Enumerable;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class String extends \System\ObjectWrapper implements \Countable, \Serializable {
+class String extends \System\ObjectWrapper implements \Countable, \Serializable, \IteratorAggregate {
     /**
      * Initializes a new instance of that class.
      *
@@ -108,6 +108,13 @@ class String extends \System\ObjectWrapper implements \Countable, \Serializable 
                                           return \array_key_exists($i, $args) ? String::parseFormatStringValue($format, $args[$i])
                                                                               : $match[0];
                                       }, $format);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator() {
+        return Enumerable::create($this->getWrappedValue());
     }
 
     /**
