@@ -399,23 +399,17 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      */
     public static function parseFormatStringValue($format, $value) {
         if (null !== $format) {
-            $handled = true;
             $format = static::valueToString($format);
 
             if ($value instanceof \DateTimeInterface) {
-                $value = $value->format($format);
+                return $value->format($format);
             }
             else if ($value instanceof \DateInterval) {
-                $value = $value->format($format);
-            }
-            else {
-                $handled = false;
+                return $value->format($format);
             }
 
-            if (!$handled) {
-                // default
-                $value = \sprintf($format, $value);
-            }
+            // default
+            return \sprintf($format, $value);
         }
 
         return $value;
