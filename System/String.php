@@ -48,7 +48,7 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
      * @return string The formatted string.
      */
     public function __invoke() {
-        return static::formatArray($this->toString(),
+        return static::formatArray($this->getWrappedValue(),
                                    \func_get_args());
     }
 
@@ -326,12 +326,7 @@ class String extends \System\ObjectWrapper implements \Countable, IComparable, \
      * @return bool Starts with expression or not.
      */
     public function startsWith($expr, $ignoreCase = false) {
-        $expr = static::valueToString($expr);
-        $str = $this->getWrappedValue();
-        $func = !$ignoreCase ? 'strpos' : 'stripos';
-
-        return 0 === \call_user_func($func,
-                                     $str, $expr);
+        return 0 === $this->invokeFindStringFunc($expr, $ignoreCase);
     }
 
     /**
