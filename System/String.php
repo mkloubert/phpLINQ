@@ -174,8 +174,8 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      * {@inheritDoc}
      */
     public function equals($other) {
-        if (\is_string($other)) {
-            return $this->getWrappedValue() === $other;
+        if (\is_scalar($other)) {
+            return $this->getWrappedValue() === static::valueToString($other);
         }
 
         if ($other instanceof \System\ObjectWrapper) {
