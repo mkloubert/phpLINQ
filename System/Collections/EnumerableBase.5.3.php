@@ -140,8 +140,13 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
     protected static function asIterator($obj, $emptyIfNull = false) {
-        if ($obj instanceof \IteratorAggregate) {
-            $obj = $obj->getIterator();
+        while (!\is_null($obj)) {
+            if ($obj instanceof \IteratorAggregate) {
+                $obj = $obj->getIterator();
+                continue;
+            }
+
+            break;
         }
 
         if (\is_null($obj)) {
@@ -174,9 +179,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
             else {
                 // Traversable
 
-                foreach ($obj as $item) {
-                    $arr[] = $item;
-                }
+                $arr = \iterator_to_array($obj);
             }
         }
 
