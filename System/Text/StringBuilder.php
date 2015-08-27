@@ -51,7 +51,7 @@ class StringBuilder extends \System\String {
      * @return $this
      */
     public function appendFormat($format) {
-        return $this->append(\call_user_func_array(array("\\System\\StringBuilder", "format"),
+        return $this->append(\call_user_func_array(array(__CLASS__, "format"),
                                                    \func_get_args()));
     }
 
@@ -70,11 +70,11 @@ class StringBuilder extends \System\String {
     /**
      * Appends a value and additionally appends a new line expression.
      *
-     * @param mixed $value The value to append.
+     * @param mixed $value The optional value to append.
      *
      * @return $this
      */
-    public function appendLine($value) {
+    public function appendLine($value = null) {
         return $this->append($value)
                     ->append(\PHP_EOL);
     }

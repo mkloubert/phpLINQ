@@ -402,8 +402,11 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
             $handled = true;
             $format = static::valueToString($format);
 
-            if ($value instanceof \DateTime) {
+            if ($value instanceof \DateTimeInterface) {
                 $value = $value->format($format);
+            }
+            else if ($value instanceof \DateInterval) {
+                $value = $value->format($value);
             }
             else {
                 $handled = false;
