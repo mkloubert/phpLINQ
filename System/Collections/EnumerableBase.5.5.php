@@ -146,7 +146,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      *
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
-    protected static function asIterator($obj, $emptyIfNull = false) {
+    public static function asIterator($obj, $emptyIfNull = false) {
         while (!\is_null($obj)) {
             if ($obj instanceof \IteratorAggregate) {
                 $obj = $obj->getIterator();
@@ -252,7 +252,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * {@inheritDoc}
      */
     public final function concatToString($defValue = '') {
-        return $this->joinToString('', $defValue);
+        return ClrString::concat($this, $defValue);
     }
 
     /**
@@ -830,11 +830,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function joinToString($separator, $defValue = '') {
-        if (!$this->valid()) {
-            return $defValue;
-        }
-
-        return \implode($separator, $this->toArray());
+        return ClrString::join($separator, $this, $defValue);
     }
 
     /**

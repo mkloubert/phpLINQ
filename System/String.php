@@ -94,6 +94,18 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     }
 
     /**
+     * Concats items to one string.
+     *
+     * @param mixed $items The items to join.
+     * @param string $defValue The default value to return if item list is empty
+     *
+     * @return string The joined string.
+     */
+    public static function concat($items, $defValue = '') {
+        return static::join('', $items, $defValue);
+    }
+
+    /**
      * Checks if that string contains an expression.
      *
      * @param string $expr The expression to search for.
@@ -354,6 +366,50 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     public static function isString($val) {
         return \is_string($val) ||
                ($val instanceof String);
+    }
+
+    /**
+     * Joins items to one string.
+     *
+     * @param string $separator The separator between two items.
+     * @param mixed $items The items to join.
+     * @param string $defValue The default value to return if item list is empty
+     *
+     * @return string The joined string.
+     */
+    public static function join($separator, $items, $defValue = '') {
+        return static::joinCallback(function() use ($separator) {
+                                        return $separator;
+                                    }, $items, $defValue);
+    }
+
+    /**
+     * Joins items to one string.
+     *
+     * @param callable $separatorProvider The function that provides the separator between two items.
+     * @param mixed $items The items to join.
+     * @param string $defValue The default value to return if item list is empty
+     *
+     * @return string The joined string.
+     */
+    public static function joinCallback($separatorProvider, $items, $defValue = '') {
+        if (!$items instanceof \System\Collections\IEnumerable) {
+            $items = Enumerable::create($items);
+        }
+
+        return $items->aggregate(function($result, $x, $ctx) use ($separatorProvider) {
+                                     if (!$ctx->isFirst) {
+                                         // append separator
+
+                                         $result .= \call_user_func($separatorProvider,
+                                                                    $x, $ctx);
+                                     }
+                                     else {
+                                         $result = '';
+                                     }
+
+                                     return $result . String::valueToString($x);
+                                 }, $defValue);
     }
 
     /**
