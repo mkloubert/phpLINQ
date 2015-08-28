@@ -217,7 +217,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      *
      * @return string The formatted string.
      */
-    public static function formatArray($format, $args) {
+    public static function formatArray($format, $args = null) {
         if (!\is_array($args)) {
             $args = Enumerable::create($args)
                               ->toArray();
