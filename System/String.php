@@ -453,7 +453,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     public function offsetUnset($index) {
         $this->throwIfIndexOutOfRange($index);
 
-        $this->_wrappedValue[$index] = "\\0";
+        $this->_wrappedValue[$index] = "\0";
     }
 
     /**
