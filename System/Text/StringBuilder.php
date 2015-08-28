@@ -144,6 +144,13 @@ class StringBuilder extends \System\String {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function offsetUnset($index) {
+        $this->remove($index, 1);
+    }
+
+    /**
      * Removes a part from the current string.
      *
      * @param int $startIndex The zero based start index.
