@@ -299,7 +299,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     protected function invokeFindStringFunc(&$expr = null, $ignoreCase = false, $offset = 0) {
         $expr = static::valueToString($expr);
         $str = $this->getWrappedValue();
-        $func = !$ignoreCase ? 'strpos' : 'stripos';
+        $func = !$ignoreCase ? "\\strpos" : "\\stripos";
 
         return \call_user_func($func,
                                $str, $expr, $offset);
