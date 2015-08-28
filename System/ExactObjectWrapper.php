@@ -34,6 +34,6 @@ final class ExactObjectWrapper extends ObjectWrapper {
      * {@inheritDoc}
      */
     public function equals($other) {
-        return $this->getWrappedValue() === $other;
+        return $this->getWrappedValue() === static::getRealValue($other);
     }
 }

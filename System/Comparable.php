@@ -33,6 +33,8 @@ final class Comparable extends ObjectWrapper implements IComparable {
      * {@inheritDoc}
      */
     public function compareTo($other) {
+        $other = static::getRealValue($other);
+
         if ($other instanceof IObject) {
             if ($other->equals($this)) {
                 // equal

@@ -89,7 +89,8 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      * {@inheritDoc}
      */
     public function compareTo($other) {
-        return \strcmp($this, $other);
+        return \strcmp($this->getWrappedValue(),
+                       static::getRealValue($other));
     }
 
     /**
@@ -174,12 +175,10 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
      * {@inheritDoc}
      */
     public function equals($other) {
+        $other = static::getRealValue($other);
+
         if (\is_scalar($other)) {
             return $this->getWrappedValue() === static::valueToString($other);
-        }
-
-        if ($other instanceof \System\ObjectWrapper) {
-            return $this->getWrappedValue() === $other->getWrappedValue();
         }
 
         return $this === $other;
@@ -252,7 +251,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, I
     /**
      * Finds the first occurrence of a char list.
      *
-     * @param $chars The list of chars.
+     * @param string $chars The list of chars.
      * @param bool $ignoreCase Ignore case or not.
      * @param int $offset The offset.
      *

@@ -41,7 +41,22 @@ class Object implements IObject {
      * {@inheritDoc}
      */
     public function equals($other) {
-        return $this == $other;
+        return $this == static::getRealValue($other);
+    }
+
+    /**
+     * Extracts the "real" value if needed.
+     *
+     * @param mixed $val The input value.
+     *
+     * @return mixed The output value.
+     */
+    protected static function getRealValue($val) {
+        if ($val instanceof ObjectWrapper) {
+            $val = $val->getWrappedValue();
+        }
+
+        return $val;
     }
 
     /**
