@@ -30,7 +30,7 @@ use \System\Linq\Enumerable;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class String extends \System\ObjectWrapper implements \ArrayAccess,\Countable, IComparable, \IteratorAggregate, \Serializable {
+class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, IComparable, \IteratorAggregate, \Serializable {
     /**
      * Value for an index that tells that a string was not found.
      */
