@@ -158,8 +158,9 @@ class StringBuilder extends \System\String {
      * {@inheritDoc}
      */
     public function replaceRegExp($pattern, $replacement) {
-        $this->_wrappedValue = parent::replaceRegExp($pattern, $replacement)
-                                     ->getWrappedValue();
+        $this->_wrappedValue = $this->invokeFuncForValue(function($str, $p, $r) {
+                                                             return \preg_replace($p, $r, $str);
+                                                         }, $pattern, $replacement);
 
         return $this;
     }
@@ -168,8 +169,7 @@ class StringBuilder extends \System\String {
      * {@inheritDoc}
      */
     public function toLower() {
-        $this->_wrappedValue = parent::toLower()
-                                     ->getWrappedValue();
+        $this->_wrappedValue = $this->invokeFuncForValue("\\strtolower");
 
         return $this;
     }
@@ -178,8 +178,7 @@ class StringBuilder extends \System\String {
      * {@inheritDoc}
      */
     public function toUpper() {
-        $this->_wrappedValue = parent::toUpper()
-                                     ->getWrappedValue();
+        $this->_wrappedValue = $this->invokeFuncForValue("\\strtoupper");
 
         return $this;
     }
@@ -188,8 +187,12 @@ class StringBuilder extends \System\String {
      * {@inheritDoc}
      */
     protected function trimMe($func, $charlist) {
-        $this->_wrappedValue = parent::trimMe($func, $charlist)
-                                     ->getWrappedValue();
+        $args = array();
+        if (!\is_null($charlist)) {
+            $args[] = static::valueToString($charlist);
+        }
+
+        $this->_wrappedValue = $this->invokeFuncForValueArray($func, $args);
 
         return $this;
     }

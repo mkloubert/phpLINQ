@@ -342,6 +342,48 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     }
 
     /**
+     * Invokes a function for the current inner value of that object.
+     * The current value is submitted as first argument of the function.
+     *
+     * @param callable $func The function to invoke.
+     * @param mixed ...$arg One or more argument for $func.
+     *
+     * @return mixed The result of the invocation.
+     */
+    protected function invokeFuncForValue($func) {
+        $args = \func_get_args();
+
+        // remove $func
+        array_splice($args, 0, 1);
+
+        return $this->invokeFuncForValueArray($func, $args);
+    }
+
+    /**
+     * Invokes a function for the current inner value of that object.
+     * The current value is submitted as first argument of the function.
+     *
+     * @param callable $func The function to invoke.
+     * @param array|\Traversable $args The arguments for $func.
+     *
+     * @return mixed The result of the invocation.
+     */
+    protected function invokeFuncForValueArray($func, $args = null) {
+        if (null === $args) {
+            $args = array();
+        }
+
+        if (!\is_array($args)) {
+            $args = \iterator_to_array($args);
+        }
+
+        // current value as first argument
+        array_unshift($args, $this->getWrappedValue());
+
+        return \call_user_func_array($func, $args);
+    }
+
+    /**
      * Gets if the string is empty or not.
      *
      * @return bool Is empty or not.
@@ -633,7 +675,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      * @return static
      */
     public function toLower() {
-        return new static(\strtolower($this->getWrappedValue()));
+        return new static($this->invokeFuncForValue("\\strtolower"));
     }
 
     /**
@@ -642,7 +684,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      * @return static
      */
     public function toUpper() {
-        return new static(\strtoupper($this->getWrappedValue()));
+        return new static($this->invokeFuncForValue("\\strtoupper"));
     }
 
     /**
@@ -676,12 +718,12 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      * @return static
      */
     protected function trimMe($func, $charlist) {
-        $args = array(static::valueToString($this->getWrappedValue()));
+        $args = array();
         if (!\is_null($charlist)) {
             $args[] = static::valueToString($charlist);
         }
 
-        return new static(\call_user_func_array($func, $args));
+        return new static($this->invokeFuncForValueArray($func, $args));
     }
 
     /**
