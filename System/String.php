@@ -401,8 +401,8 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
                                      if (!$ctx->isFirst) {
                                          // append separator
 
-                                         $result .= \call_user_func($separatorProvider,
-                                                                    $x, $ctx);
+                                         $result .= String::valueToString(\call_user_func($separatorProvider,
+                                                                                          $x, $ctx));
                                      }
                                      else {
                                          $result = '';
