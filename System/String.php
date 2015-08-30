@@ -62,7 +62,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     /**
      * Returns that string as mutable StringBuilder.
      *
-     * @return StringBuilder The converted instance.
+     * @return \System\Text\StringBuilder The converted instance.
      */
     public function asMutable() {
         return new \System\Text\StringBuilder($this->getWrappedValue());
