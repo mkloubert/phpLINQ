@@ -39,6 +39,7 @@ class StringBuilder extends \System\String {
      */
     public function append($value) {
         $this->_wrappedValue .= static::valueToString($value);
+
         return $this;
     }
 
@@ -119,100 +120,77 @@ class StringBuilder extends \System\String {
      */
     public function clear() {
         $this->_wrappedValue = '';
+
         return $this;
     }
 
     /**
-     * Inserts a value.
-     *
-     * @param int $index The index where the value should be inserted.
-     * @param mixed $value The value to insert.
-     *
-     * @return $this
-     *
-     * @throws \System\ArgumentOutOfRangeException $index is invalid.
+     * {@inheritDoc}
      */
     public function insert($index, $value) {
-        $len = $this->count();
+        $this->_wrappedValue = parent::insert($index, $value)
+                                     ->getWrappedValue();
 
-        if (($index < 0) || ($index > $len)) {
-            throw new \System\ArgumentOutOfRangeException('index', $index);
-        }
-
-        $newStr = \substr($this->getWrappedValue(), 0, $index) .
-                  static::valueToString($value);
-
-        if ($index < $len) {
-            $newStr .= \substr($this->getWrappedValue(), $index);
-        }
-
-        $this->_wrappedValue = $newStr;
         return $this;
     }
 
     /**
-     * Removes a part from the current string.
-     *
-     * @param int $startIndex The zero based start index.
-     * @param int $length The length.
-     *
-     * @return $this
-     *
-     * @throws \System\ArgumentOutOfRangeException $startIndex or the combination of $startIndex and $length
-     *                                             are invalid.
+     * {@inheritDoc}
      */
     public function remove($startIndex, $length) {
-        $curLen = $this->count();
+        $this->_wrappedValue = parent::remove($startIndex, $length)
+                                     ->getWrappedValue();
 
-        if (($startIndex < 0) || ($startIndex > $curLen)) {
-            throw new \System\ArgumentOutOfRangeException('startIndex', $curLen);
-        }
-
-        $endIndex = $startIndex + $length;
-        if ($endIndex > $curLen) {
-            throw new \System\ArgumentOutOfRangeException('length', $endIndex);
-        }
-
-        $newStr = \substr($this->getWrappedValue(), 0, $startIndex);
-        if ($endIndex < $curLen) {
-            $newStr .= \substr($this->getWrappedValue(), $endIndex);
-        }
-
-        $this->_wrappedValue = $newStr;
         return $this;
     }
 
     /**
-     * Replaces one or more expressions in that string.
-     *
-     * @param string $oldValue The value to search for.
-     * @param string $newValue The new value.
-     * @param bool $ignoreCase Ignore case or not.
-     * @param int &$count The variable where to write how many expressions were replaced.
-     *
-     * @return $this
+     * {@inheritDoc}
      */
     public function replace($oldValue, $newValue, $ignoreCase = false, &$count = null) {
-        $func = !$ignoreCase ? "\\str_replace" : "\\str_ireplace";
+        $this->_wrappedValue = parent::replace($oldValue, $newValue, $ignoreCase, $count)
+                                     ->getWrappedValue();
 
-        $this->_wrappedValue = \call_user_func_array($func,
-                                                     array($oldValue,
-                                                           static::valueToString($newValue),
-                                                           $this->getWrappedValue(),
-                                                           &$count));
         return $this;
     }
 
     /**
-     * Replaces parts of that string by using a regular expression (s. \preg_replace()).
-     *
-     * @param mixed $pattern The regular expression.
-     * @param mixed $replacement The replacement.
-     *
-     * @return $this
+     * {@inheritDoc}
      */
     public function replaceRegExp($pattern, $replacement) {
-        $this->_wrappedValue = \preg_replace($pattern, $replacement, $this->getWrappedValue());
+        $this->_wrappedValue = parent::replaceRegExp($pattern, $replacement)
+                                     ->getWrappedValue();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toLower() {
+        $this->_wrappedValue = parent::toLower()
+                                     ->getWrappedValue();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toUpper() {
+        $this->_wrappedValue = parent::toUpper()
+                                     ->getWrappedValue();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function trimMe($func, $charlist) {
+        $this->_wrappedValue = parent::trimMe($func, $charlist)
+                                     ->getWrappedValue();
+
         return $this;
     }
 }

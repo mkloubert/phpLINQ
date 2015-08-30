@@ -297,6 +297,33 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     }
 
     /**
+     * Inserts a value.
+     *
+     * @param int $index The index where the value should be inserted.
+     * @param mixed $value The value to insert.
+     *
+     * @return $this
+     *
+     * @throws \System\ArgumentOutOfRangeException $index is invalid.
+     */
+    public function insert($index, $value) {
+        $len = $this->count();
+
+        if (($index < 0) || ($index > $len)) {
+            throw new \System\ArgumentOutOfRangeException('index', $index);
+        }
+
+        $newStr = \substr($this->getWrappedValue(), 0, $index) .
+                  static::valueToString($value);
+
+        if ($index < $len) {
+            $newStr .= \substr($this->getWrappedValue(), $index);
+        }
+
+        return new static($newStr);
+    }
+
+    /**
      * Invokes the function for finding a string.
      *
      * @param string &$expr The expression to search for.
@@ -489,6 +516,73 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
         }
 
         return $value;
+    }
+
+    /**
+     * Removes a part from the current string.
+     *
+     * @param int $startIndex The zero based start index.
+     * @param int $length The length.
+     *
+     * @return $this
+     *
+     * @throws \System\ArgumentOutOfRangeException $startIndex or the combination of $startIndex and $length
+     *                                             are invalid.
+     */
+    public function remove($startIndex, $length) {
+        $curLen = $this->count();
+
+        if (($startIndex < 0) || ($startIndex > $curLen)) {
+            throw new \System\ArgumentOutOfRangeException('startIndex', $curLen);
+        }
+
+        $endIndex = $startIndex + $length;
+        if ($endIndex > $curLen) {
+            throw new \System\ArgumentOutOfRangeException('length', $endIndex);
+        }
+
+        $newStr = \substr($this->getWrappedValue(), 0, $startIndex);
+        if ($endIndex < $curLen) {
+            $newStr .= \substr($this->getWrappedValue(), $endIndex);
+        }
+
+        return new static($newStr);
+    }
+
+    /**
+     * Replaces one or more expressions in that string.
+     *
+     * @param string $oldValue The value to search for.
+     * @param string $newValue The new value.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int &$count The variable where to write how many expressions were replaced.
+     *
+     * @return $this
+     */
+    public function replace($oldValue, $newValue, $ignoreCase = false, &$count = null) {
+        $func = !$ignoreCase ? "\\str_replace" : "\\str_ireplace";
+
+        $newStr = \call_user_func_array($func,
+                                        array($oldValue,
+                                              static::valueToString($newValue),
+                                              $this->getWrappedValue(),
+                                              &$count));
+
+        return new static($newStr);
+    }
+
+    /**
+     * Replaces parts of that string by using a regular expression (s. \preg_replace()).
+     *
+     * @param mixed $pattern The regular expression.
+     * @param mixed $replacement The replacement.
+     *
+     * @return $this
+     */
+    public function replaceRegExp($pattern, $replacement) {
+        $newStr = \preg_replace($pattern, $replacement, $this->getWrappedValue());
+
+        return new static($newStr);
     }
 
     /**
