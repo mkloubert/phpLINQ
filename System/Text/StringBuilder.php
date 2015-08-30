@@ -106,6 +106,13 @@ class StringBuilder extends \System\String {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function asMutable() {
+        return $this;
+    }
+
+    /**
      * Resets the current value.
      *
      * @return $this
