@@ -447,6 +447,17 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
     }
 
     /**
+     * Checks if that string contains whitespaces only.
+     *
+     * @param string $charlist The custom list of chars that represent whitespaces (s. \\trim()).
+     *
+     * @return bool Contains whitespaces only or not.
+     */
+    public function isWhitespace($charlist = null) {
+        return static::isNullOrWhitespace($this->getWrappedValue(), $charlist);
+    }
+
+    /**
      * Joins items to one string.
      *
      * @param string $separator The separator between two items.
@@ -488,6 +499,48 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
 
                                      return $result . String::valueToString($x);
                                  }, $defValue);
+    }
+
+    /**
+     * Finds the last occurrence of a string expression.
+     *
+     * @param string $expr The string to search for.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int $offset The offset.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    public function lastIndexOf($expr, $ignoreCase = false, $offset = 0) {
+        $func = !$ignoreCase ? "\\strrpos" : "\\strripos";
+
+        $result = \call_user_func($func,
+                                  $this->getWrappedValue(), static::valueToString($expr), $offset);
+
+        return false !== $result ? $result
+                                 : static::NOT_FOUND_INDEX;
+    }
+
+    /**
+     * Finds the last occurrence of a char list.
+     *
+     * @param string $chars The list of chars.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int $offset The offset.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    public function lastIndexOfAny($chars, $ignoreCase = false, $offset = 0) {
+        $chars     = static::valueToString($chars);
+        $charCount = \strlen($chars);
+
+        $result = static::NOT_FOUND_INDEX;
+
+        for ($i = 0; $i < $charCount; $i++) {
+            $result = \max($result,
+                           $this->lastIndexOf($chars[$i], $ignoreCase, $offset));
+        }
+
+        return $result;
     }
 
     /**
@@ -631,7 +684,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      * {@inheritDoc}
      */
     public function serialize() {
-        return $this->toString();
+        return $this->getWrappedValue();
     }
 
     /**
@@ -741,7 +794,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      * {@inheritDoc}
      */
     public function unserialize($serialized) {
-        $this->_wrappedValue = static::valueToString($serialized);
+        $this->__construct($serialized);
     }
 
     /**
