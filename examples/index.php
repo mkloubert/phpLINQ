@@ -85,6 +85,7 @@ $pageTitle = 'Home';
       <a href="examples_aggregate.php" class="list-group-item">aggregate()</a>
       <a href="examples_all.php" class="list-group-item">all()</a>
       <a href="examples_any.php" class="list-group-item">any()</a>
+      <a href="examples_appendToArray.php" class="list-group-item">appendToArray()</a>
       <a href="examples_average.php" class="list-group-item">average()</a>
     </div>
   </div>
