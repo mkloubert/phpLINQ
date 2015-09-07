@@ -908,16 +908,8 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         $type = \trim($type);
 
         return $this->where(function($x) use ($type) {
-                                switch ($type) {
-                                    case 'object':
-                                        return \is_object($x);
-
-                                    case 'scalar':
-                                        return \is_scalar($x);
-
-                                    case '':
-                                    case 'null':
-                                        return null === $x;
+                                if ('' === $type) {
+                                    return null === $x;
                                 }
 
                                 if (\is_object($x)) {
@@ -926,6 +918,12 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
 
                                         return $reflect->isInstance($x);
                                     }
+
+                                    return 'object' === $type;
+                                }
+
+                                if ('scalar' === $type) {
+                                    return \is_scalar($x);
                                 }
 
                                 return \gettype($x) == $type;
