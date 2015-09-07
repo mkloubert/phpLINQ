@@ -301,7 +301,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
         $result->key      = $i->key();
         $result->value    = $i->current();
 
-        if (!\is_null($result->index)) {
+        if (null !== $result->index) {
             $result->isFirst = 0 == $result->index;
         }
 
