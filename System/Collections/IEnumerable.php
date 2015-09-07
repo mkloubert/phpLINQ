@@ -67,7 +67,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, \System\IObj
      * @param array $arr The target array.
      * @param bool $withKeys Also apply keys or not.
      *
-     * @return IEnumerable That instance.
+     * @return $this
      */
     function appendToArray(array &$arr, $withKeys = false);
 
@@ -385,7 +385,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, \System\IObj
     /**
      * Extension of \Iterator::rewind() that returns the sequence itself after operation.
      *
-     * @return IEnumerable The sequence itself.
+     * @return $this
      */
     function reset();
 
@@ -451,7 +451,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, \System\IObj
      *
      * @param int $count The number of items to skip.
      *
-     * @return IEnumerable That instance.
+     * @return $this
      */
     function skip($count);
 
