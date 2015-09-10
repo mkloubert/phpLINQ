@@ -92,7 +92,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             }
 
             if ($ctx->addItem) {
-                if (\is_null($ctx->newKey)) {
+                if (null === $ctx->newKey) {
                     // auto key
                     $items[] = $newItem;
                 }
@@ -130,15 +130,15 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             }
         }
 
-        if (\is_null($min)) {
+        if (null === $min) {
             $min = 0;
         }
 
-        if (\is_null($maxOrSeeder)) {
+        if (null === $maxOrSeeder) {
             $maxOrSeeder = \mt_getrandmax();
         }
 
-        if (!\is_null($seeder)) {
+        if (null !== $seeder) {
             \call_user_func($seeder);
         }
 
@@ -181,7 +181,7 @@ final class Enumerable extends \System\Collections\EnumerableBase {
             }
 
             if ($ctx->addItem) {
-                if (\is_null($ctx->newKey)) {
+                if (null === $ctx->newKey) {
                     // auto key
                     $items[] = $newItem;
                 }

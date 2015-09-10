@@ -229,7 +229,7 @@ final class Dictionary extends ArrayCollectionBase implements IDictionary {
      */
     public function offsetSet($offset, $value) {
         $doAdd = false;
-        if (\is_null($offset)) {
+        if (null === $offset) {
             $doAdd = true;
 
             // find next index

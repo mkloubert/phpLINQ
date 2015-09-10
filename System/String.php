@@ -427,7 +427,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
         }
 
         $args = array(static::valueToString($str));
-        if (!\is_null($charlist)) {
+        if (null !== $charlist) {
             $args[] = static::valueToString($charlist);
         }
 
@@ -772,7 +772,7 @@ class String extends \System\ObjectWrapper implements \ArrayAccess, \Countable, 
      */
     protected function trimMe($func, $charlist) {
         $args = array();
-        if (!\is_null($charlist)) {
+        if (null !== $charlist) {
             $args[] = static::valueToString($charlist);
         }
 

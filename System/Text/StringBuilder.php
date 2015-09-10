@@ -188,7 +188,7 @@ class StringBuilder extends \System\String {
      */
     protected function trimMe($func, $charlist) {
         $args = array();
-        if (!\is_null($charlist)) {
+        if (null !== $charlist) {
             $args[] = static::valueToString($charlist);
         }
 

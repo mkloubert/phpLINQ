@@ -44,7 +44,7 @@ final class Collection extends ArrayCollectionBase implements IList {
         $this->_equalityComparer = static::getEqualComparerSafe($equalityComparer);
 
         $this->clear();
-        if (!\is_null($items)) {
+        if (null !== $items) {
             $this->addRange($items);
         }
 
@@ -172,7 +172,7 @@ final class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public function offsetSet($index, $value) {
-        if (\is_null($index)) {
+        if (null === $index) {
             $this->add($value);
             return;
         }
