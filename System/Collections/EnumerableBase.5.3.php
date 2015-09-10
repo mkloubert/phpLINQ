@@ -517,13 +517,26 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getComparerSafe($comparer) {
-        if (\is_null($comparer)) {
+        if (null === $comparer) {
             $comparer = function($x, $y) {
-                if ($x instanceof IComparable) {
-                    return $x->compareTo($y);
+                if ($x instanceof IObject) {
+                    if ($x instanceof IComparable) {
+                        return $x->compareTo($y);
+                    }
+
+                    if ($x->equals($y)) {
+                        return 0;
+                    }
                 }
-                else if ($y instanceof IComparable) {
-                    return $y->compareTo($x) * -1;
+
+                if ($y instanceof IObject) {
+                    if ($y instanceof IComparable) {
+                        return $y->compareTo($x) * -1;
+                    }
+
+                    if ($y->equals($x)) {
+                        return 0;
+                    }
                 }
 
                 if ($x > $y) {
@@ -548,16 +561,28 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getEqualComparerSafe($equalityComparer) {
-        if (\is_null($equalityComparer)) {
-            $equalityComparer = function($x, $y) {
-                if ($x instanceof IObject) {
-                    return $x->equals($y);
-                }
-                else if ($y instanceof IObject) {
-                    return $y->equals($x);
-                }
+        $defaultEqualityComparer = function($x, $y) {
+            if ($x instanceof IObject) {
+                return $x->equals($y);
+            }
+            else if ($y instanceof IObject) {
+                return $y->equals($x);
+            }
 
-                return $x == $y;
+            return $x == $y;
+        };
+
+        if (null === $equalityComparer) {
+            $equalityComparer = $defaultEqualityComparer;
+        }
+
+        $rf = new \ReflectionFunction($equalityComparer);
+        if ($rf->getNumberOfParameters() < 2) {
+            // use function as selector
+
+            $equalityComparer = function($x, $y) use ($defaultEqualityComparer, $rf) {
+                return \call_user_func($defaultEqualityComparer,
+                                       $rf->invoke($x), $rf->invoke($y));
             };
         }
 
@@ -572,7 +597,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
      * @return callable The output value.
      */
     protected static function getPredicateSafe($predicate) {
-        if (\is_null($predicate)) {
+        if (null === $predicate) {
             $predicate = function() {
                 return true;
             };
@@ -778,7 +803,7 @@ abstract class EnumerableBase extends \System\Object implements IEnumerable {
                                  $resultSelector,
                                  $keyEqualityComparer) {
 
-        if (!($inner instanceof IEnumerable)) {
+        if (!$inner instanceof IEnumerable) {
             $inner = static::createEnumerable($inner);
         }
 
