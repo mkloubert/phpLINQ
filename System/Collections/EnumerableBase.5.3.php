@@ -21,10 +21,9 @@
 
 namespace System\Collections;
 
-
+use \System\ClrString;
 use \System\IComparable;
 use \System\IObject;
-use \System\String as ClrString;
 use \System\Linq\Grouping;
 use \System\Linq\IGrouping;
 use \System\Linq\Lookup;

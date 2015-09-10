@@ -29,7 +29,7 @@ use \System\Linq\Enumerable;
  * @package System\Text
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class StringBuilder extends \System\String {
+class StringBuilder extends \System\ClrString {
     /**
      * Appends a value.
      *
