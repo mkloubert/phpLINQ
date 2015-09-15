@@ -62,6 +62,13 @@ class Object implements IObject {
     /**
      * {@inheritDoc}
      */
+    public final function getType() {
+        return new \ReflectionObject($this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function toString() {
         return \get_class($this);
     }

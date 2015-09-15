@@ -39,6 +39,13 @@ interface IObject {
     function equals($other);
 
     /**
+     * Gets the type of that object.
+     *
+     * @return \ReflectionObject The type.
+     */
+    function getType();
+
+    /**
      * Returns the string representation of that object.
      *
      * @return string The string representation of that object.
