@@ -30,7 +30,7 @@ namespace System;
  */
 class Object implements IObject {
     /**
-     * Object::toString()
+     * @see Object::toString()
      */
     public final function __toString() {
         return $this->toString();
@@ -53,7 +53,7 @@ class Object implements IObject {
      */
     protected static function getRealValue($val) {
         if ($val instanceof ObjectWrapper) {
-            $val = $val->getWrappedValue();
+            return $val->getWrappedValue();
         }
 
         return $val;

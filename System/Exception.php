@@ -44,7 +44,7 @@ class Exception extends \Exception implements IException {
     }
 
     /**
-     * Object::toString()
+     * @see Object::toString()
      */
     public final function __toString() {
         return $this->toString();
