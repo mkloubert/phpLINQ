@@ -1630,13 +1630,18 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public final function zip($second, $selector) : IEnumerable {
-        return static::createEnumerable($this->zipInner($second, $selector));
+        if (null === $selector) {
+            throw new ArgumentNullException('selector');
+        }
+
+        return static::createEnumerable($this->zipInner($second,
+                                                        static::asCallable($selector)));
     }
 
     /**
      * @see EnumerableBase::zip()
      */
-    protected function zipInner($second, $selector) {
+    protected function zipInner($second, callable $selector) {
         if (!$second instanceof IEnumerable) {
             $second = static::createEnumerable($second);
         }

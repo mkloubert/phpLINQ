@@ -614,6 +614,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @return IEnumerable The new sequence.
      *
      * @throws ArgumentException $selector is no valid callable / lambda expression.
+     * @throws ArgumentNullException $selector is (null).
      */
     function zip($second, $selector) : IEnumerable;
 }
