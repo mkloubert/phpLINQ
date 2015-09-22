@@ -30,6 +30,10 @@
  **********************************************************************************************************************/
 
 
+function whereFunc($x) {
+    return 0 === $x % 2;
+}
+
 /**
  * @see \System\Collection\IEnumerable::where().
  *
@@ -48,6 +52,7 @@ class WhereTests extends TestCaseBase {
             },
             array($this, 'whereMethod1'),
             array(static::class, 'whereMethod2'),
+            'whereFunc',
             '$x => 0 === $x % 2',
             '($x) => 0 === $x % 2',
             '$x => return 0 === $x % 2;',
