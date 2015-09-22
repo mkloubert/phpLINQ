@@ -60,6 +60,50 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue('array' === gettype($items[1]));
     }
 
+    public function testBool() {
+        $seq = static::sequenceFromArray([
+            1,
+            "\\trim",
+            true,
+            function() {},
+            null,
+            4.5,
+            false,
+            '$x => null',
+        ]);
+
+        $items = [];
+        foreach ($seq->ofType('bool') as $x) {
+            $items[] = $x;
+        }
+
+        $this->assertEquals(2, count($items));
+        $this->assertTrue(true === $items[0]);
+        $this->assertTrue(false === $items[1]);
+    }
+
+    public function testBoolean() {
+        $seq = static::sequenceFromArray([
+            1,
+            "\\trim",
+            false,
+            function() {},
+            null,
+            4.5,
+            true,
+            '$x => null',
+        ]);
+
+        $items = [];
+        foreach ($seq->ofType('boolean') as $x) {
+            $items[] = $x;
+        }
+
+        $this->assertEquals(2, count($items));
+        $this->assertTrue(false === $items[0]);
+        $this->assertTrue(true === $items[1]);
+    }
+
     public function testCallable() {
         $seq = static::sequenceFromArray([
             1,
@@ -70,7 +114,7 @@ class OfTypeTests extends TestCaseBase {
             array($this, 'dummyMethod1'),
             4.5,
             array(static::class, 'dummyMethod2'),
-            '$x => null'
+            '$x => null',
         ]);
 
         $items = [];

@@ -30,64 +30,66 @@
  **********************************************************************************************************************/
 
 
-function whereFunc($x) {
-    return 0 === $x % 2;
+function selectorFunc($x) {
+    return strtoupper($x);
 }
 
-/**
- * @see \System\Collection\IEnumerable::where().
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class WhereTests extends TestCaseBase {
+class SelectTests extends TestCaseBase {
     /**
-     * Creates callables for use as predicates in where() methods.
+     * Creates list of selectors.
      *
-     * @return array The list of predicates.
+     * @return array The list of selectors.
      */
-    protected function createPredicates() : array {
+    protected function createSelectors() : array {
         return array(
             function($x) {
-                return whereFunc($x);
+                return strtoupper($x);
             },
-            array($this, 'whereMethod1'),
-            array(static::class, 'whereMethod2'),
-            'whereFunc',
-            '\whereFunc',
-            '$x => 0 === $x % 2',
-            '($x) => 0 === $x % 2',
-            '$x => return 0 === $x % 2;',
-            '($x) => return 0 === $x % 2;',
-            '$x => {return 0 === $x % 2; }',
-            '($x) =>   { return 0 === $x % 2;}',
-            '$x => {
-return 0 === $x % 2; }',
-            '($x) => {
-return 0 === $x % 2;
+            array($this, 'selector1'),
+            array(static::class, 'selector2'),
+            '$x => strtoupper($x)',
+            '($x) => strtoupper($x)',
+            '$x => return strtoupper($x);',
+            '($x) => return strtoupper($x);',
+            '$x => { return strtoupper($x);}',
+            '($x) => {return strtoupper($x);}',
+            '$x => { return strtoupper($x);
 }',
+            '($x) => {
+return strtoupper($x);
+}',
+            'selectorFunc',
+            '\selectorFunc',
         );
     }
 
     public function test1() {
-        foreach ($this->createPredicates() as $predicate) {
-            $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+        foreach ($this->createSelectors() as $selector) {
+            $seq = static::sequenceFromArray(['a', 'B', 'c', 1, 2.0, null, 3.4, 5.60, false]);
 
             $items = [];
-            foreach ($seq->where($predicate) as $i) {
-                $items[] = $i;
+            foreach ($seq->select($selector) as $x) {
+                $items[] = $x;
             }
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals(2, $items[0]);
-            $this->assertEquals(4, $items[1]);
+            $this->assertEquals(9, count($items));
+            $this->assertTrue('A' === $items[0]);
+            $this->assertTrue('B' === $items[1]);
+            $this->assertTrue('C' === $items[2]);
+            $this->assertTrue('1' === $items[3]);
+            $this->assertTrue('2' === $items[4]);
+            $this->assertTrue('' === $items[5]);
+            $this->assertTrue('3.4' === $items[6]);
+            $this->assertTrue('5.6' === $items[7]);
+            $this->assertTrue('' === $items[8]);
         }
     }
 
-    public function whereMethod1($x) {
-        return whereFunc($x);
+    public function selector1($x) {
+        return strtoupper($x);
     }
 
-    public static function whereMethod2($x) {
-        return whereFunc($x);
+    public static function selector2($x) {
+        return strtoupper($x);
     }
 }

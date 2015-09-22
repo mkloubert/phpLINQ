@@ -48,8 +48,9 @@ class ZipTests extends TestCaseBase {
      */
     protected function createZippers() : array {
         return array(
+            '\zipFunc',
             function($itemA, $itemB) {
-                return sprintf('%s%s', $itemA, $itemB);
+                return zipFunc($itemA, $itemB);
             },
             '$itemA, $itemB => sprintf("%s%s", $itemA, $itemB)',
             '($itemA, $itemB) => sprintf("%s%s", $itemA, $itemB)',
@@ -294,10 +295,10 @@ return sprintf("%s%s", $itemA, $itemB);
     }
 
     public function zipper1($itemA, $itemB) {
-        return sprintf('%s%s', $itemA, $itemB);
+        return zipFunc($itemA, $itemB);
     }
 
     public static function zipper2($itemA, $itemB) {
-        return sprintf('%s%s', $itemA, $itemB);
+        return zipFunc($itemA, $itemB);
     }
 }

@@ -40,10 +40,15 @@ function keySelectorFunc($key, $item) {
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class ToArrayTests extends TestCaseBase {
+    /**
+     * Creates a list of key selectors.
+     *
+     * @return array The selectors.
+     */
     protected function createKeySelectors() : array {
         return array(
             function($key, $item) {
-                return sprintf('%s%s', strtoupper($key), $item + 1);
+                return keySelectorFunc($key, $item);
             },
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
@@ -60,6 +65,7 @@ return sprintf("%s%s", strtoupper($key), $item + 1);
             '($key, $item) =>  {
 return  sprintf("%s%s", strtoupper($key), $item + 1);
 }',
+            '\keySelectorFunc',
         );
     }
 
@@ -93,10 +99,10 @@ return  sprintf("%s%s", strtoupper($key), $item + 1);
     }
 
     public function keySelectorMethod1($key, $item) {
-        return sprintf('%s%s', strtoupper($key), $item + 1);
+        return keySelectorFunc($key, $item);
     }
 
     public static function keySelectorMethod2($key, $item) {
-        return sprintf('%s%s', strtoupper($key), $item + 1);
+        return keySelectorFunc($key, $item);
     }
 }

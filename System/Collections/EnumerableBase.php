@@ -1050,6 +1050,10 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                                 }
 
                                 switch ($type) {
+                                    case 'bool':
+                                        return \is_bool($x);
+                                        break;
+
                                     case 'int':
                                         return \is_int($x);
                                         break;
