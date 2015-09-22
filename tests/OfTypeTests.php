@@ -37,11 +37,9 @@
  */
 class OfTypeTests extends TestCaseBase {
     public function dummyMethod1() {
-
     }
 
     public static function dummyMethod2() {
-
     }
 
 
@@ -51,10 +49,11 @@ class OfTypeTests extends TestCaseBase {
         $items = static::sequenceToArray($seq->ofType('array'));
 
         $this->assertEquals(2, count($items));
-        $this->assertTrue(is_array($items[0]));
-        $this->assertTrue('array' === gettype($items[0]));
-        $this->assertTrue(is_array($items[1]));
-        $this->assertTrue('array' === gettype($items[1]));
+
+        foreach ($items as $x) {
+            $this->assertTrue('array' === gettype($x));
+            $this->assertTrue(is_array($x));
+        }
     }
 
     public function testBool() {
@@ -74,6 +73,11 @@ class OfTypeTests extends TestCaseBase {
         $this->assertEquals(2, count($items));
         $this->assertTrue(true === $items[0]);
         $this->assertTrue(false === $items[1]);
+
+        foreach ($items as $x) {
+            $this->assertTrue('boolean' === gettype($x));
+            $this->assertTrue(is_bool($x));
+        }
     }
 
     public function testBoolean() {
@@ -93,6 +97,11 @@ class OfTypeTests extends TestCaseBase {
         $this->assertEquals(2, count($items));
         $this->assertTrue(false === $items[0]);
         $this->assertTrue(true === $items[1]);
+
+        foreach ($items as $x) {
+            $this->assertTrue('boolean' === gettype($x));
+            $this->assertTrue(is_bool($x));
+        }
     }
 
     public function testCallable() {
@@ -115,6 +124,10 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue($items[1] instanceof \Closure);
         $this->assertTrue(is_array($items[2]));
         $this->assertTrue(is_array($items[3]));
+
+        foreach ($items as $x) {
+            $this->assertTrue(is_callable($x));
+        }
     }
 
     public function testInt() {
@@ -126,6 +139,12 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue(1 === $items[0]);
         $this->assertTrue(3 === $items[1]);
         $this->assertTrue(5 === $items[2]);
+
+        foreach ($items as $x) {
+            $this->assertTrue('integer' === gettype($x));
+            $this->assertTrue(is_int($x));
+            $this->assertTrue(is_integer($x));
+        }
     }
 
     public function testInteger() {
@@ -137,6 +156,12 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue(1 === $items[0]);
         $this->assertTrue(3 === $items[1]);
         $this->assertTrue(5 === $items[2]);
+
+        foreach ($items as $x) {
+            $this->assertTrue('integer' === gettype($x));
+            $this->assertTrue(is_int($x));
+            $this->assertTrue(is_integer($x));
+        }
     }
 
     public function testNull() {
@@ -155,8 +180,11 @@ class OfTypeTests extends TestCaseBase {
         $items = static::sequenceToArray($seq->ofType('null'));
 
         $this->assertEquals(1, count($items));
-        $this->assertTrue(null === $items[0]);
-        $this->assertTrue(is_null($items[0]));
+
+        foreach ($items as $x) {
+            $this->assertTrue(null === $x);
+            $this->assertTrue(is_null($x));
+        }
     }
 
     public function testObject1() {
@@ -178,6 +206,11 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue($items[0] instanceof stdClass);
         $this->assertTrue($items[1] instanceof Closure);
         $this->assertTrue($items[2] instanceof ReflectionObject);
+
+        foreach ($items as $x) {
+            $this->assertTrue('object' === gettype($x));
+            $this->assertTrue(is_object($x));
+        }
     }
 
     public function testObject2() {
@@ -204,8 +237,10 @@ class OfTypeTests extends TestCaseBase {
 
             $this->assertEquals(2, count($items));
             foreach ($items as $x) {
+                $this->assertTrue('object' === gettype($x));
                 $this->assertTrue($x instanceof stdClass);
                 $this->assertTrue(stdClass::class === get_class($x));
+                $this->assertTrue(is_object($x));
             }
         }
     }
@@ -221,6 +256,10 @@ class OfTypeTests extends TestCaseBase {
         $this->assertTrue(3.141592654 === $items[2]);
         $this->assertTrue(true === $items[3]);
         $this->assertTrue(4 === $items[4]);
+
+        foreach ($items as $x) {
+            $this->assertTrue(is_scalar($x));
+        }
     }
 
     public function testString() {
@@ -231,5 +270,10 @@ class OfTypeTests extends TestCaseBase {
         $this->assertEquals(2, count($items));
         $this->assertTrue('2' === $items[0]);
         $this->assertTrue('4' === $items[1]);
+
+        foreach ($items as $x) {
+            $this->assertTrue('string' === gettype($x));
+            $this->assertTrue(is_string($x));
+        }
     }
 }
