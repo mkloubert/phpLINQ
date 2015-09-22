@@ -1042,10 +1042,18 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                                         return $rc->isInstance($x);
                                     }
 
+                                    if ('callable' === $type) {
+                                        return \is_callable($x);
+                                    }
+
                                     return 'object' === $type;
                                 }
 
                                 switch ($type) {
+                                    case 'int':
+                                        return \is_int($x);
+                                        break;
+
                                     case 'scalar':
                                         return \is_scalar($x);
                                         break;
@@ -1333,16 +1341,29 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             throw new ArgumentNullException('predicate');
         }
 
-        $predicate = static::wrapPredicate(static::asCallable($predicate));
+        $predicate = static::wrapPredicate($predicate);
 
-        $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($predicate, &$result) {
-                                          if ($predicate($x, $ctx)) {
-                                              $ctx->sequence()->next();
-                                          }
-                                          else {
-                                              $ctx->cancel(true);
-                                          }
-                                      });
+        $index   = 0;
+        $prevVal = null;
+        $value   = null;
+        while ($this->valid()) {
+            $ctx = new EachItemContext($this, $index++, false, $prevVal);
+            $ctx->value($value);
+
+            if ($predicate($ctx->item(), $ctx)) {
+                $this->next();
+            }
+            else {
+                break;
+            }
+
+            if ($ctx->cancel()) {
+                break;
+            }
+
+            $prevVal = $ctx->nextValue();
+            $value   = $ctx->value();
+        }
 
         return $this;
     }
