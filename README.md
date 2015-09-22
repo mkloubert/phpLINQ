@@ -14,7 +14,7 @@ The documentation describes the code of the following commit: [8e7f16c](https://
 
 ## Requirements
 
-* PHP 5.3+ ([branch v2](https://github.com/mkloubert/phpLINQ/tree/v2))
+* PHP 5.3+ ([branch v2](https://github.com/mkloubert/phpLINQ/tree/v2) or [branch v1](https://github.com/mkloubert/phpLINQ/tree/v1))
 * PHP 7+ (master branch)
 
 ## Examples
