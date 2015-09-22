@@ -1,5 +1,5 @@
 # Tests
 
-To run a test, run:
+To do test, run:
 
-`php phpunit.phar --bootstrap bootstrap.php {TEST_NAME\.php`
+`php phpunit.phar --bootstrap bootstrap.php {TEST_NAME}.php`
