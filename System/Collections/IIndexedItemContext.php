@@ -29,83 +29,35 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
-
-use \System\Collections\EnumerableBase;
+namespace System\Collections;
 
 
 /**
- * A constant string.
+ * Describes an item context with an index.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+interface IIndexedItemContext extends IItemContext {
     /**
-     * @var string
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
+     * Gets the zero based index.
      *
-     * @param mixed $value The value to wrap (as string).
+     * @return int The zero based index.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
-
-        parent::__construct($this->createStringIterator());
-    }
-
+    function index() : int;
 
     /**
-     * Creates an iterator for the current string value.
+     * Gets if the item represents the first one or not.
      *
-     * @return \Iterator The created iterator.
+     * @return bool Is first or not.
      */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
-    }
+    function isFirst() : bool;
 
     /**
-     * {@inheritDoc}
-     */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
+     * Gets if the item represents the last one or not.
      *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
+     * @return bool|null Is last or not.
+     *                   (null) represents "unknown".
      */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
-        }
-
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
-
-        return \strval($value);
-    }
+    function isLast();
 }

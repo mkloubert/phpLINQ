@@ -31,18 +31,16 @@
 
 namespace System;
 
-use \System\Collections\EnumerableBase;
-
 
 /**
- * A constant string.
+ * An object that wraps a value.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+class ValueWrapper extends Object implements IValueWrapper {
     /**
-     * @var string
+     * @var mixed
      */
     protected $_wrappedValue;
 
@@ -50,62 +48,24 @@ class ClrString extends EnumerableBase implements IString {
     /**
      * Initializes a new instance of that class.
      *
-     * @param mixed $value The value to wrap (as string).
+     * @param mixed $value The value to wrap.
      */
     public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
-
-        parent::__construct($this->createStringIterator());
+        $this->_wrappedValue = $value;
     }
 
 
     /**
-     * Creates an iterator for the current string value.
-     *
-     * @return \Iterator The created iterator.
+     * {@inheritDoc}
      */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
+    public function equals($other) : bool {
+        return $this->getWrappedValue() == static::getRealValue($other);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function getWrappedValue() : string {
+    public final function getWrappedValue() {
         return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
-     *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
-     */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
-        }
-
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
-
-        return \strval($value);
     }
 }

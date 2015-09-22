@@ -31,81 +31,25 @@
 
 namespace System;
 
-use \System\Collections\EnumerableBase;
-
 
 /**
- * A constant string.
+ * An exception for something that has a wrong format.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
-    /**
-     * @var string
-     */
-    protected $_wrappedValue;
-
-
+class FormatException extends Exception {
     /**
      * Initializes a new instance of that class.
      *
-     * @param mixed $value The value to wrap (as string).
+     * @param string $message The message.
+     * @param \Exception $innerException The inner exception.
+     * @param int $code The code.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
+    public function __construct(string $message = 'Invalid format!',
+                                \Exception $innerException = null,
+                                int $code = 0) {
 
-        parent::__construct($this->createStringIterator());
-    }
-
-
-    /**
-     * Creates an iterator for the current string value.
-     *
-     * @return \Iterator The created iterator.
-     */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
-     *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
-     */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
-        }
-
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
-
-        return \strval($value);
+        parent::__construct($message, $innerException, $code);
     }
 }

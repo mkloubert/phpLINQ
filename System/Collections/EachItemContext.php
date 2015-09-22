@@ -29,83 +29,42 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
-
-use \System\Collections\EnumerableBase;
+namespace System\Collections;
 
 
 /**
- * A constant string.
+ * An item context for an IEnumerable::each() operation.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+class EachItemContext extends IndexedItemContext implements IEachItemContext {
     /**
-     * @var string
+     * @var bool
      */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $value The value to wrap (as string).
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
-
-        parent::__construct($this->createStringIterator());
-    }
+    private $_cancel = false;
+    private $_result;
 
 
     /**
-     * Creates an iterator for the current string value.
-     *
-     * @return \Iterator The created iterator.
+     * {@inheritDoc}
      */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
+    public final function cancel($newValue = null) : bool {
+        if (\func_num_args() > 0) {
+            $this->_cancel = $newValue;
+        }
+
+        return $this->_cancel;
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
-     *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
-     */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
+    public final function result($newValue = null) {
+        if (\func_num_args() > 0) {
+            $this->_result = $newValue;
         }
 
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
-
-        return \strval($value);
+        return $this->_result;
     }
 }

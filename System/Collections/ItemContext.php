@@ -29,83 +29,93 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Collections;
 
-use \System\Collections\EnumerableBase;
+use \System\Object;
 
 
 /**
- * A constant string.
+ * An item context.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+class ItemContext extends Object implements IItemContext {
+    private $_item;
+    private $_key;
+    private $_nextValue;
+    private $_previousValue;
     /**
-     * @var string
+     * @var IEnumerable
      */
-    protected $_wrappedValue;
+    private $_seq;
+    private $_value;
 
 
     /**
      * Initializes a new instance of that class.
      *
-     * @param mixed $value The value to wrap (as string).
+     * @param mixed $previousValue The value that was set via IItemContext::nextValue() in the context of
+     *                             the previous item.
+     *
+     * @param IEnumerable $seq The underlying sequence.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
+    public function __construct(IEnumerable $seq, $previousValue = null) {
+        $this->_seq           = $seq;
+        $this->_previousValue = $previousValue;
 
-        parent::__construct($this->createStringIterator());
+        $this->_key  = $this->_seq->key();
+        $this->_item = $this->_seq->current();
     }
 
 
     /**
-     * Creates an iterator for the current string value.
-     *
-     * @return \Iterator The created iterator.
+     * {@inheritDoc}
      */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
+    public final function item() {
+        return $this->_item;
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
+    public final function key() {
+        return $this->_key;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
+    public final function previousValue() {
+        return $this->_previousValue;
     }
 
     /**
-     * Updates the inner iterator.
+     * {@inheritDoc}
      */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
+    public final function nextValue($newValue = null) {
+        if (\func_num_args() > 0) {
+            $this->_nextValue = $newValue;
+        }
+
+        return $this->_nextValue;
     }
 
     /**
-     * Converts a value to a PHP string.
-     *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
+     * {@inheritDoc}
      */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
+    public final function sequence() : IEnumerable {
+        return $this->_seq;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function value($newValue = null) {
+        if (\func_num_args() > 0) {
+            $this->_value = $newValue;
         }
 
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
-
-        return \strval($value);
+        return $this->_value;
     }
 }

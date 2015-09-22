@@ -29,83 +29,61 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Collections;
 
-use \System\Collections\EnumerableBase;
+use \System\IObject;
 
 
 /**
- * A constant string.
+ * Describes an item context.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+interface IItemContext extends IObject {
     /**
-     * @var string
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
+     * Gets the item.
      *
-     * @param mixed $value The value to wrap (as string).
+     * @return mixed The item.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
-
-        parent::__construct($this->createStringIterator());
-    }
-
+    function item();
 
     /**
-     * Creates an iterator for the current string value.
+     * Gets the key.
      *
-     * @return \Iterator The created iterator.
+     * @return mixed The key.
      */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
-    }
+    function key();
 
     /**
-     * {@inheritDoc}
-     */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
+     * Gets or sets the value for the next item.
      *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
+     * @param mixed $newValue The new value.
      *
-     * @return string $value as string.
+     * @return mixed The value for the next item.
      */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
-        }
+    function nextValue($newValue = null);
 
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
+    /**
+     * Gets the value that was set via IItemContext::nextValue() from the previous item.
+     *
+     * @return mixed The previous value.
+     */
+    function previousValue();
 
-        return \strval($value);
-    }
+    /**
+     * Gets the underlying sequence.
+     *
+     * @return IEnumerable The sequence.
+     */
+    function sequence() : IEnumerable;
+
+    /**
+     * Gets or sets the value for the whole iteration.
+     *
+     * @param mixed $newValue The new value.
+     *
+     * @return mixed The value for the whole iteration.
+     */
+    function value($newValue = null);
 }

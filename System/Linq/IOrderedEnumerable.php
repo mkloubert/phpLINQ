@@ -29,83 +29,67 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Linq;
 
-use \System\Collections\EnumerableBase;
+use \System\ArgumentException;
+use \System\ArgumentNullException;
+use \System\Collections\IEnumerable;
 
 
 /**
- * A constant string.
+ * Describes an ordered sequence.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+interface IOrderedEnumerable extends IEnumerable {
     /**
-     * @var string
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
+     * Performs a sub ordering on the current sequence by using the items as sort values.
      *
-     * @param mixed $value The value to wrap (as string).
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = static::valueToString($value);
-
-        parent::__construct($this->createStringIterator());
-    }
-
-
-    /**
-     * Creates an iterator for the current string value.
+     * @param callable $comparer The custom comparer to use.
      *
-     * @return \Iterator The created iterator.
-     */
-    protected function createStringIterator() : \Iterator {
-        return new \ArrayIterator(\str_split($this->_wrappedValue));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getWrappedValue() : string {
-        return $this->_wrappedValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new static($this->_wrappedValue);
-    }
-
-    /**
-     * Updates the inner iterator.
-     */
-    protected final function updateStringIterator() {
-        $this->_i = $this->createStringIterator();
-    }
-
-    /**
-     * Converts a value to a PHP string.
+     * @return IOrderedEnumerable The new sequence.
      *
-     * @param mixed $value The input value.
-     * @param bool $nullAsEmpty Handle (null) as empty or not.
-     *
-     * @return string $value as string.
+     * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
-        if (\is_string($value)) {
-            return $value;
-        }
+    function then($comparer = null) : IOrderedEnumerable;
 
-        if (null === $value) {
-            return $nullAsEmpty ? '' : null;
-        }
+    /**
+     * Performs a sub ordering on the current sequence.
+     *
+     * @param callable|bool $selector The selector for the sort values.
+     *                                (true) indicates to use the items itself as sort values.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IOrderedEnumerable The new sequence.
+     *
+     * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
+     * @throws ArgumentNullException $selector is (null).
+     */
+    function thenBy($selector, $comparer = null) : IOrderedEnumerable;
 
-        return \strval($value);
-    }
+    /**
+     * Performs a descending sub ordering on the current sequence.
+     *
+     * @param callable|bool $selector The selector for the sort values.
+     *                                (true) indicates to use the items itself as sort values.
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IOrderedEnumerable The new sequence.
+     *
+     * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
+     * @throws ArgumentNullException $selector is (null).
+     */
+    function thenByDescending($selector, $comparer = null) : IOrderedEnumerable;
+
+    /**
+     * Performs a descending sub ordering on the current sequence by using the items as sort values.
+     *
+     * @param callable $comparer The custom comparer to use.
+     *
+     * @return IOrderedEnumerable The new sequence.
+     *
+     * @throws ArgumentException $comparer is no valid callable / lambda expression.
+     */
+    function thenDescending($comparer = null) : IOrderedEnumerable;
 }
