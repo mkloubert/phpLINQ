@@ -16,7 +16,7 @@ The documentation describes the code of the following commit: [8e7f16c](https://
 
 * PHP 5.3+ ([branch v2](https://github.com/mkloubert/phpLINQ/tree/v2))
 * PHP 7+ (master branch)
-* 
+
 ## Examples
 
 A complete list can be found at the [live example page](https://github.com/mkloubert/phpLINQ/tree/master/examples).
