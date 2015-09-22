@@ -72,10 +72,7 @@ return 0 === $x % 2;
         foreach ($this->createPredicates() as $predicate) {
             $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
 
-            $items = [];
-            foreach ($seq->where($predicate) as $i) {
-                $items[] = $i;
-            }
+            $items = static::sequenceToArray($seq->where($predicate));
 
             $this->assertEquals(2, count($items));
             $this->assertEquals(2, $items[0]);

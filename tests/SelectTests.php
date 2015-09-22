@@ -34,6 +34,11 @@ function selectorFunc($x) {
     return strtoupper($x);
 }
 
+/**
+ * @see \System\Collection\IEnumerable::select().
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class SelectTests extends TestCaseBase {
     /**
      * Creates list of selectors.
@@ -67,10 +72,7 @@ return strtoupper($x);
         foreach ($this->createSelectors() as $selector) {
             $seq = static::sequenceFromArray(['a', 'B', 'c', 1, 2.0, null, 3.4, 5.60, false]);
 
-            $items = [];
-            foreach ($seq->select($selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($seq->select($selector));
 
             $this->assertEquals(9, count($items));
             $this->assertTrue('A' === $items[0]);

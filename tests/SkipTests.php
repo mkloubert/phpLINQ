@@ -39,10 +39,7 @@ class SkipTests extends TestCaseBase {
     public function test1() {
         $seq = static::sequenceFromArray([7, '1', 2, false, null, 5.6]);
 
-        $items = [];
-        foreach ($seq->skip(1) as $x) {
-            $items[] = $x;
-        }
+        $items = static::sequenceToArray($seq->skip(1));
 
         $this->assertEquals(5, count($items));
         $this->assertTrue('1' === $items[0]);

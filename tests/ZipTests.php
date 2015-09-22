@@ -75,10 +75,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = ['A', 'B', 'C', 'D'];
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(3, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -92,10 +89,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = ['A', 'B'];
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(2, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -108,10 +102,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = ['A', 'B', 'C', 'd'];
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(4, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -126,10 +117,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(4, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -144,10 +132,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = new ArrayIterator(['A', 'B']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(2, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -160,10 +145,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(4, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -185,10 +167,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = $createGenerator();
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(3, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -207,10 +186,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = $createGenerator();
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(2, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -230,10 +206,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = $createGenerator();
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(4, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -248,10 +221,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = static::sequenceFromArray(['A', 'B', 'C', 'D']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(3, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -265,10 +235,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3]);
             $b = static::sequenceFromArray(['A', 'B']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(2, count($items));
             $this->assertEquals('1A', $items[0]);
@@ -281,10 +248,7 @@ return sprintf("%s%s", $itemA, $itemB);
             $a = static::sequenceFromArray([1, 2, 3, 4]);
             $b = static::sequenceFromArray(['A', 'B', 'C', 'd']);
 
-            $items = [];
-            foreach ($a->zip($b, $selector) as $x) {
-                $items[] = $x;
-            }
+            $items = static::sequenceToArray($a->zip($b, $selector));
 
             $this->assertEquals(4, count($items));
             $this->assertEquals('1A', $items[0]);

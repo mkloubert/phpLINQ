@@ -29,40 +29,31 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\IEnumerable;
-use \System\Linq\Enumerable;
-
 
 /**
- * A basic test case.
+ * @see \System\Collection\IEnumerable::reverse().
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
-    /**
-     * Creates a new sequence from an array.
-     *
-     * @param array $arr The array with the data for the sequence.
-     *
-     * @return Enumerable The created sequence.
-     */
-    protected static function sequenceFromArray(array $arr) : Enumerable {
-        return Enumerable::create($arr);
+class ReverseTests extends TestCaseBase {
+    public function test1() {
+        $seq = static::sequenceFromArray([3, 5, 2, 77, 12]);
+
+        $items = static::sequenceToArray($seq->reverse());
+
+        $this->assertEquals(5, count($items));
+        $this->assertTrue(12 === $items[0]);
+        $this->assertTrue(77 === $items[1]);
+        $this->assertTrue(2 === $items[2]);
+        $this->assertTrue(5 === $items[3]);
+        $this->assertTrue(3 === $items[4]);
     }
 
-    /**
-     * Creates an array from a sequence.
-     *
-     * @param IEnumerable $seq The sequence.
-     *
-     * @return array The sequence as array.
-     */
-    protected static function sequenceToArray(IEnumerable $seq) : array {
-        $result = [];
-        foreach ($seq as $x) {
-            $result[] = $x;
-        }
+    public function testEmpty() {
+        $seq = static::sequenceFromArray([]);
 
-        return $result;
+        $items = static::sequenceToArray($seq->reverse());
+
+        $this->assertEquals(0, count($items));
     }
 }
