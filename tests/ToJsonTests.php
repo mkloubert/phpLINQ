@@ -29,56 +29,113 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System\Linq;
 
-use \System\Collections\EnumerableBase;
-use \System\Collections\IEnumerable;
-
+function keySelectorFunc($key) {
+    return chr(ord('A') + $key);
+}
 
 /**
- * A common sequence.
+ * @see \System\Collection\IEnumerable::toJson()
  *
- * @package System\Linq
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Enumerable extends EnumerableBase {
+class ToJsonTests extends TestCaseBase {
     /**
-     * Creates a new instance from an item list.
+     * Creates key selectors for the tests.
      *
-     * @param mixed $items The initial values.
-     *
-     * @return static
+     * @return array The key selectors.
      */
-    public static function create($items = null) {
-        return new static(static::asIterator($items, true));
+    protected function createKeySelectors() : array {
+        return [
+            function ($key) {
+                return keySelectorFunc($key);
+            },
+            'keySelectorFunc',
+            '\keySelectorFunc',
+            array($this, 'keySelectorMethod1'),
+            array(static::class, 'keySelectorMethod2'),
+            '$key => chr(ord("A") + $key)',
+            '($key) => chr(ord("A") + $key)',
+            '$key => return chr(ord("A") + $key);',
+            '($key) => return chr(ord("A") + $key);',
+            '$key => { return chr(ord("A") + $key); }',
+            '($key) => { return chr(ord("A") + $key); }',
+            '$key => {
+return chr(ord("A") + $key);
+}',
+            '($key) => {
+return chr(ord("A") + $key);
+}',
+        ];
+    }
+
+    public function keySelectorMethod1($x) {
+        return keySelectorFunc($x);
+    }
+
+    public static function keySelectorMethod2($x) {
+        return keySelectorFunc($x);
     }
 
     /**
-     * {@inheritDoc}
+     * @see \System\Collection\IEnumerable::toJson()
+     *
+     * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
      */
-    protected static function createEnumerable($items = null) {
-        return new self(static::asIterator($items, true));
+    public function test1() {
+        $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+
+        $json = $seq->toJson();
+        $arr  = \json_decode($json, true);
+
+        $this->assertEquals(5, count($arr));
+
+        foreach ($arr as $key => $value) {
+            $this->assertTrue('integer' === gettype($value));
+            $this->assertTrue(is_int($value));
+            $this->assertTrue(is_integer($value));
+            $this->assertTrue(isset($arr[$value - 1]));
+            $this->assertEquals($key, $value - 1);
+        }
     }
 
-    /**
-     * Creates a new sequence from a JSON string.
-     *
-     * @param mixed $json The JSON data.
-     *
-     * @return IEnumerable The new sequence.
-     */
-    public static function fromJson($json) : IEnumerable {
-        return static::create(\json_decode($json, true));
+    public function test2() {
+        $seq = static::sequenceFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
+
+        $json = $seq->toJson();
+        $arr  = \json_decode($json, true);
+
+        $this->assertEquals(5, count($arr));
+
+        foreach ($arr as $key => $value) {
+            $this->assertTrue('string' === gettype($key));
+            $this->assertTrue(is_string($key));
+            $this->assertEquals($key, chr(ord('a') + $value - 1));
+
+            $this->assertTrue('integer' === gettype($value));
+            $this->assertTrue(is_int($value));
+            $this->assertTrue(is_integer($value));
+        }
     }
 
-    /**
-     * Creates a new instance from a list of values.
-     *
-     * @param mixed ...$value The initial values.
-     *
-     * @return static
-     */
-    public static function fromValues() {
-        return static::create(\func_get_args());
+    public function testKeySelector() {
+        foreach ($this->createKeySelectors() as $selector) {
+            $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+
+            $json = $seq->toJson($selector);
+            $arr  = \json_decode($json, true);
+
+            $this->assertEquals(5, count($arr));
+
+            foreach ($arr as $key => $value) {
+                $this->assertTrue('string' === gettype($key));
+                $this->assertTrue(is_string($key));
+                $this->assertEquals($key, chr(ord('A') + $value - 1));
+
+                $this->assertTrue('integer' === gettype($value));
+                $this->assertTrue(is_int($value));
+                $this->assertTrue(is_integer($value));
+            }
+        }
     }
 }
