@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::take().
+ * @see \System\Collection\IEnumerable::take()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

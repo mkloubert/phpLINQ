@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::skip().
+ * @see \System\Collection\IEnumerable::skip()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

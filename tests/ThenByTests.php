@@ -30,102 +30,123 @@
  **********************************************************************************************************************/
 
 
-function predicateFunc($x) : bool {
-    return $x > 2;
+function selector1FuncForTest1($x) {
+    return strlen($x);
 }
 
+function selector2FuncForTest1($x) {
+    return $x;
+}
+
+
 /**
- * @see \System\Collection\IEnumerable::firstOrDefault()
+ * @see \System\Collection\IEnumerable::thenBy()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class FirstOrDefaultTests extends TestCaseBase {
+class ThenByTests extends TestCaseBase {
     /**
-     * Creates callable predicates for the tests.
+     * Creates selectors for ThenByTests::test1() method.
      *
-     * @return array The list of callables.
+     * @return array The selectors.
      */
-    protected function createPredicates() : array {
-        return array(
-            function ($x) : bool {
-                return predicateFunc($x);
-            },
-            'predicateFunc',
-            '\predicateFunc',
-            array($this, 'predicateMethod1'),
-            array(static::class, 'predicateMethod2'),
-            '$x => $x > 2',
-            '($x) => $x > 2',
-            '$x => return $x > 2;',
-            '($x) => return $x > 2;',
-            '$x => { return $x > 2; }',
-            '($x) => { return $x > 2; }',
-            '$x => {
-return $x > 2;
+    protected function createSelectorsForTest1() : array {
+        return [
+            [
+                function($x) { return selector1FuncForTest1($x); },
+                function($x) { return selector2FuncForTest1($x); },
+            ],
+            [
+                array($this, 'selector1Method1'),
+                array($this, 'selector2Method1'),
+            ],
+            [
+                array(static::class, 'selector1Method2'),
+                array(static::class, 'selector2Method2'),
+            ],
+            [
+                'selector1FuncForTest1',
+                'selector2FuncForTest1',
+            ],
+            [
+                '\selector1FuncForTest1',
+                '\selector2FuncForTest1',
+            ],
+            [
+                '$x => strlen($x)',
+                '$x => $x',
+            ],
+            [
+                '($x) => strlen($x)',
+                '($x) => $x',
+            ],
+            [
+                '$x => return strlen($x);',
+                '$x => return $x;',
+            ],
+            [
+                '($x) => return strlen($x);',
+                '($x) => return $x;',
+            ],
+            [
+                '($x) => { return strlen($x); }',
+                '($x) => { return $x; }',
+            ],
+            [
+                '($x) => {
+$y = strlen($x);
+return $y;
 }',
-            '($x) => {
-return $x > 2;
+                '($x) => {
+$y = $x;
+return $y;
 }',
-        );
+            ],
+        ];
     }
 
-    public function predicateMethod1($x) {
-        return predicateFunc($x);
-    }
+    public function test1() {
+        foreach ($this->createSelectorsForTest1() as $selectors) {
+            $seq = static::sequenceFromArray([
+                "grape",
+                "passionfruit",
+                "banana",
+                "mango",
+                "orange",
+                "raspberry",
+                "apple",
+                "blueberry",
+            ]);
 
-    public static function predicateMethod2($x) {
-        return predicateFunc($x);
-    }
+            $items = static::sequenceToArray($seq->orderBy($selectors[0])
+                                                 ->thenBy($selectors[1]));
 
-    public function testNoPredicate1() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+            $this->assertEquals(8, count($items));
 
-        $item1 = $seq1->firstOrDefault();
-        $item2 = $seq2->firstOrDefault();
-
-        $this->assertEquals(1, $item1);
-        $this->assertEquals(null, $item2);
-    }
-
-    public function testNoPredicate2() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
-
-        $item1 = $seq1->firstOrDefault(null, 'xyz');
-        $item2 = $seq2->firstOrDefault(null, 'xyz');
-
-        $this->assertEquals(1, $item1);
-        $this->assertEquals('xyz', $item2);
-    }
-
-    public function testNoPredicateWithDefault() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
-
-        $item1 = $seq1->firstOrDefault(false);
-        $item2 = $seq2->firstOrDefault(false);
-
-        $this->assertEquals(1, $item1);
-        $this->assertEquals(false, $item2);
-    }
-
-    public function testWithPredicate() {
-        foreach ($this->createPredicates() as $predicate) {
-            $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-            $seq2 = static::sequenceFromArray([1, 2]);
-            $seq3 = static::sequenceFromArray([2, -1, 1]);
-            $seq4 = static::sequenceFromArray([]);
-
-            $item1 = $seq1->firstOrDefault($predicate);
-            $item2 = $seq2->firstOrDefault($predicate);
-            $item3 = $seq3->firstOrDefault($predicate);
-            $item4 = $seq4->firstOrDefault($predicate);
-
-            $this->assertEquals(3, $item1);
-            $this->assertEquals(null, $item2);
-            $this->assertEquals(null, $item3);
-            $this->assertEquals(null, $item4);
+            $this->assertEquals('apple', $items[0]);
+            $this->assertEquals('grape', $items[1]);
+            $this->assertEquals('mango', $items[2]);
+            $this->assertEquals('banana', $items[3]);
+            $this->assertEquals('orange', $items[4]);
+            $this->assertEquals('blueberry', $items[5]);
+            $this->assertEquals('raspberry', $items[6]);
+            $this->assertEquals('passionfruit', $items[7]);
         }
+    }
+
+    public function selector1Method1($x) {
+        return selector1FuncForTest1($x);
+    }
+
+    public static function selector1Method2($x) {
+        return selector1FuncForTest1($x);
+    }
+
+    public function selector2Method1($x) {
+        return selector2FuncForTest1($x);
+    }
+
+    public static function selector2Method2($x) {
+        return selector2FuncForTest1($x);
     }
 }

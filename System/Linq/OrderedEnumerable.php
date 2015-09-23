@@ -101,7 +101,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
 
         $selector = $this->_selector;
 
-        $sortFunc   = '\usort';
+        $sortFunc    = '\usort';
         $keySelector = null;
         if ($this->_preventKeys) {
             $keySelector = function($key, \stdClass $item) {
@@ -135,6 +135,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
                               ]);
 
         // now extract real items
+        // from prepared ones
         $items = \array_map(function(\stdClass $x) {
             return $x->value;
         }, $items);

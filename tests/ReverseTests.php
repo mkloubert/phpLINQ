@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::reverse().
+ * @see \System\Collection\IEnumerable::reverse()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

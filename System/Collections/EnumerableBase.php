@@ -1076,7 +1076,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function order($comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+    public final function order($comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
         static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
 
         return $this->orderBy(true, $comparer, $preventKeys);
@@ -1085,7 +1085,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function orderBy($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+    public function orderBy($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
         static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
 
         if (true === $selector) {
@@ -1103,7 +1103,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function orderByDescending($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+    public final function orderByDescending($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
         static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
 
         $comparer = static::getComparerSafe($comparer);
@@ -1118,7 +1118,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function orderDescending($comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+    public final function orderDescending($comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
         static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
 
         return $this->orderByDescending(true, $comparer, $preventKeys);
@@ -1136,7 +1136,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function randomize($seeder = null, $randProvider = null, bool $preventKeys = true) : IOrderedEnumerable {
+    public function randomize($seeder = null, $randProvider = null, bool $preventKeys = false) : IOrderedEnumerable {
         $seeder       = static::asCallable($seeder);
         $randProvider = static::asCallable($randProvider);
 
@@ -1171,7 +1171,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function reverse(bool $preventKeys = true) : IOrderedEnumerable {
+    public final function reverse(bool $preventKeys = false) : IOrderedEnumerable {
         return $this->orderBy(function($x, IIndexedItemContext $ctx) {
                                   return \PHP_INT_MAX - $ctx->index();
                               },

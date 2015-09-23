@@ -29,6 +29,12 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+
+/**
+ * @see \System\Collection\IEnumerable::randomize()
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class RandomizeTests extends TestCaseBase {
     public function test1() {
         $seq = static::sequenceFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);

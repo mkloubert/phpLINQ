@@ -37,7 +37,7 @@ class TestClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::cast().
+ * @see \System\Collection\IEnumerable::cast()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

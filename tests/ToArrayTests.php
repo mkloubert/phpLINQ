@@ -35,7 +35,7 @@ function keySelectorFunc($key, $item) {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toArray().
+ * @see \System\Collection\IEnumerable::toArray()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

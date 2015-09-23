@@ -35,7 +35,7 @@ function predicateFunc($x) : bool {
 }
 
 /**
- * @see \System\Collection\IEnumerable::lastOrDefault().
+ * @see \System\Collection\IEnumerable::lastOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -30,6 +30,11 @@
  **********************************************************************************************************************/
 
 
+/**
+ * @see \System\Collection\IEnumerable::appendToArray()
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class AppendToArrayTests extends TestCaseBase {
     public function testWithKeys() {
         $seq = static::sequenceFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);

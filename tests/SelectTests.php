@@ -35,7 +35,7 @@ function selectorFunc($x) {
 }
 
 /**
- * @see \System\Collection\IEnumerable::select().
+ * @see \System\Collection\IEnumerable::select()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

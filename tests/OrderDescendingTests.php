@@ -30,6 +30,11 @@
  **********************************************************************************************************************/
 
 
+/**
+ * @see \System\Collection\IEnumerable::orderDescending()
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class OrderDescendingTests extends TestCaseBase {
     public function testNoComparer() {
         $seq = static::sequenceFromArray([3, 4, 1, 5, 2]);

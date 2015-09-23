@@ -36,7 +36,7 @@ function zipFunc($itemA, $itemB) {
 
 
 /**
- * @see \System\Collection\IEnumerable::zip().
+ * @see \System\Collection\IEnumerable::zip()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

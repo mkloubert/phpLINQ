@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::ofType().
+ * @see \System\Collection\IEnumerable::ofType()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

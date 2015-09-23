@@ -30,6 +30,11 @@
  **********************************************************************************************************************/
 
 
+/**
+ * @see \System\Collection\IEnumerable::order()
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class OrderTests extends TestCaseBase {
     public function testNoComparer() {
         $seq = static::sequenceFromArray([3, 4, 1, 5, 2]);

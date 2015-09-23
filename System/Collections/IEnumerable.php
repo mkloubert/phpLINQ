@@ -375,7 +375,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function order($comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
+    function order($comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence ascending by using a specific sort value.
@@ -392,7 +392,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderBy($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
+    function orderBy($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using a specific sort value.
@@ -409,7 +409,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderByDescending($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
+    function orderByDescending($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using the items as sort value.
@@ -423,7 +423,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function orderDescending($comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
+    function orderDescending($comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Calculates the product of the items.
@@ -445,7 +445,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @throws ArgumentException $seeder / $randProvider is no valid callable / lambda expression.
      */
-    function randomize($seeder = null, $randProvider = null, bool $preventKeys = true) : IOrderedEnumerable;
+    function randomize($seeder = null, $randProvider = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Resets the sequence and returns it.
@@ -460,7 +460,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return IOrderedEnumerable The new sequence.
      */
-    function reverse(bool $preventKeys = true) : IOrderedEnumerable;
+    function reverse(bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Projects each element of that sequence to a new sequence.

@@ -35,7 +35,7 @@ function whereFunc($x) {
 }
 
 /**
- * @see \System\Collection\IEnumerable::where().
+ * @see \System\Collection\IEnumerable::where()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
