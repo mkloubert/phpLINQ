@@ -984,7 +984,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                                                  }
 
                                                  $ctx->result($x);
-                                             });
+                                             }, $defValue);
     }
 
     /**
