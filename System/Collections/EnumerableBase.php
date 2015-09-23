@@ -557,7 +557,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             return $defaultComparer;
         }
 
-        $rf = new \ReflectionFunction($comparer);
+        $rf = static::toReflectionFunction($comparer);
         if ($rf->getNumberOfParameters() < 2) {
             // use function as selector
 
@@ -597,7 +597,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             return $defaultEqualityComparer;
         }
 
-        $rf = new \ReflectionFunction($equalityComparer);
+        $rf = static::toReflectionFunction($equalityComparer);
         if ($rf->getNumberOfParameters() < 2) {
             // use function as selector
 
@@ -1578,6 +1578,21 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         }
 
         return false;
+    }
+
+    /**
+     * Creates a reflector object for a function.
+     *
+     * @param mixed $func The function.
+     *
+     * @return \ReflectionFunctionAbstract The created reflector.
+     */
+    protected static function toReflectionFunction($func) : \ReflectionFunctionAbstract {
+        if (\is_array($func)) {
+            return new \ReflectionMethod($func[0], $func[1]);
+        }
+
+        return new \ReflectionFunction($func);
     }
 
     /**
