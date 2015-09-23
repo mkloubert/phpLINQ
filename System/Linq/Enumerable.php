@@ -31,8 +31,9 @@
 
 namespace System\Linq;
 
+use \System\ArgumentException;
+use \System\ArgumentOutOfRangeException;
 use \System\Collections\EnumerableBase;
-use \System\Collections\IEnumerable;
 
 
 /**
@@ -42,6 +43,56 @@ use \System\Collections\IEnumerable;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class Enumerable extends EnumerableBase {
+    /**
+     * Builds a sequence with a specific number of random values.
+     *
+     * @param int $count The number of items to create.
+     * @param int|callable $maxOrSeeder The exclusive maximum value (mt_getrandmax() - 1 by default).
+     *                                  If there are only two arguments and that value is a callable
+     *                                  it is set to (null) and its origin value is written to $seeder.
+     * @param int $min The inclusive minimum value (0 by default).
+     * @param callable $seeder The optional function that initializes the random
+     *                         number generator.
+     *
+     * @return static
+     *
+     * @throws ArgumentException $seeder is no valid callable / lambda expression.
+     * @throws ArgumentOutOfRangeException $count is less than 0.
+     */
+    public final static function buildRandom(int $count, $maxOrSeeder = null, int $min = 0, $seeder = null) {
+        if ($count < 0) {
+            throw new ArgumentOutOfRangeException('count', $count);
+        }
+
+        if (2 === \func_num_args()) {
+            if (static::isCallable($maxOrSeeder)) {
+                $seeder      = $maxOrSeeder;
+                $maxOrSeeder = null;
+            }
+        }
+
+        $seeder = static::asCallable($seeder);
+
+        if (null === $maxOrSeeder) {
+            $maxOrSeeder = \mt_getrandmax();
+        }
+
+        if (null !== $seeder) {
+            $seeder();
+        }
+
+        return static::create(static::buildRandomInner($count, $min, $maxOrSeeder));
+    }
+
+    /**
+     * @see Enumerable::buildRandom()
+     */
+    protected static function buildRandomInner(int $count, int $min, int $max) {
+        for ($i = 0; $i < $count; $i++) {
+            yield \mt_rand($min, $max - 1);
+        }
+    }
+
     /**
      * Creates a new instance from an item list.
      *
@@ -65,9 +116,9 @@ class Enumerable extends EnumerableBase {
      *
      * @param mixed $json The JSON data.
      *
-     * @return IEnumerable The new sequence.
+     * @return static
      */
-    public static function fromJson($json) : IEnumerable {
+    public static function fromJson($json) {
         return static::create(\json_decode($json, true));
     }
 

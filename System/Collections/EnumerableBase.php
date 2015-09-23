@@ -207,6 +207,19 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public function asResettable() : IEnumerable {
+        switch (\get_class($this->_i)) {
+            case \Generator::class:
+                return static::createEnumerable($this->toArray(true));
+                break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function average($defValue = null) {
         $count = 0;
         $sum = $this->each(function($x, IEachItemContext $ctx) use (&$count) {

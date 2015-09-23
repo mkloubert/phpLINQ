@@ -95,6 +95,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable;
 
     /**
+     * Returns a version of that sequence that can be resetted.
+     *
+     * @return IEnumerable The converted sequence or that instance if it can be resetted.
+     */
+    function asResettable() : IEnumerable;
+
+    /**
      * Calculates the average value of all values of that sequence.
      *
      * @param mixed $defValue The default value if sequence is empty.
