@@ -39,7 +39,7 @@ class ReverseTests extends TestCaseBase {
     public function test1() {
         $seq = static::sequenceFromArray([3, 5, 2, 77, 12]);
 
-        $items = static::sequenceToArray($seq->reverse(false));
+        $items = static::sequenceToArray($seq->reverse());
 
         $this->assertEquals(5, count($items));
         $this->assertTrue(12 === $items[0]);

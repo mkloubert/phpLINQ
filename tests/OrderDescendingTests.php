@@ -39,7 +39,7 @@ class OrderDescendingTests extends TestCaseBase {
     public function testNoComparer() {
         $seq = static::sequenceFromArray([3, 4, 1, 5, 2]);
 
-        $items = static::sequenceToArray($seq->orderDescending(false));
+        $items = static::sequenceToArray($seq->orderDescending());
 
         $this->assertEquals(5, count($items));
         foreach ($items as $key => $value) {

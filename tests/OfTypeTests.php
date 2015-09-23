@@ -42,7 +42,6 @@ class OfTypeTests extends TestCaseBase {
     public static function dummyMethod2() {
     }
 
-
     public function testArray() {
         $seq = static::sequenceFromArray([1, [], '2', 3, array('a', 'b'), '4', 5]);
 
