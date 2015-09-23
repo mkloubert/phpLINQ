@@ -166,16 +166,14 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     public static function asIterator($obj, $emptyIfNull = false) {
         while (null !== $obj) {
             if (\is_array($obj)) {
-                $obj = new \ArrayIterator($obj);
-                continue;
+                return new \ArrayIterator($obj);
             }
             else if ($obj instanceof \IteratorAggregate) {
                 $obj = $obj->getIterator();
                 continue;
             }
             else if (\is_string($obj)) {
-                $obj = new ClrString($obj);
-                continue;
+                return new ClrString($obj);
             }
 
             break;
@@ -1078,14 +1076,18 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function order($comparer = null) : IOrderedEnumerable {
-        return $this->orderBy(true, $comparer);
+    public final function order($comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+
+        return $this->orderBy(true, $comparer, $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orderBy($selector, $comparer = null) : IOrderedEnumerable {
+    public function orderBy($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+
         if (true === $selector) {
             $selector = function($x) {
                 return $x;
@@ -1094,26 +1096,32 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         return new OrderedEnumerable($this,
                                      static::asCallable($selector),
-                                     static::getComparerSafe($comparer));
+                                     static::getComparerSafe($comparer),
+                                     $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function orderByDescending($selector, $comparer = null) : IOrderedEnumerable {
+    public final function orderByDescending($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+
         $comparer = static::getComparerSafe($comparer);
 
         return $this->orderBy($selector,
                               function($x, $y) use ($comparer) : int {
                                   return (int)$comparer($y, $x);
-                              });
+                              },
+                              $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function orderDescending($comparer = null) : IOrderedEnumerable {
-        return $this->orderByDescending(true, $comparer);
+    public final function orderDescending($comparer = null, bool $preventKeys = true) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+
+        return $this->orderByDescending(true, $comparer, $preventKeys);
     }
 
     /**
@@ -1128,7 +1136,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function randomize($seeder = null, $randProvider = null) : IEnumerable {
+    public function randomize($seeder = null, $randProvider = null, bool $preventKeys = true) : IOrderedEnumerable {
         $seeder       = static::asCallable($seeder);
         $randProvider = static::asCallable($randProvider);
 
@@ -1142,7 +1150,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             $seeder();
         }
 
-        return $this->orderBy($randProvider);
+        return $this->orderBy($randProvider, null, $preventKeys);
     }
 
     /**
@@ -1163,10 +1171,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function reverse() : IOrderedEnumerable {
+    public final function reverse(bool $preventKeys = true) : IOrderedEnumerable {
         return $this->orderBy(function($x, IIndexedItemContext $ctx) {
                                   return \PHP_INT_MAX - $ctx->index();
-                              });
+                              },
+                              null,
+                              $preventKeys);
     }
 
     /**
@@ -1562,6 +1572,25 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     public final function union($second, $equalityComparer = null) : IEnumerable {
         return $this->concat($second)
                     ->distinct($equalityComparer);
+    }
+
+    /**
+     * Updates the arguments of "order" based methods.
+     *
+     * @param int $argCount The number of submitted arguments.
+     * @param int $mustBe The required number of arguments to update values.
+     * @param mixed &$comparer The comparer.
+     * @param mixed &$preventKeys The value that indicates if keys should be prevented or not.
+     */
+    protected static function updateOrderArguments(int $argCount, int $mustBe, &$comparer, &$preventKeys) {
+        if ($mustBe === $argCount) {
+            if (\is_bool($comparer)) {
+                // swap values
+
+                $preventKeys = $comparer;
+                $comparer    = null;
+            }
+        }
     }
 
     /**

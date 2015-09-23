@@ -19,6 +19,9 @@
  */
 
 
+error_reporting(E_ALL);
+
+
 /**
  * Autoloader.
  *
@@ -36,37 +39,13 @@ spl_autoload_register(function($clsName) {
     }
 });
 
-class A {
-    public static function isEqual($val) {
-        return $val instanceof static;
-    }
+use \System\Linq\Enumerable;
 
-    public function __toString() {
-        return static::class;
-    }
+$seq = Enumerable::create([3, 4, 1, 5, 2])->order();
+
+$result = [];
+foreach ($seq as $key => $value) {
+    $result[$key] = $value;
 }
 
-class B extends A {
-    public function __toString() {
-        return static::class;
-    }
-}
-
-$a = new A();
-$b = new B();
-
-die(var_export(strcmp($a, $b)));
-
-
-$coll = new \System\Collections\Dictionary();
-$coll->add('TM', '19790905');
-$coll->add('JS', '19810701');
-
-$arr = array('PZ', 'MK');
-$coll->appendToArray($arr, true);
-
-foreach ($arr as $key => $item) {
-    echo var_export($item, true);
-
-    // echo "{$key}<br />";
-}
+var_dump($result);

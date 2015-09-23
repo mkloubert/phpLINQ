@@ -29,40 +29,16 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\IEnumerable;
-use \System\Linq\Enumerable;
 
+class OrderTests extends TestCaseBase {
+    public function testNoComparer() {
+        $seq = static::sequenceFromArray([3, 4, 1, 5, 2]);
 
-/**
- * A basic test case.
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
-    /**
-     * Creates a new sequence from an array.
-     *
-     * @param array $arr The array with the data for the sequence.
-     *
-     * @return Enumerable The created sequence.
-     */
-    protected static function sequenceFromArray(array $arr) : Enumerable {
-        return Enumerable::create($arr);
-    }
+        $items = static::sequenceToArray($seq->order(false));
 
-    /**
-     * Creates an array from a sequence.
-     *
-     * @param IEnumerable $seq The sequence.
-     *
-     * @return array The sequence as array.
-     */
-    protected static function sequenceToArray(IEnumerable $seq) : array {
-        $result = [];
-        foreach ($seq as $key => $value) {
-            $result[$key] = $value;
+        $this->assertEquals(5, count($items));
+        foreach ($items as $key => $value) {
+            $this->assertEquals($key + 1, $value);
         }
-
-        return $result;
     }
 }

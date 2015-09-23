@@ -367,12 +367,15 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Orders the items of that sequence ascending by using the items as sort value.
      *
      * @param callable $comparer The custom comparer to use.
+     *                           If there is only one argument and this argument is a boolean it is used as value for
+     *                           $preventKeys.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function order($comparer = null) : IOrderedEnumerable;
+    function order($comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence ascending by using a specific sort value.
@@ -380,13 +383,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
      * @param callable $comparer The custom comparer to use.
+     *                           If there are only two arguments and this argument is a boolean it is used as value for
+     *                           $preventKeys.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderBy($selector, $comparer = null) : IOrderedEnumerable;
+    function orderBy($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using a specific sort value.
@@ -394,24 +400,30 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
      * @param callable $comparer The custom comparer to use.
+     *                           If there are only two arguments and this argument is a boolean it is used as value for
+     *                           $preventKeys.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderByDescending($selector, $comparer = null) : IOrderedEnumerable;
+    function orderByDescending($selector, $comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using the items as sort value.
      *
      * @param callable $comparer The custom comparer to use.
+     *                           If there is only one argument and this argument is a boolean it is used as value for
+     *                           $preventKeys.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function orderDescending($comparer = null) : IOrderedEnumerable;
+    function orderDescending($comparer = null, bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Calculates the product of the items.
@@ -427,12 +439,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @param callable $seeder The custom function that initializes the random number generator.
      * @param callable $randProvider The custom function that provides the random values.
+     * @param bool $preventKeys Prevent keys or not.
      *
-     * @return IEnumerable The new sequence.
+     * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $seeder / $randProvider is no valid callable / lambda expression.
      */
-    function randomize($seeder = null, $randProvider = null) : IEnumerable;
+    function randomize($seeder = null, $randProvider = null, bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Resets the sequence and returns it.
@@ -443,10 +456,11 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
 
     /**
      * Returns the items of that sequence in reverse order.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      */
-    function reverse() : IOrderedEnumerable;
+    function reverse(bool $preventKeys = true) : IOrderedEnumerable;
 
     /**
      * Projects each element of that sequence to a new sequence.

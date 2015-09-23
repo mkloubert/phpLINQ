@@ -29,40 +29,17 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\IEnumerable;
-use \System\Linq\Enumerable;
+class RandomizeTests extends TestCaseBase {
+    public function test1() {
+        $seq = static::sequenceFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
 
+        $items = static::sequenceToArray($seq->randomize());
 
-/**
- * A basic test case.
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
-    /**
-     * Creates a new sequence from an array.
-     *
-     * @param array $arr The array with the data for the sequence.
-     *
-     * @return Enumerable The created sequence.
-     */
-    protected static function sequenceFromArray(array $arr) : Enumerable {
-        return Enumerable::create($arr);
-    }
-
-    /**
-     * Creates an array from a sequence.
-     *
-     * @param IEnumerable $seq The sequence.
-     *
-     * @return array The sequence as array.
-     */
-    protected static function sequenceToArray(IEnumerable $seq) : array {
-        $result = [];
-        foreach ($seq as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        return $result;
+        $this->assertEquals(5, count($items));
+        $this->assertNotEquals(false, array_search(1, $items, true));
+        $this->assertNotEquals(false, array_search(2, $items, true));
+        $this->assertNotEquals(false, array_search(3, $items, true));
+        $this->assertNotEquals(false, array_search(4, $items, true));
+        $this->assertNotEquals(false, array_search(5, $items, true));
     }
 }
