@@ -54,13 +54,19 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
      * Creates an array from a sequence.
      *
      * @param IEnumerable $seq The sequence.
+     * @param bool $seq $preventKeys Prevent keys or not.
      *
      * @return array The sequence as array.
      */
-    protected static function sequenceToArray(IEnumerable $seq) : array {
+    protected static function sequenceToArray(IEnumerable $seq, bool $preventKeys = true) : array {
         $result = [];
         foreach ($seq as $key => $value) {
-            $result[$key] = $value;
+            if ($preventKeys) {
+                $result[$key] = $value;
+            }
+            else {
+                $result[] = $value;
+            }
         }
 
         return $result;

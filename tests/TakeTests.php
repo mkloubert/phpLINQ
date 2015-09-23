@@ -39,7 +39,7 @@ class TakeTests extends TestCaseBase {
     public function test1() {
         $seq = static::sequenceFromArray(['1', 2, false, null, 5.6, 7]);
 
-        $items = static::sequenceToArray($seq->take(5));
+        $items = static::sequenceToArray($seq->take(5), false);
 
         $this->assertEquals(5, count($items));
         $this->assertTrue('1' === $items[0]);
