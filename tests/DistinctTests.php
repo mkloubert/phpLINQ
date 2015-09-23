@@ -34,6 +34,12 @@ function comparerFunc($x, $y) {
     return $x === $y;
 }
 
+class EqualityComparerClass {
+    public function __invoke($x, $y) {
+        return comparerFunc($x, $y);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::distinct()
  *
@@ -57,6 +63,7 @@ class DistinctTests extends TestCaseBase {
             '\comparerFunc',
             array($this, 'comparerMethod1'),
             array(static::class, 'comparerMethod2'),
+            new EqualityComparerClass(),
             '$x, $y => $x === $y',
             '($x, $y) => $x === $y',
             '$x, $y => return $x === $y;',

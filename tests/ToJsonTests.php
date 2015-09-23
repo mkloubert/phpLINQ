@@ -34,6 +34,12 @@ function keySelectorFunc($key) {
     return chr(ord('A') + $key);
 }
 
+class KeySelectorClass {
+    public function __invoke($key) {
+        return keySelectorFunc($key);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::toJson()
  *
@@ -54,6 +60,7 @@ class ToJsonTests extends TestCaseBase {
             '\keySelectorFunc',
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
+            new KeySelectorClass(),
             '$key => chr(ord("A") + $key)',
             '($key) => chr(ord("A") + $key)',
             '$key => return chr(ord("A") + $key);',

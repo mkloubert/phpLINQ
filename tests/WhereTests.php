@@ -34,6 +34,12 @@ function whereFunc($x) {
     return 0 === $x % 2;
 }
 
+class WhereClass {
+    public function __invoke($x) {
+        return whereFunc($x);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::where()
  *
@@ -52,6 +58,7 @@ class WhereTests extends TestCaseBase {
             },
             array($this, 'whereMethod1'),
             array(static::class, 'whereMethod2'),
+            new WhereClass(),
             'whereFunc',
             '\whereFunc',
             '$x => 0 === $x % 2',

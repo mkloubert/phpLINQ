@@ -39,6 +39,12 @@ spl_autoload_register(function($clsName) {
     }
 });
 
+class TestClass {
+    public function __invoke() {
+
+    }
+}
+
 use \System\Linq\Enumerable;
 
 $seq = Enumerable::create([3, 4, 1, 5, 2])->order();
@@ -48,4 +54,5 @@ foreach ($seq as $key => $value) {
     $result[$key] = $value;
 }
 
-var_dump($result);
+$tc = new TestClass();
+var_dump(is_callable($tc));

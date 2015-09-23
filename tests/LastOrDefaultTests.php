@@ -34,6 +34,12 @@ function predicateFunc($x) : bool {
     return $x < 4;
 }
 
+class PredicateClass {
+    public function __invoke($x) {
+        return predicateFunc($x);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::lastOrDefault()
  *
@@ -54,6 +60,7 @@ class LastOrDefaultTests extends TestCaseBase {
             '\predicateFunc',
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
+            new PredicateClass(),
             '$x => $x < 4',
             '($x) => $x < 4',
             '$x => return $x < 4;',

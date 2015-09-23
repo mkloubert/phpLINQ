@@ -34,6 +34,11 @@ function zipFunc($itemA, $itemB) {
     return sprintf('%s%s', $itemA, $itemB);
 }
 
+class ZipperClass {
+    public function __invoke($itemA, $itemB) {
+        return zipFunc($itemA, $itemB);
+    }
+}
 
 /**
  * @see \System\Collection\IEnumerable::zip()
@@ -66,6 +71,7 @@ return sprintf("%s%s", $itemA, $itemB);
             '($itemA, $itemB) => { return sprintf("%s%s", $itemA, $itemB);}',
             array($this, 'zipper1'),
             array(static::class, 'zipper2'),
+            new ZipperClass(),
             'zipFunc',
         );
     }

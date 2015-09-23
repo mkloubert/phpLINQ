@@ -34,6 +34,12 @@ function keySelectorFunc($key, $item) {
     return sprintf('%s%s', strtoupper($key), $item + 1);
 }
 
+class KeySelectorClass {
+    public function __invoke($key, $item) {
+        return keySelectorFunc($key, $item);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::toArray()
  *
@@ -52,6 +58,7 @@ class ToArrayTests extends TestCaseBase {
             },
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
+            new KeySelectorClass(),
             'keySelectorFunc',
             '$key, $item => sprintf("%s%s", strtoupper($key), $item + 1)',
             '($key, $item) => sprintf("%s%s", strtoupper($key), $item + 1)',

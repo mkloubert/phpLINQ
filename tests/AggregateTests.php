@@ -34,6 +34,12 @@ function stringConcatAccumulatorFunc($result, $x) {
     return $result . $x;
 }
 
+class StringConcatAccumulatorClass {
+    public function __invoke($result, $x) {
+        return stringConcatAccumulatorFunc($result, $x);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::aggregate()
  *
@@ -54,6 +60,7 @@ class AggregateTests extends TestCaseBase {
             '\stringConcatAccumulatorFunc',
             array($this, 'stringConcatAccumulatorMethod1'),
             array(static::class, 'stringConcatAccumulatorMethod2'),
+            new StringConcatAccumulatorClass(),
             '$result, $x => $result . $x',
             '($result, $x) => $result . $x',
             '$result, $x => return $result . $x;',

@@ -36,6 +36,12 @@ function predicateFunc($x) {
     return 0 === $x % 2;
 }
 
+class PredicateClass {
+    public function __invoke($x) {
+        return predicateFunc($x);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::singleOrDefault()
  *
@@ -54,6 +60,7 @@ class SingleOrDefaultTests extends TestCaseBase {
             },
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
+            new PredicateClass(),
             'predicateFunc',
             '\predicateFunc',
             '$x => 0 === $x % 2',

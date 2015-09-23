@@ -34,6 +34,12 @@ function selectorFunc($x) {
     return strtoupper($x);
 }
 
+class SelectorClass {
+    public function __invoke($x) {
+        return strtoupper($x);
+    }
+}
+
 /**
  * @see \System\Collection\IEnumerable::select()
  *
@@ -52,6 +58,7 @@ class SelectTests extends TestCaseBase {
             },
             array($this, 'selector1'),
             array(static::class, 'selector2'),
+            new SelectorClass(),
             '$x => strtoupper($x)',
             '($x) => strtoupper($x)',
             '$x => return strtoupper($x);',

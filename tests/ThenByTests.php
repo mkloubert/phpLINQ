@@ -38,6 +38,18 @@ function selector2FuncForTest1($x) {
     return $x;
 }
 
+class SelectorClass1 {
+    public function __invoke($x) {
+        return selector1FuncForTest1($x);
+    }
+}
+
+class SelectorClass2 {
+    public function __invoke($x) {
+        return selector2FuncForTest1($x);
+    }
+}
+
 
 /**
  * @see \System\Collection\IEnumerable::thenBy()
@@ -63,6 +75,10 @@ class ThenByTests extends TestCaseBase {
             [
                 array(static::class, 'selector1Method2'),
                 array(static::class, 'selector2Method2'),
+            ],
+            [
+                new SelectorClass1(),
+                new SelectorClass2(),
             ],
             [
                 'selector1FuncForTest1',

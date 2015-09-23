@@ -1588,6 +1588,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * @return \ReflectionFunctionAbstract The created reflector.
      */
     protected static function toReflectionFunction($func) : \ReflectionFunctionAbstract {
+        if (\is_object($func)) {
+            if (\method_exists($func, '__invoke')) {
+                $func = array($func, '__invoke');
+            }
+        }
+
         if (\is_array($func)) {
             return new \ReflectionMethod($func[0], $func[1]);
         }
