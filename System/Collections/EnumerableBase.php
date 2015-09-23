@@ -80,11 +80,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         $accumulator = static::asCallable($accumulator);
 
         return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($accumulator) {
-                                                 if ($ctx->isFirst()) {
-                                                     return;
+                                                 if (!$ctx->isFirst()) {
+                                                     $ctx->result($accumulator($ctx->result(), $x, $ctx));
                                                  }
-
-                                                 $ctx->result($accumulator($ctx->result(), $x, $ctx));
+                                                 else {
+                                                     $ctx->result($x);
+                                                 }
                                              }, $defValue);
     }
 
