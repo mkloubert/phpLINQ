@@ -55,6 +55,10 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
      * @var callable
      */
     private $_selector;
+    /**
+     * @var IEnumerable
+     */
+    private $_sequence;
 
 
 
@@ -67,9 +71,10 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
      * @param bool $preventKeys Prevent keys or not.
      */
     public function __construct(IEnumerable $sequence, callable $selector, callable $comparer, bool $preventKeys = true) {
-        $this->_comparer = $comparer;
+        $this->_comparer    = $comparer;
         $this->_preventKeys = $preventKeys;
-        $this->_selector = $selector;
+        $this->_selector    = $selector;
+        $this->_sequence    = $sequence;
 
         parent::__construct($sequence);
 
@@ -91,12 +96,12 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
      */
     protected function resetMe(bool $resetSequence = true) {
         if ($resetSequence) {
-            $this->_i->reset();
+            $this->_sequence->reset();
         }
 
         $selector = $this->_selector;
 
-        $sortFunc = '\usort';
+        $sortFunc   = '\usort';
         $keySelector = null;
         if ($this->_preventKeys) {
             $keySelector = function($key, \stdClass $item) {
@@ -107,7 +112,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
         }
 
         // prepare items before ...
-        $items = $this->_i
+        $items = $this->_sequence
                       ->select(function($x, IItemContext $ctx) use ($selector) {
                                    $result         = new \stdClass();
                                    $result->key    = $ctx->key();
@@ -172,7 +177,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
         $comparer     = static::getComparerSafe($comparer);
         $thisComparer = $this->_comparer;
 
-        return new static(static::createEnumerable($this->_i),
+        return new static($this->_i,
                           function($x) use ($selector, $thisSelector) {
                               $result          = new \stdClass();
                               $result->level_0 = $thisSelector($x);  // first sort by this (level 0)
