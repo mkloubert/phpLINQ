@@ -53,6 +53,10 @@ class ConcatValuesTests extends TestCaseBase {
 
         $this->assertEquals(9, count($items));
         foreach ($items as $key => $value) {
+            $this->assertTrue('integer' === gettype($value));
+            $this->assertTrue(is_int($value));
+            $this->assertTrue(is_integer($value));
+
             $this->assertEquals($key + 1, $value);
         }
     }
