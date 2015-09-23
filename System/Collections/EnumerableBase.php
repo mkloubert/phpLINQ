@@ -1317,16 +1317,16 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         $me = $this;
 
         return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($me, $predicateOrDefValue) {
+                                                 if (!$predicateOrDefValue($x, $ctx)) {
+                                                     return;
+                                                 }
+
                                                  if (true === $ctx->value()) {
                                                      $te = $me->getType()
                                                               ->getMethod('throwException')
                                                               ->getClosure($me);
 
                                                      $te('Sequence contains more than one matching element!');
-                                                 }
-
-                                                 if (!$predicateOrDefValue($x, $ctx)) {
-                                                     return;
                                                  }
 
                                                  $ctx->result($x);
@@ -1546,13 +1546,13 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                 $lambdaBody = \trim(\substr($lambdaBody, 1, \strlen($lambdaBody) - 2));
             }
 
-            if ('' === $lambdaBody) {
-                $lambdaBody = 'return null;';
-            }
-
             if ((';' !== \substr($lambdaBody, -1))) {
                 $lambdaBody = \sprintf('return %s;',
                                        $lambdaBody);
+            }
+
+            if ('' === $lambdaBody) {
+                $lambdaBody = 'return null;';
             }
 
             return eval(\sprintf('return function(%s) { %s };',

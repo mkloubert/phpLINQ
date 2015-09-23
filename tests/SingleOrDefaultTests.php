@@ -29,69 +29,123 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\EnumerableException;
 
-function selectorFunc($x) {
-    return strtoupper($x);
+
+function predicateFunc($x) {
+    return 0 === $x % 2;
 }
 
 /**
- * @see \System\Collection\IEnumerable::select()
+ * @see \System\Collection\IEnumerable::singleOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class SelectTests extends TestCaseBase {
+class SingleOrDefaultTests extends TestCaseBase {
     /**
-     * Creates list of selectors.
+     * Creates predicates for the tests.
      *
-     * @return array The list of selectors.
+     * @return array The created predicates.
      */
-    protected function createSelectors() : array {
-        return array(
+    protected function createPredicates() : array {
+        return [
             function($x) {
-                return strtoupper($x);
+                return predicateFunc($x);
             },
-            array($this, 'selector1'),
-            array(static::class, 'selector2'),
-            '$x => strtoupper($x)',
-            '($x) => strtoupper($x)',
-            '$x => return strtoupper($x);',
-            '($x) => return strtoupper($x);',
-            '$x => { return strtoupper($x);}',
-            '($x) => {return strtoupper($x);}',
-            '$x => { return strtoupper($x);
+            array($this, 'predicateMethod1'),
+            array(static::class, 'predicateMethod2'),
+            'predicateFunc',
+            '\predicateFunc',
+            '$x => 0 === $x % 2',
+            '($x) => 0 === $x % 2',
+            '$x => return 0 === $x % 2;',
+            '($x) => return 0 === $x % 2;',
+            '$x => { return 0 === $x % 2; }',
+            '($x) => { return 0 === $x % 2; }',
+            '$x => {
+return 0 === $x % 2;
 }',
             '($x) => {
-return strtoupper($x);
+return 0 === $x % 2;
 }',
-            'selectorFunc',
-            '\selectorFunc',
-        );
+        ];
     }
 
-    public function test1() {
-        foreach ($this->createSelectors() as $selector) {
-            $seq = static::sequenceFromArray(['a', 'B', 'c', 1, 2.0, null, 3.4, 5.60, false]);
+    public function predicateMethod1($x) {
+        return predicateFunc($x);
+    }
 
-            $items = static::sequenceToArray($seq->select($selector));
+    public static function predicateMethod2($x) {
+        return predicateFunc($x);
+    }
 
-            $this->assertEquals(9, count($items));
-            $this->assertEquals('A', $items[0]);
-            $this->assertEquals('B', $items[1]);
-            $this->assertEquals('C', $items[2]);
-            $this->assertEquals('1', $items[3]);
-            $this->assertEquals('2', $items[4]);
-            $this->assertEquals('', $items[5]);
-            $this->assertEquals('3.4', $items[6]);
-            $this->assertEquals('5.6', $items[7]);
-            $this->assertEquals('', $items[8]);
+    public function testWithPredicate() {
+        foreach ($this->createPredicates() as $predicate) {
+            $seq1 = static::sequenceFromArray([1, 2, 3]);
+            $seq2 = static::sequenceFromArray([1, 3, 5]);
+            $seq3 = static::sequenceFromArray([]);
+            $seq4 = static::sequenceFromArray([22]);
+
+            $item1 = $seq1->singleOrDefault($predicate);
+            $item2 = $seq2->singleOrDefault($predicate);
+            $item3 = $seq3->singleOrDefault($predicate);
+            $item4 = $seq4->singleOrDefault($predicate);
+
+            $this->assertEquals(2   , $item1);
+            $this->assertEquals(null, $item2);
+            $this->assertEquals(null, $item3);
+            $this->assertEquals(22  , $item4);
         }
     }
 
-    public function selector1($x) {
-        return strtoupper($x);
+    public function testWithPredicateAndException() {
+        foreach ($this->createPredicates() as $predicate) {
+            $seq1 = static::sequenceFromArray([2, 3, 4]);
+            $seq2 = static::sequenceFromArray([6, 8]);
+
+            $exceptionThrown1 = false;
+            try {
+                $seq1->singleOrDefault($predicate);
+            }
+            catch (EnumerableException $ex) {
+                $exceptionThrown1 = true;
+            }
+
+            $exceptionThrown2 = false;
+            try {
+                $seq2->singleOrDefault($predicate);
+            }
+            catch (EnumerableException $ex) {
+                $exceptionThrown2 = true;
+            }
+
+            $this->assertTrue($exceptionThrown1);
+            $this->assertTrue($exceptionThrown2);
+        }
     }
 
-    public static function selector2($x) {
-        return strtoupper($x);
+    public function testWithoutPredicate() {
+        $seq1 = static::sequenceFromArray([1]);
+        $seq2 = static::sequenceFromArray([]);
+
+        $item1 = $seq1->singleOrDefault();
+        $item2 = $seq2->singleOrDefault();
+
+        $this->assertEquals(1, $item1);
+        $this->assertEquals(null, $item2);
+    }
+
+    public function testWithoutPredicateAndWithException() {
+        $seq = static::sequenceFromArray([1, 2]);
+
+        $exceptionThrown = false;
+        try {
+            $seq->singleOrDefault();
+        }
+        catch (EnumerableException $ex) {
+            $exceptionThrown = true;
+        }
+
+        $this->assertTrue($exceptionThrown);
     }
 }
