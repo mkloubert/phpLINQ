@@ -42,11 +42,11 @@ class ReverseTests extends TestCaseBase {
         $items = static::sequenceToArray($seq->reverse());
 
         $this->assertEquals(5, count($items));
-        $this->assertTrue(12 === $items[0]);
-        $this->assertTrue(77 === $items[1]);
-        $this->assertTrue(2 === $items[2]);
-        $this->assertTrue(5 === $items[3]);
-        $this->assertTrue(3 === $items[4]);
+        $this->assertEquals(12, $items[0]);
+        $this->assertEquals(77, $items[1]);
+        $this->assertEquals(2, $items[2]);
+        $this->assertEquals(5, $items[3]);
+        $this->assertEquals(3, $items[4]);
     }
 
     public function testEmpty() {
