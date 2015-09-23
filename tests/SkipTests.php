@@ -42,10 +42,10 @@ class SkipTests extends TestCaseBase {
         $items = static::sequenceToArray($seq->skip(1), false);
 
         $this->assertEquals(5, count($items));
-        $this->assertTrue('1' === $items[0]);
-        $this->assertTrue(2 === $items[1]);
-        $this->assertTrue(false === $items[2]);
-        $this->assertTrue(null === $items[3]);
-        $this->assertTrue(5.6 === $items[4]);
+        $this->assertEquals('1', $items[0]);
+        $this->assertEquals(2, $items[1]);
+        $this->assertEquals(false, $items[2]);
+        $this->assertEquals(null, $items[3]);
+        $this->assertEquals(5.6, $items[4]);
     }
 }
