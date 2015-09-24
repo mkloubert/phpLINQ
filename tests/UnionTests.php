@@ -43,11 +43,11 @@ class EqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::intersect()
+ * @see \System\Collection\IEnumerable::union()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class IntersectTests extends TestCaseBase {
+class UnionTests extends TestCaseBase {
     /**
      * Creates the equality comparers for the tests.
      *
@@ -88,98 +88,164 @@ return $x === $y;
     }
 
     public function test1Array() {
-        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+        foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $i = [2, '3'];
+            $other = [8, 3, 6, 4, 4, 9, 1, 0];
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = static::sequenceToArray($seq->union($other));
 
-            $this->assertEquals(2, count($items));
-            $this->assertTrue(2 === $items[0]);
+            $this->assertEquals(9, count($items));
+
+            $this->assertTrue(5 === $items[0]);
             $this->assertTrue(3 === $items[1]);
+            $this->assertTrue(9 === $items[2]);
+            $this->assertTrue(7 === $items[3]);
+            $this->assertTrue(8 === $items[4]);
+            $this->assertTrue(6 === $items[5]);
+            $this->assertTrue(4 === $items[6]);
+            $this->assertTrue(1 === $items[7]);
+            $this->assertTrue(0 === $items[8]);
         }
     }
 
     public function test1Generator() {
         $createGenerator = function() {
+            yield 8;
+            yield 3;
+            yield 6;
+            yield 4;
+            yield 4;
+            yield 9;
             yield 1;
-            yield 5;
+            yield 0;
         };
 
-        foreach (static::sequenceListFromArray([1.0, 2, 3, 4, 5]) as $seq) {
+        foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $i = $createGenerator();
+            $other = $createGenerator();
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = static::sequenceToArray($seq->union($other));
 
-            $this->assertEquals(2, count($items));
-            $this->assertTrue(1.0 === $items[0]);
-            $this->assertTrue(5 === $items[1]);
+            $this->assertEquals(9, count($items));
+
+            $this->assertTrue(5 === $items[0]);
+            $this->assertTrue(3 === $items[1]);
+            $this->assertTrue(9 === $items[2]);
+            $this->assertTrue(7 === $items[3]);
+            $this->assertTrue(8 === $items[4]);
+            $this->assertTrue(6 === $items[5]);
+            $this->assertTrue(4 === $items[6]);
+            $this->assertTrue(1 === $items[7]);
+            $this->assertTrue(0 === $items[8]);
         }
     }
 
     public function test1Iterator() {
-        foreach (static::sequenceListFromArray([1, 2, 3, 4, '5']) as $seq) {
+        foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $i = new ArrayIterator([5.0, 2]);
+            $other = [8, 3, 6, 4, 4, 9, 1, 0];
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = new ArrayIterator(static::sequenceToArray($seq->union($other)));
 
-            $this->assertEquals(2, count($items));
-            $this->assertTrue(2 === $items[0]);
-            $this->assertTrue('5' === $items[1]);
+            $this->assertEquals(9, count($items));
+
+            $this->assertTrue(5 === $items[0]);
+            $this->assertTrue(3 === $items[1]);
+            $this->assertTrue(9 === $items[2]);
+            $this->assertTrue(7 === $items[3]);
+            $this->assertTrue(8 === $items[4]);
+            $this->assertTrue(6 === $items[5]);
+            $this->assertTrue(4 === $items[6]);
+            $this->assertTrue(1 === $items[7]);
+            $this->assertTrue(0 === $items[8]);
         }
     }
 
     public function test2Array() {
         foreach ($this->createEqualityComparers() as $equalityComparer) {
-            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $i = [2, '3'];
+                $other = [8, 3, 6, 4, '4', 9, 1, 0];
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
 
-                $this->assertEquals(1, count($items));
-                $this->assertTrue(2 === $items[0]);
+                $this->assertEquals(10, count($items));
+
+                $this->assertTrue(5 === $items[0]);
+                $this->assertTrue(3 === $items[1]);
+                $this->assertTrue(9 === $items[2]);
+                $this->assertTrue(7 === $items[3]);
+                $this->assertTrue(8 === $items[4]);
+                $this->assertTrue(6 === $items[5]);
+                $this->assertTrue(4 === $items[6]);
+                $this->assertTrue('4' === $items[7]);
+                $this->assertTrue(1 === $items[8]);
+                $this->assertTrue(0 === $items[9]);
             }
         }
     }
 
     public function test2Generator() {
         $createGenerator = function() {
+            yield 8;
+            yield 3;
+            yield 6;
+            yield 4;
+            yield 4.0;
+            yield 9;
             yield 1;
-            yield 5;
+            yield 0;
         };
 
         foreach ($this->createEqualityComparers() as $equalityComparer) {
-            foreach (static::sequenceListFromArray([1.0, 2, 3, 4, 5]) as $seq) {
+            foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $i = $createGenerator();
+                $other = $createGenerator();
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
 
-                $this->assertEquals(1, count($items));
+                $this->assertEquals(10, count($items));
+
                 $this->assertTrue(5 === $items[0]);
+                $this->assertTrue(3 === $items[1]);
+                $this->assertTrue(9 === $items[2]);
+                $this->assertTrue(7 === $items[3]);
+                $this->assertTrue(8 === $items[4]);
+                $this->assertTrue(6 === $items[5]);
+                $this->assertTrue(4 === $items[6]);
+                $this->assertTrue(4.0 === $items[7]);
+                $this->assertTrue(1 === $items[8]);
+                $this->assertTrue(0 === $items[9]);
             }
         }
     }
 
     public function test2Iterator() {
         foreach ($this->createEqualityComparers() as $equalityComparer) {
-            foreach (static::sequenceListFromArray([1, 2, 3, 4, '5']) as $seq) {
+            foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $i = new ArrayIterator([5.0, 2]);
+                $other = new ArrayIterator([8, 3, 6, 4, '4', 9, 1, 0]);
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
 
-                $this->assertEquals(1, count($items));
-                $this->assertTrue(2 === $items[0]);
+                $this->assertEquals(10, count($items));
+
+                $this->assertTrue(5 === $items[0]);
+                $this->assertTrue(3 === $items[1]);
+                $this->assertTrue(9 === $items[2]);
+                $this->assertTrue(7 === $items[3]);
+                $this->assertTrue(8 === $items[4]);
+                $this->assertTrue(6 === $items[5]);
+                $this->assertTrue(4 === $items[6]);
+                $this->assertTrue('4' === $items[7]);
+                $this->assertTrue(1 === $items[8]);
+                $this->assertTrue(0 === $items[9]);
             }
         }
     }
