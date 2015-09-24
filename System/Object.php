@@ -177,4 +177,19 @@ class Object implements IObject {
     public function toString() : IString {
         return new ClrString(\get_class($this));
     }
+
+    /**
+     * Wraps a predicate with a callable that requires a boolean as result value.
+     *
+     * @param callable $predicate The predicate to wrap.
+     *
+     * @return callable The wrapper.
+     */
+    public static function wrapPredicate($predicate) : callable {
+        $predicate = static::asCallable($predicate);
+
+        return function($x, $ctx) use ($predicate) : bool {
+            return $predicate($x, $ctx);
+        };
+    }
 }

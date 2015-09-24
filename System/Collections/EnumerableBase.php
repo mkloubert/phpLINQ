@@ -1621,19 +1621,6 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     }
 
     /**
-     * Wraps a predicate with a callable that requires a boolean as result value.
-     *
-     * @param callable $predicate The predicate to wrap.
-     *
-     * @return callable The wrapper.
-     */
-    public static function wrapPredicate(callable $predicate) : callable {
-        return function($x, $ctx) use ($predicate) : bool {
-                   return $predicate($x, $ctx);
-               };
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function unserialize($str) {

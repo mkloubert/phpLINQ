@@ -32,26 +32,73 @@
 use \System\Collections\IEnumerable;
 
 
-/**
- * @see \System\Collection\IEnumerable::skip()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class SkipTests extends TestCaseBase {
+function predicateFunc($x) : bool {
+    return $x < 3;
+}
+
+class PredciateClass {
+    public function __invoke($x) : bool {
+        return predicateFunc($x);
+    }
+}
+
+class SkipWhileTests extends TestCaseBase {
+    /**
+     * Creates the predicates for the tests.
+     *
+     * @return array The predicates.
+     */
+    protected function createPredicates() : array {
+        return [
+            function($x) : bool {
+                return predicateFunc($x);
+            },
+            'predicateFunc',
+            '\predicateFunc',
+            array($this, 'predciateMethod1'),
+            array(static::class, 'predciateMethod2'),
+            new PredciateClass(),
+            '$x => $x < 3',
+            '($x) => $x < 3',
+            '$x => return $x < 3;',
+            '($x) => return $x < 3;',
+            '$x => { return $x < 3; }',
+            '($x) => { return $x < 3; }',
+            '$x => {
+return $x < 3;
+}',
+            '($x) => {
+return $x < 3;
+}',
+        ];
+    }
+
+    public function predciateMethod1($x) : bool {
+        return predicateFunc($x);
+    }
+
+    public static function predciateMethod2($x) : bool {
+        return predicateFunc($x);
+    }
+
     public function test1() {
-        foreach (static::sequenceListFromArray(['1', 2, false, null, 5.6, 7]) as $seq) {
-            /* @var IEnumerable $seq */
+        foreach ($this->createPredicates() as $predicate) {
+            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->skip(1), false);
+                $items = static::sequenceToArray($seq->skipWhile($predicate));
 
-            $this->assertEquals(5, count($items));
+                // var_dump($items);
 
-            $this->assertTrue(2 === $items[0]);
-            $this->assertTrue(false === $items[1]);
-            $this->assertTrue(null === $items[2]);
-            $this->assertTrue(is_null($items[2]));
-            $this->assertTrue(5.6 === $items[3]);
-            $this->assertTrue(7 === $items[4]);
+                $this->assertEquals(3, count($items));
+                foreach ($items as $key => $value) {
+                    $this->assertTrue('integer' === gettype($value));
+                    $this->assertTrue(is_int($value));
+                    $this->assertTrue(is_integer($value));
+
+                    $this->assertTrue(($key + 1) === $value);
+                }
+            }
         }
     }
 }
