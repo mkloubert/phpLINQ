@@ -39,7 +39,7 @@ class RandomizeTests extends TestCaseBase {
     public function test1() {
         $seq = static::sequenceFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
 
-        $items = static::sequenceToArray($seq->randomize(true));
+        $items = static::sequenceToArray($seq->randomize(true, true));
 
         $this->assertEquals(5, count($items));
         $this->assertNotEquals(false, array_search(1, $items, true));

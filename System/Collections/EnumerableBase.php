@@ -1151,24 +1151,26 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function randomize(
-        $seederOrPreventKeys = null,
+        $seeder = null,
         $randProviderOrPreventKeys = null,
         bool $preventKeys = false
     ) : IOrderedEnumerable {
 
         if (\func_num_args() < 3) {
-            if (\is_bool($seederOrPreventKeys)) {
-                $preventKeys         = $seederOrPreventKeys;
-                $seederOrPreventKeys = null;
-            }
-
             if (\is_bool($randProviderOrPreventKeys)) {
                 $preventKeys               = $randProviderOrPreventKeys;
                 $randProviderOrPreventKeys = null;
             }
         }
 
-        $seederOrPreventKeys       = static::asCallable($seederOrPreventKeys);
+        if (true === $seeder) {
+            $seeder = function() {
+                list($usec, $sec) = \explode(' ', \microtime());
+                return (float)$sec + ((float)$usec * 100000);
+            };
+        }
+
+        $seeder                    = static::asCallable($seeder);
         $randProviderOrPreventKeys = static::asCallable($randProviderOrPreventKeys);
 
         if (null === $randProviderOrPreventKeys) {
@@ -1177,8 +1179,8 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             };
         }
 
-        if (null !== $seederOrPreventKeys) {
-            $seederOrPreventKeys();
+        if (null !== $seeder) {
+            $seeder();
         }
 
         return $this->orderBy($randProviderOrPreventKeys, null, $preventKeys);

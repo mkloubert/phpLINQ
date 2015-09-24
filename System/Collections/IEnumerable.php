@@ -444,10 +444,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Randomizes the order of that sequence.
      *
-     * @param callable|bool $seederOrPreventKeys The custom function that initializes the random number generator.
-     *                                           If there are less than 3 arguments submitted and this value is a
-     *                                           boolean, it is handled as value for $preventKeys and it is set to
-     *                                           default.
+     * @param callable|bool $seeder The custom function that initializes the random number generator.
+     *                              If this value is (true), a default logic is used.
      * @param callable|bool $randProviderOrPreventKeys The custom function that provides the random values.
      *                                                 If there are less than two arguments submitted and this value is
      *                                                 a boolean, it is handled as value for $preventKeys and it is set
@@ -456,10 +454,10 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return IOrderedEnumerable The new sequence.
      *
-     * @throws ArgumentException $seeder / $randProvider is no valid callable / lambda expression.
+     * @throws ArgumentException $seeder / $randProviderOrPreventKeys is no valid callable / lambda expression.
      */
     function randomize(
-        $seederOrPreventKeys = null,
+        $seeder = null,
         $randProviderOrPreventKeys = null,
         bool $preventKeys = false
     ) : IOrderedEnumerable;
