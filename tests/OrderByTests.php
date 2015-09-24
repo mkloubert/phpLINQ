@@ -32,143 +32,73 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1FuncForTest1($x) {
-    return strlen($x);
-}
-
-function selector2FuncForTest1($x) {
+function selectorFunc($x) {
     return $x;
 }
 
-class SelectorClass1 {
+class SelectorClass {
     public function __invoke($x) {
-        return selector1FuncForTest1($x);
+        return $x;
     }
 }
-
-class SelectorClass2 {
-    public function __invoke($x) {
-        return selector2FuncForTest1($x);
-    }
-}
-
 
 /**
- * @see \System\Linq\IOrderedEnumerable::thenBy()
+ * @see \System\Collection\IEnumerable::orderBy()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ThenByTests extends TestCaseBase {
+class OrderByTests extends TestCaseBase {
     /**
-     * Creates selectors for ThenByTests::test1() method.
+     * Creates the selectors for the tests.
      *
      * @return array The selectors.
      */
-    protected function createSelectorsForTest1() : array {
+    protected function createSelectors() : array {
         return [
-            [
-                function($x) { return selector1FuncForTest1($x); },
-                function($x) { return selector2FuncForTest1($x); },
-            ],
-            [
-                array($this, 'selector1Method1'),
-                array($this, 'selector2Method1'),
-            ],
-            [
-                array(static::class, 'selector1Method2'),
-                array(static::class, 'selector2Method2'),
-            ],
-            [
-                new SelectorClass1(),
-                new SelectorClass2(),
-            ],
-            [
-                'selector1FuncForTest1',
-                'selector2FuncForTest1',
-            ],
-            [
-                '\selector1FuncForTest1',
-                '\selector2FuncForTest1',
-            ],
-            [
-                '$x => strlen($x)',
-                '$x => $x',
-            ],
-            [
-                '($x) => strlen($x)',
-                '($x) => $x',
-            ],
-            [
-                '$x => return strlen($x);',
-                '$x => return $x;',
-            ],
-            [
-                '($x) => return strlen($x);',
-                '($x) => return $x;',
-            ],
-            [
-                '($x) => { return strlen($x); }',
-                '($x) => { return $x; }',
-            ],
-            [
-                '($x) => {
-$y = strlen($x);
-return $y;
+            true,
+            function($x) {
+                return selectorFunc($x);
+            },
+            'selectorFunc',
+            '\selectorFunc',
+            array($this, 'selectorMethod1'),
+            array(static::class, 'selectorMethod2'),
+            new SelectorClass(),
+            '$x => $x',
+            '($x) => $x',
+            '$x => return $x;',
+            '($x) => return $x;',
+            '$x => { return $x; }',
+            '($x) => { return $x; }',
+            '$x => {
+return $x;
 }',
-                '($x) => {
-$y = $x;
-return $y;
+            '($x) => {
+return $x;
 }',
-            ],
         ];
     }
 
-    public function test1() {
-        foreach ($this->createSelectorsForTest1() as $selectors) {
-            $values = [
-                "grape",
-                "passionfruit",
-                "banana",
-                "mango",
-                "orange",
-                "raspberry",
-                "apple",
-                "blueberry",
-            ];
+    public function selectorMethod1($x) {
+        return $x;
+    }
 
-            foreach (static::sequenceListFromArray($values) as $seq) {
+    public static function selectorMethod2($x) {
+        return $x;
+    }
+
+    public function testNoComparer() {
+        foreach ($this->createSelectors() as $selector) {
+            foreach (static::sequenceListFromArray([3, 4, 1, 5, 2]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $items = static::sequenceToArray($seq->orderBy($selectors[0])
-                                                     ->thenBy($selectors[1]));
+                $items = static::sequenceToArray($seq->orderBy($selector));
 
-                $this->assertEquals(8, count($items));
-
-                $this->assertEquals('apple', $items[0]);
-                $this->assertEquals('grape', $items[1]);
-                $this->assertEquals('mango', $items[2]);
-                $this->assertEquals('banana', $items[3]);
-                $this->assertEquals('orange', $items[4]);
-                $this->assertEquals('blueberry', $items[5]);
-                $this->assertEquals('raspberry', $items[6]);
-                $this->assertEquals('passionfruit', $items[7]);
+                $this->assertEquals(5, count($items));
+                foreach ($items as $key => $value) {
+                    $this->assertEquals($key + 1, $value);
+                }
             }
         }
-    }
-
-    public function selector1Method1($x) {
-        return selector1FuncForTest1($x);
-    }
-
-    public static function selector1Method2($x) {
-        return selector1FuncForTest1($x);
-    }
-
-    public function selector2Method1($x) {
-        return selector2FuncForTest1($x);
-    }
-
-    public static function selector2Method2($x) {
-        return selector2FuncForTest1($x);
     }
 }

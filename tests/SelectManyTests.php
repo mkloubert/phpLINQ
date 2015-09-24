@@ -71,7 +71,9 @@ class Selector3Class {
  */
 class SelectManyTests extends TestCaseBase {
     /**
-     * @return mixed
+     * Creates the selectors for the tests.
+     *
+     * @return array The selectors.
      */
     protected function createSelectors() : array {
         return [

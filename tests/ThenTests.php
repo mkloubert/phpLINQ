@@ -36,29 +36,19 @@ function selector1FuncForTest1($x) {
     return strlen($x);
 }
 
-function selector2FuncForTest1($x) {
-    return $x;
-}
-
 class SelectorClass1 {
     public function __invoke($x) {
         return selector1FuncForTest1($x);
     }
 }
 
-class SelectorClass2 {
-    public function __invoke($x) {
-        return selector2FuncForTest1($x);
-    }
-}
-
 
 /**
- * @see \System\Linq\IOrderedEnumerable::thenBy()
+ * @see \System\Linq\IOrderedEnumerable::then()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ThenByTests extends TestCaseBase {
+class ThenTests extends TestCaseBase {
     /**
      * Creates selectors for ThenByTests::test1() method.
      *
@@ -68,55 +58,40 @@ class ThenByTests extends TestCaseBase {
         return [
             [
                 function($x) { return selector1FuncForTest1($x); },
-                function($x) { return selector2FuncForTest1($x); },
             ],
             [
                 array($this, 'selector1Method1'),
-                array($this, 'selector2Method1'),
             ],
             [
                 array(static::class, 'selector1Method2'),
-                array(static::class, 'selector2Method2'),
             ],
             [
                 new SelectorClass1(),
-                new SelectorClass2(),
             ],
             [
                 'selector1FuncForTest1',
-                'selector2FuncForTest1',
             ],
             [
                 '\selector1FuncForTest1',
-                '\selector2FuncForTest1',
             ],
             [
                 '$x => strlen($x)',
-                '$x => $x',
             ],
             [
                 '($x) => strlen($x)',
-                '($x) => $x',
             ],
             [
                 '$x => return strlen($x);',
-                '$x => return $x;',
             ],
             [
                 '($x) => return strlen($x);',
-                '($x) => return $x;',
             ],
             [
                 '($x) => { return strlen($x); }',
-                '($x) => { return $x; }',
             ],
             [
                 '($x) => {
 $y = strlen($x);
-return $y;
-}',
-                '($x) => {
-$y = $x;
 return $y;
 }',
             ],
@@ -140,7 +115,7 @@ return $y;
                 /* @var IEnumerable $seq */
 
                 $items = static::sequenceToArray($seq->orderBy($selectors[0])
-                                                     ->thenBy($selectors[1]));
+                                                     ->then());
 
                 $this->assertEquals(8, count($items));
 
@@ -162,13 +137,5 @@ return $y;
 
     public static function selector1Method2($x) {
         return selector1FuncForTest1($x);
-    }
-
-    public function selector2Method1($x) {
-        return selector2FuncForTest1($x);
-    }
-
-    public static function selector2Method2($x) {
-        return selector2FuncForTest1($x);
     }
 }

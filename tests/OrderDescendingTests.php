@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::orderDescending()
+ * @see \System\Linq\IOrderedEnumerable::orderDescending()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

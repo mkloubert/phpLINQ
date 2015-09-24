@@ -33,19 +33,21 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::order()
+ * @see \System\Linq\IOrderedEnumerable::order()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class OrderTests extends TestCaseBase {
     public function testNoComparer() {
-        $seq = static::sequenceFromArray([3, 4, 1, 5, 2]);
+        foreach (static::sequenceListFromArray([3, 4, 1, 5, 2]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->order());
+            $items = static::sequenceToArray($seq->order());
 
-        $this->assertEquals(5, count($items));
-        foreach ($items as $key => $value) {
-            $this->assertEquals($key + 1, $value);
+            $this->assertEquals(5, count($items));
+            foreach ($items as $key => $value) {
+                $this->assertEquals($key + 1, $value);
+            }
         }
     }
 }
