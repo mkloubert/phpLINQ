@@ -48,6 +48,7 @@ class ResetTests extends TestCaseBase {
         foreach ($items1 as $key => $value) {
             $this->assertTrue(isset($items2[$key]));
             $this->assertTrue($items2[$key] === $value);
+            $this->assertTrue($items2[$key] === $items1[$key]);
         }
     }
 
@@ -68,6 +69,7 @@ class ResetTests extends TestCaseBase {
         foreach ($items1 as $key => $value) {
             $this->assertTrue(isset($items2[$key]));
             $this->assertTrue($items2[$key] === $value);
+            $this->assertTrue($items2[$key] === $items1[$key]);
         }
     }
 
@@ -81,6 +83,7 @@ class ResetTests extends TestCaseBase {
         foreach ($items1 as $key => $value) {
             $this->assertTrue(isset($items2[$key]));
             $this->assertTrue($items2[$key] === $value);
+            $this->assertTrue($items2[$key] === $items1[$key]);
         }
     }
 }
