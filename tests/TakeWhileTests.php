@@ -43,11 +43,11 @@ class PredciateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::skipWhile()
+ * @see \System\Collection\IEnumerable::takeWhile()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class SkipWhileTests extends TestCaseBase {
+class TakeWhileTests extends TestCaseBase {
     /**
      * Creates the predicates for the tests.
      *
@@ -91,9 +91,9 @@ return $x < 3;
             foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $items = static::sequenceToArray($seq->skipWhile($predicate));
+                $items = static::sequenceToArray($seq->takeWhile($predicate));
 
-                $this->assertEquals(3, count($items));
+                $this->assertEquals(2, count($items));
                 foreach ($items as $key => $value) {
                     $this->assertTrue('integer' === gettype($value));
                     $this->assertTrue(is_int($value));
