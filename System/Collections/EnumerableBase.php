@@ -644,9 +644,10 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                 unset($second[$k]);
                 yield $curItem;
 
-                $this->next();
                 break;
             }
+
+            $this->next();
         }
     }
 
