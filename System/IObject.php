@@ -53,7 +53,7 @@ interface IObject {
      *
      * @return \ReflectionObject The type.
      */
-    function getType();
+    function getType() : \ReflectionObject;
 
     /**
      * Returns the string representation of that object.

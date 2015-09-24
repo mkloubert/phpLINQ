@@ -73,7 +73,7 @@ class Object implements IObject {
     /**
      * {@inheritDoc}
      */
-    public final function getType() {
+    public final function getType() : \ReflectionObject {
         return new \ReflectionObject($this);
     }
 

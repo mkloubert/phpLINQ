@@ -72,7 +72,7 @@ class Exception extends \Exception implements IException {
     /**
      * {@inheritDoc}
      */
-    public final function getType() {
+    public final function getType() : \ReflectionObject {
         return new \ReflectionObject($this);
     }
 
