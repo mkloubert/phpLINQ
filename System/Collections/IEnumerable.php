@@ -210,7 +210,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Returns the items of that sequence except the items of other one.
      *
      * @param mixed $second The other sequence.
-     * @param callable $equalityComparer The custom equaler function.
+     * @param callable $equalityComparer The custom equality function.
      *
      * @return IEnumerable The new sequence.
      *
@@ -267,7 +267,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Returns the intersection of this sequence and another.
      *
      * @param mixed $second The second sequence.
-     * @param callable $equalityComparer The custom equaler function.
+     * @param callable $equalityComparer The custom equality function.
      *
      * @return IEnumerable The new sequence.
      *
