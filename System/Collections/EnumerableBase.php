@@ -140,23 +140,6 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     }
 
     /**
-     * Returns an value as callable.
-     *
-     * @param mixed $val The input value.
-     *
-     * @return callable The output value.
-     *
-     * @throws ArgumentException $val is invalid.
-     */
-    public static function asCallable($val) {
-        if (\is_callable($val) || (null === $val)) {
-            return $val;
-        }
-
-        return static::toLambda($val);
-    }
-
-    /**
      * Returns an object / value as iterator.
      *
      * @param mixed $obj The object to convert / cast.
@@ -913,29 +896,6 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     }
 
     /**
-     * Checks if a value can be executed / is callable.
-     *
-     * @param mixed $val The value to check.
-     *
-     * @return bool Can be executed or not.
-     */
-    public static function isCallable($val) {
-        return \is_callable($val) ||
-               static::isLambda($val);
-    }
-
-    /**
-     * Checks if a value is a valid lambda expression.
-     *
-     * @param mixed $val The value to check.
-     *
-     * @return bool Is valid lambda expression or not.
-     */
-    public static function isLambda($val) {
-        return false !== static::toLambda($val, false);
-    }
-
-    /**
      * Iterates over that sequence by using an item context.
      *
      * @param callable $action The action to invoke for each item.
@@ -1543,60 +1503,6 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         return new ClrString(\json_encode($this->toArray($keySelectorOrOptions),
                                           $options, $depth));
-    }
-
-    /**
-     * Creates a closure from a lambda expression.
-     *
-     * @param string $expr The expression.
-     * @param bool $throwException Throw exception or return (false) instead.
-     *
-     * @return \Closure|bool The closure or (false) an error
-     *
-     * @throws ArgumentException $expr is no valid expression.
-     * @throws FormatException Seems to be a lambda expression, but has an invalid format.
-     */
-    public static function toLambda($expr, bool $throwException = true) {
-        $expr = \trim($expr);
-
-        // check for lambda
-        if (1 === \preg_match("/^(\\s*)([\\(]?)([^\\)]*)([\\)]?)(\\s*)(=>)/m", $expr, $lambdaMatches)) {
-            if ((empty($lambdaMatches[2]) && !empty($lambdaMatches[4])) ||
-                (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
-            {
-                if ($throwException) {
-                    throw new FormatException();
-                }
-
-                return false;
-            }
-
-            $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])));
-
-            while ((\strlen($lambdaBody) >= 2) &&
-                   ('{' === \substr($lambdaBody, 0, 1)) && ('}' === \substr($lambdaBody, -1))) {
-
-                $lambdaBody = \trim(\substr($lambdaBody, 1, \strlen($lambdaBody) - 2));
-            }
-
-            if ((';' !== \substr($lambdaBody, -1))) {
-                $lambdaBody = \sprintf('return %s;',
-                                       $lambdaBody);
-            }
-
-            if ('' === $lambdaBody) {
-                $lambdaBody = 'return null;';
-            }
-
-            return eval(\sprintf('return function(%s) { %s };',
-                                 $lambdaMatches[3], $lambdaBody));
-        }
-
-        if ($throwException) {
-            throw new ArgumentException('expr');
-        }
-
-        return false;
     }
 
     /**
