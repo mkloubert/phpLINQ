@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function zipFunc($itemA, $itemB) {
     return sprintf('%s%s', $itemA, $itemB);
@@ -78,86 +80,103 @@ return sprintf("%s%s", $itemA, $itemB);
 
     public function testArray1() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = ['A', 'B', 'C', 'D'];
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = ['A', 'B', 'C', 'D'];
 
-            $this->assertEquals(3, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(3, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+            }
         }
     }
 
     public function testArray2() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = ['A', 'B'];
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = ['A', 'B'];
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(2, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+            }
         }
     }
 
     public function testArray3() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = ['A', 'B', 'C', 'd'];
+            foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = ['A', 'B', 'C', 'd'];
 
-            $this->assertEquals(4, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
-            $this->assertEquals('4d', $items[3]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(4, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+                $this->assertEquals('4d', $items[3]);
+            }
         }
     }
 
     public function testIterator1() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = new ArrayIterator(['A', 'B', 'C', 'd']);
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-            $this->assertEquals(4, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
-            $this->assertEquals('4d', $items[3]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(3, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+            }
         }
     }
 
     public function testIterator2() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = new ArrayIterator(['A', 'B']);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = new ArrayIterator(['A', 'B']);
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(2, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+            }
         }
     }
 
     public function testIterator3() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = new ArrayIterator(['A', 'B', 'C', 'd']);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-            $this->assertEquals(4, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
-            $this->assertEquals('4d', $items[3]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(4, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+                $this->assertEquals('4d', $items[3]);
+            }
         }
     }
 
@@ -170,15 +189,18 @@ return sprintf("%s%s", $itemA, $itemB);
         };
 
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = $createGenerator();
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = $createGenerator();
 
-            $this->assertEquals(3, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(3, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+            }
         }
     }
 
@@ -189,14 +211,17 @@ return sprintf("%s%s", $itemA, $itemB);
         };
 
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = $createGenerator();
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = $createGenerator();
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(2, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+            }
         }
     }
 
@@ -209,58 +234,70 @@ return sprintf("%s%s", $itemA, $itemB);
         };
 
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = $createGenerator();
+            foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = $createGenerator();
 
-            $this->assertEquals(4, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
-            $this->assertEquals('4d', $items[3]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(4, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+                $this->assertEquals('4d', $items[3]);
+            }
         }
     }
 
     public function testSequence1() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = static::sequenceFromArray(['A', 'B', 'C', 'D']);
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = static::sequenceFromArray(['A', 'B', 'C', 'D']);
 
-            $this->assertEquals(3, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(3, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+            }
         }
     }
 
     public function testSequence2() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3]);
-            $b = static::sequenceFromArray(['A', 'B']);
+            foreach (static::sequenceListFromArray([1, 2, 3]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = static::sequenceFromArray(['A', 'B']);
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(2, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+            }
         }
     }
 
     public function testSequence3() {
         foreach ($this->createZippers() as $selector) {
-            $a = static::sequenceFromArray([1, 2, 3, 4]);
-            $b = static::sequenceFromArray(['A', 'B', 'C', 'd']);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $a) {
+                /* @var IEnumerable $a */
 
-            $items = static::sequenceToArray($a->zip($b, $selector));
+                $b = static::sequenceFromArray(['A', 'B', 'C', 'd']);
 
-            $this->assertEquals(4, count($items));
-            $this->assertEquals('1A', $items[0]);
-            $this->assertEquals('2B', $items[1]);
-            $this->assertEquals('3C', $items[2]);
-            $this->assertEquals('4d', $items[3]);
+                $items = static::sequenceToArray($a->zip($b, $selector));
+
+                $this->assertEquals(4, count($items));
+                $this->assertEquals('1A', $items[0]);
+                $this->assertEquals('2B', $items[1]);
+                $this->assertEquals('3C', $items[2]);
+                $this->assertEquals('4d', $items[3]);
+            }
         }
     }
 
