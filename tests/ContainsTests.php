@@ -55,6 +55,7 @@ class ContainsTests extends TestCaseBase {
      */
     protected function createEqualityComparers() : array {
         return [
+            true,
             function($x, $y) : bool {
                 return equalityComparerFunc($x, $y);
             },

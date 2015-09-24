@@ -55,6 +55,7 @@ class SequenceEqualTests extends TestCaseBase {
      */
     protected function createEqualityComparers() : array {
         return [
+            true,
             function($x, $y) {
                 return equalityComparerFunc($x, $y);
             },

@@ -73,13 +73,134 @@ class Object implements IObject {
     }
 
     /**
+     * Keeps sure that a comparer function is NOT (null).
+     *
+     * @param callable $comparer The input value.
+     *
+     * @return callable The output value.
+     */
+    public static function getComparerSafe($comparer) : callable {
+        $comparer = static::asCallable($comparer);
+
+        $defaultComparer = function($x, $y) : int {
+            if ($x instanceof IObject) {
+                if ($x instanceof IComparable) {
+                    return $x->compareTo($y);
+                }
+
+                if ($x->equals($y)) {
+                    return 0;
+                }
+            }
+
+            if ($y instanceof IObject) {
+                if ($y instanceof IComparable) {
+                    return $y->compareTo($x) * -1;
+                }
+
+                if ($y->equals($x)) {
+                    return 0;
+                }
+            }
+
+            if ($x > $y) {
+                return 1;
+            }
+            else if ($x < $y) {
+                return -1;
+            }
+
+            return 0;
+        };
+
+        if (null === $comparer) {
+            return $defaultComparer;
+        }
+
+        $rf = static::toReflectionFunction($comparer);
+        if ($rf->getNumberOfParameters() < 2) {
+            // use function as selector
+
+            return function($x, $y) use ($defaultComparer, $comparer) : int {
+                return $defaultComparer($comparer($x),
+                                        $comparer($y));
+            };
+        }
+
+        return static::wrapComparer($comparer);
+    }
+
+    /**
+     * Keeps sure that a equality comparer is NOT (null).
+     *
+     * @param callable $equalityComparer The input value.
+     *
+     * @return callable The output value.
+     */
+    public static function getEqualityComparerSafe($equalityComparer) : callable {
+        if (true === $equalityComparer) {
+            $equalityComparer = function($x, $y) : bool {
+                return $x === $y;
+            };
+        }
+
+        $equalityComparer = static::asCallable($equalityComparer);
+
+        $defaultEqualityComparer = function($x, $y) : bool {
+            if ($x instanceof IObject) {
+                return $x->equals($y);
+            }
+            else if ($y instanceof IObject) {
+                return $y->equals($x);
+            }
+
+            return $x == $y;
+        };
+
+        if (null === $equalityComparer) {
+            return $defaultEqualityComparer;
+        }
+
+        $rf = static::toReflectionFunction($equalityComparer);
+        if ($rf->getNumberOfParameters() < 2) {
+            // use function as selector
+
+            return function($x, $y) use ($defaultEqualityComparer, $equalityComparer) : bool {
+                return $defaultEqualityComparer($equalityComparer($x),
+                                                $equalityComparer($y));
+            };
+        }
+
+        return static::wrapEqualityComparer($equalityComparer);
+    }
+
+    /**
+     * Keeps sure that a predicate function is NOT (null).
+     *
+     * @param callable $predicate The input value.
+     *
+     * @return callable The output value.
+     */
+    public static function getPredicateSafe($predicate) : callable {
+        $predicate = static::asCallable($predicate);
+
+        if (null === $predicate) {
+            return function() : bool {
+                return true;
+            };
+        }
+
+        return static::wrapPredicate($predicate);
+    }
+
+    /**
      * Extracts the "real" value if needed.
      *
      * @param mixed $val The input value.
      *
      * @return mixed The output value.
      */
-    protected static function getRealValue($val) {
+    public static function getRealValue($val) {
         while ($val instanceof IValueWrapper) {
             $val = $val->getWrappedValue();
         }
@@ -172,10 +293,61 @@ class Object implements IObject {
     }
 
     /**
+     * Creates a reflector object for a function.
+     *
+     * @param mixed $func The function.
+     *
+     * @return \ReflectionFunctionAbstract The created reflector.
+     */
+    public static function toReflectionFunction($func) : \ReflectionFunctionAbstract {
+        if (\is_object($func)) {
+            if (\method_exists($func, '__invoke')) {
+                $func = array($func, '__invoke');
+            }
+        }
+
+        if (\is_array($func)) {
+            return new \ReflectionMethod($func[0], $func[1]);
+        }
+
+        return new \ReflectionFunction($func);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toString() : IString {
         return new ClrString(\get_class($this));
+    }
+
+    /**
+     * Wraps a comparer with a callable that requires an integer as result value.
+     *
+     * @param callable $comparer The equality comparer to wrap.
+     *
+     * @return callable The wrapper.
+     */
+    public static function wrapComparer($comparer) {
+        $comparer = static::asCallable($comparer);
+
+        return function($x, $y) use ($comparer) : int {
+            return $comparer($x, $y);
+        };
+    }
+
+    /**
+     * Wraps an equality comparer with a callable that requires a boolean as result value.
+     *
+     * @param callable $equalityComparer The equality comparer to wrap.
+     *
+     * @return callable The wrapper.
+     */
+    public static function wrapEqualityComparer($equalityComparer) {
+        $equalityComparer = static::asCallable($equalityComparer);
+
+        return function($x, $y) use ($equalityComparer) : bool {
+            return $equalityComparer($x, $y);
+        };
     }
 
     /**

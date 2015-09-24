@@ -150,7 +150,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Checks if that sequence contains an item.
      *
      * @param mixed $item The item to search for.
-     * @param callable $equalityComparer The custom equality comparer to use.
+     * @param callable|bool $equalityComparer The custom equality comparer to use.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return bool Contains item or not.
      */
@@ -177,7 +178,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Removes duplicates.
      *
-     * @param callable $equalityComparer The custom equality comparer.
+     * @param callable|bool $equalityComparer The custom equality comparer.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The new sequence.
      */
@@ -210,7 +212,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Returns the items of that sequence except the items of other one.
      *
      * @param mixed $second The other sequence.
-     * @param callable $equalityComparer The custom equality function.
+     * @param callable|bool $equalityComparer The custom equality function.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The new sequence.
      *
@@ -235,7 +238,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Groups the items of that sequence.
      *
      * @param callable $keySelector The key selector.
-     * @param callable $keyEqualityComparer The custom equality function for the keys.
+     * @param callable|bool $keyEqualityComparer The custom equality function for the keys.
+     *                                           (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The grouped items as a sequence of IGrouping items.
      *
@@ -251,7 +255,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param callable $outerKeySelector The key selector for the items of that sequence.
      * @param callable $innerKeySelector The key selector for the items of the other sequence.
      * @param callable $resultSelector The function that provides the result value for two matching elements.
-     * @param callable $keyEqualityComparer The custom equality function for the keys.
+     * @param callable|bool $keyEqualityComparer The custom equality function for the keys.
+     *                                           (true) indicates to check values for exact match (=== operator).
      *
      * @return static The joined sequence.
      *
@@ -267,7 +272,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Returns the intersection of this sequence and another.
      *
      * @param mixed $second The second sequence.
-     * @param callable $equalityComparer The custom equality function.
+     * @param callable|bool $equalityComparer The custom equality function.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The new sequence.
      *
@@ -297,11 +303,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param callable $outerKeySelector The key selector for the items of that sequence.
      * @param callable $innerKeySelector The key selector for the items of the other sequence.
      * @param callable $resultSelector The function that provides the result value for two matching elements.
-     * @param callable $keyEqualityComparer The custom equality function for the keys.
+     * @param callable|bool $keyEqualityComparer The custom equality function for the keys.
+     *                                           (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The joined sequence.
      *
-     * @throws ArgumentException $outerKeySelector / $innerKeySelector / $resultSelector / $keyEqualityComparer is no valid callable / lambda expression.
+     * @throws ArgumentException $outerKeySelector / $innerKeySelector / $resultSelector / $keyEqualityComparer
+     *                           is no valid callable / lambda expression.
      * @throws ArgumentNullException $outerKeySelector / $innerKeySelector / $resultSelector is (null).
      */
     function join($inner,
@@ -506,7 +514,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Checks if another sequence has the same elements as that sequence.
      *
      * @param mixed $other The other sequence.
-     * @param callable $equalityComparer The custom equality comparer to use.
+     * @param callable|bool $equalityComparer The custom equality comparer to use.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return bool Both are equal or not.
      *
@@ -613,7 +622,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Produces the set union of that sequence and another.
      *
      * @param mixed $second The other sequence.
-     * @param callable $equalityComparer The custom equality comparer to use.
+     * @param callable|bool $equalityComparer The custom equality comparer to use.
+     *                                        (true) indicates to check values for exact match (=== operator).
      *
      * @return IEnumerable The new sequence.
      *

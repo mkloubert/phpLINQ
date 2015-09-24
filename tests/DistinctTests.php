@@ -58,6 +58,7 @@ class DistinctTests extends TestCaseBase {
 
     protected function createEqualityComparers() : array {
         return [
+            true,
             function($x, $y) {
                 return comparerFunc($x, $y);
             },
