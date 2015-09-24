@@ -244,7 +244,7 @@ class Object implements IObject {
      * @param string $expr The expression.
      * @param bool $throwException Throw exception or return (false) instead.
      *
-     * @return \Closure|bool The closure or (false) an error
+     * @return \Closure|bool The closure or (false) on error.
      *
      * @throws ArgumentException $expr is no valid expression.
      * @throws FormatException Seems to be a lambda expression, but has an invalid format.
