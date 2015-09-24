@@ -130,7 +130,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
                               [
                                   &$items,
                                   function(\stdClass $x, \stdClass $y) use ($comparer) : int {
-                                      return (int)$comparer($x->sortBy, $y->sortBy);
+                                      return $comparer($x->sortBy, $y->sortBy);
                                   },
                               ]);
 
@@ -187,19 +187,19 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
                               return $result;
                           },
                           function(\stdClass $x, \stdClass $y) use ($comparer, $thisComparer) : int {
-                              $comp0 = (int)$thisComparer($x->level_0, $y->level_0);
+                              $comp0 = $thisComparer($x->level_0, $y->level_0);
                               if (0 !== $comp0) {
                                   return $comp0;
                               }
 
-                              $comp1 = (int)$comparer($x->level_1, $y->level_1);
+                              $comp1 = $comparer($x->level_1, $y->level_1);
                               if (0 !== $comp1) {
                                   return $comp1;
                               }
 
                               return 0;
                           },
-                          (bool)$preventKeys);
+                          $preventKeys);
     }
 
     /**
@@ -212,7 +212,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
 
         return $this->thenBy($selector,
                              function($x, $y) use ($comparer) : int {
-                                 return (int)$comparer($y, $x);
+                                 return $comparer($y, $x);
                              },
                              $preventKeys);
     }

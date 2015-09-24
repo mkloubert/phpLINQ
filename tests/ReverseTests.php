@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::reverse()
@@ -37,23 +39,27 @@
  */
 class ReverseTests extends TestCaseBase {
     public function test1() {
-        $seq = static::sequenceFromArray([3, 5, 2, 77, 12]);
+        foreach (static::sequenceListFromArray([3, 5, 2, 77, 12]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->reverse());
+            $items = static::sequenceToArray($seq->reverse());
 
-        $this->assertEquals(5, count($items));
-        $this->assertEquals(12, $items[0]);
-        $this->assertEquals(77, $items[1]);
-        $this->assertEquals(2, $items[2]);
-        $this->assertEquals(5, $items[3]);
-        $this->assertEquals(3, $items[4]);
+            $this->assertEquals(5, count($items));
+            $this->assertEquals(12, $items[0]);
+            $this->assertEquals(77, $items[1]);
+            $this->assertEquals(2, $items[2]);
+            $this->assertEquals(5, $items[3]);
+            $this->assertEquals(3, $items[4]);
+        }
     }
 
     public function testEmpty() {
-        $seq = static::sequenceFromArray([]);
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->reverse());
+            $items = static::sequenceToArray($seq->reverse());
 
-        $this->assertEquals(0, count($items));
+            $this->assertEquals(0, count($items));
+        }
     }
 }

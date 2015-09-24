@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function stringConcatAccumulatorFunc($result, $x) {
     return $result . $x;
@@ -84,16 +86,28 @@ return $result . $x;
         return stringConcatAccumulatorFunc($result, $x);
     }
 
-    public function testStringConcat() {
+    public function testStringConcat1() {
         foreach ($this->createStringConcatAccumulator() as $accumulator) {
-            $seq1 = static::sequenceFromArray(['A', 'BB', 'c']);
-            $seq2 = static::sequenceFromArray([]);
+            foreach (static::sequenceListFromArray(['A', 'BB', 'c']) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $val1 = $seq1->aggregate($accumulator, 666);
-            $val2 = $seq2->aggregate($accumulator, 666);
+                $val = $seq->aggregate($accumulator, 666);
 
-            $this->assertEquals('ABBc', $val1);
-            $this->assertEquals(666, $val2);
+                $this->assertNotEquals(666, $val);
+                $this->assertEquals('ABBc', $val);
+            }
+        }
+    }
+
+    public function testStringConcat2() {
+        foreach ($this->createStringConcatAccumulator() as $accumulator) {
+            foreach (static::sequenceListFromArray([]) as $seq) {
+                /* @var IEnumerable $seq */
+
+                $val = $seq->aggregate($accumulator, 666);
+
+                $this->assertEquals(666, $val);
+            }
         }
     }
 }

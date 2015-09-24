@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function selector1FuncForTest1($x) {
     return strlen($x);
@@ -123,7 +125,7 @@ return $y;
 
     public function test1() {
         foreach ($this->createSelectorsForTest1() as $selectors) {
-            $seq = static::sequenceFromArray([
+            $values = [
                 "grape",
                 "passionfruit",
                 "banana",
@@ -132,21 +134,25 @@ return $y;
                 "raspberry",
                 "apple",
                 "blueberry",
-            ]);
+            ];
 
-            $items = static::sequenceToArray($seq->orderBy($selectors[0])
-                                                 ->thenBy($selectors[1]));
+            foreach (static::sequenceListFromArray($values) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $this->assertEquals(8, count($items));
+                $items = static::sequenceToArray($seq->orderBy($selectors[0])
+                                                     ->thenBy($selectors[1]));
 
-            $this->assertEquals('apple', $items[0]);
-            $this->assertEquals('grape', $items[1]);
-            $this->assertEquals('mango', $items[2]);
-            $this->assertEquals('banana', $items[3]);
-            $this->assertEquals('orange', $items[4]);
-            $this->assertEquals('blueberry', $items[5]);
-            $this->assertEquals('raspberry', $items[6]);
-            $this->assertEquals('passionfruit', $items[7]);
+                $this->assertEquals(8, count($items));
+
+                $this->assertEquals('apple', $items[0]);
+                $this->assertEquals('grape', $items[1]);
+                $this->assertEquals('mango', $items[2]);
+                $this->assertEquals('banana', $items[3]);
+                $this->assertEquals('orange', $items[4]);
+                $this->assertEquals('blueberry', $items[5]);
+                $this->assertEquals('raspberry', $items[6]);
+                $this->assertEquals('passionfruit', $items[7]);
+            }
         }
     }
 

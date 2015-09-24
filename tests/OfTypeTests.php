@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::ofType()
@@ -43,20 +45,22 @@ class OfTypeTests extends TestCaseBase {
     }
 
     public function testArray() {
-        $seq = static::sequenceFromArray([1, [], '2', 3, array('a', 'b'), '4', 5]);
+        foreach (static::sequenceListFromArray([1, [], '2', 3, array('a', 'b'), '4', 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->ofType('array'));
+            $items = static::sequenceToArray($seq->ofType('array'));
 
-        $this->assertEquals(2, count($items));
+            $this->assertEquals(2, count($items));
 
-        foreach ($items as $x) {
-            $this->assertTrue('array' === gettype($x));
-            $this->assertTrue(is_array($x));
+            foreach ($items as $x) {
+                $this->assertTrue('array' === gettype($x));
+                $this->assertTrue(is_array($x));
+            }
         }
     }
 
     public function testBool() {
-        $seq = static::sequenceFromArray([
+        $values = [
             1,
             "\\trim",
             true,
@@ -65,22 +69,26 @@ class OfTypeTests extends TestCaseBase {
             4.5,
             false,
             '$x => null',
-        ]);
+        ];
 
-        $items = static::sequenceToArray($seq->ofType('bool'));
+        foreach (static::sequenceListFromArray($values) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(2, count($items));
-        $this->assertTrue(true === $items[0]);
-        $this->assertTrue(false === $items[1]);
+            $items = static::sequenceToArray($seq->ofType('bool'));
 
-        foreach ($items as $x) {
-            $this->assertTrue('boolean' === gettype($x));
-            $this->assertTrue(is_bool($x));
+            $this->assertEquals(2, count($items));
+            $this->assertTrue(true === $items[0]);
+            $this->assertTrue(false === $items[1]);
+
+            foreach ($items as $x) {
+                $this->assertTrue('boolean' === gettype($x));
+                $this->assertTrue(is_bool($x));
+            }
         }
     }
 
     public function testBoolean() {
-        $seq = static::sequenceFromArray([
+        $values = [
             1,
             "\\trim",
             false,
@@ -89,22 +97,26 @@ class OfTypeTests extends TestCaseBase {
             4.5,
             true,
             '$x => null',
-        ]);
+        ];
 
-        $items = static::sequenceToArray($seq->ofType('boolean'));
+        foreach (static::sequenceListFromArray($values) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(2, count($items));
-        $this->assertTrue(false === $items[0]);
-        $this->assertTrue(true === $items[1]);
+            $items = static::sequenceToArray($seq->ofType('boolean'));
 
-        foreach ($items as $x) {
-            $this->assertTrue('boolean' === gettype($x));
-            $this->assertTrue(is_bool($x));
+            $this->assertEquals(2, count($items));
+            $this->assertTrue(false === $items[0]);
+            $this->assertTrue(true === $items[1]);
+
+            foreach ($items as $x) {
+                $this->assertTrue('boolean' === gettype($x));
+                $this->assertTrue(is_bool($x));
+            }
         }
     }
 
     public function testCallable() {
-        $seq = static::sequenceFromArray([
+        $values = [
             1,
             "\\trim",
             true,
@@ -114,57 +126,65 @@ class OfTypeTests extends TestCaseBase {
             4.5,
             array(static::class, 'dummyMethod2'),
             '$x => null',
-        ]);
+        ];
 
-        $items = static::sequenceToArray($seq->ofType('callable'));
+        foreach (static::sequenceListFromArray($values) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(4, count($items));
-        $this->assertTrue("\\trim" === $items[0]);
-        $this->assertTrue($items[1] instanceof \Closure);
-        $this->assertTrue(is_array($items[2]));
-        $this->assertTrue(is_array($items[3]));
+            $items = static::sequenceToArray($seq->ofType('callable'));
 
-        foreach ($items as $x) {
-            $this->assertTrue(is_callable($x));
+            $this->assertEquals(4, count($items));
+            $this->assertTrue("\\trim" === $items[0]);
+            $this->assertTrue($items[1] instanceof \Closure);
+            $this->assertTrue(is_array($items[2]));
+            $this->assertTrue(is_array($items[3]));
+
+            foreach ($items as $x) {
+                $this->assertTrue(is_callable($x));
+            }
         }
     }
 
     public function testInt() {
-        $seq = static::sequenceFromArray([1, '2', 3, null, '4', 5, true]);
+        foreach (static::sequenceListFromArray([1, '2', 3, null, '4', 5, true]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->ofType('int'));
+            $items = static::sequenceToArray($seq->ofType('int'));
 
-        $this->assertEquals(3, count($items));
-        $this->assertTrue(1 === $items[0]);
-        $this->assertTrue(3 === $items[1]);
-        $this->assertTrue(5 === $items[2]);
+            $this->assertEquals(3, count($items));
+            $this->assertTrue(1 === $items[0]);
+            $this->assertTrue(3 === $items[1]);
+            $this->assertTrue(5 === $items[2]);
 
-        foreach ($items as $x) {
-            $this->assertTrue('integer' === gettype($x));
-            $this->assertTrue(is_int($x));
-            $this->assertTrue(is_integer($x));
+            foreach ($items as $x) {
+                $this->assertTrue('integer' === gettype($x));
+                $this->assertTrue(is_int($x));
+                $this->assertTrue(is_integer($x));
+            }
         }
     }
 
     public function testInteger() {
-        $seq = static::sequenceFromArray([1, '2', false, 3, '4', null, 5]);
+        foreach (static::sequenceListFromArray([1, '2', false, 3, '4', null, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->ofType('integer'));
+            $items = static::sequenceToArray($seq->ofType('integer'));
 
-        $this->assertEquals(3, count($items));
-        $this->assertTrue(1 === $items[0]);
-        $this->assertTrue(3 === $items[1]);
-        $this->assertTrue(5 === $items[2]);
+            $this->assertEquals(3, count($items));
+            $this->assertTrue(1 === $items[0]);
+            $this->assertTrue(3 === $items[1]);
+            $this->assertTrue(5 === $items[2]);
 
-        foreach ($items as $x) {
-            $this->assertTrue('integer' === gettype($x));
-            $this->assertTrue(is_int($x));
-            $this->assertTrue(is_integer($x));
+            foreach ($items as $x) {
+                $this->assertTrue('integer' === gettype($x));
+                $this->assertTrue(is_int($x));
+                $this->assertTrue(is_integer($x));
+            }
         }
     }
 
     public function testNull() {
-        $seq = static::sequenceFromArray([
+        $values = [
             1,
             new stdClass(),
             null,
@@ -174,20 +194,24 @@ class OfTypeTests extends TestCaseBase {
             4,
             new ReflectionObject($this),
             0.0,
-        ]);
+        ];
 
-        $items = static::sequenceToArray($seq->ofType('null'));
+        foreach (static::sequenceListFromArray($values) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(1, count($items));
+            $items = static::sequenceToArray($seq->ofType('null'));
 
-        foreach ($items as $x) {
-            $this->assertTrue(null === $x);
-            $this->assertTrue(is_null($x));
+            $this->assertEquals(1, count($items));
+
+            foreach ($items as $x) {
+                $this->assertTrue(null === $x);
+                $this->assertTrue(is_null($x));
+            }
         }
     }
 
     public function testObject1() {
-        $seq = static::sequenceFromArray([
+        $values = [
             1,
             new stdClass(),
             null,
@@ -197,18 +221,22 @@ class OfTypeTests extends TestCaseBase {
             4,
             new ReflectionObject($this),
             '5',
-        ]);
+        ];
 
-        $items = static::sequenceToArray($seq->ofType('object'));
+        foreach (static::sequenceListFromArray($values) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(3, count($items));
-        $this->assertTrue($items[0] instanceof stdClass);
-        $this->assertTrue($items[1] instanceof Closure);
-        $this->assertTrue($items[2] instanceof ReflectionObject);
+            $items = static::sequenceToArray($seq->ofType('object'));
 
-        foreach ($items as $x) {
-            $this->assertTrue('object' === gettype($x));
-            $this->assertTrue(is_object($x));
+            $this->assertEquals(3, count($items));
+            $this->assertTrue($items[0] instanceof stdClass);
+            $this->assertTrue($items[1] instanceof Closure);
+            $this->assertTrue($items[2] instanceof ReflectionObject);
+
+            foreach ($items as $x) {
+                $this->assertTrue('object' === gettype($x));
+                $this->assertTrue(is_object($x));
+            }
         }
     }
 
@@ -219,7 +247,7 @@ class OfTypeTests extends TestCaseBase {
         ];
 
         foreach ($classNames as $cn) {
-            $seq = static::sequenceFromArray([
+            $values = [
                 1,
                 new stdClass(),
                 2,
@@ -230,49 +258,57 @@ class OfTypeTests extends TestCaseBase {
                 4.5,
                 new ReflectionObject($this),
                 '\stdClass'
-            ]);
+            ];
 
-            $items = static::sequenceToArray($seq->ofType($cn));
+            foreach (static::sequenceListFromArray($values) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $this->assertEquals(2, count($items));
-            foreach ($items as $x) {
-                $this->assertTrue('object' === gettype($x));
-                $this->assertTrue($x instanceof stdClass);
-                $this->assertTrue(stdClass::class === get_class($x));
-                $this->assertTrue(is_object($x));
+                $items = static::sequenceToArray($seq->ofType($cn));
+
+                $this->assertEquals(2, count($items));
+                foreach ($items as $x) {
+                    $this->assertTrue('object' === gettype($x));
+                    $this->assertTrue($x instanceof stdClass);
+                    $this->assertTrue(stdClass::class === get_class($x));
+                    $this->assertTrue(is_object($x));
+                }
             }
         }
     }
 
     public function testScalar() {
-        $seq = static::sequenceFromArray([1, new stdClass(), '5', 3.141592654, true, 4, new ReflectionObject($this), null]);
+        foreach (static::sequenceListFromArray([1, new stdClass(), '5', 3.141592654, true, 4, new ReflectionObject($this), null]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->ofType('scalar'));
+            $items = static::sequenceToArray($seq->ofType('scalar'));
 
-        $this->assertEquals(5, count($items));
-        $this->assertTrue(1 === $items[0]);
-        $this->assertTrue('5' === $items[1]);
-        $this->assertTrue(3.141592654 === $items[2]);
-        $this->assertTrue(true === $items[3]);
-        $this->assertTrue(4 === $items[4]);
+            $this->assertEquals(5, count($items));
+            $this->assertTrue(1 === $items[0]);
+            $this->assertTrue('5' === $items[1]);
+            $this->assertTrue(3.141592654 === $items[2]);
+            $this->assertTrue(true === $items[3]);
+            $this->assertTrue(4 === $items[4]);
 
-        foreach ($items as $x) {
-            $this->assertTrue(is_scalar($x));
+            foreach ($items as $x) {
+                $this->assertTrue(is_scalar($x));
+            }
         }
     }
 
     public function testString() {
-        $seq = static::sequenceFromArray([1, null, '2', 3, true, '4', 5]);
+        foreach (static::sequenceListFromArray([1, null, '2', 3, true, '4', 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->ofType('string'));
+            $items = static::sequenceToArray($seq->ofType('string'));
 
-        $this->assertEquals(2, count($items));
-        $this->assertTrue('2' === $items[0]);
-        $this->assertTrue('4' === $items[1]);
+            $this->assertEquals(2, count($items));
+            $this->assertTrue('2' === $items[0]);
+            $this->assertTrue('4' === $items[1]);
 
-        foreach ($items as $x) {
-            $this->assertTrue('string' === gettype($x));
-            $this->assertTrue(is_string($x));
+            foreach ($items as $x) {
+                $this->assertTrue('string' === gettype($x));
+                $this->assertTrue(is_string($x));
+            }
         }
     }
 }

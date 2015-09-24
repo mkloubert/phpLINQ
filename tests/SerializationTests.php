@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \serialize()
@@ -38,21 +40,24 @@
  */
 class SerializationTests extends TestCaseBase {
     public function test1() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $str  = serialize($seq1);
-        $seq2 = unserialize($str);
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq1) {
+            /* @var IEnumerable $seq */
 
-        $this->assertInstanceOf(get_class($seq1), $seq2);
+            $str  = serialize($seq1);
+            $seq2 = unserialize($str);
 
-        $items = static::sequenceToArray($seq2);
+            $this->assertInstanceOf(get_class($seq1), $seq2);
 
-        $this->assertEquals(5, count($items));
-        foreach ($items as $key => $value) {
-            $this->assertTrue('integer' === gettype($key));
-            $this->assertTrue(is_int($key));
-            $this->assertTrue(is_integer($key));
+            $items = static::sequenceToArray($seq2);
 
-            $this->assertEquals($value, $key + 1);
+            $this->assertEquals(5, count($items));
+            foreach ($items as $key => $value) {
+                $this->assertTrue('integer' === gettype($key));
+                $this->assertTrue(is_int($key));
+                $this->assertTrue(is_integer($key));
+
+                $this->assertEquals($value, $key + 1);
+            }
         }
     }
 }

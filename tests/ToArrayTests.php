@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function keySelectorFunc($key, $item) {
     return sprintf('%s%s', strtoupper($key), $item + 1);
@@ -77,14 +79,17 @@ return  sprintf("%s%s", strtoupper($key), $item + 1);
     }
 
     public function testAutoKeys() {
-        $seq = static::sequenceFromArray(['0', '1', '2', '3', '4']);
-        $arr = $seq->toArray();
+        foreach (static::sequenceListFromArray(['0', '1', '2', '3', '4']) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $this->assertEquals(5, count($arr));
+            $arr = $seq->toArray();
 
-        foreach ($arr as $index => $value) {
-            $this->assertTrue($index === (int)$value);
-            $this->assertTrue($value === (string)$index);
+            $this->assertEquals(5, count($arr));
+
+            foreach ($arr as $index => $value) {
+                $this->assertTrue($index === (int)$value);
+                $this->assertTrue($value === (string)$index);
+            }
         }
     }
 

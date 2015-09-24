@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::sum()
@@ -37,13 +39,22 @@
  */
 class SumTests extends TestCaseBase {
     public function test1() {
-        $seq1 = static::sequenceFromArray([1, 2, -3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+        foreach (static::sequenceListFromArray([1, 2, -3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $sum1 = $seq1->sum('XYZ');
-        $sum2 = $seq2->sum('XYZ');
+            $sum = $seq->sum('XYZ');
 
-        $this->assertEquals(9, $sum1);
-        $this->assertEquals('XYZ', $sum2);
+            $this->assertEquals(9, $sum);
+        }
+    }
+
+    public function testEmpty() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $sum = $seq->sum('XYZ');
+
+            $this->assertEquals('XYZ', $sum);
+        }
     }
 }

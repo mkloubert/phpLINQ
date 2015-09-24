@@ -30,6 +30,7 @@
  **********************************************************************************************************************/
 
 use \System\Collections\EnumerableException;
+use \System\Collections\IEnumerable;
 
 
 function predicateFunc($x) {
@@ -143,16 +144,18 @@ return 0 === $x % 2;
     }
 
     public function testWithoutPredicateAndWithException() {
-        $seq = static::sequenceFromArray([1, 2]);
+        foreach (static::sequenceListFromArray([1, 2]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $exceptionThrown = false;
-        try {
-            $seq->singleOrDefault();
-        }
-        catch (EnumerableException $ex) {
-            $exceptionThrown = true;
-        }
+            $exceptionThrown = false;
+            try {
+                $seq->singleOrDefault();
+            }
+            catch (EnumerableException $ex) {
+                $exceptionThrown = true;
+            }
 
-        $this->assertTrue($exceptionThrown);
+            $this->assertTrue($exceptionThrown);
+        }
     }
 }

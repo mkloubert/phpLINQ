@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function keySelectorFunc($key) {
     return chr(ord('A') + $key);
@@ -90,19 +92,21 @@ return chr(ord("A") + $key);
      * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
      */
     public function test1() {
-        $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $json = $seq->toJson();
-        $arr  = \json_decode($json, true);
+            $json = $seq->toJson();
+            $arr  = \json_decode($json, true);
 
-        $this->assertEquals(5, count($arr));
+            $this->assertEquals(5, count($arr));
 
-        foreach ($arr as $key => $value) {
-            $this->assertTrue('integer' === gettype($value));
-            $this->assertTrue(is_int($value));
-            $this->assertTrue(is_integer($value));
-            $this->assertTrue(isset($arr[$value - 1]));
-            $this->assertEquals($key, $value - 1);
+            foreach ($arr as $key => $value) {
+                $this->assertTrue('integer' === gettype($value));
+                $this->assertTrue(is_int($value));
+                $this->assertTrue(is_integer($value));
+                $this->assertTrue(isset($arr[$value - 1]));
+                $this->assertEquals($key, $value - 1);
+            }
         }
     }
 
@@ -127,21 +131,23 @@ return chr(ord("A") + $key);
 
     public function testKeySelector() {
         foreach ($this->createKeySelectors() as $selector) {
-            $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $json = $seq->toJson($selector);
-            $arr  = \json_decode($json, true);
+                $json = $seq->toJson($selector);
+                $arr  = \json_decode($json, true);
 
-            $this->assertEquals(5, count($arr));
+                $this->assertEquals(5, count($arr));
 
-            foreach ($arr as $key => $value) {
-                $this->assertTrue('string' === gettype($key));
-                $this->assertTrue(is_string($key));
-                $this->assertEquals($key, chr(ord('A') + $value - 1));
+                foreach ($arr as $key => $value) {
+                    $this->assertTrue('string' === gettype($key));
+                    $this->assertTrue(is_string($key));
+                    $this->assertEquals($key, chr(ord('A') + $value - 1));
 
-                $this->assertTrue('integer' === gettype($value));
-                $this->assertTrue(is_int($value));
-                $this->assertTrue(is_integer($value));
+                    $this->assertTrue('integer' === gettype($value));
+                    $this->assertTrue(is_int($value));
+                    $this->assertTrue(is_integer($value));
+                }
             }
         }
     }

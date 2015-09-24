@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::take()
@@ -37,15 +39,17 @@
  */
 class TakeTests extends TestCaseBase {
     public function test1() {
-        $seq = static::sequenceFromArray(['1', 2, false, null, 5.6, 7]);
+        foreach (static::sequenceListFromArray(['1', 2, false, null, 5.6, 7]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->take(5), false);
+            $items = static::sequenceToArray($seq->take(5), false);
 
-        $this->assertEquals(5, count($items));
-        $this->assertEquals('1', $items[0]);
-        $this->assertEquals(2, $items[1]);
-        $this->assertEquals(false, $items[2]);
-        $this->assertEquals(null, $items[3]);
-        $this->assertEquals(5.6, $items[4]);
+            $this->assertEquals(5, count($items));
+            $this->assertEquals('1', $items[0]);
+            $this->assertEquals(2, $items[1]);
+            $this->assertEquals(false, $items[2]);
+            $this->assertEquals(null, $items[3]);
+            $this->assertEquals(5.6, $items[4]);
+        }
     }
 }

@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::average()
@@ -37,13 +39,23 @@
  */
 class AverageTests extends TestCaseBase {
     public function test1() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $av1 = $seq1->average('The Walking Dead');
-        $av2 = $seq2->average('The Walking Dead');
+            $av = $seq->average('The Walking Dead');
 
-        $this->assertEquals(3, $av1);
-        $this->assertEquals('The Walking Dead', $av2);
+            $this->assertNotEquals('The Walking Dead', $av);
+            $this->assertEquals(3, $av);
+        }
+    }
+
+    public function test2() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $av = $seq->average('The Walking Dead');
+
+            $this->assertEquals('The Walking Dead', $av);
+        }
     }
 }

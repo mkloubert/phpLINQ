@@ -40,14 +40,39 @@ use \System\Linq\Enumerable;
  */
 abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
     /**
+     * @param array $arr
+     * @return Generator
+     */
+    protected static function generatorFromArray(array $arr = []) : Generator {
+        foreach ($arr as $key => $value) {
+            yield $value;
+        }
+    }
+
+    /**
      * Creates a new sequence from an array.
      *
      * @param array $arr The array with the data for the sequence.
      *
      * @return Enumerable The created sequence.
      */
-    protected static function sequenceFromArray(array $arr) : Enumerable {
+    protected static function sequenceFromArray(array $arr = []) : Enumerable {
         return Enumerable::create($arr);
+    }
+
+    /**
+     * Creates a list of sequences from an array.
+     *
+     * @param array $arr The array with the data for each sequence.
+     *
+     * @return array The list of sequences.
+     */
+    protected static function sequenceListFromArray(array $arr = []) : array {
+        return [
+            static::sequenceFromArray($arr),
+            Enumerable::create(new \ArrayIterator($arr)),
+            Enumerable::create(static::generatorFromArray($arr)),
+        ];
     }
 
     /**

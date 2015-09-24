@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::product()
@@ -36,17 +38,53 @@
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class ProductTests extends TestCaseBase {
-    public function test1() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([1, 2, 0, 4, 5]);
-        $seq3 = static::sequenceFromArray([]);
+    public function testEmpty() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $prod1 = $seq1->product('abc');
-        $prod2 = $seq2->product('abc');
-        $prod3 = $seq3->product('abc');
+            $prod = $seq->product('Breaking Bad');
 
-        $this->assertEquals(120, $prod1);
-        $this->assertEquals(0, $prod2);
-        $this->assertEquals('abc', $prod3);
+            $this->assertEquals('Breaking Bad', $prod);
+        }
+    }
+
+    public function testFloat() {
+        foreach (static::sequenceListFromArray([1.2, 3, 77, 5.67, 8]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $prod = $seq->product('Breaking Bad');
+
+            $this->assertEquals(12573.792, $prod);
+        }
+    }
+
+    public function testFloatWithZero() {
+        foreach (static::sequenceListFromArray([1.2, 3, 0, 5.67, 8]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $prod = $seq->product('Breaking Bad');
+
+            $this->assertEquals(0, $prod);
+        }
+    }
+
+    public function testInt() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $prod = $seq->product('Breaking Bad');
+
+            $this->assertEquals(120, $prod);
+        }
+    }
+
+    public function testWithZero() {
+        foreach (static::sequenceListFromArray([1, 2, 0, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $prod = $seq->product('Breaking Bad');
+
+            $this->assertEquals(0, $prod);
+        }
     }
 }

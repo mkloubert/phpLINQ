@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function whereFunc($x) {
     return 0 === $x % 2;
@@ -77,13 +79,15 @@ return 0 === $x % 2;
 
     public function test1() {
         foreach ($this->createPredicates() as $predicate) {
-            $seq = static::sequenceFromArray([1, 2, 3, 4, 5]);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->where($predicate));
+                $items = static::sequenceToArray($seq->where($predicate));
 
-            $this->assertEquals(2, count($items));
-            $this->assertEquals(2, $items[0]);
-            $this->assertEquals(4, $items[1]);
+                $this->assertEquals(2, count($items));
+                $this->assertEquals(2, $items[0]);
+                $this->assertEquals(4, $items[1]);
+            }
         }
     }
 

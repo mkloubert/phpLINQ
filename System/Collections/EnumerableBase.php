@@ -568,7 +568,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         }
 
         return function($x, $y) use ($comparer) : int {
-            return (int)$comparer($x, $y);
+            return $comparer($x, $y);
         };
     }
 
@@ -608,7 +608,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         }
 
         return function($x, $y) use ($equalityComparer) : bool {
-            return (bool)$equalityComparer($x, $y);
+            return $equalityComparer($x, $y);
         };
     }
 
@@ -1124,7 +1124,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         return $this->orderBy($selector,
                               function($x, $y) use ($comparer) : int {
-                                  return (int)$comparer($y, $x);
+                                  return $comparer($y, $x);
                               },
                               $preventKeys);
     }
@@ -1704,7 +1704,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      */
     public static function wrapPredicate(callable $predicate) : callable {
         return function($x, $ctx) use ($predicate) : bool {
-                   return (bool)$predicate($x, $ctx);
+                   return $predicate($x, $ctx);
                };
     }
 

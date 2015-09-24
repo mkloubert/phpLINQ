@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function selectorFunc($x) {
     return strtoupper($x);
@@ -77,20 +79,22 @@ return strtoupper($x);
 
     public function test1() {
         foreach ($this->createSelectors() as $selector) {
-            $seq = static::sequenceFromArray(['a', 'B', 'c', 1, 2.0, null, 3.4, 5.60, false]);
+            foreach (static::sequenceListFromArray(['a', 'B', 'c', 1, 2.0, null, 3.4, 5.60, false]) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->select($selector));
+                $items = static::sequenceToArray($seq->select($selector));
 
-            $this->assertEquals(9, count($items));
-            $this->assertEquals('A', $items[0]);
-            $this->assertEquals('B', $items[1]);
-            $this->assertEquals('C', $items[2]);
-            $this->assertEquals('1', $items[3]);
-            $this->assertEquals('2', $items[4]);
-            $this->assertEquals('', $items[5]);
-            $this->assertEquals('3.4', $items[6]);
-            $this->assertEquals('5.6', $items[7]);
-            $this->assertEquals('', $items[8]);
+                $this->assertEquals(9, count($items));
+                $this->assertEquals('A', $items[0]);
+                $this->assertEquals('B', $items[1]);
+                $this->assertEquals('C', $items[2]);
+                $this->assertEquals('1', $items[3]);
+                $this->assertEquals('2', $items[4]);
+                $this->assertEquals('', $items[5]);
+                $this->assertEquals('3.4', $items[6]);
+                $this->assertEquals('5.6', $items[7]);
+                $this->assertEquals('', $items[8]);
+            }
         }
     }
 

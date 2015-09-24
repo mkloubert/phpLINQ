@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 function predicateFunc($x) : bool {
     return $x > 2;
@@ -84,55 +86,115 @@ return $x > 2;
         return predicateFunc($x);
     }
 
-    public function testNoPredicate1() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+    public function testNoPredicate1a() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $item1 = $seq1->firstOrDefault();
-        $item2 = $seq2->firstOrDefault();
+            $item = $seq->firstOrDefault();
 
-        $this->assertEquals(1, $item1);
-        $this->assertEquals(null, $item2);
+            $this->assertNotEquals(null, $item);
+            $this->assertEquals(1, $item);
+        }
     }
 
-    public function testNoPredicate2() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+    public function testNoPredicate1b() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $item1 = $seq1->firstOrDefault(null, 'xyz');
-        $item2 = $seq2->firstOrDefault(null, 'xyz');
+            $item = $seq->firstOrDefault();
 
-        $this->assertEquals(1, $item1);
-        $this->assertEquals('xyz', $item2);
+            $this->assertEquals(null, $item);
+        }
     }
 
-    public function testNoPredicateWithDefault() {
-        $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-        $seq2 = static::sequenceFromArray([]);
+    public function testNoPredicate2a() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $item1 = $seq1->firstOrDefault(false);
-        $item2 = $seq2->firstOrDefault(false);
+            $item = $seq->firstOrDefault(null, 'How I Met Your Mother');
 
-        $this->assertEquals(1, $item1);
-        $this->assertEquals(false, $item2);
+            $this->assertNotEquals('How I Met Your Mother', $item);
+            $this->assertEquals(1, $item);
+        }
     }
 
-    public function testWithPredicate() {
+    public function testNoPredicate2b() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $item = $seq->firstOrDefault(null, 'Fear The Waling Dead');
+
+            $this->assertEquals('Fear The Waling Dead', $item);
+        }
+    }
+
+    public function testNoPredicateWithDefault1() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $item = $seq->firstOrDefault(false);
+
+            $this->assertNotEquals(false, $item);
+            $this->assertEquals(1, $item);
+        }
+    }
+
+    public function testNoPredicateWithDefault2() {
+        foreach (static::sequenceListFromArray([]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $item = $seq->firstOrDefault(false);
+
+            $this->assertEquals(false, $item);
+        }
+    }
+
+    public function testWithPredicate1() {
         foreach ($this->createPredicates() as $predicate) {
-            $seq1 = static::sequenceFromArray([1, 2, 3, 4, 5]);
-            $seq2 = static::sequenceFromArray([1, 2]);
-            $seq3 = static::sequenceFromArray([2, -1, 1]);
-            $seq4 = static::sequenceFromArray([]);
+            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+                /* @var IEnumerable $seq */
 
-            $item1 = $seq1->firstOrDefault($predicate);
-            $item2 = $seq2->firstOrDefault($predicate);
-            $item3 = $seq3->firstOrDefault($predicate);
-            $item4 = $seq4->firstOrDefault($predicate);
+                $item = $seq->firstOrDefault($predicate);
 
-            $this->assertEquals(3, $item1);
-            $this->assertEquals(null, $item2);
-            $this->assertEquals(null, $item3);
-            $this->assertEquals(null, $item4);
+                $this->assertNotEquals(null, $item);
+                $this->assertEquals(3, $item);
+            }
+        }
+    }
+
+    public function testWithPredicate2() {
+        foreach ($this->createPredicates() as $predicate) {
+            foreach (static::sequenceListFromArray([1, 2]) as $seq) {
+                /* @var IEnumerable $seq */
+
+                $item = $seq->firstOrDefault($predicate);
+
+                $this->assertEquals(null, $item);
+            }
+        }
+    }
+
+    public function testWithPredicate3() {
+        foreach ($this->createPredicates() as $predicate) {
+            foreach (static::sequenceListFromArray([2, -1, 1]) as $seq) {
+                /* @var IEnumerable $seq */
+
+                $item = $seq->firstOrDefault($predicate);
+
+                $this->assertEquals(null, $item);
+            }
+        }
+    }
+
+    public function testWithPredicate4() {
+        foreach ($this->createPredicates() as $predicate) {
+            foreach (static::sequenceListFromArray([]) as $seq) {
+                /* @var IEnumerable $seq */
+
+                $item = $seq->firstOrDefault($predicate);
+
+                $this->assertEquals(null, $item);
+            }
         }
     }
 }

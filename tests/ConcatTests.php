@@ -29,6 +29,8 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\IEnumerable;
+
 
 /**
  * @see \System\Collection\IEnumerable::concat()
@@ -43,21 +45,24 @@ class ConcatValuesTests extends TestCaseBase {
             yield 9;
         };
 
-        $seq       = static::sequenceFromArray([1, 2, 3]);
-        $arr       = [4];
-        $iterator  = new ArrayIterator([5, 6]);
-        $generator = $createGenerator();
-        $nothing   = null;
+        foreach (static::sequenceListFromArray([1, 2, 3]) as $seq) {
+            /* @var IEnumerable $seq */
 
-        $items = static::sequenceToArray($seq->concat($arr, $iterator, $generator, $nothing));
+            $arr       = [4];
+            $iterator  = new ArrayIterator([5, 6]);
+            $generator = $createGenerator();
+            $nothing   = null;
 
-        $this->assertEquals(9, count($items));
-        foreach ($items as $key => $value) {
-            $this->assertTrue('integer' === gettype($value));
-            $this->assertTrue(is_int($value));
-            $this->assertTrue(is_integer($value));
+            $items = static::sequenceToArray($seq->concat($arr, $iterator, $generator, $nothing));
 
-            $this->assertEquals($key + 1, $value);
+            $this->assertEquals(9, count($items));
+            foreach ($items as $key => $value) {
+                $this->assertTrue('integer' === gettype($value));
+                $this->assertTrue(is_int($value));
+                $this->assertTrue(is_integer($value));
+
+                $this->assertEquals($key + 1, $value);
+            }
         }
     }
 }
