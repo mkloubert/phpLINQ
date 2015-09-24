@@ -444,15 +444,24 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Randomizes the order of that sequence.
      *
-     * @param callable $seeder The custom function that initializes the random number generator.
-     * @param callable $randProvider The custom function that provides the random values.
+     * @param callable|bool $seederOrPreventKeys The custom function that initializes the random number generator.
+     *                                           If there is only one argument submitted and this value is a boolean,
+     *                                           it is handled as value for $preventKeys and it is set to default.
+     * @param callable|bool $randProviderOrPreventKeys The custom function that provides the random values.
+     *                                                 If there are only two arguments submitted and this value is
+     *                                                 a boolean, it is handled as value for $preventKeys and it is set
+     *                                                 to default.
      * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $seeder / $randProvider is no valid callable / lambda expression.
      */
-    function randomize($seeder = null, $randProvider = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function randomize(
+        $seederOrPreventKeys = null,
+        $randProviderOrPreventKeys = null,
+        bool $preventKeys = false
+    ) : IOrderedEnumerable;
 
     /**
      * Resets the sequence and returns it.

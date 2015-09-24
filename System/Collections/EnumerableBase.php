@@ -1150,21 +1150,38 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function randomize($seeder = null, $randProvider = null, bool $preventKeys = false) : IOrderedEnumerable {
-        $seeder       = static::asCallable($seeder);
-        $randProvider = static::asCallable($randProvider);
+    public function randomize(
+        $seederOrPreventKeys = null,
+        $randProviderOrPreventKeys = null,
+        bool $preventKeys = false
+    ) : IOrderedEnumerable {
 
-        if (null === $randProvider) {
-            $randProvider = function () {
+        if (\func_num_args() < 3) {
+            if (\is_bool($seederOrPreventKeys)) {
+                $preventKeys         = $seederOrPreventKeys;
+                $seederOrPreventKeys = null;
+            }
+
+            if (\is_bool($randProviderOrPreventKeys)) {
+                $preventKeys               = $randProviderOrPreventKeys;
+                $randProviderOrPreventKeys = null;
+            }
+        }
+
+        $seederOrPreventKeys       = static::asCallable($seederOrPreventKeys);
+        $randProviderOrPreventKeys = static::asCallable($randProviderOrPreventKeys);
+
+        if (null === $randProviderOrPreventKeys) {
+            $randProviderOrPreventKeys = function () {
                 return \mt_rand();
             };
         }
 
-        if (null !== $seeder) {
-            $seeder();
+        if (null !== $seederOrPreventKeys) {
+            $seederOrPreventKeys();
         }
 
-        return $this->orderBy($randProvider, null, $preventKeys);
+        return $this->orderBy($randProviderOrPreventKeys, null, $preventKeys);
     }
 
     /**
