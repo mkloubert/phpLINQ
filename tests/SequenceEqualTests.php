@@ -42,6 +42,11 @@ class EqualityComparerClass {
     }
 }
 
+/**
+ * @see \System\Collection\IEnumerable::sequenceEqual()
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class SequenceEqualTests extends TestCaseBase {
     /**
      * Creates equality comparers for the tests.
