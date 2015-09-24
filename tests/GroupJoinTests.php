@@ -59,10 +59,15 @@ function petKeySelectorFunc(Pet $pet) {
     return $pet->Owner->Name;
 }
 
-function selectorFunc(Person $person, Pet $pet) {
-    return sprintf('Owner: %s; Pet: %s',
+function selectorFunc(Person $person, IEnumerable $pets) {
+    $petList = $pets->select(function(Pet $pet) {
+                                 return $pet->Name;
+                             })
+                    ->toArray();
+
+    return sprintf('Owner: %s; Pets: "%s"',
                    $person->Name,
-                   $pet->Name);
+                   implode('", "', $petList));
 }
 
 class PersonKeySelectorClass {
@@ -78,17 +83,17 @@ class PetKeySelectorClass {
 }
 
 class ResultSelectorClass {
-    public function __invoke(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+    public function __invoke(Person $person, IEnumerable $pets) {
+        return selectorFunc($person, $pets);
     }
 }
 
 /**
- * @see \System\Collection\IEnumerable::join()
+ * @see \System\Collection\IEnumerable::groupJoin()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class JoinTests extends TestCaseBase {
+class GroupJoinTests extends TestCaseBase {
     /**
      * Creates the data / elements for the tests.
      *
@@ -105,6 +110,7 @@ class JoinTests extends TestCaseBase {
                       new Pet("Schnuffel", $persons[2]),
                       new Pet("WauWau"   , $persons[0]),
                       new Pet("Lulu"     , $persons[3]),
+                      new Pet("Sparky"   , $persons[0]),
                       new Pet("Asta"     , $persons[1]));
 
         return [$persons, $pets];
@@ -124,8 +130,8 @@ class JoinTests extends TestCaseBase {
                 function(Pet $pet) {
                     return petKeySelectorFunc($pet);
                 },
-                function(Person $person, Pet $pet) {
-                    return selectorFunc($person, $pet);
+                function(Person $person, IEnumerable $pets) {
+                    return selectorFunc($person, $pets);
                 },
             ],
             [
@@ -156,32 +162,62 @@ class JoinTests extends TestCaseBase {
             [
                 '$person => $person->Name',
                 '$pet => $pet->Owner->Name',
-                '$person, $pet => sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name)',
+                '$person, $pets => selectorFunc($person, $pets)',
             ],
             [
                 '($person) => $person->Name',
                 '($pet) => $pet->Owner->Name',
-                '($person, $pet) => sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name)',
+                '($person, $pets) => selectorFunc($person, $pets)',
+            ],
+            [
+                '$person => $person->Name',
+                '$pet => $pet->Owner->Name',
+                '$person, $pets => \selectorFunc($person, $pets)',
+            ],
+            [
+                '($person) => $person->Name',
+                '($pet) => $pet->Owner->Name',
+                '($person, $pets) => \selectorFunc($person, $pets)',
             ],
             [
                 '$person => return $person->Name;',
                 '$pet => return $pet->Owner->Name;',
-                '$person, $pet => return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);',
+                '$person, $pets => return selectorFunc($person, $pets);',
             ],
             [
                 '($person) => return $person->Name;',
                 '($pet) => return $pet->Owner->Name;',
-                '($person, $pet) => return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);',
+                '($person, $pets) => return selectorFunc($person, $pets);',
+            ],
+            [
+                '$person => return $person->Name;',
+                '$pet => return $pet->Owner->Name;',
+                '$person, $pets => return \selectorFunc($person, $pets);',
+            ],
+            [
+                '($person) => return $person->Name;',
+                '($pet) => return $pet->Owner->Name;',
+                '($person, $pets) => return \selectorFunc($person, $pets);',
             ],
             [
                 '$person => { return $person->Name; }',
                 '$pet => { return $pet->Owner->Name; }',
-                '$person, $pet => { return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name); }',
+                '$person, $pets => { return selectorFunc($person, $pets); }',
             ],
             [
                 '($person) => { return $person->Name; }',
                 '($pet) => { return $pet->Owner->Name; }',
-                '($person, $pet) => { return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name); }',
+                '($person, $pets) => { return selectorFunc($person, $pets); }',
+            ],
+            [
+                '$person => { return $person->Name; }',
+                '$pet => { return $pet->Owner->Name; }',
+                '$person, $pets => { return \selectorFunc($person, $pets); }',
+            ],
+            [
+                '($person) => { return $person->Name; }',
+                '($pet) => { return $pet->Owner->Name; }',
+                '($person, $pets) => { return \selectorFunc($person, $pets); }',
             ],
             [
                 '$person => {
@@ -190,8 +226,8 @@ return $person->Name;
                 '$pet => {
 return $pet->Owner->Name;
 }',
-                '$person, $pet => {
-return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
+                '$person, $pets => {
+return selectorFunc($person, $pets);
 }',
             ],
             [
@@ -201,8 +237,30 @@ return $person->Name;
                 '($pet) => {
 return $pet->Owner->Name;
 }',
-                '($person, $pet) => {
-return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
+                '($person, $pets) => {
+return selectorFunc($person, $pets);
+}',
+            ],
+            [
+                '$person => {
+return $person->Name;
+}',
+                '$pet => {
+return $pet->Owner->Name;
+}',
+                '$person, $pets => {
+return \selectorFunc($person, $pets);
+}',
+            ],
+            [
+                '($person) => {
+return $person->Name;
+}',
+                '($pet) => {
+return $pet->Owner->Name;
+}',
+                '($person, $pets) => {
+return \selectorFunc($person, $pets);
 }',
             ],
         ];
@@ -227,18 +285,16 @@ return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
 
                 $personSeq = $personSeqFactory($persons);
 
-                $joined = $personSeq->join($petSeq,
-                                           $personKeySelector, $petKeySelector, $resultSelector);
+                $joined = $personSeq->groupJoin($petSeq,
+                                                $personKeySelector, $petKeySelector, $resultSelector);
 
                 $items = static::sequenceToArray($joined);
 
-                $this->assertEquals(6, count($items));
-                $this->assertEquals('Owner: Tanja; Pet: WauWau', $items[0]);
-                $this->assertEquals('Owner: Marcel; Pet: Gina', $items[1]);
-                $this->assertEquals('Owner: Marcel; Pet: Schnuffi', $items[2]);
-                $this->assertEquals('Owner: Marcel; Pet: Asta', $items[3]);
-                $this->assertEquals('Owner: Yvonne; Pet: Schnuffel', $items[4]);
-                $this->assertEquals('Owner: Josefine; Pet: Lulu', $items[5]);
+                $this->assertEquals(4, count($items));
+                $this->assertEquals('Owner: Tanja; Pets: "WauWau", "Sparky"', $items[0]);
+                $this->assertEquals('Owner: Marcel; Pets: "Gina", "Schnuffi", "Asta"', $items[1]);
+                $this->assertEquals('Owner: Yvonne; Pets: "Schnuffel"', $items[2]);
+                $this->assertEquals('Owner: Josefine; Pets: "Lulu"', $items[3]);
             }
         }
     }
@@ -259,12 +315,12 @@ return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
         return petKeySelectorFunc($pet);
     }
 
-    public function resultSelectorMethod1(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+    public function resultSelectorMethod1(Person $person, IEnumerable $pets) {
+        return selectorFunc($person, $pets);
     }
 
-    public static function resultSelectorMethod2(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+    public static function resultSelectorMethod2(Person $person, IEnumerable $pets) {
+        return selectorFunc($person, $pets);
     }
 
     public function testArray() {
