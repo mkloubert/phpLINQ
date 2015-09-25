@@ -70,6 +70,7 @@ $seq = new Enumerable(createIterator());
 
 ## Implemented
 
+* [aggregate()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.aggregate()-method)
 * [all()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.all()-method)
 * [any()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.any()-method)
 * [average()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.average()-method)
