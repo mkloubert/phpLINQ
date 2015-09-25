@@ -46,9 +46,9 @@ interface IOrderedEnumerable extends IEnumerable {
     /**
      * Performs a sub ordering on the current sequence by using the items as sort values.
      *
-     * @param callable $comparer The custom comparer to use.
-     *                           If there is only one argument and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there is only one argument and this argument is a boolean it is
+     *                                             used as value for $preventKeys.
      * @param bool|null $preventKeys Prevent keys or not.
      *                               (null) indicates to use the (default) value from that sequence.
      *
@@ -56,16 +56,16 @@ interface IOrderedEnumerable extends IEnumerable {
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function then($comparer = null, $preventKeys = null) : IOrderedEnumerable;
+    function then($comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable;
 
     /**
      * Performs a sub ordering on the current sequence.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable $comparer The custom comparer to use.
-     *                           If there are only two arguments and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there are only two arguments and this argument is a boolean it is
+     *                                             used as value for $preventKeys.
      * @param bool|null $preventKeys Prevent keys or not.
      *                               (null) indicates to use the (default) value from that sequence.
      *
@@ -74,16 +74,16 @@ interface IOrderedEnumerable extends IEnumerable {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function thenBy($selector, $comparer = null, $preventKeys = null) : IOrderedEnumerable;
+    function thenBy($selector, $comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable;
 
     /**
      * Performs a descending sub ordering on the current sequence.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable $comparer The custom comparer to use.
-     *                           If there are only two arguments and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable| $comparerOrPreventKeys The custom comparer to use.
+     *                                         If there are only two arguments and this argument is a boolean it is
+     *                                         used as value for $preventKeys.
      * @param bool|null $preventKeys Prevent keys or not.
      *                               (null) indicates to use the (default) value from that sequence.
      *
@@ -92,14 +92,14 @@ interface IOrderedEnumerable extends IEnumerable {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function thenByDescending($selector, $comparer = null, $preventKeys = null) : IOrderedEnumerable;
+    function thenByDescending($selector, $comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable;
 
     /**
      * Performs a descending sub ordering on the current sequence by using the items as sort values.
      *
-     * @param callable $comparer The custom comparer to use.
-     *                           If there is only one argument and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there is only one argument and this argument is a boolean it is
+     *                                             used as value for $preventKeys.
      * @param bool|null $preventKeys Prevent keys or not.
      *                               (null) indicates to use the (default) value from that sequence.
      *
@@ -107,5 +107,5 @@ interface IOrderedEnumerable extends IEnumerable {
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function thenDescending($comparer = null, $preventKeys = null) : IOrderedEnumerable;
+    function thenDescending($comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable;
 }

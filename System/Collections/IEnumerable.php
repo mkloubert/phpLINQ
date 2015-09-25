@@ -372,7 +372,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Returns the items of a specific type.
      *
-     * @param string $type The type.
+     * @param string|\ReflectionClass $type The type.
      *
      * @return IEnumerable The new sequence.
      */
@@ -381,25 +381,25 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Orders the items of that sequence ascending by using the items as sort value.
      *
-     * @param callable $comparer The custom comparer to use.
-     *                           If there is only one argument and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there is only one argument and this argument is a boolean it is
+     *                                             used as value for $preventKeys.
      * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function order($comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function order($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence ascending by using a specific sort value.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable $comparer The custom comparer to use.
-     *                           If there are only two arguments and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there are only two arguments and this argument is a boolean it
+     *                                             is used as value for $preventKeys.
      * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
@@ -407,16 +407,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderBy($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderBy($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using a specific sort value.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable $comparer The custom comparer to use.
-     *                           If there are only two arguments and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                             If there are only two arguments and this argument is a boolean it
+     *                                             is used as value for $preventKeys.
      * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
@@ -424,21 +424,21 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderByDescending($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderByDescending($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using the items as sort value.
      *
-     * @param callable $comparer The custom comparer to use.
-     *                           If there is only one argument and this argument is a boolean it is used as value for
-     *                           $preventKeys.
+     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
+     *                                        If there is only one argument and this argument is a boolean it is used
+     *                                        as value for $preventKeys.
      * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function orderDescending($comparer = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderDescending($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
 
     /**
      * Calculates the product of the items.

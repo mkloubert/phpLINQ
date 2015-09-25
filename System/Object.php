@@ -250,6 +250,20 @@ class Object implements IObject {
      * @throws FormatException Seems to be a lambda expression, but has an invalid format.
      */
     public static function toLambda($expr, bool $throwException = true) {
+        $throwOrReturn = function() use ($throwException) {
+            if ($throwException) {
+                throw new ArgumentException('expr');
+            }
+
+            return false;
+        };
+
+        if (\is_object($expr)) {
+            if (!\method_exists($expr, '__toString')) {
+                return $throwOrReturn();
+            }
+        }
+
         $expr = \trim($expr);
 
         // check for lambda
@@ -285,17 +299,13 @@ class Object implements IObject {
                                  $lambdaMatches[3], $lambdaBody));
         }
 
-        if ($throwException) {
-            throw new ArgumentException('expr');
-        }
-
-        return false;
+        return $throwOrReturn();
     }
 
     /**
-     * Creates a reflector object for a function.
+     * Creates a reflector object for a callable.
      *
-     * @param mixed $func The function.
+     * @param mixed $func The callable.
      *
      * @return \ReflectionFunctionAbstract The created reflector.
      */

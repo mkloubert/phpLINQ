@@ -146,17 +146,17 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function then($comparer = null, $preventKeys = null) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+    public final function then($comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
 
-        return $this->thenBy(true, $comparer, $preventKeys);
+        return $this->thenBy(true, $comparerOrPreventKeys, $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function thenBy($selector, $comparer = null, $preventKeys = null) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+    public final function thenBy($selector, $comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
 
         if (null === $selector) {
             throw new ArgumentNullException('selector');
@@ -175,7 +175,7 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
         $selector     = static::asCallable($selector);
         $thisSelector = $this->_selector;
 
-        $comparer     = static::getComparerSafe($comparer);
+        $comparer     = static::getComparerSafe($comparerOrPreventKeys);
         $thisComparer = $this->_comparer;
 
         return new static($this->_i,
@@ -205,14 +205,14 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function thenByDescending($selector, $comparer = null, $preventKeys = null) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+    public final function thenByDescending($selector, $comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
 
-        $comparer = static::getComparerSafe($comparer);
+        $comparerOrPreventKeys = static::getComparerSafe($comparerOrPreventKeys);
 
         return $this->thenBy($selector,
-                             function($x, $y) use ($comparer) : int {
-                                 return $comparer($y, $x);
+                             function($x, $y) use ($comparerOrPreventKeys) : int {
+                                 return $comparerOrPreventKeys($y, $x);
                              },
                              $preventKeys);
     }
@@ -220,9 +220,9 @@ class OrderedEnumerable extends Enumerable implements IOrderedEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function thenDescending($comparer = null, $preventKeys = null) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+    public final function thenDescending($comparerOrPreventKeys = null, $preventKeys = null) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
 
-        return $this->thenByDescending(true, $comparer, $preventKeys);
+        return $this->thenByDescending(true, $comparerOrPreventKeys, $preventKeys);
     }
 }

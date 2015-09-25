@@ -460,7 +460,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
             $found = false;
             foreach ($second as $ite) {
-                if (!$equalityComparer($ite, $curItem)) {
+                if (!$equalityComparer($curItem, $ite)) {
                     continue;
                 }
 
@@ -636,7 +636,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
             // search for matching item in second sequence
             foreach ($second as $k => $v) {
-                if (!$equalityComparer($v, $curItem)) {
+                if (!$equalityComparer($curItem, $v)) {
                     // not found
                     continue;
                 }
@@ -882,7 +882,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function ofType($type) : IEnumerable {
-        $type = \trim($type);
+        if ($type instanceof \ReflectionClass) {
+            $type = $type->getName();
+        }
+        else {
+            $type = \trim($type);
+        }
 
         return $this->where(function($x) use ($type) : bool {
                                 if ('' === $type) {
@@ -932,17 +937,17 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function order($comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+    public final function order($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
 
-        return $this->orderBy(true, $comparer, $preventKeys);
+        return $this->orderBy(true, $comparerOrPreventKeys, $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orderBy($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+    public function orderBy($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
 
         if (true === $selector) {
             $selector = function($x) {
@@ -952,21 +957,21 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         return new OrderedEnumerable($this,
                                      static::asCallable($selector),
-                                     static::getComparerSafe($comparer),
+                                     static::getComparerSafe($comparerOrPreventKeys),
                                      $preventKeys);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function orderByDescending($selector, $comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparer, $preventKeys);
+    public final function orderByDescending($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
 
-        $comparer = static::getComparerSafe($comparer);
+        $comparerOrPreventKeys = static::getComparerSafe($comparerOrPreventKeys);
 
         return $this->orderBy($selector,
-                              function($x, $y) use ($comparer) : int {
-                                  return $comparer($y, $x);
+                              function($x, $y) use ($comparerOrPreventKeys) : int {
+                                  return $comparerOrPreventKeys($y, $x);
                               },
                               $preventKeys);
     }
@@ -974,10 +979,10 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function orderDescending($comparer = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparer, $preventKeys);
+    public final function orderDescending($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
+        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
 
-        return $this->orderByDescending(true, $comparer, $preventKeys);
+        return $this->orderByDescending(true, $comparerOrPreventKeys, $preventKeys);
     }
 
     /**
