@@ -426,7 +426,20 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function elementAtOrDefault(int $index, $defValue = null, bool &$found = false) {
+    public function elementAt(int $index) {
+        $result = $this->elementAtOrDefault($index, null, $found);
+
+        if (!$found) {
+            throw new ElementNotFoundException();
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function elementAtOrDefault(int $index, $defValue = null, &$found = false) {
         return $this->skip($index)
                     ->firstOrDefault(null, $defValue, $found);
     }
@@ -475,7 +488,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function firstOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
+    public final function firstOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
@@ -824,7 +837,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function lastOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
+    public final function lastOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
@@ -1187,7 +1200,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function singleOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
+    public final function singleOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 

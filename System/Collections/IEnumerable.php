@@ -202,12 +202,26 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Returns an element at a specific position.
      *
      * @param int $index The zero based index.
+     *
+     * @return mixed The element or the default value.
+     *
+     * @throws ArgumentOutOfRangeException $index is less than 0.
+     * @throws ElementNotFoundException Element was not found.
+     */
+    function elementAt(int $index);
+
+    /**
+     * Returns an element at a specific position.
+     *
+     * @param int $index The zero based index.
      * @param mixed $defValue The value to return if element was not found.
      * @param bool &$found The variable where to write down if an element was found or not.
      *
      * @return mixed The element or the default value.
+     *
+     * @throws ArgumentOutOfRangeException $index is less than 0.
      */
-    function elementAtOrDefault(int $index, $defValue = null, bool &$found = false);
+    function elementAtOrDefault(int $index, $defValue = null, &$found = false);
 
     /**
      * Returns the items of that sequence except the items of other one.
@@ -234,7 +248,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return mixed The first matching value or the default value.
      */
-    function firstOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
+    function firstOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
     /**
      * Groups the items of that sequence.
@@ -350,7 +364,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return mixed The last matching value or the default value.
      */
-    function lastOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
+    function lastOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
     /**
      * Gets the maximum value of that sequence.
@@ -539,7 +553,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @throws \Exception Sequence contains more than one element.
      */
-    function singleOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
+    function singleOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
     /**
      * Skips a number of items.
