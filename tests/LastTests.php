@@ -34,7 +34,7 @@ use \System\Collections\IEnumerable;
 
 
 function predicateFunc($x) : bool {
-    return $x > 2;
+    return $x < 4;
 }
 
 class PredicateClass {
@@ -44,11 +44,11 @@ class PredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::first()
+ * @see \System\Collection\IEnumerable::last()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class FirstTests extends TestCaseBase {
+class LastOrDefaultTests extends TestCaseBase {
     /**
      * Creates callable predicates for the tests.
      *
@@ -64,17 +64,17 @@ class FirstTests extends TestCaseBase {
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
             new PredicateClass(),
-            '$x => $x > 2',
-            '($x) => $x > 2',
-            '$x => return $x > 2;',
-            '($x) => return $x > 2;',
-            '$x => { return $x > 2; }',
-            '($x) => { return $x > 2; }',
+            '$x => $x < 4',
+            '($x) => $x < 4',
+            '$x => return $x < 4;',
+            '($x) => return $x < 4;',
+            '$x => { return $x < 4; }',
+            '($x) => { return $x < 4; }',
             '$x => {
-return $x > 2;
+return $x < 4;
 }',
             '($x) => {
-return $x > 2;
+return $x < 4;
 }',
         );
     }
@@ -91,9 +91,9 @@ return $x > 2;
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->first();
+            $item = $seq->last();
 
-            $this->assertEquals(1, $item);
+            $this->assertEquals(5, $item);
         }
     }
 
@@ -102,7 +102,7 @@ return $x > 2;
             /* @var IEnumerable $seq */
 
             try {
-                $item = $seq->first();
+                $item = $seq->last();
             }
             catch (ElementNotFoundException $ex) {
                 $thrownEx = $ex;
@@ -118,9 +118,9 @@ return $x > 2;
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->first(null);
+            $item = $seq->last(null);
 
-            $this->assertEquals(1, $item);
+            $this->assertEquals(5, $item);
         }
     }
 
@@ -129,7 +129,7 @@ return $x > 2;
             /* @var IEnumerable $seq */
 
             try {
-                $item = $seq->first(null);
+                $item = $seq->last(null);
             }
             catch (ElementNotFoundException $ex) {
                 $thrownEx = $ex;
@@ -146,7 +146,7 @@ return $x > 2;
             foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $item = $seq->first($predicate);
+                $item = $seq->last($predicate);
 
                 $this->assertEquals(3, $item);
             }
@@ -155,11 +155,11 @@ return $x > 2;
 
     public function testWithPredicate2() {
         foreach ($this->createPredicates() as $predicate) {
-            foreach (static::sequenceListFromArray([1, 2]) as $seq) {
+            foreach (static::sequenceListFromArray([6, 5, 4]) as $seq) {
                 /* @var IEnumerable $seq */
 
                 try {
-                    $item = $seq->first($predicate);
+                    $item = $seq->last($predicate);
                 }
                 catch (ElementNotFoundException $ex) {
                     $thrownEx = $ex;

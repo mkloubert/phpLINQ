@@ -242,9 +242,10 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @param callable $predicate The custom predicate to use.
      *
-     * @return mixed The first matching value or the default value.
+     * @return mixed The first matching value.
      *
-     * @throws ArgumentOutOfRangeException $index is less than 0.
+     * @throws ArgumentException $predicate is no valid callable / lambda expression.
+     * @throws ElementNotFoundException Element was not found.
      */
     function first($predicate = null);
 
@@ -258,6 +259,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param bool &$found The variable where to write down if a value was found or not.
      *
      * @return mixed The first matching value or the default value.
+     *
+     * @throws ArgumentException $predicateOrDefValue is no valid callable / lambda expression.
      */
     function firstOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
@@ -365,6 +368,18 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function joinToStringCallback($separatorFactory = null, $defValue = '') : IString;
 
     /**
+     * Returns the last matching value of that sequence.
+     *
+     * @param callable $predicate The custom predicate to use.
+     *
+     * @return mixed The last matching value.
+     *
+     * @throws ArgumentException $predicate is no valid callable / lambda expression.
+     * @throws ElementNotFoundException Element was not found.
+     */
+    function last($predicate = null);
+
+    /**
      * Returns the last matching value of that sequence or a default value if not found.
      *
      * @param mixed $predicateOrDefValue The custom predicate to use.
@@ -374,6 +389,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @param bool &$found The variable where to write down if a value was found or not.
      *
      * @return mixed The last matching value or the default value.
+     *
+     * @throws ArgumentException $predicateOrDefValue is no valid callable / lambda expression.
      */
     function lastOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
@@ -562,7 +579,8 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return mixed The found element or the default value.
      *
-     * @throws \Exception Sequence contains more than one element.
+     * @throws ArgumentException $predicateOrDefValue is no valid callable / lambda expression.
+     * @throws EnumerableException Sequence contains more than one element.
      */
     function singleOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 

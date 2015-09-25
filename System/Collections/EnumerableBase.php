@@ -850,6 +850,19 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public final function last($predicate = null) {
+        $result = $this->lastOrDefault($predicate, null, $found);
+
+        if (!$found) {
+            throw new ElementNotFoundException();
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function lastOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
