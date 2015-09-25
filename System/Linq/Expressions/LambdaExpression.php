@@ -85,7 +85,7 @@ class LambdaExpression extends \System\Object {
      *
      * @return \Closure The underlying closure.
      */
-    public final function closure() : \Closure {
+    public final function getClosure() : \Closure {
         return $this->_closure;
     }
 
