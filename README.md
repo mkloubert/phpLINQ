@@ -96,6 +96,7 @@ $seq = Enumerable::create(createIterator());
 * [select()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.select()-method)
 * [selectMany()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.selectMany()-method)
 * [sequenceEqual()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.sequenceEqual()-method)
+* [single()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.single()-method)
 * [singleOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.singleOrDefault()-method)
 * [skip()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skip()-method)
 * [skipWhile()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.skipWhile()-method)
@@ -109,8 +110,3 @@ $seq = Enumerable::create(createIterator());
 * [union()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.union()-method)
 * [where()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.where()-method)
 * [zip()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.zip()-method)
-
-
-## TODO
-
-- [ ] moveNext() method
