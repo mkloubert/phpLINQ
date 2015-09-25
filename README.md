@@ -30,13 +30,9 @@ use \System\Linq;
 
 $seq = Enumerable::fromValues(5979, 23979, null, 23979, 1781, 241279);
 
-$newSeq = $seq->select(function($item) {
-                           return strval($item);
-                       })  // transform all values
-                           // to string
-              ->where(function($item) {
-                          return !empty($item);
-                      })    // filter out all values that are empty
+$newSeq = $seq->select('$x => (string)$x')  // transform all values
+                                            // to string
+              ->where('$x => !empty($x)')    // filter out all values that are empty
               ->skip(1)    // skip the first element ('5979')
               ->take(3)    // take the next 3 elements from current position
                             // ('23979', '23979' and '1781')
@@ -63,7 +59,7 @@ function createIterator() {
     yield 241279;
 }
 
-$seq = new Enumerable(createIterator());
+$seq = Enumerable::create(createIterator());
 
 // ...
 ```
