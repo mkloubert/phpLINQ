@@ -31,13 +31,9 @@
 
 namespace System\Collections;
 
-use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
 use \System\ClrString;
-use \System\FormatException;
-use \System\IObject;
-use \System\IComparable;
 use \System\IString;
 use \System\Linq\Grouping;
 use \System\Linq\IGrouping;
