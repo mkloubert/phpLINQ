@@ -1226,6 +1226,19 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public final function single($predicate = null) {
+        $result = $this->singleOrDefault($predicate, null, $found);
+
+        if (!$found) {
+            throw new ElementNotFoundException();
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function singleOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);

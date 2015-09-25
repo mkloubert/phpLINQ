@@ -30,11 +30,12 @@
  **********************************************************************************************************************/
 
 use \System\Collections\ElementNotFoundException;
+use \System\Collections\EnumerableException;
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
-    return $x < 4;
+function predicateFunc($x) {
+    return 0 === $x % 2;
 }
 
 class PredicateClass {
@@ -44,39 +45,39 @@ class PredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::last()
+ * @see \System\Collection\IEnumerable::single()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class LastTests extends TestCaseBase {
+class SingleTests extends TestCaseBase {
     /**
-     * Creates callable predicates for the tests.
+     * Creates predicates for the tests.
      *
-     * @return array The list of callables.
+     * @return array The created predicates.
      */
     protected function createPredicates() : array {
-        return array(
-            function ($x) : bool {
+        return [
+            function($x) {
                 return predicateFunc($x);
             },
-            'predicateFunc',
-            '\predicateFunc',
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
             new PredicateClass(),
-            '$x => $x < 4',
-            '($x) => $x < 4',
-            '$x => return $x < 4;',
-            '($x) => return $x < 4;',
-            '$x => { return $x < 4; }',
-            '($x) => { return $x < 4; }',
+            'predicateFunc',
+            '\predicateFunc',
+            '$x => 0 === $x % 2',
+            '($x) => 0 === $x % 2',
+            '$x => return 0 === $x % 2;',
+            '($x) => return 0 === $x % 2;',
+            '$x => { return 0 === $x % 2; }',
+            '($x) => { return 0 === $x % 2; }',
             '$x => {
-return $x < 4;
+return 0 === $x % 2;
 }',
             '($x) => {
-return $x < 4;
+return 0 === $x % 2;
 }',
-        );
+        ];
     }
 
     public function predicateMethod1($x) {
@@ -87,88 +88,104 @@ return $x < 4;
         return predicateFunc($x);
     }
 
-    public function testNoPredicate1a() {
-        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
-            /* @var IEnumerable $seq */
+    public function testWithPredicate() {
+        foreach ($this->createPredicates() as $predicate) {
+            $seq1 = static::sequenceFromArray([1, 2, 3]);
+            $seq2 = static::sequenceFromArray([1, 3, 5]);
+            $seq3 = static::sequenceFromArray([]);
+            $seq4 = static::sequenceFromArray([22]);
 
-            $item = $seq->last();
-
-            $this->assertEquals(5, $item);
-        }
-    }
-
-    public function testNoPredicate1b() {
-        foreach (static::sequenceListFromArray([]) as $seq) {
-            /* @var IEnumerable $seq */
+            $item1 = $seq1->single($predicate);
 
             try {
-                $item = $seq->last();
+                $item2 = $seq2->single($predicate);
             }
             catch (ElementNotFoundException $ex) {
-                $thrownEx = $ex;
+                $thrownEx2 = $ex;
             }
-
-            $this->assertFalse(isset($item));
-            $this->assertTrue(isset($thrownEx));
-            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
-        }
-    }
-
-    public function testNoPredicate2a() {
-        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $item = $seq->last(null);
-
-            $this->assertEquals(5, $item);
-        }
-    }
-
-    public function testNoPredicate2b() {
-        foreach (static::sequenceListFromArray([]) as $seq) {
-            /* @var IEnumerable $seq */
 
             try {
-                $item = $seq->last(null);
+                $item3 = $seq3->single($predicate);
             }
             catch (ElementNotFoundException $ex) {
-                $thrownEx = $ex;
+                $thrownEx3 = $ex;
             }
 
-            $this->assertFalse(isset($item));
-            $this->assertTrue(isset($thrownEx));
-            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
+            $item4 = $seq4->single($predicate);
+
+            $this->assertEquals(2, $item1);
+
+            $this->assertFalse(isset($item2));
+            $this->assertTrue(isset($thrownEx2));
+            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx2);
+
+            $this->assertFalse(isset($item3));
+            $this->assertTrue(isset($thrownEx3));
+            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx3);
+
+            $this->assertEquals(22, $item4);
         }
     }
 
-    public function testWithPredicate1() {
+    public function testWithPredicateAndException() {
         foreach ($this->createPredicates() as $predicate) {
-            foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
-                /* @var IEnumerable $seq */
+            $seq1 = static::sequenceFromArray([2, 3, 4]);
+            $seq2 = static::sequenceFromArray([6, 8]);
 
-                $item = $seq->last($predicate);
-
-                $this->assertEquals(3, $item);
+            $exceptionThrown1 = false;
+            try {
+                $seq1->single($predicate);
             }
+            catch (EnumerableException $ex) {
+                $exceptionThrown1 = true;
+            }
+
+            $exceptionThrown2 = false;
+            try {
+                $seq2->single($predicate);
+            }
+            catch (EnumerableException $ex) {
+                $exceptionThrown2 = true;
+            }
+
+            $this->assertTrue($exceptionThrown1);
+            $this->assertTrue($exceptionThrown2);
         }
     }
 
-    public function testWithPredicate2() {
-        foreach ($this->createPredicates() as $predicate) {
-            foreach (static::sequenceListFromArray([6, 5, 4]) as $seq) {
-                /* @var IEnumerable $seq */
+    public function testWithoutPredicate() {
+        $seq1 = static::sequenceFromArray([1]);
+        $seq2 = static::sequenceFromArray([]);
 
-                try {
-                    $item = $seq->last($predicate);
-                }
-                catch (ElementNotFoundException $ex) {
-                    $thrownEx = $ex;
-                }
+        $item1 = $seq1->single();
 
-                $this->assertFalse(isset($item));
-                $this->assertTrue(isset($thrownEx));
-                $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
+        try {
+            $item2 = $seq2->single();
+        }
+        catch (ElementNotFoundException $ex) {
+            $thrownEx2 = $ex;
+        }
+
+        $this->assertEquals(1, $item1);
+
+        $this->assertFalse(isset($item2));
+        $this->assertTrue(isset($thrownEx2));
+        $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx2);
+    }
+
+    public function testWithoutPredicateAndWithException() {
+        foreach (static::sequenceListFromArray([1, 2]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $exceptionThrown = false;
+            try {
+                $seq->single();
             }
+            catch (EnumerableException $ex) {
+                $exceptionThrown = true;
+            }
+
+            $this->assertTrue($exceptionThrown);
         }
     }
 }

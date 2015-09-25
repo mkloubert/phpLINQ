@@ -571,6 +571,18 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Returns the one and only matching element in that sequence.
      *
+     * @param callable $predicate The custom predicate to use.
+     *
+     * @return mixed The found element or the default value.
+     *
+     * @throws ArgumentException $predicate is no valid callable / lambda expression.
+     * @throws ElementNotFoundException Element was not found.
+     */
+    function single($predicate = null);
+
+    /**
+     * Returns the one and only matching element in that sequence or a default value if not found.
+     *
      * @param mixed $predicateOrDefValue The custom predicate to use.
      *                                   If there is only one submitted argument and this variable contains
      *                                   no callable, it is set to (null) and its origin value is written to $defValue.
