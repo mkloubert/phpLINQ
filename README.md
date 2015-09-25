@@ -92,7 +92,7 @@ $seq = new Enumerable(createIterator());
 * [ofType()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.ofType()-method)
 * [orderBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderBy()-method)
 * [orderByDescending()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.orderByDescending()-method)
-* [reverse()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.reverse([$preventKeys])-method)
+* [reverse()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.reverse()-method)
 * [select()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.select()-method)
 * [selectMany()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.selectMany()-method)
 * [sequenceEqual()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.sequenceEqual()-method)
