@@ -79,6 +79,7 @@ $seq = Enumerable::create(createIterator());
 * [elementAt()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.elementAt()-method)
 * [elementAtOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.elementAtOrDefault()-method)
 * [except()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.except()-method)
+* [first()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.first()-method)
 * [firstOrDefault()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.firstOrDefault()-method)
 * [groupBy()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.groupBy()-method)
 * [groupJoin()](https://github.com/mkloubert/phpLINQ/wiki/IEnumerable.groupJoin()-method)
