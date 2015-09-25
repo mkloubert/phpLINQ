@@ -475,16 +475,18 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function firstOrDefault($predicateOrDefValue = null, $defValue = null) {
+    public final function firstOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
         $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
 
-        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($predicateOrDefValue) {
+        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use (&$found, $predicateOrDefValue) {
                                                  if (!$predicateOrDefValue($x, $ctx)) {
                                                      return;
                                                  }
+
+                                                 $found = true;
 
                                                  $ctx->result($x);
                                                  $ctx->cancel(true);
@@ -822,17 +824,18 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function lastOrDefault($predicateOrDefValue = null, $defValue = null) {
+    public final function lastOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
         $predicateOrDefValue = static::getPredicateSafe($predicateOrDefValue);
 
-        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($predicateOrDefValue) {
+        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use (&$found, $predicateOrDefValue) {
                                                  if (!$predicateOrDefValue($x, $ctx)) {
                                                      return;
                                                  }
 
+                                                 $found = true;
                                                  $ctx->result($x);
                                              }, $defValue);
     }
@@ -1184,7 +1187,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function singleOrDefault($predicateOrDefValue = null, $defValue = null) {
+    public final function singleOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false) {
         static::updatePredicateAndDefaultValue(\func_num_args(),
                                                $predicateOrDefValue, $defValue);
 
@@ -1192,7 +1195,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         $me = $this;
 
-        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($me, $predicateOrDefValue) {
+        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use (&$found, $me, $predicateOrDefValue) {
                                                  if (!$predicateOrDefValue($x, $ctx)) {
                                                      return;
                                                  }
@@ -1204,6 +1207,8 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
                                                      $te('Sequence contains more than one matching element!');
                                                  }
+
+                                                 $found = true;
 
                                                  $ctx->result($x);
                                                  $ctx->value(true);

@@ -229,10 +229,11 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *                                   If there is only one submitted argument and this variable contains
      *                                   no callable, it is set to (null) and its origin value is written to $defValue.
      * @param mixed $defValue The default value to return if value was not found.
+     * @param bool &$found The variable where to write down if a value was found or not.
      *
      * @return mixed The first matching value or the default value.
      */
-    function firstOrDefault($predicateOrDefValue = null, $defValue = null);
+    function firstOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
 
     /**
      * Groups the items of that sequence.
@@ -344,10 +345,11 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *                                   If there is only one submitted argument and this variable contains
      *                                   no callable, it is set to (null) and its origin value is written to $defValue.
      * @param mixed $defValue The default value to return if value was not found.
+     * @param bool &$found The variable where to write down if a value was found or not.
      *
      * @return mixed The last matching value or the default value.
      */
-    function lastOrDefault($predicateOrDefValue = null, $defValue = null);
+    function lastOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
 
     /**
      * Gets the maximum value of that sequence.
@@ -530,12 +532,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *                                   If there is only one submitted argument and this variable contains
      *                                   no callable, it is set to (null) and its origin value is written to $defValue.
      * @param mixed $defValue The default value if element was not found.
+     * @param bool &$found The variable where to write down if an element was found or not.
      *
      * @return mixed The found element or the default value.
      *
      * @throws \Exception Sequence contains more than one element.
      */
-    function singleOrDefault($predicateOrDefValue = null, $defValue = null);
+    function singleOrDefault($predicateOrDefValue = null, $defValue = null, bool &$found = false);
 
     /**
      * Skips a number of items.
