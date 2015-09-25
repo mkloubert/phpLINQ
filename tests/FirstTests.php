@@ -29,6 +29,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Collections\ElementNotFoundException;
 use \System\Collections\IEnumerable;
 
 
@@ -47,7 +48,7 @@ class PredicateClass {
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class FirstOrDefaultTests extends TestCaseBase {
+class FirstTests extends TestCaseBase {
     /**
      * Creates callable predicates for the tests.
      *
@@ -90,9 +91,8 @@ return $x > 2;
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->firstOrDefault();
+            $item = $seq->first();
 
-            $this->assertNotEquals(null, $item);
             $this->assertEquals(1, $item);
         }
     }
@@ -101,9 +101,16 @@ return $x > 2;
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->firstOrDefault();
+            try {
+                $item = $seq->first();
+            }
+            catch (ElementNotFoundException $ex) {
+                $thrownEx = $ex;
+            }
 
-            $this->assertEquals(null, $item);
+            $this->assertFalse(isset($item));
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
         }
     }
 
@@ -111,9 +118,8 @@ return $x > 2;
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->firstOrDefault(null, 'How I Met Your Mother');
+            $item = $seq->first(null);
 
-            $this->assertNotEquals('How I Met Your Mother', $item);
             $this->assertEquals(1, $item);
         }
     }
@@ -122,30 +128,16 @@ return $x > 2;
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $item = $seq->firstOrDefault(null, 'Fear The Walking Dead');
+            try {
+                $item = $seq->first(null);
+            }
+            catch (ElementNotFoundException $ex) {
+                $thrownEx = $ex;
+            }
 
-            $this->assertEquals('Fear The Walking Dead', $item);
-        }
-    }
-
-    public function testNoPredicateWithDefault1() {
-        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $item = $seq->firstOrDefault(false);
-
-            $this->assertNotEquals(false, $item);
-            $this->assertEquals(1, $item);
-        }
-    }
-
-    public function testNoPredicateWithDefault2() {
-        foreach (static::sequenceListFromArray([]) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $item = $seq->firstOrDefault(false);
-
-            $this->assertEquals(false, $item);
+            $this->assertFalse(isset($item));
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
         }
     }
 
@@ -154,9 +146,8 @@ return $x > 2;
             foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $item = $seq->firstOrDefault($predicate);
+                $item = $seq->first($predicate);
 
-                $this->assertNotEquals(null, $item);
                 $this->assertEquals(3, $item);
             }
         }
@@ -167,33 +158,16 @@ return $x > 2;
             foreach (static::sequenceListFromArray([1, 2]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $item = $seq->firstOrDefault($predicate);
+                try {
+                    $item = $seq->first($predicate);
+                }
+                catch (ElementNotFoundException $ex) {
+                    $thrownEx = $ex;
+                }
 
-                $this->assertEquals(null, $item);
-            }
-        }
-    }
-
-    public function testWithPredicate3() {
-        foreach ($this->createPredicates() as $predicate) {
-            foreach (static::sequenceListFromArray([2, -1, 1]) as $seq) {
-                /* @var IEnumerable $seq */
-
-                $item = $seq->firstOrDefault($predicate);
-
-                $this->assertEquals(null, $item);
-            }
-        }
-    }
-
-    public function testWithPredicate4() {
-        foreach ($this->createPredicates() as $predicate) {
-            foreach (static::sequenceListFromArray([]) as $seq) {
-                /* @var IEnumerable $seq */
-
-                $item = $seq->firstOrDefault($predicate);
-
-                $this->assertEquals(null, $item);
+                $this->assertFalse(isset($item));
+                $this->assertTrue(isset($thrownEx));
+                $this->assertInstanceOf(ElementNotFoundException::class, $thrownEx);
             }
         }
     }

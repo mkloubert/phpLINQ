@@ -238,6 +238,17 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function except($second, $equalityComparer = null) : IEnumerable;
 
     /**
+     * Returns the first matching value of that sequence.
+     *
+     * @param callable $predicate The custom predicate to use.
+     *
+     * @return mixed The first matching value or the default value.
+     *
+     * @throws ArgumentOutOfRangeException $index is less than 0.
+     */
+    function first($predicate = null);
+
+    /**
      * Returns the first matching value of that sequence or a default value if not found.
      *
      * @param mixed $predicateOrDefValue The custom predicate to use.

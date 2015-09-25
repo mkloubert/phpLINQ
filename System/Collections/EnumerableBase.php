@@ -426,7 +426,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function elementAt(int $index) {
+    public final function elementAt(int $index) {
         $result = $this->elementAtOrDefault($index, null, $found);
 
         if (!$found) {
@@ -483,6 +483,19 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
             $this->next();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function first($predicate = null) {
+        $result = $this->firstOrDefault($predicate, null, $found);
+
+        if (!$found) {
+            throw new ElementNotFoundException();
+        }
+
+        return $result;
     }
 
     /**
