@@ -203,10 +203,11 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @param int $index The zero based index.
      * @param mixed $defValue The value to return if element was not found.
+     * @param bool &$found The variable where to write down if an element was found or not.
      *
      * @return mixed The element or the default value.
      */
-    function elementAtOrDefault(int $index, $defValue = null);
+    function elementAtOrDefault(int $index, $defValue = null, bool &$found = false);
 
     /**
      * Returns the items of that sequence except the items of other one.

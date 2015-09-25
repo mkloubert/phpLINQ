@@ -426,9 +426,9 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function elementAtOrDefault(int $index, $defValue = null) {
+    public function elementAtOrDefault(int $index, $defValue = null, bool &$found = false) {
         return $this->skip($index)
-                    ->firstOrDefault(null, $defValue);
+                    ->firstOrDefault(null, $defValue, $found);
     }
 
     /**
