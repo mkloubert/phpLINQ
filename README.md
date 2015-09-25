@@ -47,7 +47,7 @@ foreach ($newSeq as $item) {
 
 ### Example 2
 
-Create a sequence from any [Iterator](http://php.net/manual/en/class.iterator.php).
+Create a sequence from any [Iterator](https://github.com/mkloubert/phpLINQ/wiki/Sequence).
 
 ```php
 use \System\Linq;
