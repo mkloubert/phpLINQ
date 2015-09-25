@@ -90,6 +90,15 @@ class LambdaExpression extends \System\Object {
     }
 
     /**
+     * Gets the reflector of the underlying closure.
+     *
+     * @return \ReflectionFunction The reflector.
+     */
+    public function getReflector() {
+        return new \ReflectionFunction($this->_closure);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toString() : IString {
