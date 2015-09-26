@@ -29,11 +29,11 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Linq\Enumerable;
+use \System\Collections\IEnumerable;
 
 
 function keySelectorFunc($x) : string {
-    return trim(strtoupper($x));
+    return chr(ord('A') + $x);
 }
 
 class KeySelectorClass {
@@ -100,30 +100,27 @@ return \keySelectorFunc($x);
 
     public function test1() {
         foreach ($this->createKeySelectors() as $keySelector) {
-            $testData = ['a' => 1, 'B' => 2.0, 'c ' => '3'];
-
-            $sequences   = [];
-            $sequences[] = $testData;
-            $sequences[] = new ArrayIterator($testData);
-
-            foreach ($sequences as $data) {
-                $seq = Enumerable::create($data);
+            foreach (static::sequenceListFromArray([1, 2.0, '3']) as $seq) {
+                /* @var IEnumerable $seq */
 
                 $items = static::sequenceToArray($seq->withNewKeys($keySelector));
 
                 $this->assertEquals(3, count($items));
 
                 $this->assertTrue(isset($items['A']));
-                $this->assertFalse(isset($items['a']));
+                $this->assertFalse(isset($items[0]));
                 $this->assertSame(1, $items['A']);
+
                 $this->assertTrue(isset($items['B']));
+                $this->assertFalse(isset($items[1]));
                 $this->assertSame(2.0, $items['B']);
+
                 $this->assertTrue(isset($items['C']));
-                $this->assertFalse(isset($items['c ']));
+                $this->assertFalse(isset($items[2]));
                 $this->assertSame('3', $items['C']);
 
                 $this->assertFalse(isset($items['D']));
-                $this->assertFalse(isset($items['d']));
+                $this->assertFalse(isset($items[3]));
             }
         }
     }
