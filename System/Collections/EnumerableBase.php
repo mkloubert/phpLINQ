@@ -203,7 +203,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         }
 
         if ($this->_i instanceof KeySelectorIterator) {
-            return $this->_i->createNewFromSequence($this->_i->sequence()->asResettable());
+            $newIterator = $this->_i
+                                ->createNewFromSequence($this->_i
+                                                             ->sequence()
+                                                             ->asResettable());
+
+            return static::createEnumerable($newIterator);
         }
 
         return $this;
