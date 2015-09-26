@@ -689,6 +689,17 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function toList($equalityComparer = null) : IList;
 
     /**
+     * Converts that sequence to a new set.
+     *
+     * @param callable $equalityComparer The custom equality comparer to use.
+     *
+     * @return ISet The new set.
+     *
+     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
+     */
+    function toSet($equalityComparer = null) : ISet;
+
+    /**
      * Produces the set union of that sequence and another.
      *
      * @param mixed $second The other sequence.

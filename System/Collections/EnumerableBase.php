@@ -1429,7 +1429,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString {
+    public final function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString {
         if (1 === \func_num_args()) {
             if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
                 // swap values
@@ -1452,8 +1452,15 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function toList($equalityComparer = null) : IList {
+    public final function toList($equalityComparer = null) : IList {
         return new Collection($this, $equalityComparer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function toSet($equalityComparer = null) : ISet {
+        return new Set($this, $equalityComparer);
     }
 
     /**

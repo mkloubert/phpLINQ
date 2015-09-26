@@ -48,8 +48,6 @@ class Collection extends ArrayCollectionBase implements IList {
      * Initializes a new instance of that class.
      *
      * @param mixed $items The initial items.
-     *                     If there is only one argument and the value is callable, it
-     *                     is used as key comparer.
      * @param callable $equalityComparer The optional key comparer.
      */
     public function __construct($items = null, $equalityComparer = null) {
