@@ -747,6 +747,18 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function where($predicate) : IEnumerable;
 
     /**
+     * Returns a new sequence with the same items BUT new keys.
+     *
+     * @param callable $keySelector The key selector to use.
+     *
+     * @return IEnumerable The new sequence.
+     *
+     * @throws ArgumentException $keySelector is no valid callable / lambda expression.
+     * @throws ArgumentNullException $keySelector is (null).
+     */
+    function withNewKeys($keySelector) : IEnumerable;
+
+    /**
      * Applies a specified function to the corresponding elements of that sequence and another,
      * producing a sequence of the results.
      *
