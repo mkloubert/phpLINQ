@@ -198,10 +198,12 @@ abstract class EnumerableBase extends Object implements IEnumerable {
             return $this->_i->asResettable();
         }
 
-        switch (\get_class($this->_i)) {
-            case \Generator::class:
-                return static::createEnumerable($this->toArray(true));
-                break;
+        if ($this->_i instanceof \Generator) {
+            return static::createEnumerable($this->toArray(true));
+        }
+
+        if ($this->_i instanceof KeySelectorIterator) {
+            return $this->_i->createNewFromSequence($this->_i->sequence()->asResettable());
         }
 
         return $this;
@@ -1575,11 +1577,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public final function withNewKeys($keySelector) : IEnumerable {
-        if (null == $keySelector) {
-            throw new ArgumentNullException('keySelector');
-        }
-
-        return static::createEnumerable($this->toArray($keySelector));
+        return static::createEnumerable(new KeySelectorIterator($this, $keySelector));
     }
 
     /**

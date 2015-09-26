@@ -31,73 +31,110 @@
 
 namespace System\Collections;
 
+use \System\ArgumentNullException;
+use \System\Object;
+
 
 /**
- * An iterator for IDictionaryEntry instances.
+ * Iterator that wraps a sequence by using a selector that produces new keys.
  *
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class DictionaryEntryIterator implements \Iterator {
+class KeySelectorIterator implements \Iterator {
     /**
-     * @var \Iterator
+     * @var callable
      */
-    private $_i;
+    private $_keySelector;
+    /**
+     * @var IEnumerable
+     */
+    private $_seq;
 
 
     /**
      * Initializes a new instance of that class.
      *
-     * @param \Iterator $i The iterator that contains the dictionary entries.
+     * @param IEnumerable $seq The inner sequence.
+     * @param callable $keySelector The key selector to use.
+     *
+     * @throws ArgumentNullException $keySelector is (null).
      */
-    public function __construct(\Iterator $i) {
-        $this->_i = $i;
+    public function __construct(IEnumerable $seq, $keySelector) {
+        if (null === $keySelector) {
+            throw new ArgumentNullException('keySelector');
+        }
+
+        $this->_keySelector = Object::asCallable($keySelector);
+        $this->_seq         = $seq;
     }
 
+
+    /**
+     * Creates a new instance with the same key selector but with another sequence.
+     *
+     * @param IEnumerable $newSeq The new sequence.
+     *
+     * @return KeySelectorIterator The new instance.
+     */
+    public function createNewFromSequence(IEnumerable $newSeq) : KeySelectorIterator {
+        return new static($newSeq, $this->_keySelector);
+    }
 
     /**
      * {@inheritDoc}
      */
     public final function current() {
-        return $this->currentEntry()
-                    ->value();
-    }
-
-    /**
-     * Gets the current dictionary entry instance.
-     *
-     * @return IDictionaryEntry The current dictionary entry.
-     */
-    protected function currentEntry() : IDictionaryEntry {
-        return $this->_i->current();
+        return $this->_seq
+                    ->current();
     }
 
     /**
      * {@inheritDoc}
      */
     public final function key() {
-        return $this->currentEntry()
-                    ->key();
+        $ctx = new ItemContext($this->_seq);
+
+        return \call_user_func($this->_keySelector,
+                               $ctx->key(), $ctx->item(), $ctx);
+    }
+
+    /**
+     * Gets the key selector.
+     *
+     * @return callable The key selector.
+     */
+    public final function keySelector() {
+        return $this->_keySelector;
     }
 
     /**
      * {@inheritDoc}
      */
     public final function next() {
-        $this->_i->next();
+        $this->_seq->next();
     }
 
     /**
      * {@inheritDoc}
      */
     public final function rewind() {
-        $this->_i->rewind();
+        $this->_seq->rewind();
+    }
+
+    /**
+     * Gets the underlying sequence.
+     *
+     * @return IEnumerable The underlying sequence.
+     */
+    public final function sequence() : IEnumerable {
+        return $this->_seq;
     }
 
     /**
      * {@inheritDoc}
      */
     public final function valid() {
-        return $this->_i->valid();
+        return $this->_seq->valid();
     }
 }
