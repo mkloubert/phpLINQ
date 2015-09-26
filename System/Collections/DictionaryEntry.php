@@ -33,100 +33,67 @@ namespace System\Collections;
 
 
 /**
- * Describes a list.
+ * An entry of a dictionary.
  *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IList extends \ArrayAccess, IEnumerable {
+class DictionaryEntry extends \System\Object implements IDictionaryEntry {
     /**
-     * Adds a new item.
-     *
-     * @param mixed $item The item to add.
-     *
-     * @return int The index of the new item.
+     * Name of the array key for the key value of a serialized entry.
      */
-    function add($item) : int;
+    const ARRAY_KEY_KEY   = 'key';
+    /**
+     * Name of the array key for the value of a serialized entry.
+     */
+    const ARRAY_KEY_VALUE = 'value';
+
+
+    private $_key;
+    private $_value;
+
 
     /**
-     * Adds a list of items.
+     * Initializes a new instance of that class.
      *
-     * @param mixed ...$item One or more item to add.
+     * @param mixed $key The key.
+     * @param mixed $value The value.
      */
-    function addItems();
+    public function __construct($key, $value) {
+        $this->_key   = $key;
+        $this->_value = $value;
+    }
+
 
     /**
-     * Adds a range of items.
-     *
-     * @param mixed ...$items One or more item list to add.
+     * {@inheritDoc}
      */
-    function addRange($items = null);
+    public final function key() {
+        return $this->_key;
+    }
 
     /**
-     * Removes all items.
+     * {@inheritDoc}
      */
-    function clear();
+    public function serialize() {
+        return \serialize([static::ARRAY_KEY_KEY   => $this->key(),
+                           static::ARRAY_KEY_VALUE => $this->value()]);
+    }
 
     /**
-     * Checks if the list contains an item.
-     *
-     * @param mixed $item The item to check.
-     *
-     * @return boolean Contains item or not.
+     * {@inheritDoc}
      */
-    function containsItem($item) : bool;
+    public final function value() {
+        return $this->_value;
+    }
 
     /**
-     * Returns the index of the first occurence of a value / item.
-     *
-     * @param mixed $item The item to search for.
-     *
-     * @return int The zero based index or -1 if not found.
+     * {@inheritDoc}
      */
-    function indexOf($item) : int;
+    public function unserialize($serialized) {
+        $arr = \unserialize($serialized) ?? [];
 
-    /**
-     * Inserts an item into that list.
-     *
-     * @param int $index The index where the item should be inserted.
-     * @param mixed $item The item to insert.
-     */
-    function insert(int $index, $item);
-
-    /**
-     * Gets a value indicating whether the list object has a fixed size.
-     *
-     * @return bool The read-only or not.
-     */
-    function isFixedSize() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is read-only.
-     *
-     * @return bool The read-only or not.
-     */
-    function isReadOnly() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is thread-safe.
-     *
-     * @return bool The synchronized or not.
-     */
-    function isSynchronized() : bool;
-
-    /**
-     * Removes an item.
-     *
-     * @param mixed $item The item to remove.
-     *
-     * @return bool The item was removed or not.
-     */
-    function remove($item) : bool;
-
-    /**
-     * Removes an item at a specific position.
-     *
-     * @param int $index The zero based index.
-     */
-    function removeAt(int $index);
+        $this->__construct($arr[static::ARRAY_KEY_KEY],
+                           $arr[static::ARRAY_KEY_VALUE]);
+    }
 }

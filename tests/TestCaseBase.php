@@ -40,6 +40,32 @@ use \System\Linq\Enumerable;
  */
 abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
     /**
+     * Checks a sequence if it has an expected list of same values (in the same order).
+     *
+     * @param IEnumerable $seq The sequence.
+     * @param array $expected The expected values.
+     * @param bool $exact Check values exactly or not.
+     */
+    protected function checkForExpectedValues(IEnumerable $seq, array $expected = array(), bool $exact = true) {
+        foreach ($expected as $index => $ev) {
+            $seq->reset();
+
+            $count = $index;
+            while ($count-- > 0 && $seq->valid()) {
+                $seq->next();
+            }
+
+            $av = $seq->current();
+            if ($exact) {
+                $this->assertEquals($ev, $av);
+            }
+            else {
+                $this->assertSame($ev, $av);
+            }
+        }
+    }
+
+    /**
      * @param array $arr
      * @return Generator
      */

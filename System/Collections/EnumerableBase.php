@@ -124,7 +124,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
+    public function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
         return $this->iterateWithItemContext(function($x, IItemContext $ctx) use (&$arr, $withKeys) {
                                                  if (!$withKeys) {
                                                      $arr[] = $x;
@@ -133,6 +133,13 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                                                      $arr[$ctx->key()] = $x;
                                                  }
                                              }, $this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function asEnumerable() : IEnumerable {
+        return $this;
     }
 
     /**
@@ -1429,6 +1436,13 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public final function toDictionary($keyComparer = null, $keyValidator = null, $valueValidator = null) : IDictionary {
+        return new Dictionary($this, $keyComparer, $keyValidator, $valueValidator);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString {
         if (1 === \func_num_args()) {
             if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
@@ -1452,15 +1466,15 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function toList($equalityComparer = null) : IList {
-        return new Collection($this, $equalityComparer);
+    public final function toList($equalityComparer = null, $itemValidator = null) : IList {
+        return new Collection($this, $equalityComparer, $itemValidator);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function toSet($equalityComparer = null) : ISet {
-        return new Set($this, $equalityComparer);
+    public final function toSet($equalityComparer = null, $itemValidator = null) : ISet {
+        return new Set($this, $equalityComparer, $itemValidator);
     }
 
     /**

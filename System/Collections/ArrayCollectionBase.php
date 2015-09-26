@@ -31,6 +31,8 @@
 
 namespace System\Collections;
 
+use \System\Linq\Enumerable;
+
 
 /**
  * A basic collection that uses an array for handling its items.
@@ -38,7 +40,7 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-abstract class ArrayCollectionBase extends EnumerableBase {
+abstract class ArrayCollectionBase extends Enumerable {
     /**
      * @var array
      */
@@ -114,14 +116,14 @@ abstract class ArrayCollectionBase extends EnumerableBase {
      * {@inheritDoc}
      */
     public function serialize() {
-        return \json_encode($this->_items);
+        return \serialize($this->_items);
     }
 
     /**
      * {@inheritDoc}
      */
     public function unserialize($serialized) {
-        $this->_items = \json_decode($serialized, true) ?? [];
+        $this->_items = \unserialize($serialized) ?? [];
     }
 
     /**

@@ -216,6 +216,23 @@ class Object implements IObject {
     }
 
     /**
+     * Keeps sure that an value validator function is NOT (null).
+     *
+     * @param callable $validator The input value.
+     *
+     * @return callable The output value.
+     */
+    public static function getValueValidatorSafe($validator) : callable {
+        if (null === $validator) {
+            return function() {
+                return true;
+            };
+        }
+
+        return static::wrapValueValidator($validator);
+    }
+
+    /**
      * Checks if a value can be executed / is callable.
      *
      * @param mixed $val The value to check.
@@ -372,6 +389,21 @@ class Object implements IObject {
 
         return function($x, $ctx) use ($predicate) : bool {
             return $predicate($x, $ctx);
+        };
+    }
+
+    /**
+     * Wraps a value validator with a callable that requires a boolean as result value.
+     *
+     * @param callable $validator The validator to wrap.
+     *
+     * @return callable The wrapper.
+     */
+    public static function wrapValueValidator($validator) : callable {
+        $validator = static::asCallable($validator);
+
+        return function($x) use ($validator) : bool {
+            return $validator($x);
         };
     }
 }

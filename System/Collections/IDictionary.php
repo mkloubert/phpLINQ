@@ -33,100 +33,80 @@ namespace System\Collections;
 
 
 /**
- * Describes a list.
+ * Describes a dictionary / hashtable.
  *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IList extends \ArrayAccess, IEnumerable {
+interface IDictionary extends \ArrayAccess, IEnumerable {
     /**
-     * Adds a new item.
+     * Adds a new entry.
      *
-     * @param mixed $item The item to add.
-     *
-     * @return int The index of the new item.
+     * @param mixed $key The key.
+     * @param mixed $value The value.
      */
-    function add($item) : int;
+    function add($key, $value);
 
     /**
-     * Adds a list of items.
-     *
-     * @param mixed ...$item One or more item to add.
-     */
-    function addItems();
-
-    /**
-     * Adds a range of items.
-     *
-     * @param mixed ...$items One or more item list to add.
-     */
-    function addRange($items = null);
-
-    /**
-     * Removes all items.
+     * Removes all entries.
      */
     function clear();
 
     /**
-     * Checks if the list contains an item.
+     * Checks if a key exists or not.
      *
-     * @param mixed $item The item to check.
+     * @param mixed $key The kex to check.
      *
-     * @return boolean Contains item or not.
+     * @return bool Key exsists or not.
      */
-    function containsItem($item) : bool;
+    function containsKey($key) : bool;
 
     /**
-     * Returns the index of the first occurence of a value / item.
+     * Gets a value indicating whether the dictionary object has a fixed size.
      *
-     * @param mixed $item The item to search for.
-     *
-     * @return int The zero based index or -1 if not found.
-     */
-    function indexOf($item) : int;
-
-    /**
-     * Inserts an item into that list.
-     *
-     * @param int $index The index where the item should be inserted.
-     * @param mixed $item The item to insert.
-     */
-    function insert(int $index, $item);
-
-    /**
-     * Gets a value indicating whether the list object has a fixed size.
-     *
-     * @return bool The read-only or not.
+     * @return bool Has a fixed size or not.
      */
     function isFixedSize() : bool;
 
     /**
-     * Gets a value indicating whether the list object is read-only.
+     * Gets a value indicating whether the dictionary object is read-only.
      *
-     * @return bool The read-only or not.
+     * @return bool Is read-only or not.
      */
     function isReadOnly() : bool;
 
     /**
-     * Gets a value indicating whether the list object is thread-safe.
+     * Gets a value indicating whether the dictionary object is thread-safe.
      *
-     * @return bool The synchronized or not.
+     * @return bool Is synchronized or not.
      */
     function isSynchronized() : bool;
 
     /**
-     * Removes an item.
+     * Returns all keys of that dictionary.
      *
-     * @param mixed $item The item to remove.
-     *
-     * @return bool The item was removed or not.
+     * @return IEnumerable The keys.
      */
-    function remove($item) : bool;
+    function keys() : IEnumerable;
 
     /**
-     * Removes an item at a specific position.
-     *
-     * @param int $index The zero based index.
+     * @see \System\Collections\IDictionary::removeKey()
      */
-    function removeAt(int $index);
+    function remove($key) : bool;
+
+    /**
+     * Removes an entry by key.
+     *
+     * @param mixed $key The key.
+     *
+     * @return bool Entry was removed or not.
+     */
+    function removeKey($key) : bool;
+
+    /**
+     * Returns all values of that dictionary.
+     *
+     * @return IEnumerable The values.
+     */
+    function values() : IEnumerable;
 }

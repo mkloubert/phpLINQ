@@ -95,6 +95,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable;
 
     /**
+     * Returns that instance as sequence.
+     *
+     * @return IEnumerable The object as sequence.
+     */
+    function asEnumerable() : IEnumerable;
+
+    /**
      * Returns a version of that sequence that can be resetted.
      *
      * @return IEnumerable The converted sequence or that instance if it can be resetted.
@@ -665,6 +672,19 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function toArray($keySelector = null) : array;
 
     /**
+     * Creates a new dictionary from that sequence.
+     *
+     * @param callable $keyComparer The custom key comparer to use.
+     * @param callable $keyValidator The custom validator for the keys to use.
+     * @param callable $valueValidator The custom validator for the values to use.
+     *
+     * @return IDictionary The new dictionary.
+     *
+     * @throws ArgumentException $keyComparer / $keyValidator / $valueValidator is no valid callable / lambda expression.
+     */
+    function toDictionary($keyComparer = null, $keyValidator = null, $valueValidator = null) : IDictionary;
+
+    /**
      * Converts that sequence to a JSON string.
      *
      * @param callable|int $keySelectorOrOptions The key selector.
@@ -681,23 +701,25 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Converts that sequence to a new list.
      *
      * @param callable $equalityComparer The custom equality comparer to use.
+     * @param callable $itemValidator The custom item validator to use.
      *
      * @return IList The new list.
      *
-     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
+     * @throws ArgumentException $equalityComparer / $itemValidator is no valid callable / lambda expression.
      */
-    function toList($equalityComparer = null) : IList;
+    function toList($equalityComparer = null, $itemValidator = null) : IList;
 
     /**
      * Converts that sequence to a new set.
      *
      * @param callable $equalityComparer The custom equality comparer to use.
+     * @param callable $itemValidator The custom item validator to use.
      *
      * @return ISet The new set.
      *
-     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
+     * @throws ArgumentException $equalityComparer / $itemValidator is no valid callable / lambda expression.
      */
-    function toSet($equalityComparer = null) : ISet;
+    function toSet($equalityComparer = null, $itemValidator = null) : ISet;
 
     /**
      * Produces the set union of that sequence and another.

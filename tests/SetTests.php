@@ -29,7 +29,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\ISet;
+use \System\ArgumentException;
 use \System\Collections\Set;
 
 
@@ -37,9 +37,19 @@ function equalityComparerFunc($x, $y): bool {
     return $x === $y;
 }
 
+function itemValidatorFunc($x) : bool {
+    return is_string($x) || is_int($x);
+}
+
 class EqualityComparerClass {
     public function __invoke($x, $y) {
         return equalityComparerFunc($x, $y);
+    }
+}
+
+class ItemValidatorClass {
+    public function __invoke($x) {
+        return itemValidatorFunc($x);
     }
 }
 
@@ -49,25 +59,6 @@ class EqualityComparerClass {
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class SetTests extends TestCaseBase {
-    /**
-     * Checks a set if it has an expected list of exactly same values (in the same order).
-     *
-     * @param ISet $s The set.
-     * @param array $expected The expected values.
-     */
-    protected function checkExpected(ISet $s, array $expected = array()) {
-        foreach ($expected as $index => $e) {
-            $s->reset();
-
-            $count = $index;
-            while ($count-- > 0 && $s->valid()) {
-                $s->next();
-            }
-
-            $this->assertSame($e, $s->current());
-        }
-    }
-
     /**
      * Creates the equality comparers for the tests.
      *
@@ -98,12 +89,50 @@ return equalityComparerFunc($x, $y);
         ];
     }
 
+    /**
+     * Creates the item validators for the tests.
+     *
+     * @return array The item validators.
+     */
+    protected function createItemValidators() : array {
+        return [
+            function ($x) {
+                return itemValidatorFunc($x);
+            },
+            'itemValidatorFunc',
+            '\itemValidatorFunc',
+            new ItemValidatorClass(),
+            array($this, 'itemValidatorMethod1'),
+            array(static::class, 'itemValidatorMethod2'),
+            '$x => itemValidatorFunc($x)',
+            '($x) => itemValidatorFunc($x)',
+            '$x => return itemValidatorFunc($x);',
+            '($x) => return itemValidatorFunc($x);',
+            '$x => { return itemValidatorFunc($x); }',
+            '($x) => { return itemValidatorFunc($x); }',
+            '$x => {
+                return itemValidatorFunc($x);
+            }',
+            '($x) => {
+                return itemValidatorFunc($x);
+            }',
+        ];
+    }
+
     public function equalityComparerMethod1($x, $y) {
         return equalityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) {
         return equalityComparerFunc($x, $y);
+    }
+
+    public function itemValidatorMethod1($x) {
+        return itemValidatorFunc($x);
+    }
+
+    public static function itemValidatorMethod2($x) {
+        return itemValidatorFunc($x);
     }
 
     public function testAdd() {
@@ -132,19 +161,19 @@ return equalityComparerFunc($x, $y);
 
             $s->add(1);
             $this->assertEquals(1, count($s));
-            $this->checkExpected($s, [1]);
+            $this->checkForExpectedValues($s, [1]);
 
             $s->add(1);
             $this->assertEquals(1, count($s));
-            $this->checkExpected($s, [1]);
+            $this->checkForExpectedValues($s, [1]);
 
             $s->add('1');
             $this->assertEquals(2, count($s));
-            $this->checkExpected($s, [1, '1']);
+            $this->checkForExpectedValues($s, [1, '1']);
 
             $s->add(3.0);
             $this->assertEquals(3, count($s));
-            $this->checkExpected($s, [1, '1', 3.0]);
+            $this->checkForExpectedValues($s, [1, '1', 3.0]);
         }
     }
 
@@ -202,27 +231,59 @@ return equalityComparerFunc($x, $y);
         }
     }
 
+    public function testItemValidator() {
+        foreach ($this->createItemValidators() as $itemValidator) {
+            $s = new Set(null, null, $itemValidator);
+
+            $this->assertEquals(0, count($s));
+
+            $s->add(1);
+            $this->assertEquals(1, count($s));
+            $this->checkForExpectedValues($s, [1]);
+
+            $s->add('2');
+            $this->assertEquals(2, count($s));
+            $this->checkForExpectedValues($s, [1, '2']);
+
+            $s->add('1');
+            $this->assertEquals(2, count($s));
+            $this->checkForExpectedValues($s, [1, '2']);
+
+            try {
+                $s->add(3.0);
+            }
+            catch (ArgumentException $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertEquals(2, count($s));
+            $this->checkForExpectedValues($s, [1, '2']);
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+        }
+    }
+
     public function testRemove() {
         $s = new Set([1.4, 2, '3', '2']);
 
         $this->assertEquals(3, count($s));
-        $this->checkExpected($s, [1.4, 2, '3']);
+        $this->checkForExpectedValues($s, [1.4, 2, '3']);
 
         $this->assertTrue($s->remove('2'));
         $this->assertEquals(2, count($s));
-        $this->checkExpected($s, [1.4, '3']);
+        $this->checkForExpectedValues($s, [1.4, '3']);
 
         $this->assertTrue($s->remove(3));
         $this->assertEquals(1, count($s));
-        $this->checkExpected($s, [1.4]);
+        $this->checkForExpectedValues($s, [1.4]);
 
         $this->assertFalse($s->remove(3.0));
         $this->assertEquals(1, count($s));
-        $this->checkExpected($s, [1.4]);
+        $this->checkForExpectedValues($s, [1.4]);
 
         $this->assertFalse($s->remove(5));
         $this->assertEquals(1, count($s));
-        $this->checkExpected($s, [1.4]);
+        $this->checkForExpectedValues($s, [1.4]);
     }
 
     public function testRemoveWithEqualityComparer() {
@@ -230,19 +291,19 @@ return equalityComparerFunc($x, $y);
             $s = new Set([1.4, 2, '3', '2'], $equalityComparer);
 
             $this->assertEquals(4, count($s));
-            $this->checkExpected($s, [1.4, 2, '3', '2']);
+            $this->checkForExpectedValues($s, [1.4, 2, '3', '2']);
 
             $this->assertTrue($s->remove('2'));
             $this->assertEquals(3, count($s));
-            $this->checkExpected($s, [1.4, 2, '3']);
+            $this->checkForExpectedValues($s, [1.4, 2, '3']);
 
             $this->assertFalse($s->remove(3));
             $this->assertEquals(3, count($s));
-            $this->checkExpected($s, [1.4, 2, '3']);
+            $this->checkForExpectedValues($s, [1.4, 2, '3']);
 
             $this->assertFalse($s->remove(5));
             $this->assertEquals(3, count($s));
-            $this->checkExpected($s, [1.4, 2, '3']);
+            $this->checkForExpectedValues($s, [1.4, 2, '3']);
         }
     }
 }

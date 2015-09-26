@@ -31,7 +31,9 @@
 
 namespace System\Collections;
 
+use \System\ArgumentException;
 use \System\ArgumentOutOfRangeException;
+use \System\InvalidOperationException;
 
 
 /**
@@ -42,6 +44,7 @@ use \System\ArgumentOutOfRangeException;
  */
 class Collection extends ArrayCollectionBase implements IList {
     private $_equalityComparer;
+    private $_itemValidator;
 
 
     /**
@@ -49,12 +52,24 @@ class Collection extends ArrayCollectionBase implements IList {
      *
      * @param mixed $items The initial items.
      * @param callable $equalityComparer The optional key comparer.
+     * @param callable $itemValidator The custom item validator to use.
      */
-    public function __construct($items = null, $equalityComparer = null) {
+    public function __construct($items = null, $equalityComparer = null, $itemValidator = null) {
+        $items                   = static::asIterator($items, true);
         $this->_equalityComparer = static::getEqualityComparerSafe($equalityComparer);
+        $this->_itemValidator    = static::getValueValidatorSafe($itemValidator);
 
-        $this->clear();
-        $this->addRange($items);
+        $this->clearInner();
+
+        while ($items->valid()) {
+            $i = $items->current();
+            $this->throwIfItemIsInvalid($i);
+
+            $this->addInner($i);
+
+            $items->next();
+        }
+
         $this->reset();
     }
 
@@ -62,7 +77,17 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function add($item) {
+    public final function add($item) : int {
+        $this->throwIfReadOnly();
+        $this->throwIfItemIsInvalid($item);
+
+        return $this->addInner($item);
+    }
+
+    /**
+     * @see Collection::add()
+     */
+    protected function addInner($item) : int {
         $this->_items[] = $item;
 
         return $this->count() - 1;
@@ -71,19 +96,19 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function addItems() {
+    public final function addItems() {
         $this->addRange(\func_get_args());
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addRange($items = null) {
+    public final function addRange($items = null) {
         foreach (\func_get_args() as $arg) {
             $i = static::asIterator($arg, true);
 
             while ($i->valid()) {
-                $this->_items[] = $i->current();
+                $this->add($i->current());
 
                 $i->next();
             }
@@ -93,8 +118,17 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function clear() {
-        $this->_items = array();
+    public final function clear() {
+        $this->throwIfReadOnly();
+
+        $this->clearInner();
+    }
+
+    /**
+     * @see Collection::clear()
+     */
+    protected function clearInner() {
+        $this->_items = [];
     }
 
     private function compareItems($x, $y) {
@@ -105,14 +139,14 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function containsItem($item) : bool {
+    public final function containsItem($item) : bool {
         return $this->indexOf($item) > -1;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function indexOf($item) : int {
+    public final function indexOf($item) : int {
         foreach ($this->_items as $index => $value) {
             if ($this->compareItems($item, $value)) {
                 // found
@@ -127,7 +161,17 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function insert(int $index, $item) {
+    public final function insert(int $index, $item) {
+        $this->throwIfReadOnly();
+        $this->throwIfItemIsInvalid($item);
+
+        $this->insertInner($index, $item);
+    }
+
+    /**
+     * @see Collection::insert()
+     */
+    protected function insertInner(int $index, $item) {
         if ($index === $this->count()) {
             $this->add($item);
             return;
@@ -147,6 +191,11 @@ class Collection extends ArrayCollectionBase implements IList {
         return $this->isReadOnly();
     }
 
+    private function isItemValid($item) : bool {
+        return \call_user_func($this->_itemValidator,
+                               $item);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -164,14 +213,14 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($index) {
+    public final function offsetExists($index) {
         return \array_key_exists($index, $this->_items);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($index) {
+    public final function offsetGet($index) {
         if ($this->offsetExists($index)) {
             return $this->_items[$index];
         }
@@ -182,7 +231,10 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function offsetSet($index, $value) {
+    public final function offsetSet($index, $value) {
+        $this->throwIfReadOnly();
+        $this->throwIfItemIsInvalid($value);
+
         if (null === $index) {
             $this->add($value);
             return;
@@ -198,14 +250,16 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($index) {
+    public final function offsetUnset($index) {
         $this->removeAt($index);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function remove($item) : bool {
+    public final function remove($item) : bool {
+        $this->throwIfReadOnly();
+
         $index = $this->indexOf($item);
         if ($index > -1) {
             $this->removeAt($index);
@@ -218,13 +272,46 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
-    public function removeAt(int $index) {
+    public final function removeAt(int $index) {
+        $this->throwIfReadOnly();
+
+        $this->removeAtInner($index);
+    }
+
+    /**
+     * @see Collection::removeAt()
+     */
+    protected function removeAtInner(int $index) {
         if ($this->offsetExists($index)) {
             \array_splice($this->_items, $index, 1);
             return;
         }
 
         $this->throwIndexOutOfRange($index);
+    }
+
+    /**
+     * Throws an exception if an item is invalid.
+     *
+     * @param mixed $item The item to check.
+     *
+     * @throws ArgumentException Is invalid item.
+     */
+    protected final function throwIfItemIsInvalid($item) {
+        if (!$this->isItemValid($item)) {
+            throw new ArgumentException('item', 'Item is not valid!');
+        }
+    }
+
+    /**
+     * Throws an exception if that collection is read-only.
+     *
+     * @throws InvalidOperationException Collection is read-only.
+     */
+    protected final function throwIfReadOnly() {
+        if ($this->isReadOnly()) {
+            throw new InvalidOperationException('Collection is read only!');
+        }
     }
 
     private function throwIndexOutOfRange($index) {

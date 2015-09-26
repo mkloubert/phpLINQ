@@ -33,100 +33,71 @@ namespace System\Collections;
 
 
 /**
- * Describes a list.
+ * An iterator for IDictionaryEntry instances.
  *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IList extends \ArrayAccess, IEnumerable {
+class DictionaryEntryIterator implements \Iterator {
     /**
-     * Adds a new item.
-     *
-     * @param mixed $item The item to add.
-     *
-     * @return int The index of the new item.
+     * @var \Iterator
      */
-    function add($item) : int;
+    private $_i;
+
 
     /**
-     * Adds a list of items.
+     * Initializes a new instance of that class.
      *
-     * @param mixed ...$item One or more item to add.
+     * @param \Iterator $i The iterator that contains the dictionary entries.
      */
-    function addItems();
+    public function __construct(\Iterator $i) {
+        $this->_i = $i;
+    }
+
 
     /**
-     * Adds a range of items.
-     *
-     * @param mixed ...$items One or more item list to add.
+     * {@inheritDoc}
      */
-    function addRange($items = null);
+    public final function current() {
+        return $this->currentEntry()
+                    ->value();
+    }
 
     /**
-     * Removes all items.
+     * Gets the current dictionary entry instance.
+     *
+     * @return IDictionaryEntry The current dictionary entry.
      */
-    function clear();
+    protected function currentEntry() : IDictionaryEntry {
+        return $this->_i->current();
+    }
 
     /**
-     * Checks if the list contains an item.
-     *
-     * @param mixed $item The item to check.
-     *
-     * @return boolean Contains item or not.
+     * {@inheritDoc}
      */
-    function containsItem($item) : bool;
+    public final function key() {
+        return $this->currentEntry()
+                    ->key();
+    }
 
     /**
-     * Returns the index of the first occurence of a value / item.
-     *
-     * @param mixed $item The item to search for.
-     *
-     * @return int The zero based index or -1 if not found.
+     * {@inheritDoc}
      */
-    function indexOf($item) : int;
+    public final function rewind() {
+        $this->_i->rewind();
+    }
 
     /**
-     * Inserts an item into that list.
-     *
-     * @param int $index The index where the item should be inserted.
-     * @param mixed $item The item to insert.
+     * {@inheritDoc}
      */
-    function insert(int $index, $item);
+    public final function next() {
+        $this->_i->next();
+    }
 
     /**
-     * Gets a value indicating whether the list object has a fixed size.
-     *
-     * @return bool The read-only or not.
+     * {@inheritDoc}
      */
-    function isFixedSize() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is read-only.
-     *
-     * @return bool The read-only or not.
-     */
-    function isReadOnly() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is thread-safe.
-     *
-     * @return bool The synchronized or not.
-     */
-    function isSynchronized() : bool;
-
-    /**
-     * Removes an item.
-     *
-     * @param mixed $item The item to remove.
-     *
-     * @return bool The item was removed or not.
-     */
-    function remove($item) : bool;
-
-    /**
-     * Removes an item at a specific position.
-     *
-     * @param int $index The zero based index.
-     */
-    function removeAt(int $index);
+    public final function valid() {
+        return $this->_i->valid();
+    }
 }

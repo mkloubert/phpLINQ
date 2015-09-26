@@ -21,6 +21,9 @@
 
 namespace System\Collections;
 
+use System\ArgumentException;
+use \System\InvalidOperationException;
+
 
 /**
  * A common set.
@@ -30,6 +33,7 @@ namespace System\Collections;
  */
 final class Set extends ArrayCollectionBase implements ISet {
     private $_equalityComparer;
+    private $_itemValidator;
 
 
     /**
@@ -37,17 +41,22 @@ final class Set extends ArrayCollectionBase implements ISet {
      *
      * @param mixed $items The initial items.
      * @param callable $equalityComparer The custom item comparer to use.
+     * @param callable $itemValidator The custom item validator to use.
      */
-    public function __construct($items = null, $equalityComparer = null) {
+    public function __construct($items = null, $equalityComparer = null, $itemValidator = null) {
+        $items                   = static::asIterator($items, true);
         $this->_equalityComparer = static::getEqualityComparerSafe($equalityComparer);
+        $this->_itemValidator    = static::getValueValidatorSafe($itemValidator);
 
-        $this->clear();
+        $this->clearInner();
 
-        $i = static::asIterator($items, true);
-        while ($i->valid()) {
-            $this->add($i->current());
+        while ($items->valid()) {
+            $i = $items->current();
+            $this->throwIfItemIsInvalid($i);
 
-            $i->next();
+            $this->addInner($i);
+
+            $items->next();
         }
 
         $this->reset();
@@ -57,7 +66,17 @@ final class Set extends ArrayCollectionBase implements ISet {
     /**
      * {@inheritDoc}
      */
-    public function add($item) : bool {
+    public final function add($item) : bool {
+        $this->throwIfReadOnly();
+        $this->throwIfItemIsInvalid($item);
+
+        return $this->addInner($item);
+    }
+
+    /**
+     * @see Set::add()
+     */
+    protected function addInner($item) : bool {
         if (!$this->containsItem($item)) {
             $this->_items[] = $item;
             return true;
@@ -69,8 +88,17 @@ final class Set extends ArrayCollectionBase implements ISet {
     /**
      * {@inheritDoc}
      */
-    public function clear() {
-        $this->_items = array();
+    public final function clear() {
+        $this->throwIfReadOnly();
+
+        $this->clearInner();
+    }
+
+    /**
+     * @see Set::clear()
+     */
+    protected function clearInner() {
+        $this->_items = [];
     }
 
     private function compareItems($x, $y) {
@@ -93,6 +121,11 @@ final class Set extends ArrayCollectionBase implements ISet {
         return false;
     }
 
+    private function isItemValid($item) : bool {
+        return \call_user_func($this->_itemValidator,
+                               $item);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -103,7 +136,16 @@ final class Set extends ArrayCollectionBase implements ISet {
     /**
      * {@inheritDoc}
      */
-    public function remove($item) : bool {
+    public final function remove($item) : bool {
+        $this->throwIfReadOnly();
+
+        return $this->removeInner($item);
+    }
+
+    /**
+     * @ss Set::remove()
+     */
+    protected function removeInner($item) : bool {
         foreach ($this->_items as $index => $value) {
             if ($this->compareItems($item, $value)) {
                 // found
@@ -115,5 +157,29 @@ final class Set extends ArrayCollectionBase implements ISet {
 
         // not found
         return false;
+    }
+
+    /**
+     * Throws an exception if an item is invalid.
+     *
+     * @param mixed $item The item to check.
+     *
+     * @throws ArgumentException Is invalid item.
+     */
+    protected final function throwIfItemIsInvalid($item) {
+        if (!$this->isItemValid($item)) {
+            throw new ArgumentException('item', 'Item is not valid!');
+        }
+    }
+
+    /**
+     * Throws an exception if that set is read-only.
+     *
+     * @throws InvalidOperationException Instance is read-only.
+     */
+    protected final function throwIfReadOnly() {
+        if ($this->isReadOnly()) {
+            throw new InvalidOperationException('Set is read only!');
+        }
     }
 }
