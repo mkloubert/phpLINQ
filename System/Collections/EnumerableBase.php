@@ -187,6 +187,10 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function asResettable() : IEnumerable {
+        if ($this->_i instanceof IEnumerable) {
+            return $this->_i->asResettable();
+        }
+
         switch (\get_class($this->_i)) {
             case \Generator::class:
                 return static::createEnumerable($this->toArray(true));
@@ -1443,6 +1447,13 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         return new ClrString(\json_encode($this->toArray($keySelectorOrOptions),
                                           $options, $depth));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toList($equalityComparer = null) : IList {
+        return new Collection($this, $equalityComparer);
     }
 
     /**

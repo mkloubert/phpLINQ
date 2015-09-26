@@ -678,6 +678,17 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString;
 
     /**
+     * Converts that sequence to a new list.
+     *
+     * @param callable $equalityComparer The custom equality comparer to use.
+     *
+     * @return IList The new list.
+     *
+     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
+     */
+    function toList($equalityComparer = null) : IList;
+
+    /**
      * Produces the set union of that sequence and another.
      *
      * @param mixed $second The other sequence.
