@@ -140,16 +140,16 @@ return equalityComparerFunc($x, $y);
 
         $this->assertEquals(0, count($s));
 
-        $s->add(1);
+        $this->assertTrue($s->add(1));
         $this->assertEquals(1, count($s));
 
-        $s->add(1);
+        $this->assertFalse($s->add(1));
         $this->assertEquals(1, count($s));
 
-        $s->add('1');
+        $this->assertFalse($s->add('1'));
         $this->assertEquals(1, count($s));
 
-        $s->add(3);
+        $this->assertTrue($s->add(3));
         $this->assertEquals(2, count($s));
     }
 
@@ -159,19 +159,19 @@ return equalityComparerFunc($x, $y);
 
             $this->assertEquals(0, count($s));
 
-            $s->add(1);
+            $this->assertTrue($s->add(1));
             $this->assertEquals(1, count($s));
             $this->checkForExpectedValues($s, [1]);
 
-            $s->add(1);
+            $this->assertFalse($s->add(1));
             $this->assertEquals(1, count($s));
             $this->checkForExpectedValues($s, [1]);
 
-            $s->add('1');
+            $this->assertTrue($s->add('1'));
             $this->assertEquals(2, count($s));
             $this->checkForExpectedValues($s, [1, '1']);
 
-            $s->add(3.0);
+            $this->assertTrue($s->add(3.0));
             $this->assertEquals(3, count($s));
             $this->checkForExpectedValues($s, [1, '1', 3.0]);
         }
@@ -237,15 +237,15 @@ return equalityComparerFunc($x, $y);
 
             $this->assertEquals(0, count($s));
 
-            $s->add(1);
+            $this->assertTrue($s->add(1));
             $this->assertEquals(1, count($s));
             $this->checkForExpectedValues($s, [1]);
 
-            $s->add('2');
+            $this->assertTrue($s->add('2'));
             $this->assertEquals(2, count($s));
             $this->checkForExpectedValues($s, [1, '2']);
 
-            $s->add('1');
+            $this->assertFalse($s->add('1'));
             $this->assertEquals(2, count($s));
             $this->checkForExpectedValues($s, [1, '2']);
 
