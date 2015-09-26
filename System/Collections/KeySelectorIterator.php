@@ -77,7 +77,7 @@ class KeySelectorIterator implements \Iterator {
      *
      * @return KeySelectorIterator The new instance.
      */
-    public function createNewFromSequence(IEnumerable $newSeq) : KeySelectorIterator {
+    public final function createNewFromSequence(IEnumerable $newSeq) : KeySelectorIterator {
         return new static($newSeq, $this->_keySelector);
     }
 
