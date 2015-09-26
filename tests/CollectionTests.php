@@ -249,9 +249,32 @@ return equalityComparer1Func($x, $y);
         $this->assertTrue(isset($thrownEx1));
         $this->assertInstanceOf(ArgumentOutOfRangeException::class, $thrownEx1);
 
+        unset($thrownEx1);
+
         $this->assertTrue(isset($coll[0]));
         $this->assertFalse(isset($coll[1]));
         $this->assertSame(1, $coll[0]);
+
+        $coll[0] = 'one';
+        $this->assertEquals(1, count($coll));
+        $this->assertTrue(isset($coll[0]));
+        $this->assertSame('one', $coll[0]);
+
+        try {
+            $coll[1] = 'ToToTo';
+        }
+        catch (ArgumentOutOfRangeException $ex) {
+            $thrownEx1 = $ex;
+        }
+        $this->assertEquals(1, count($coll));
+        $this->assertFalse(isset($coll[1]));
+        $this->assertTrue(isset($thrownEx1));
+        $this->assertInstanceOf(ArgumentOutOfRangeException::class, $thrownEx1);
+
+        $coll[] = 'tOtO';
+        $this->assertEquals(2, count($coll));
+        $this->assertTrue(isset($coll[1]));
+        $this->assertSame('tOtO', $coll[1]);
     }
 
     public function testClear() {

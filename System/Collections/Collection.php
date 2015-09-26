@@ -115,11 +115,8 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public function indexOf($item) : int {
-        $index = -1;
-        foreach ($this->_items as $i) {
-            ++$index;
-
-            if ($this->compareItems($item, $i)) {
+        foreach ($this->_items as $index => $value) {
+            if ($this->compareItems($item, $value)) {
                 // found
                 return $index;
             }
