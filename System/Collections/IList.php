@@ -38,7 +38,7 @@ namespace System\Collections;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-interface IList extends \ArrayAccess, IEnumerable {
+interface IList extends IReadOnlyList {
     /**
      * Adds a new item.
      *
@@ -68,51 +68,12 @@ interface IList extends \ArrayAccess, IEnumerable {
     function clear();
 
     /**
-     * Checks if the list contains an item.
-     *
-     * @param mixed $item The item to check.
-     *
-     * @return boolean Contains item or not.
-     */
-    function containsItem($item) : bool;
-
-    /**
-     * Returns the index of the first occurence of a value / item.
-     *
-     * @param mixed $item The item to search for.
-     *
-     * @return int The zero based index or -1 if not found.
-     */
-    function indexOf($item) : int;
-
-    /**
      * Inserts an item into that list.
      *
      * @param int $index The index where the item should be inserted.
      * @param mixed $item The item to insert.
      */
     function insert(int $index, $item);
-
-    /**
-     * Gets a value indicating whether the list object has a fixed size.
-     *
-     * @return bool The read-only or not.
-     */
-    function isFixedSize() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is read-only.
-     *
-     * @return bool The read-only or not.
-     */
-    function isReadOnly() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is thread-safe.
-     *
-     * @return bool The synchronized or not.
-     */
-    function isSynchronized() : bool;
 
     /**
      * Removes an item.

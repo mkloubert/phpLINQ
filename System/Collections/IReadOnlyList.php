@@ -33,36 +33,48 @@ namespace System\Collections;
 
 
 /**
- * Describes a dictionary / hashtable.
+ * A list that provides methods for read operations.
  *
- * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ * @package System\Collections
  */
-interface IDictionary extends IReadOnlyDictionary {
+interface IReadOnlyList extends \ArrayAccess, IEnumerable {
     /**
-     * Adds a new entry.
+     * Checks if the list contains an item.
      *
-     * @param mixed $key The key.
-     * @param mixed $value The value.
+     * @param mixed $item The item to check.
+     *
+     * @return boolean Contains item or not.
      */
-    function add($key, $value);
+    function containsItem($item) : bool;
 
     /**
-     * Removes all entries.
+     * Returns the index of the first occurence of a value / item.
+     *
+     * @param mixed $item The item to search for.
+     *
+     * @return int The zero based index or -1 if not found.
      */
-    function clear();
+    function indexOf($item) : int;
 
     /**
-     * @see \System\Collections\IDictionary::removeKey()
+     * Gets a value indicating whether the list object has a fixed size.
+     *
+     * @return bool The read-only or not.
      */
-    function remove($key) : bool;
+    function isFixedSize() : bool;
 
     /**
-     * Removes an entry by key.
+     * Gets a value indicating whether the list object is read-only.
      *
-     * @param mixed $key The key.
-     *
-     * @return bool Entry was removed or not.
+     * @return bool The read-only or not.
      */
-    function removeKey($key) : bool;
+    function isReadOnly() : bool;
+
+    /**
+     * Gets a value indicating whether the list object is thread-safe.
+     *
+     * @return bool The synchronized or not.
+     */
+    function isSynchronized() : bool;
 }

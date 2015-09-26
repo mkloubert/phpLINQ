@@ -33,36 +33,53 @@ namespace System\Collections;
 
 
 /**
- * Describes a dictionary / hashtable.
+ * A dictionary that provides methods for read operations.
  *
- * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ * @package System\Collections
  */
-interface IDictionary extends IReadOnlyDictionary {
+interface IReadOnlyDictionary extends \ArrayAccess, IEnumerable {
     /**
-     * Adds a new entry.
+     * Checks if a key exists or not.
      *
-     * @param mixed $key The key.
-     * @param mixed $value The value.
+     * @param mixed $key The kex to check.
+     *
+     * @return bool Key exsists or not.
      */
-    function add($key, $value);
+    function containsKey($key) : bool;
 
     /**
-     * Removes all entries.
+     * Gets a value indicating whether the dictionary object has a fixed size.
+     *
+     * @return bool Has a fixed size or not.
      */
-    function clear();
+    function isFixedSize() : bool;
 
     /**
-     * @see \System\Collections\IDictionary::removeKey()
+     * Gets a value indicating whether the dictionary object is read-only.
+     *
+     * @return bool Is read-only or not.
      */
-    function remove($key) : bool;
+    function isReadOnly() : bool;
 
     /**
-     * Removes an entry by key.
+     * Gets a value indicating whether the dictionary object is thread-safe.
      *
-     * @param mixed $key The key.
-     *
-     * @return bool Entry was removed or not.
+     * @return bool Is synchronized or not.
      */
-    function removeKey($key) : bool;
+    function isSynchronized() : bool;
+
+    /**
+     * Returns all keys of that dictionary.
+     *
+     * @return IEnumerable The keys.
+     */
+    function keys() : IEnumerable;
+
+    /**
+     * Returns all values of that dictionary.
+     *
+     * @return IEnumerable The values.
+     */
+    function values() : IEnumerable;
 }
