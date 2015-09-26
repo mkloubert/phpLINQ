@@ -31,26 +31,22 @@
 
 namespace System\Collections;
 
-use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\Object;
 
 
 /**
- * Iterator that wraps a sequence by using a selector that produces new keys.
+ * Iterator that wraps a sequence by using a selector
+ * hat produces new keys AND values.
  *
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class KeySelectorIterator implements \Iterator {
+class KeyAndValueSelectorIterator extends KeySelectorIterator {
     /**
      * @var callable
      */
-    private $_keySelector;
-    /**
-     * @var IEnumerable
-     */
-    private $_seq;
+    private $_valueSelector;
 
 
     /**
@@ -58,85 +54,44 @@ class KeySelectorIterator implements \Iterator {
      *
      * @param IEnumerable $seq The inner sequence.
      * @param callable $keySelector The key selector to use.
+     * @param callable $valueSelector The value / item selector to use.
      *
-     * @throws ArgumentException $keySelector is no valid callable / lambda expression.
      * @throws ArgumentNullException $keySelector is (null).
      */
-    public function __construct(IEnumerable $seq, $keySelector) {
-        if (null === $keySelector) {
-            throw new ArgumentNullException('keySelector');
+    public function __construct(IEnumerable $seq, $keySelector, $valueSelector) {
+        if (null === $valueSelector) {
+            throw new ArgumentNullException('valueSelector');
         }
 
-        $this->_keySelector = Object::asCallable($keySelector);
-        $this->_seq         = $seq;
+        $this->_valueSelector = Object::asCallable($valueSelector);
+
+        parent::__construct($seq, $keySelector);
     }
 
 
     /**
-     * Creates a new instance with the same key selector but with another sequence.
-     *
-     * @param IEnumerable $newSeq The new sequence.
-     *
-     * @return KeySelectorIterator The new instance.
+     * {@inheritDoc}
      */
-    public function createNewFromSequence(IEnumerable $newSeq) {
-        return new static($newSeq, $this->_keySelector);
+    public final function createNewFromSequence(IEnumerable $newSeq) {
+        return new static($newSeq, $this->keySelector(), $this->_valueSelector);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function current() {
-        return $this->_seq
-                    ->current();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function key() {
+    public final function current() {
         $ctx = new ItemContext($this->sequence());
 
-        return \call_user_func($this->_keySelector,
-                               $ctx->key(), $ctx->item(), $ctx, $this);
+        return \call_user_func($this->_valueSelector,
+                               $ctx->item(), $ctx->key(), $ctx, $this);
     }
 
     /**
-     * Gets the key selector.
+     * Gets the value selector.
      *
-     * @return callable The key selector.
+     * @return callable The value selector.
      */
-    public final function keySelector() : callable {
-        return $this->_keySelector;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function next() {
-        $this->_seq->next();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function rewind() {
-        $this->_seq->rewind();
-    }
-
-    /**
-     * Gets the underlying sequence.
-     *
-     * @return IEnumerable The underlying sequence.
-     */
-    public final function sequence() : IEnumerable {
-        return $this->_seq;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function valid() {
-        return $this->_seq->valid();
+    public final function valueSelector() : callable {
+        return $this->_valueSelector;
     }
 }

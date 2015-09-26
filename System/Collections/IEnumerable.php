@@ -759,6 +759,19 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function withNewKeys($keySelector) : IEnumerable;
 
     /**
+     * Returns a new sequence with new keys AND items.
+     *
+     * @param callable $keySelector The key selector to use.
+     * @param callable $valueSelector The value / item selector to use.
+     *
+     * @return IEnumerable The new sequence.
+     *
+     * @throws ArgumentException $keySelector / $valueSelector is no valid callable / lambda expression.
+     * @throws ArgumentNullException $keySelector / $valueSelector is (null).
+     */
+    function withNewKeysAndValues($keySelector, $valueSelector) : IEnumerable;
+
+    /**
      * Applies a specified function to the corresponding elements of that sequence and another,
      * producing a sequence of the results.
      *

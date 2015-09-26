@@ -1588,6 +1588,13 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public final function withNewKeysAndValues($keySelector, $valueSelector) : IEnumerable {
+        return static::createEnumerable(new KeyAndValueSelectorIterator($this, $keySelector, $valueSelector));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function unserialize($str) {
         $this->__construct(static::asIterator(\unserialize($str), true));
     }
