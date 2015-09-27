@@ -372,7 +372,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     }
 
     private function throwKeyOutOfRangeException($key) {
-        throw new ArgumentOutOfRangeException('key', $key, 'Key not found!');
+        throw new ArgumentOutOfRangeException($key, 'key', 'Key not found!');
     }
 
     /**

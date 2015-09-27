@@ -346,7 +346,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      *
      * @return IEnumerable The new sequence.
      */
-    protected static function createEnumerable($items = null) {
+    protected static function createEnumerable($items = null) : IEnumerable {
         return new static(static::asIterator($items, true));
     }
 
@@ -1292,7 +1292,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      */
     public final function skip(int $count) : IEnumerable {
         if ($count < 0) {
-            throw new ArgumentOutOfRangeException('count', $count);
+            throw new ArgumentOutOfRangeException($count, 'count');
         }
 
         return $this->skipWhile(function() use (&$count) {
@@ -1349,7 +1349,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      */
     public final function take(int $count) : IEnumerable {
         if ($count < 0) {
-            throw new ArgumentOutOfRangeException('count', $count);
+            throw new ArgumentOutOfRangeException($count, 'count');
         }
 
         return $this->takeWhile(function() use (&$count) {

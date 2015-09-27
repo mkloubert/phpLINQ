@@ -29,47 +29,107 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+use \System\Linq\Enumerable;
 
 
-/**
- * For an argument that is out of range.
- *
- * @package System
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class ArgumentOutOfRangeException extends ArgumentException {
-    /**
-     * @var mixed
-     */
-    protected $_actualValue;
+function enumerableRangeIncreaseByFunc() {
+    return 0.5;
+}
 
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $actualValue The underlying value.
-     * @param string $paramName The name of the underlying parameter.
-     * @param string $message The message.
-     * @param int $code The code.
-     * @param \Exception $innerException The inner exception.
-     */
-    public function __construct($actualValue = null, string $paramName = '',
-                                string $message = '', \Exception $innerException = null, $code = 0) {
-
-        $this->_actualValue = $actualValue;
-
-        parent::__construct($paramName,
-                            $message, $innerException, $code);
-    }
-
-
-    /**
-     * Gets the underlying value.
-     *
-     * @return mixed The underlying value.
-     */
-    public function actualValue() {
-        return $this->_actualValue;
+class EnumerableRangeIncreaseByFuncClass {
+    public function __invoke() {
+        return enumerableRangeIncreaseByFunc();
     }
 }
+
+/**
+ * Tests for \System\Linq\Enumerable class.
+ *
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
+class EnumerableTests extends TestCaseBase {
+    /**
+     * Creates the $increaseBy callable values for the Enumerable:range() tests.
+     *
+     * @return array The functions.
+     */
+    protected function createRangeIncreaseByFuncs() : array {
+        return [
+            function() {
+                return enumerableRangeIncreaseByFunc();
+            },
+            'enumerableRangeIncreaseByFunc',
+            '\enumerableRangeIncreaseByFunc',
+            [$this, 'rangeIncreaseByFuncMethod1'],
+            [static::class, 'rangeIncreaseByFuncMethod2'],
+            new EnumerableRangeIncreaseByFuncClass(),
+            '() => enumerableRangeIncreaseByFunc()',
+            '() => \enumerableRangeIncreaseByFunc()',
+            '() => return enumerableRangeIncreaseByFunc();',
+            '() => return \enumerableRangeIncreaseByFunc();',
+            '() => { return enumerableRangeIncreaseByFunc(); }',
+            '() => { return \enumerableRangeIncreaseByFunc(); }',
+            '() => {
+    return enumerableRangeIncreaseByFunc();
+}',
+            '() => {
+    return \enumerableRangeIncreaseByFunc();
+}',
+        ];
+    }
+
+    public function rangeIncreaseByFuncMethod1() {
+        return static::rangeIncreaseByFuncMethod2();
+    }
+
+    public static function rangeIncreaseByFuncMethod2() {
+        return enumerableRangeIncreaseByFunc();
+    }
+
+    public function testBuildRandom() {
+        $seq = Enumerable::buildRandom(5);
+
+        $items = static::sequenceToArray($seq);
+
+        $this->assertEquals(5, count($items));
+    }
+
+    public function testRange1() {
+        $seq = Enumerable::range(1, 5);
+
+        $items = static::sequenceToArray($seq);
+
+        $this->assertEquals(5, count($items));
+        foreach ($items as $key => $value) {
+            $this->assertSame($key + 1, $value);
+        }
+    }
+
+    public function testRange2() {
+        $seq = Enumerable::range(1, 0);
+
+        $items = static::sequenceToArray($seq);
+
+        $this->assertEquals(0, count($items));
+    }
+
+    public function testRange3() {
+        foreach ($this->createRangeIncreaseByFuncs() as $increaseByFunc) {
+            $seq = Enumerable::range(2, 3, $increaseByFunc);
+
+            $items = static::sequenceToArray($seq);
+
+            $this->assertEquals(3, count($items));
+
+            $this->assertTrue(isset($items[0]));
+            $this->assertSame(2, $items[0]);
+
+            $this->assertTrue(isset($items[1]));
+            $this->assertSame(2.5, $items[1]);
+
+            $this->assertTrue(isset($items[2]));
+            $this->assertSame(3.0, $items[2]);
+        }
+    }
+}
+

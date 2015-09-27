@@ -19,6 +19,7 @@
             <file>EachTests.php</file>
             <file>ElementAtOrDefaultTests.php</file>
             <file>ElementAtTests.php</file>
+            <file>EnumerableTests.php</file>
             <file>ExceptTests.php</file>
             <file>FirstOrDefaultTests.php</file>
             <file>FirstTests.php</file>

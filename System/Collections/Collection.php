@@ -315,6 +315,6 @@ class Collection extends ArrayCollectionBase implements IList {
     }
 
     private function throwIndexOutOfRange($index) {
-        throw new ArgumentOutOfRangeException('index', $index, 'Index not found!');
+        throw new ArgumentOutOfRangeException($index, 'index', 'Index not found!');
     }
 }

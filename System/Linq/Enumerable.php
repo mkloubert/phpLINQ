@@ -33,6 +33,7 @@ namespace System\Linq;
 
 use \System\ArgumentException;
 use \System\ArgumentOutOfRangeException;
+use \System\Collections\IEnumerable;
 use \System\Collections\EnumerableBase;
 
 
@@ -47,28 +48,35 @@ class Enumerable extends EnumerableBase {
      * Builds a sequence with a specific number of random values.
      *
      * @param int $count The number of items to create.
-     * @param int|callable $maxOrSeeder The exclusive maximum value (mt_getrandmax() - 1 by default).
-     *                                  If there are only two arguments and that value is a callable
-     *                                  it is set to (null) and its origin value is written to $seeder.
+     * @param int|callable|bool $maxOrSeeder The exclusive maximum value (mt_getrandmax() - 1 by default).
+     *                                       If there are only two arguments and that value is a callable
+     *                                       it is set to (null) and its origin value is written to $seeder.
      * @param int $min The inclusive minimum value (0 by default).
-     * @param callable $seeder The optional function that initializes the random
-     *                         number generator.
+     * @param callable|bool $seeder The optional function that initializes the random number generator.
+     *                              If this value is (true), a default logic will be used.
      *
-     * @return static
+     * @return IEnumerable The created sequence.
      *
      * @throws ArgumentException $seeder is no valid callable / lambda expression.
      * @throws ArgumentOutOfRangeException $count is less than 0.
      */
-    public final static function buildRandom(int $count, $maxOrSeeder = null, int $min = 0, $seeder = null) {
+    public final static function buildRandom(int $count, $maxOrSeeder = null, int $min = 0, $seeder = null) : IEnumerable {
         if ($count < 0) {
-            throw new ArgumentOutOfRangeException('count', $count);
+            throw new ArgumentOutOfRangeException($count, 'count');
         }
 
         if (2 === \func_num_args()) {
-            if (static::isCallable($maxOrSeeder)) {
+            if ((true === $maxOrSeeder) || static::isCallable($maxOrSeeder)) {
                 $seeder      = $maxOrSeeder;
                 $maxOrSeeder = null;
             }
+        }
+
+        if (true === $seeder) {
+            $seeder = function() {
+                list($usec, $sec) = \explode(' ', \microtime());
+                return (float)$sec + ((float)$usec * 100000);
+            };
         }
 
         $seeder = static::asCallable($seeder);
@@ -107,7 +115,7 @@ class Enumerable extends EnumerableBase {
     /**
      * {@inheritDoc}
      */
-    protected static function createEnumerable($items = null) {
+    protected static function createEnumerable($items = null) : IEnumerable {
         return new self(static::asIterator($items, true));
     }
 
@@ -131,5 +139,49 @@ class Enumerable extends EnumerableBase {
      */
     public static function fromValues() {
         return static::create(\func_get_args());
+    }
+
+    /**
+     * Creates a sequence with a range of numbers.
+     *
+     * @param number $start The start value.
+     * @param int $count The number of items.
+     * @param number|callable $increaseBy The increase value or the function that provides that value.
+     *
+     * @return IEnumerable The new sequence.
+     *
+     * @throws ArgumentOutOfRangeException $count is less than 0.
+     */
+    public final static function range($start, int $count, $increaseBy = 1) : IEnumerable {
+        if ($count < 0) {
+            throw new ArgumentOutOfRangeException($count, 'count');
+        }
+
+        $increaseByFunc = $increaseBy;
+        if (!static::isCallable($increaseByFunc)) {
+            $increaseByFunc = function() use ($increaseBy) {
+                return $increaseBy;
+            };
+        }
+        else {
+            $increaseByFunc = static::asCallable($increaseByFunc);
+        }
+
+        return static::createEnumerable(static::rangeInner($start, $count, $increaseByFunc));
+    }
+
+    /**
+     * @see Enumerable::range()
+     */
+    protected static function rangeInner($start, int $count, callable $increaseByFunc) {
+        $result = $start;
+
+        for ($i = 0; $i < $count; $i++) {
+            $currentValue = $result;
+
+            yield $result;
+
+            $result += $increaseByFunc($currentValue, $i);
+        }
     }
 }
