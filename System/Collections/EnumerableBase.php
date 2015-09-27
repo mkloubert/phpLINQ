@@ -143,6 +143,30 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function asResettable() : IEnumerable {
+        if ($this->_i instanceof IEnumerable) {
+            return $this->_i->asResettable();
+        }
+
+        if ($this->_i instanceof \Generator) {
+            return static::createEnumerable($this->toArray(true));
+        }
+
+        if ($this->_i instanceof KeySelectorIterator) {
+            $newIterator = $this->_i
+                                ->createNewFromSequence($this->_i
+                                ->sequence()
+                                ->asResettable());
+
+            return static::createEnumerable($newIterator);
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns an object / value as iterator.
      *
      * @param mixed $obj The object to convert / cast.
@@ -188,30 +212,6 @@ abstract class EnumerableBase extends Object implements IEnumerable {
         }
 
         return new \ArrayIterator($arr);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function asResettable() : IEnumerable {
-        if ($this->_i instanceof IEnumerable) {
-            return $this->_i->asResettable();
-        }
-
-        if ($this->_i instanceof \Generator) {
-            return static::createEnumerable($this->toArray(true));
-        }
-
-        if ($this->_i instanceof KeySelectorIterator) {
-            $newIterator = $this->_i
-                                ->createNewFromSequence($this->_i
-                                                             ->sequence()
-                                                             ->asResettable());
-
-            return static::createEnumerable($newIterator);
-        }
-
-        return $this;
     }
 
     /**
