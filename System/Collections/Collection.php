@@ -181,7 +181,7 @@ class Collection extends ArrayCollectionBase implements IList {
             $this->throwIndexOutOfRange($index);
         }
 
-        \array_splice($this->_items, $index, 0, array($item));
+        \array_splice($this->_items, $index, 0, [$item]);
     }
 
     /**
