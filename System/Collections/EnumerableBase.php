@@ -1492,7 +1492,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
 
         $grps = $this->groupBy($keySelector, $keyEqualityComparer);
         if (null !== $elementSelector) {
-            $grps = $grps->select(function(IGrouping $g) use ($elementSelector) {
+            $grps = $grps->select(function(IGrouping $g) use ($elementSelector) : IGrouping {
                                       return new Grouping($g->key(),
                                                           $g->getIterator()->select($elementSelector));
                                   });
