@@ -37,7 +37,9 @@ use \System\ClrString;
 use \System\IString;
 use \System\Linq\Grouping;
 use \System\Linq\IGrouping;
+use \System\Linq\ILookup;
 use \System\Linq\IOrderedEnumerable;
+use \System\Linq\Lookup;
 use \System\Linq\OrderedEnumerable;
 use \System\Object;
 
@@ -1475,6 +1477,28 @@ abstract class EnumerableBase extends Object implements IEnumerable {
      */
     public final function toList($equalityComparer = null, $itemValidator = null) : IList {
         return new Collection($this, $equalityComparer, $itemValidator);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function toLookup(
+        $keySelector,
+        $keyEqualityComparer = null,
+        $elementSelector = null
+    ) : ILookup {
+
+        $elementSelector = static::asCallable($elementSelector);
+
+        $grps = $this->groupBy($keySelector, $keyEqualityComparer);
+        if (null !== $elementSelector) {
+            $grps = $grps->select(function(IGrouping $g) use ($elementSelector) {
+                                      return new Grouping($g->key(),
+                                                          $g->getIterator()->select($elementSelector));
+                                  });
+        }
+
+        return new Lookup($grps);
     }
 
     /**

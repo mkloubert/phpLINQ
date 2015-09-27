@@ -62,6 +62,7 @@
             <file>ToDictionaryTests.php</file>
             <file>ToJsonTests.php</file>
             <file>ToListTests.php</file>
+            <file>ToLookupTests.php</file>
             <file>ToSetTests.php</file>
             <file>UnionTests.php</file>
             <file>WithNewKeysAndValuesTests.php</file>

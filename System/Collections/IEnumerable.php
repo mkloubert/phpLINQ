@@ -36,6 +36,7 @@ use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
 use \System\IObject;
 use \System\IString;
+use \System\Linq\ILookup;
 use \System\Linq\IOrderedEnumerable;
 
 
@@ -708,6 +709,21 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $equalityComparer / $itemValidator is no valid callable / lambda expression.
      */
     function toList($equalityComparer = null, $itemValidator = null) : IList;
+
+    /**
+     * Converts that sequence to a new lookup object.
+     *
+     * @param callable $keySelector The custom key selector to use.
+     * @param callable $keyEqualityComparer The custom key comparer to use.
+     * @param callable $elementSelector The custom element selector to use.
+     *
+     * @return ILookup The sequence as lookup.
+     *
+     * @throws ArgumentException $equalityComparer / $itemValidator / $elementSelector is
+     *                           no valid callable / lambda expression.
+     * @throws ArgumentNullException $keySelector is (null).
+     */
+    function toLookup($keySelector, $keyEqualityComparer = null, $elementSelector = null) : ILookup;
 
     /**
      * Converts that sequence to a new set.
