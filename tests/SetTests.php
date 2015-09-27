@@ -33,23 +33,23 @@ use \System\ArgumentException;
 use \System\Collections\Set;
 
 
-function equalityComparerFunc($x, $y): bool {
+function setEqualityComparerFunc($x, $y): bool {
     return $x === $y;
 }
 
-function itemValidatorFunc($x) : bool {
+function setItemValidatorFunc($x) : bool {
     return is_string($x) || is_int($x);
 }
 
-class EqualityComparerClass {
+class SetEqualityComparerClass {
     public function __invoke($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return setEqualityComparerFunc($x, $y);
     }
 }
 
-class ItemValidatorClass {
+class SetItemValidatorClass {
     public function __invoke($x) {
-        return itemValidatorFunc($x);
+        return setItemValidatorFunc($x);
     }
 }
 
@@ -67,36 +67,36 @@ class SetTests extends TestCaseBase {
     protected function createEqualityComparers() : array {
         return [
             function($x, $y) {
-                return equalityComparerFunc($x, $y);
+                return setEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
-            new EqualityComparerClass(),
+            'setEqualityComparerFunc',
+            '\setEqualityComparerFunc',
+            new SetEqualityComparerClass(),
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            '$x, $y => setEqualityComparerFunc($x, $y)',
+            '($x, $y) => setEqualityComparerFunc($x, $y)',
+            '$x, $y => return setEqualityComparerFunc($x, $y);',
+            '($x, $y) => return setEqualityComparerFunc($x, $y);',
+            '$x, $y => { return setEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return setEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return setEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return setEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \setEqualityComparerFunc($x, $y)',
+            '($x, $y) => \setEqualityComparerFunc($x, $y)',
+            '$x, $y => return \setEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \setEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \setEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \setEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \setEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \setEqualityComparerFunc($x, $y);
 }',
         ];
     }
@@ -109,42 +109,54 @@ return \equalityComparerFunc($x, $y);
     protected function createItemValidators() : array {
         return [
             function ($x) {
-                return itemValidatorFunc($x);
+                return setItemValidatorFunc($x);
             },
-            'itemValidatorFunc',
-            '\itemValidatorFunc',
-            new ItemValidatorClass(),
+            'setItemValidatorFunc',
+            '\setItemValidatorFunc',
+            new SetItemValidatorClass(),
             array($this, 'itemValidatorMethod1'),
             array(static::class, 'itemValidatorMethod2'),
-            '$x => itemValidatorFunc($x)',
-            '($x) => itemValidatorFunc($x)',
-            '$x => return itemValidatorFunc($x);',
-            '($x) => return itemValidatorFunc($x);',
-            '$x => { return itemValidatorFunc($x); }',
-            '($x) => { return itemValidatorFunc($x); }',
+            '$x => setItemValidatorFunc($x)',
+            '($x) => setItemValidatorFunc($x)',
+            '$x => return setItemValidatorFunc($x);',
+            '($x) => return setItemValidatorFunc($x);',
+            '$x => { return setItemValidatorFunc($x); }',
+            '($x) => { return setItemValidatorFunc($x); }',
             '$x => {
-                return itemValidatorFunc($x);
+                return setItemValidatorFunc($x);
             }',
             '($x) => {
-                return itemValidatorFunc($x);
+                return setItemValidatorFunc($x);
+            }',
+            '$x => \setItemValidatorFunc($x)',
+            '($x) => \setItemValidatorFunc($x)',
+            '$x => return \setItemValidatorFunc($x);',
+            '($x) => return \setItemValidatorFunc($x);',
+            '$x => { return \setItemValidatorFunc($x); }',
+            '($x) => { return \setItemValidatorFunc($x); }',
+            '$x => {
+                return \setItemValidatorFunc($x);
+            }',
+            '($x) => {
+                return \setItemValidatorFunc($x);
             }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return setEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return setEqualityComparerFunc($x, $y);
     }
 
     public function itemValidatorMethod1($x) {
-        return itemValidatorFunc($x);
+        return setItemValidatorFunc($x);
     }
 
     public static function itemValidatorMethod2($x) {
-        return itemValidatorFunc($x);
+        return setItemValidatorFunc($x);
     }
 
     public function testAdd() {

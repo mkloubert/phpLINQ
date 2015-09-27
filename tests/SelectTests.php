@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function selectorFunc($x) : string {
+function selectSelectorFunc($x) : string {
     return strtoupper($x);
 }
 
-class SelectorClass {
+class SelectSelectorClass {
     public function __invoke($x) {
-        return strtoupper($x);
+        return selectSelectorFunc($x);
     }
 }
 
@@ -60,32 +60,31 @@ class SelectTests extends TestCaseBase {
             },
             array($this, 'selector1'),
             array(static::class, 'selector2'),
-            new SelectorClass(),
-            '$x => selectorFunc($x)',
-            '($x) => selectorFunc($x)',
-            '$x => return selectorFunc($x);',
-            '($x) => return selectorFunc($x);',
-            '$x => { return selectorFunc($x);}',
-            '($x) => {return selectorFunc($x);}',
-            '$x => { return selectorFunc($x);
+            new SelectSelectorClass(),
+            '$x => selectSelectorFunc($x)',
+            '($x) => selectSelectorFunc($x)',
+            '$x => return selectSelectorFunc($x);',
+            '($x) => return selectSelectorFunc($x);',
+            '$x => { return selectSelectorFunc($x);}',
+            '($x) => {return selectSelectorFunc($x);}',
+            '$x => { return selectSelectorFunc($x);
 }',
             '($x) => {
-return selectorFunc($x);
+return selectSelectorFunc($x);
 }',
-            '$x => \selectorFunc($x)',
-            '($x) => \selectorFunc($x)',
-            '$x => return \selectorFunc($x);',
-            '($x) => return \selectorFunc($x);',
-            '$x => { return \selectorFunc($x);}',
-            '($x) => {return \selectorFunc($x);}',
-            '$x => { return \selectorFunc($x);
+            '$x => \selectSelectorFunc($x)',
+            '($x) => \selectSelectorFunc($x)',
+            '$x => return \selectSelectorFunc($x);',
+            '($x) => return \selectSelectorFunc($x);',
+            '$x => { return \selectSelectorFunc($x);}',
+            '($x) => {return \selectSelectorFunc($x);}',
+            '$x => { return \selectSelectorFunc($x);
 }',
             '($x) => {
-return \selectorFunc($x);
+return \selectSelectorFunc($x);
 }',
-            'selectorFunc',
-            '\selectorFunc',
-
+            'selectSelectorFunc',
+            '\selectSelectorFunc',
         );
     }
 
@@ -111,10 +110,10 @@ return \selectorFunc($x);
     }
 
     public function selector1($x) {
-        return strtoupper($x);
+        return selectSelectorFunc($x);
     }
 
     public static function selector2($x) {
-        return strtoupper($x);
+        return selectSelectorFunc($x);
     }
 }

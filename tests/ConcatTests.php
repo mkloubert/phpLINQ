@@ -37,7 +37,7 @@ use \System\Collections\IEnumerable;
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ConcatValuesTests extends TestCaseBase {
+class ConcatTests extends TestCaseBase {
     public function test1() {
         $createGenerator = function() {
             yield 7;

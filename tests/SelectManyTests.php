@@ -32,35 +32,35 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1Func($x) : array {
+function selectManySelector1Func($x) : array {
     return [$x, $x * 10, $x * 100];
 }
 
-function selector2Func($x) : Iterator {
-    return new ArrayIterator(selector1Func($x));
+function selectManySelector2Func($x) : Iterator {
+    return new ArrayIterator(selectManySelector1Func($x));
 }
 
-function selector3Func($x) {
-    foreach (selector1Func($x) as $item) {
+function selectManySelector3Func($x) {
+    foreach (selectManySelector1Func($x) as $item) {
         yield $item;
     }
 }
 
-class Selector1Class {
+class SelectManySelector1Class {
     public function __invoke($x) {
-        return selector1Func($x);
+        return selectManySelector1Func($x);
     }
 }
 
-class Selector2Class {
+class SelectManySelector2Class {
     public function __invoke($x) {
-        return selector2Func($x);
+        return selectManySelector2Func($x);
     }
 }
 
-class Selector3Class {
+class SelectManySelector3Class {
     public function __invoke($x) {
-        return selector3Func($x);
+        return selectManySelector3Func($x);
     }
 }
 
@@ -79,24 +79,24 @@ class SelectManyTests extends TestCaseBase {
         return [
             [
                 function($x) {
-                    return selector1Func($x);
+                    return selectManySelector1Func($x);
                 },
                 function($x) {
-                    return selector2Func($x);
+                    return selectManySelector2Func($x);
                 },
                 function($x) {
-                    return selector3Func($x);
+                    return selectManySelector3Func($x);
                 },
             ],
             [
-                'selector1Func',
-                'selector2Func',
-                'selector3Func',
+                'selectManySelector1Func',
+                'selectManySelector2Func',
+                'selectManySelector3Func',
             ],
             [
-                '\selector1Func',
-                '\selector2Func',
-                '\selector3Func',
+                '\selectManySelector1Func',
+                '\selectManySelector2Func',
+                '\selectManySelector3Func',
             ],
             [
                 array($this, 'selector1Method1'),
@@ -109,87 +109,87 @@ class SelectManyTests extends TestCaseBase {
                 array(static::class, 'selector3Method2'),
             ],
             [
-                new Selector1Class(),
-                new Selector2Class(),
-                new Selector3Class(),
+                new SelectManySelector1Class(),
+                new SelectManySelector2Class(),
+                new SelectManySelector3Class(),
             ],
             [
-                '$x => selector1Func($x)',
-                '$x => selector2Func($x)',
-                '$x => selector3Func($x)',
+                '$x => selectManySelector1Func($x)',
+                '$x => selectManySelector2Func($x)',
+                '$x => selectManySelector3Func($x)',
             ],
             [
-                '($x) => selector1Func($x)',
-                '($x) => selector2Func($x)',
-                '($x) => selector3Func($x)',
+                '($x) => selectManySelector1Func($x)',
+                '($x) => selectManySelector2Func($x)',
+                '($x) => selectManySelector3Func($x)',
             ],
             [
-                '$x => return selector1Func($x);',
-                '$x => return selector2Func($x);',
-                '$x => return selector3Func($x);',
+                '$x => return selectManySelector1Func($x);',
+                '$x => return selectManySelector2Func($x);',
+                '$x => return selectManySelector3Func($x);',
             ],
             [
-                '($x) => return selector1Func($x);',
-                '($x) => return selector2Func($x);',
-                '($x) => return selector3Func($x);',
+                '($x) => return selectManySelector1Func($x);',
+                '($x) => return selectManySelector2Func($x);',
+                '($x) => return selectManySelector3Func($x);',
             ],
             [
-                '$x => { return selector1Func($x); }',
-                '$x => { return selector2Func($x); }',
-                '$x => { return selector3Func($x); }',
+                '$x => { return selectManySelector1Func($x); }',
+                '$x => { return selectManySelector2Func($x); }',
+                '$x => { return selectManySelector3Func($x); }',
             ],
             [
-                '($x) => { return selector1Func($x); }',
-                '($x) => { return selector2Func($x); }',
-                '($x) => { return selector3Func($x); }',
+                '($x) => { return selectManySelector1Func($x); }',
+                '($x) => { return selectManySelector2Func($x); }',
+                '($x) => { return selectManySelector3Func($x); }',
             ],
             [
                 '$x => {
-return selector1Func($x);
+return selectManySelector1Func($x);
 }',
                 '$x => {
-return selector2Func($x);
+return selectManySelector2Func($x);
 }',
                 '$x => {
-return selector3Func($x);
+return selectManySelector3Func($x);
 }',
             ],
             [
                 '($x) => {
-return selector1Func($x);
+return selectManySelector1Func($x);
 }',
                 '($x) => {
-return selector2Func($x);
+return selectManySelector2Func($x);
 }',
                 '($x) => {
-return selector3Func($x);
+return selectManySelector3Func($x);
 }',
             ],
         ];
     }
 
     public function selector1Method1($x) {
-        return selector1Func($x);
+        return selectManySelector1Func($x);
     }
 
     public static function selector1Method2($x) {
-        return selector1Func($x);
+        return selectManySelector1Func($x);
     }
 
     public function selector2Method1($x) {
-        return selector2Func($x);
+        return selectManySelector2Func($x);
     }
 
     public static function selector2Method2($x) {
-        return selector2Func($x);
+        return selectManySelector2Func($x);
     }
 
     public function selector3Method1($x) {
-        return selector3Func($x);
+        return selectManySelector3Func($x);
     }
 
     public static function selector3Method2($x) {
-        return selector3Func($x);
+        return selectManySelector3Func($x);
     }
 
     public function test1() {
@@ -202,15 +202,15 @@ return selector3Func($x);
 
                     $this->assertEquals(9, count($items));
 
-                    $this->assertTrue(1 === $items[0]);
-                    $this->assertTrue(10 === $items[1]);
-                    $this->assertTrue(100 === $items[2]);
-                    $this->assertTrue(2 === $items[3]);
-                    $this->assertTrue(20 === $items[4]);
-                    $this->assertTrue(200 === $items[5]);
-                    $this->assertTrue(3 === $items[6]);
-                    $this->assertTrue(30 === $items[7]);
-                    $this->assertTrue(300 === $items[8]);
+                    $this->assertSame(1, $items[0]);
+                    $this->assertSame(10, $items[1]);
+                    $this->assertSame(100, $items[2]);
+                    $this->assertSame(2, $items[3]);
+                    $this->assertSame(20, $items[4]);
+                    $this->assertSame(200, $items[5]);
+                    $this->assertSame(3, $items[6]);
+                    $this->assertSame(30, $items[7]);
+                    $this->assertSame(300, $items[8]);
                 }
             }
         }

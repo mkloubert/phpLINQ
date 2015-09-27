@@ -32,23 +32,23 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($x) : string {
+function withNewKeysAndValuesKeySelectorFunc($x) : string {
     return chr(ord('A') + $x);
 }
 
-function valueSelectorFunc($x) : float {
+function withNewKeysAndValuesValueSelectorFunc($x) : float {
     return (float)$x;
 }
 
 class KeySelectorClass {
     public function __invoke($x) {
-        return keySelectorFunc($x);
+        return withNewKeysAndValuesKeySelectorFunc($x);
     }
 }
 
 class ValueSelectorClass {
     public function __invoke($x) {
-        return valueSelectorFunc($x);
+        return withNewKeysAndValuesValueSelectorFunc($x);
     }
 }
 
@@ -66,36 +66,36 @@ class WithNewKeysAndValuesTests extends TestCaseBase {
     protected function createKeySelectors() : array {
         return [
             function($x) {
-                return keySelectorFunc($x);
+                return withNewKeysAndValuesKeySelectorFunc($x);
             },
-            'keySelectorFunc',
-            '\keySelectorFunc',
+            'withNewKeysAndValuesKeySelectorFunc',
+            '\withNewKeysAndValuesKeySelectorFunc',
             new KeySelectorClass(),
             [$this, 'keySelectorMethod1'],
             [static::class, 'keySelectorMethod2'],
-            '$x => keySelectorFunc($x)',
-            '$x => \keySelectorFunc($x)',
-            '($x) => keySelectorFunc($x)',
-            '($x) => \keySelectorFunc($x)',
-            '$x => return keySelectorFunc($x);',
-            '$x => return \keySelectorFunc($x);',
-            '($x) => return keySelectorFunc($x);',
-            '($x) => return \keySelectorFunc($x);',
-            '$x => { return keySelectorFunc($x); }',
-            '$x => { return \keySelectorFunc($x); }',
-            '($x) => { return keySelectorFunc($x); }',
-            '($x) => { return \keySelectorFunc($x); }',
+            '$x => withNewKeysAndValuesKeySelectorFunc($x)',
+            '$x => \withNewKeysAndValuesKeySelectorFunc($x)',
+            '($x) => withNewKeysAndValuesKeySelectorFunc($x)',
+            '($x) => \withNewKeysAndValuesKeySelectorFunc($x)',
+            '$x => return withNewKeysAndValuesKeySelectorFunc($x);',
+            '$x => return \withNewKeysAndValuesKeySelectorFunc($x);',
+            '($x) => return withNewKeysAndValuesKeySelectorFunc($x);',
+            '($x) => return \withNewKeysAndValuesKeySelectorFunc($x);',
+            '$x => { return withNewKeysAndValuesKeySelectorFunc($x); }',
+            '$x => { return \withNewKeysAndValuesKeySelectorFunc($x); }',
+            '($x) => { return withNewKeysAndValuesKeySelectorFunc($x); }',
+            '($x) => { return \withNewKeysAndValuesKeySelectorFunc($x); }',
             '$x => {
-return keySelectorFunc($x);
+return withNewKeysAndValuesKeySelectorFunc($x);
 }',
             '$x => {
-return \keySelectorFunc($x);
+return \withNewKeysAndValuesKeySelectorFunc($x);
 }',
             '($x) => {
-return keySelectorFunc($x);
+return withNewKeysAndValuesKeySelectorFunc($x);
 }',
             '($x) => {
-return \keySelectorFunc($x);
+return \withNewKeysAndValuesKeySelectorFunc($x);
 }',
         ];
     }
@@ -108,46 +108,46 @@ return \keySelectorFunc($x);
     protected function createValueSelectors() : array {
         return [
             function($x) {
-                return valueSelectorFunc($x);
+                return withNewKeysAndValuesValueSelectorFunc($x);
             },
-            'valueSelectorFunc',
-            '\valueSelectorFunc',
+            'withNewKeysAndValuesValueSelectorFunc',
+            '\withNewKeysAndValuesValueSelectorFunc',
             new ValueSelectorClass(),
             [$this, 'valueSelectorMethod1'],
             [static::class, 'valueSelectorMethod2'],
-            '$x => valueSelectorFunc($x)',
-            '$x => \valueSelectorFunc($x)',
-            '($x) => valueSelectorFunc($x)',
-            '($x) => \valueSelectorFunc($x)',
-            '$x => return valueSelectorFunc($x);',
-            '$x => return \valueSelectorFunc($x);',
-            '($x) => return valueSelectorFunc($x);',
-            '($x) => return \valueSelectorFunc($x);',
-            '$x => { return valueSelectorFunc($x); }',
-            '$x => { return \valueSelectorFunc($x); }',
-            '($x) => { return valueSelectorFunc($x); }',
-            '($x) => { return \valueSelectorFunc($x); }',
+            '$x => withNewKeysAndValuesValueSelectorFunc($x)',
+            '$x => \withNewKeysAndValuesValueSelectorFunc($x)',
+            '($x) => withNewKeysAndValuesValueSelectorFunc($x)',
+            '($x) => \withNewKeysAndValuesValueSelectorFunc($x)',
+            '$x => return withNewKeysAndValuesValueSelectorFunc($x);',
+            '$x => return \withNewKeysAndValuesValueSelectorFunc($x);',
+            '($x) => return withNewKeysAndValuesValueSelectorFunc($x);',
+            '($x) => return \withNewKeysAndValuesValueSelectorFunc($x);',
+            '$x => { return withNewKeysAndValuesValueSelectorFunc($x); }',
+            '$x => { return \withNewKeysAndValuesValueSelectorFunc($x); }',
+            '($x) => { return withNewKeysAndValuesValueSelectorFunc($x); }',
+            '($x) => { return \withNewKeysAndValuesValueSelectorFunc($x); }',
             '$x => {
-return valueSelectorFunc($x);
+return withNewKeysAndValuesValueSelectorFunc($x);
 }',
             '$x => {
-return \valueSelectorFunc($x);
+return \withNewKeysAndValuesValueSelectorFunc($x);
 }',
             '($x) => {
-return valueSelectorFunc($x);
+return withNewKeysAndValuesValueSelectorFunc($x);
 }',
             '($x) => {
-return \valueSelectorFunc($x);
+return \withNewKeysAndValuesValueSelectorFunc($x);
 }',
         ];
     }
 
     public function keySelectorMethod1($x) {
-        return keySelectorFunc($x);
+        return withNewKeysAndValuesKeySelectorFunc($x);
     }
 
     public static function keySelectorMethod2($x) {
-        return keySelectorFunc($x);
+        return withNewKeysAndValuesKeySelectorFunc($x);
     }
 
     public function test1() {
@@ -177,10 +177,10 @@ return \valueSelectorFunc($x);
     }
 
     public function valueSelectorMethod1($x) {
-        return valueSelectorFunc($x);
+        return withNewKeysAndValuesValueSelectorFunc($x);
     }
 
     public static function valueSelectorMethod2($x) {
-        return valueSelectorFunc($x);
+        return withNewKeysAndValuesValueSelectorFunc($x);
     }
 }

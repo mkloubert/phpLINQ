@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
+function skipWhilePredicateFunc($x) : bool {
     return $x < 3;
 }
 
-class PredciateClass {
+class SkipWhilePredciateClass {
     public function __invoke($x) : bool {
-        return predicateFunc($x);
+        return skipWhilePredicateFunc($x);
     }
 }
 
@@ -56,46 +56,46 @@ class SkipWhileTests extends TestCaseBase {
     protected function createPredicates() : array {
         return [
             function($x) : bool {
-                return predicateFunc($x);
+                return skipWhilePredicateFunc($x);
             },
-            'predicateFunc',
-            '\predicateFunc',
+            'skipWhilePredicateFunc',
+            '\skipWhilePredicateFunc',
             array($this, 'predciateMethod1'),
             array(static::class, 'predciateMethod2'),
-            new PredciateClass(),
-            '$x => predicateFunc($x)',
-            '($x) => predicateFunc($x)',
-            '$x => return predicateFunc($x);',
-            '($x) => return predicateFunc($x);',
-            '$x => { return predicateFunc($x); }',
-            '($x) => { return predicateFunc($x); }',
+            new SkipWhilePredciateClass(),
+            '$x => skipWhilePredicateFunc($x)',
+            '($x) => skipWhilePredicateFunc($x)',
+            '$x => return skipWhilePredicateFunc($x);',
+            '($x) => return skipWhilePredicateFunc($x);',
+            '$x => { return skipWhilePredicateFunc($x); }',
+            '($x) => { return skipWhilePredicateFunc($x); }',
             '$x => {
-return predicateFunc($x);
+return skipWhilePredicateFunc($x);
 }',
             '($x) => {
-return predicateFunc($x);
+return skipWhilePredicateFunc($x);
 }',
-            '$x => \predicateFunc($x)',
-            '($x) => \predicateFunc($x)',
-            '$x => return \predicateFunc($x);',
-            '($x) => return \predicateFunc($x);',
-            '$x => { return \predicateFunc($x); }',
-            '($x) => { return \predicateFunc($x); }',
+            '$x => \skipWhilePredicateFunc($x)',
+            '($x) => \skipWhilePredicateFunc($x)',
+            '$x => return \skipWhilePredicateFunc($x);',
+            '($x) => return \skipWhilePredicateFunc($x);',
+            '$x => { return \skipWhilePredicateFunc($x); }',
+            '($x) => { return \skipWhilePredicateFunc($x); }',
             '$x => {
-return \predicateFunc($x);
+return \skipWhilePredicateFunc($x);
 }',
             '($x) => {
-return \predicateFunc($x);
+return \skipWhilePredicateFunc($x);
 }',
         ];
     }
 
     public function predciateMethod1($x) : bool {
-        return predicateFunc($x);
+        return skipWhilePredicateFunc($x);
     }
 
     public static function predciateMethod2($x) : bool {
-        return predicateFunc($x);
+        return skipWhilePredicateFunc($x);
     }
 
     public function test1() {

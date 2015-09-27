@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function selectorFunc($x) {
+function orderByDescendingSelectorFunc($x) {
     return $x;
 }
 
-class SelectorClass {
+class OrderByDescendingSelectorClass {
     public function __invoke($x) {
-        return $x;
+        return orderByDescendingSelectorFunc($x);
     }
 }
 
@@ -57,46 +57,46 @@ class OrderByDescendingTests extends TestCaseBase {
         return [
             true,
             function($x) {
-                return selectorFunc($x);
+                return orderByDescendingSelectorFunc($x);
             },
-            'selectorFunc',
-            '\selectorFunc',
+            'orderByDescendingSelectorFunc',
+            '\orderByDescendingSelectorFunc',
             array($this, 'selectorMethod1'),
             array(static::class, 'selectorMethod2'),
-            new SelectorClass(),
-            '$x => selectorFunc($x)',
-            '($x) => selectorFunc($x)',
-            '$x => return selectorFunc($x);',
-            '($x) => return selectorFunc($x);',
-            '$x => { return selectorFunc($x); }',
-            '($x) => { return selectorFunc($x); }',
+            new OrderByDescendingSelectorClass(),
+            '$x => orderByDescendingSelectorFunc($x)',
+            '($x) => orderByDescendingSelectorFunc($x)',
+            '$x => return orderByDescendingSelectorFunc($x);',
+            '($x) => return orderByDescendingSelectorFunc($x);',
+            '$x => { return orderByDescendingSelectorFunc($x); }',
+            '($x) => { return orderByDescendingSelectorFunc($x); }',
             '$x => {
-return selectorFunc($x);
+return orderByDescendingSelectorFunc($x);
 }',
             '($x) => {
-return selectorFunc($x);
+return orderByDescendingSelectorFunc($x);
 }',
-            '$x => \selectorFunc($x)',
-            '($x) => \selectorFunc($x)',
-            '$x => return \selectorFunc($x);',
-            '($x) => return \selectorFunc($x);',
-            '$x => { return \selectorFunc($x); }',
-            '($x) => { return \selectorFunc($x); }',
+            '$x => \orderByDescendingSelectorFunc($x)',
+            '($x) => \orderByDescendingSelectorFunc($x)',
+            '$x => return \orderByDescendingSelectorFunc($x);',
+            '($x) => return \orderByDescendingSelectorFunc($x);',
+            '$x => { return \orderByDescendingSelectorFunc($x); }',
+            '($x) => { return \orderByDescendingSelectorFunc($x); }',
             '$x => {
-return \selectorFunc($x);
+return \orderByDescendingSelectorFunc($x);
 }',
             '($x) => {
-return \selectorFunc($x);
+return \orderByDescendingSelectorFunc($x);
 }',
         ];
     }
 
     public function selectorMethod1($x) {
-        return selectorFunc($x);
+        return orderByDescendingSelectorFunc($x);
     }
 
     public static function selectorMethod2($x) {
-        return selectorFunc($x);
+        return orderByDescendingSelectorFunc($x);
     }
 
     public function testNoComparer() {

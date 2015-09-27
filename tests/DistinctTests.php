@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function comparerFunc($x, $y) : bool {
+function distinctComparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class DistinctEqualityComparerClass {
     public function __invoke($x, $y) {
-        return comparerFunc($x, $y);
+        return distinctComparerFunc($x, $y);
     }
 }
 
@@ -49,47 +49,47 @@ class EqualityComparerClass {
  */
 class DistinctTests extends TestCaseBase {
     public function comparerMethod1($x, $y) {
-        return comparerFunc($x, $y);
+        return distinctComparerFunc($x, $y);
     }
 
     public static function comparerMethod2($x, $y) {
-        return comparerFunc($x, $y);
+        return distinctComparerFunc($x, $y);
     }
 
     protected function createEqualityComparers() : array {
         return [
             true,
             function($x, $y) {
-                return comparerFunc($x, $y);
+                return distinctComparerFunc($x, $y);
             },
-            'comparerFunc',
-            '\comparerFunc',
+            'distinctComparerFunc',
+            '\distinctComparerFunc',
             array($this, 'comparerMethod1'),
             array(static::class, 'comparerMethod2'),
-            new EqualityComparerClass(),
-            '$x, $y => comparerFunc($x, $y)',
-            '($x, $y) => comparerFunc($x, $y)',
-            '$x, $y => return comparerFunc($x, $y);',
-            '($x, $y) => return comparerFunc($x, $y);',
-            '$x, $y => { return comparerFunc($x, $y); }',
-            '($x, $y) => { return comparerFunc($x, $y); }',
+            new DistinctEqualityComparerClass(),
+            '$x, $y => distinctComparerFunc($x, $y)',
+            '($x, $y) => distinctComparerFunc($x, $y)',
+            '$x, $y => return distinctComparerFunc($x, $y);',
+            '($x, $y) => return distinctComparerFunc($x, $y);',
+            '$x, $y => { return distinctComparerFunc($x, $y); }',
+            '($x, $y) => { return distinctComparerFunc($x, $y); }',
             '$x, $y => {
-return comparerFunc($x, $y);
+return distinctComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return comparerFunc($x, $y);
+return distinctComparerFunc($x, $y);
 }',
-            '$x, $y => \comparerFunc($x, $y)',
-            '($x, $y) => \comparerFunc($x, $y)',
-            '$x, $y => return \comparerFunc($x, $y);',
-            '($x, $y) => return \comparerFunc($x, $y);',
-            '$x, $y => { return \comparerFunc($x, $y); }',
-            '($x, $y) => { return \comparerFunc($x, $y); }',
+            '$x, $y => \distinctComparerFunc($x, $y)',
+            '($x, $y) => \distinctComparerFunc($x, $y)',
+            '$x, $y => return \distinctComparerFunc($x, $y);',
+            '($x, $y) => return \distinctComparerFunc($x, $y);',
+            '$x, $y => { return \distinctComparerFunc($x, $y); }',
+            '($x, $y) => { return \distinctComparerFunc($x, $y); }',
             '$x, $y => {
-return \comparerFunc($x, $y);
+return \distinctComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \comparerFunc($x, $y);
+return \distinctComparerFunc($x, $y);
 }',
         ];
     }

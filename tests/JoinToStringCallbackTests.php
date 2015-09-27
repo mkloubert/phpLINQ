@@ -33,13 +33,13 @@ use \System\Collections\IIndexedItemContext;
 use \System\Collections\IEnumerable;
 
 
-function separatorFactoryFunc($x, IIndexedItemContext $ctx) : string {
+function joinToStringCallbackSeparatorFactoryFunc($x, IIndexedItemContext $ctx) : string {
     return !$ctx->isLast() ? ', ' : ' and ';
 }
 
-class SeparatorFactoryClass {
+class JoinToStringSeparatorFactoryClass {
     public function __invoke($x, IIndexedItemContext $ctx) {
-        return separatorFactoryFunc($x, $ctx);
+        return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
     }
 }
 
@@ -57,46 +57,46 @@ class JoinToStringCallbackTests extends TestCaseBase {
     protected function createSeparatorFactories() : array {
         return [
             function($x, IIndexedItemContext $ctx) {
-                return separatorFactoryFunc($x, $ctx);
+                return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
             },
-            'separatorFactoryFunc',
-            '\separatorFactoryFunc',
+            'joinToStringCallbackSeparatorFactoryFunc',
+            '\joinToStringCallbackSeparatorFactoryFunc',
             array($this, 'separatorFactoryMethod1'),
             array(static::class, 'separatorFactoryMethod2'),
-            new SeparatorFactoryClass(),
-            '$x, $ctx => separatorFactoryFunc($x, $ctx)',
-            '($x, $ctx) => separatorFactoryFunc($x, $ctx)',
-            '$x, $ctx => return separatorFactoryFunc($x, $ctx);',
-            '($x, $ctx) => return separatorFactoryFunc($x, $ctx);',
-            '$x, $ctx => { return separatorFactoryFunc($x, $ctx); }',
-            '($x, $ctx) => { return separatorFactoryFunc($x, $ctx); }',
+            new JoinToStringSeparatorFactoryClass(),
+            '$x, $ctx => joinToStringCallbackSeparatorFactoryFunc($x, $ctx)',
+            '($x, $ctx) => joinToStringCallbackSeparatorFactoryFunc($x, $ctx)',
+            '$x, $ctx => return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);',
+            '($x, $ctx) => return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);',
+            '$x, $ctx => { return joinToStringCallbackSeparatorFactoryFunc($x, $ctx); }',
+            '($x, $ctx) => { return joinToStringCallbackSeparatorFactoryFunc($x, $ctx); }',
             '$x, $ctx => {
-return separatorFactoryFunc($x, $ctx);
+return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
 }',
             '($x, $ctx) => {
-return separatorFactoryFunc($x, $ctx);
+return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
 }',
-            '$x, $ctx => \separatorFactoryFunc($x, $ctx)',
-            '($x, $ctx) => \separatorFactoryFunc($x, $ctx)',
-            '$x, $ctx => return \separatorFactoryFunc($x, $ctx);',
-            '($x, $ctx) => return \separatorFactoryFunc($x, $ctx);',
-            '$x, $ctx => { return \separatorFactoryFunc($x, $ctx); }',
-            '($x, $ctx) => { return \separatorFactoryFunc($x, $ctx); }',
+            '$x, $ctx => \joinToStringCallbackSeparatorFactoryFunc($x, $ctx)',
+            '($x, $ctx) => \joinToStringCallbackSeparatorFactoryFunc($x, $ctx)',
+            '$x, $ctx => return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx);',
+            '($x, $ctx) => return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx);',
+            '$x, $ctx => { return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx); }',
+            '($x, $ctx) => { return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx); }',
             '$x, $ctx => {
-return \separatorFactoryFunc($x, $ctx);
+return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
 }',
             '($x, $ctx) => {
-return \separatorFactoryFunc($x, $ctx);
+return \joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
 }',
         ];
     }
 
     public function separatorFactoryMethod1($x, IIndexedItemContext $ctx) {
-        return separatorFactoryFunc($x, $ctx);
+        return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
     }
 
     public static function separatorFactoryMethod2($x, IIndexedItemContext $ctx) {
-        return separatorFactoryFunc($x, $ctx);
+        return joinToStringCallbackSeparatorFactoryFunc($x, $ctx);
     }
 
     public function test1() {

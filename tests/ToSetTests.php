@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function equalityComparerFunc($x, $y): bool {
+function toSetEqualityComparerFunc($x, $y): bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class ToSetEqualityComparerClass {
     public function __invoke($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return toSetEqualityComparerFunc($x, $y);
     }
 }
 
@@ -56,46 +56,46 @@ class ToSetTests extends TestCaseBase {
     protected function createEqualityComparers() : array {
         return [
             function($x, $y) {
-                return equalityComparerFunc($x, $y);
+                return toSetEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
-            new EqualityComparerClass(),
+            'toSetEqualityComparerFunc',
+            '\toSetEqualityComparerFunc',
+            new ToSetEqualityComparerClass(),
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            '$x, $y => toSetEqualityComparerFunc($x, $y)',
+            '($x, $y) => toSetEqualityComparerFunc($x, $y)',
+            '$x, $y => return toSetEqualityComparerFunc($x, $y);',
+            '($x, $y) => return toSetEqualityComparerFunc($x, $y);',
+            '$x, $y => { return toSetEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return toSetEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return toSetEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return toSetEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \toSetEqualityComparerFunc($x, $y)',
+            '($x, $y) => \toSetEqualityComparerFunc($x, $y)',
+            '$x, $y => return \toSetEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \toSetEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \toSetEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \toSetEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \toSetEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \toSetEqualityComparerFunc($x, $y);
 }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return toSetEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return toSetEqualityComparerFunc($x, $y);
     }
 
     public function test1() {

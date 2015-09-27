@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
+function takeWhilePredicateFunc($x) : bool {
     return $x < 3;
 }
 
-class PredciateClass {
+class TakeWhilePredciateClass {
     public function __invoke($x) : bool {
-        return predicateFunc($x);
+        return takeWhilePredicateFunc($x);
     }
 }
 
@@ -56,46 +56,46 @@ class TakeWhileTests extends TestCaseBase {
     protected function createPredicates() : array {
         return [
             function($x) : bool {
-                return predicateFunc($x);
+                return takeWhilePredicateFunc($x);
             },
-            'predicateFunc',
-            '\predicateFunc',
+            'takeWhilePredicateFunc',
+            '\takeWhilePredicateFunc',
             array($this, 'predciateMethod1'),
             array(static::class, 'predciateMethod2'),
-            new PredciateClass(),
-            '$x => predicateFunc($x)',
-            '($x) => predicateFunc($x)',
-            '$x => return predicateFunc($x);',
-            '($x) => return predicateFunc($x);',
-            '$x => { return predicateFunc($x); }',
-            '($x) => { return predicateFunc($x); }',
+            new TakeWhilePredciateClass(),
+            '$x => takeWhilePredicateFunc($x)',
+            '($x) => takeWhilePredicateFunc($x)',
+            '$x => return takeWhilePredicateFunc($x);',
+            '($x) => return takeWhilePredicateFunc($x);',
+            '$x => { return takeWhilePredicateFunc($x); }',
+            '($x) => { return takeWhilePredicateFunc($x); }',
             '$x => {
-return predicateFunc($x);
+return takeWhilePredicateFunc($x);
 }',
             '($x) => {
-return predicateFunc($x);
+return takeWhilePredicateFunc($x);
 }',
-            '$x => \predicateFunc($x)',
-            '($x) => \predicateFunc($x)',
-            '$x => return \predicateFunc($x);',
-            '($x) => return \predicateFunc($x);',
-            '$x => { return \predicateFunc($x); }',
-            '($x) => { return \predicateFunc($x); }',
+            '$x => \takeWhilePredicateFunc($x)',
+            '($x) => \takeWhilePredicateFunc($x)',
+            '$x => return \takeWhilePredicateFunc($x);',
+            '($x) => return \takeWhilePredicateFunc($x);',
+            '$x => { return \takeWhilePredicateFunc($x); }',
+            '($x) => { return \takeWhilePredicateFunc($x); }',
             '$x => {
-return \predicateFunc($x);
+return \takeWhilePredicateFunc($x);
 }',
             '($x) => {
-return \predicateFunc($x);
+return \takeWhilePredicateFunc($x);
 }',
         ];
     }
 
     public function predciateMethod1($x) : bool {
-        return predicateFunc($x);
+        return takeWhilePredicateFunc($x);
     }
 
     public static function predciateMethod2($x) : bool {
-        return predicateFunc($x);
+        return takeWhilePredicateFunc($x);
     }
 
     public function test1() {

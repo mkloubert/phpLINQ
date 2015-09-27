@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($key) : string {
+function toJsonKeySelectorFunc($key) : string {
     return chr(ord('A') + $key);
 }
 
-class KeySelectorClass {
+class ToJsonKeySelectorClass {
     public function __invoke($key) {
-        return keySelectorFunc($key);
+        return toJsonKeySelectorFunc($key);
     }
 }
 
@@ -56,46 +56,46 @@ class ToJsonTests extends TestCaseBase {
     protected function createKeySelectors() : array {
         return [
             function ($key) {
-                return keySelectorFunc($key);
+                return toJsonKeySelectorFunc($key);
             },
-            'keySelectorFunc',
-            '\keySelectorFunc',
+            'toJsonKeySelectorFunc',
+            '\toJsonKeySelectorFunc',
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
-            new KeySelectorClass(),
-            '$key => keySelectorFunc($key)',
-            '($key) => keySelectorFunc($key)',
-            '$key => return keySelectorFunc($key);',
-            '($key) => return keySelectorFunc($key);',
-            '$key => { return keySelectorFunc($key); }',
-            '($key) => { return keySelectorFunc($key); }',
+            new ToJsonKeySelectorClass(),
+            '$key => toJsonKeySelectorFunc($key)',
+            '($key) => toJsonKeySelectorFunc($key)',
+            '$key => return toJsonKeySelectorFunc($key);',
+            '($key) => return toJsonKeySelectorFunc($key);',
+            '$key => { return toJsonKeySelectorFunc($key); }',
+            '($key) => { return toJsonKeySelectorFunc($key); }',
             '$key => {
-return keySelectorFunc($key);
+return toJsonKeySelectorFunc($key);
 }',
             '($key) => {
-return keySelectorFunc($key);
+return toJsonKeySelectorFunc($key);
 }',
-            '$key => \keySelectorFunc($key)',
-            '($key) => \keySelectorFunc($key)',
-            '$key => return \keySelectorFunc($key);',
-            '($key) => return \keySelectorFunc($key);',
-            '$key => { return \keySelectorFunc($key); }',
-            '($key) => { return \keySelectorFunc($key); }',
+            '$key => \toJsonKeySelectorFunc($key)',
+            '($key) => \toJsonKeySelectorFunc($key)',
+            '$key => return \toJsonKeySelectorFunc($key);',
+            '($key) => return \toJsonKeySelectorFunc($key);',
+            '$key => { return \toJsonKeySelectorFunc($key); }',
+            '($key) => { return \toJsonKeySelectorFunc($key); }',
             '$key => {
-return \keySelectorFunc($key);
+return \toJsonKeySelectorFunc($key);
 }',
             '($key) => {
-return \keySelectorFunc($key);
+return \toJsonKeySelectorFunc($key);
 }',
         ];
     }
 
     public function keySelectorMethod1($x) {
-        return keySelectorFunc($x);
+        return toJsonKeySelectorFunc($x);
     }
 
     public static function keySelectorMethod2($x) {
-        return keySelectorFunc($x);
+        return toJsonKeySelectorFunc($x);
     }
 
     /**

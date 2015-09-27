@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function equalityComparerFunc($x, $y) : bool {
+function unionEqualityComparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class UnionEqualityComparerClass {
     public function __invoke($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return unionEqualityComparerFunc($x, $y);
     }
 }
 
@@ -57,46 +57,46 @@ class UnionTests extends TestCaseBase {
         return [
             true,
             function($x, $y) : bool {
-                return equalityComparerFunc($x, $y);
+                return unionEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
+            'unionEqualityComparerFunc',
+            '\unionEqualityComparerFunc',
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            new EqualityComparerClass(),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            new UnionEqualityComparerClass(),
+            '$x, $y => unionEqualityComparerFunc($x, $y)',
+            '($x, $y) => unionEqualityComparerFunc($x, $y)',
+            '$x, $y => return unionEqualityComparerFunc($x, $y);',
+            '($x, $y) => return unionEqualityComparerFunc($x, $y);',
+            '$x, $y => { return unionEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return unionEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return unionEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return unionEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \unionEqualityComparerFunc($x, $y)',
+            '($x, $y) => \unionEqualityComparerFunc($x, $y)',
+            '$x, $y => return \unionEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \unionEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \unionEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \unionEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \unionEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \unionEqualityComparerFunc($x, $y);
 }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return unionEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return unionEqualityComparerFunc($x, $y);
     }
 
     public function test1Array() {

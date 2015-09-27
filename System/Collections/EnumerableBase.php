@@ -358,7 +358,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function defaultArrayIfEmpty($items = null) : IEnumerable {
+    public final function defaultArrayIfEmpty($items = null) : IEnumerable {
         if ($this->isEmpty()) {
             return static::createEnumerable($items);
         }
@@ -369,7 +369,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function defaultIfEmpty() : IEnumerable {
+    public final function defaultIfEmpty() : IEnumerable {
         return $this->defaultArrayIfEmpty(\func_get_args());
     }
 

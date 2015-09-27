@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1FuncForTest1($x) : int {
+function thenSelector1FuncForTest1($x) : int {
     return strlen($x);
 }
 
-class SelectorClass1 {
+class ThenSelector1ForTest1Class {
     public function __invoke($x) {
-        return selector1FuncForTest1($x);
+        return thenSelector1FuncForTest1($x);
     }
 }
 
@@ -57,7 +57,7 @@ class ThenTests extends TestCaseBase {
     protected function createSelectorsForTest1() : array {
         return [
             [
-                function($x) { return selector1FuncForTest1($x); },
+                function($x) { return thenSelector1FuncForTest1($x); },
             ],
             [
                 array($this, 'selector1Method1'),
@@ -66,53 +66,53 @@ class ThenTests extends TestCaseBase {
                 array(static::class, 'selector1Method2'),
             ],
             [
-                new SelectorClass1(),
+                new ThenSelector1ForTest1Class(),
             ],
             [
-                'selector1FuncForTest1',
+                'thenSelector1FuncForTest1',
             ],
             [
-                '\selector1FuncForTest1',
+                '\thenSelector1FuncForTest1',
             ],
             [
-                '$x => selector1FuncForTest1($x)',
+                '$x => thenSelector1FuncForTest1($x)',
             ],
             [
-                '($x) => selector1FuncForTest1($x)',
+                '($x) => thenSelector1FuncForTest1($x)',
             ],
             [
-                '$x => return selector1FuncForTest1($x);',
+                '$x => return thenSelector1FuncForTest1($x);',
             ],
             [
-                '($x) => return selector1FuncForTest1($x);',
+                '($x) => return thenSelector1FuncForTest1($x);',
             ],
             [
-                '($x) => { return selector1FuncForTest1($x); }',
+                '($x) => { return thenSelector1FuncForTest1($x); }',
             ],
             [
                 '($x) => {
-$y = selector1FuncForTest1($x);
+$y = thenSelector1FuncForTest1($x);
 return $y;
 }',
             ],
             [
-                '$x => \selector1FuncForTest1($x)',
+                '$x => \thenSelector1FuncForTest1($x)',
             ],
             [
-                '($x) => \selector1FuncForTest1($x)',
+                '($x) => \thenSelector1FuncForTest1($x)',
             ],
             [
-                '$x => return \selector1FuncForTest1($x);',
+                '$x => return \thenSelector1FuncForTest1($x);',
             ],
             [
-                '($x) => return \selector1FuncForTest1($x);',
+                '($x) => return \thenSelector1FuncForTest1($x);',
             ],
             [
-                '($x) => { return \selector1FuncForTest1($x); }',
+                '($x) => { return \thenSelector1FuncForTest1($x); }',
             ],
             [
                 '($x) => {
-$y = \selector1FuncForTest1($x);
+$y = \thenSelector1FuncForTest1($x);
 return $y;
 }',
             ],
@@ -153,10 +153,10 @@ return $y;
     }
 
     public function selector1Method1($x) {
-        return selector1FuncForTest1($x);
+        return thenSelector1FuncForTest1($x);
     }
 
     public static function selector1Method2($x) {
-        return selector1FuncForTest1($x);
+        return thenSelector1FuncForTest1($x);
     }
 }

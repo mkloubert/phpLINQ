@@ -34,33 +34,33 @@ use \System\Collections\IDictionary;
 use \System\Linq\Enumerable;
 
 
-function itemValidatorFunc($x) : bool {
+function toDictionaryItemValidatorFunc($x) : bool {
     return is_numeric($x);
 }
 
-function keyComparerFunc ($x, $y) : bool {
+function toDictionaryKeyComparerFunc ($x, $y) : bool {
     return 0 === strcasecmp(trim($x), trim($y));
 }
 
-function keyValidatorFunc ($x) : bool {
+function toDictionaryKeyValidatorFunc ($x) : bool {
     return is_string($x);
 }
 
-class ItemValidatorClass {
+class ToDictionaryItemValidatorClass {
     public function __invoke($x) {
-        return itemValidatorFunc($x);
+        return toDictionaryItemValidatorFunc($x);
     }
 }
 
-class KeyComparerClass {
+class ToDictionaryKeyComparerClass {
     public function __invoke($x, $y) {
-        return keyComparerFunc($x, $y);
+        return toDictionaryKeyComparerFunc($x, $y);
     }
 }
 
-class KeyValidatorClass {
+class ToDictionaryKeyValidatorClass {
     public function __invoke($x) {
-        return keyValidatorFunc($x);
+        return toDictionaryKeyValidatorFunc($x);
     }
 }
 
@@ -78,36 +78,36 @@ class ToDictionaryTests extends TestCaseBase {
     protected function createItemValidators() : array {
         return [
             function ($x) {
-                return itemValidatorFunc($x);
+                return toDictionaryItemValidatorFunc($x);
             },
-            'itemValidatorFunc',
-            '\itemValidatorFunc',
-            new ItemValidatorClass(),
+            'toDictionaryItemValidatorFunc',
+            '\toDictionaryItemValidatorFunc',
+            new ToDictionaryItemValidatorClass(),
             array($this, 'itemValidatorMethod1'),
             array(static::class, 'itemValidatorMethod2'),
-            '$x => itemValidatorFunc($x)',
-            '($x) => itemValidatorFunc($x)',
-            '$x => return itemValidatorFunc($x);',
-            '($x) => return itemValidatorFunc($x);',
-            '$x => { return itemValidatorFunc($x); }',
-            '($x) => { return itemValidatorFunc($x); }',
+            '$x => toDictionaryItemValidatorFunc($x)',
+            '($x) => toDictionaryItemValidatorFunc($x)',
+            '$x => return toDictionaryItemValidatorFunc($x);',
+            '($x) => return toDictionaryItemValidatorFunc($x);',
+            '$x => { return toDictionaryItemValidatorFunc($x); }',
+            '($x) => { return toDictionaryItemValidatorFunc($x); }',
             '$x => {
-                 return itemValidatorFunc($x);
+                 return toDictionaryItemValidatorFunc($x);
              }',
             '($x) => {
-                 return itemValidatorFunc($x);
+                 return toDictionaryItemValidatorFunc($x);
              }',
-            '$x => \itemValidatorFunc($x)',
-            '($x) => \itemValidatorFunc($x)',
-            '$x => return \itemValidatorFunc($x);',
-            '($x) => return \itemValidatorFunc($x);',
-            '$x => { return \itemValidatorFunc($x); }',
-            '($x) => { return \itemValidatorFunc($x); }',
+            '$x => \toDictionaryItemValidatorFunc($x)',
+            '($x) => \toDictionaryItemValidatorFunc($x)',
+            '$x => return \toDictionaryItemValidatorFunc($x);',
+            '($x) => return \toDictionaryItemValidatorFunc($x);',
+            '$x => { return \toDictionaryItemValidatorFunc($x); }',
+            '($x) => { return \toDictionaryItemValidatorFunc($x); }',
             '$x => {
-                 return \itemValidatorFunc($x);
+                 return \toDictionaryItemValidatorFunc($x);
              }',
             '($x) => {
-                 return \itemValidatorFunc($x);
+                 return \toDictionaryItemValidatorFunc($x);
              }',
         ];
     }
@@ -120,36 +120,36 @@ class ToDictionaryTests extends TestCaseBase {
     protected function createKeyComparers() : array {
         return [
             function ($x, $y) {
-                return keyComparerFunc($x, $y);
+                return toDictionaryKeyComparerFunc($x, $y);
             },
-            'keyComparerFunc',
-            '\keyComparerFunc',
-            new KeyComparerClass(),
+            'toDictionaryKeyComparerFunc',
+            '\toDictionaryKeyComparerFunc',
+            new ToDictionaryKeyComparerClass(),
             array($this, 'keyComparerMethod1'),
             array(static::class, 'keyComparerMethod2'),
-            '$x, $y => keyComparerFunc($x, $y)',
-            '($x, $y) => keyComparerFunc($x, $y)',
-            '$x, $y => return keyComparerFunc($x, $y);',
-            '($x, $y) => return keyComparerFunc($x, $y);',
-            '$x, $y => { return keyComparerFunc($x, $y); }',
-            '($x, $y) => { return keyComparerFunc($x, $y); }',
+            '$x, $y => toDictionaryKeyComparerFunc($x, $y)',
+            '($x, $y) => toDictionaryKeyComparerFunc($x, $y)',
+            '$x, $y => return toDictionaryKeyComparerFunc($x, $y);',
+            '($x, $y) => return toDictionaryKeyComparerFunc($x, $y);',
+            '$x, $y => { return toDictionaryKeyComparerFunc($x, $y); }',
+            '($x, $y) => { return toDictionaryKeyComparerFunc($x, $y); }',
             '$x, $y => {
-                 return keyComparerFunc($x, $y);
+                 return toDictionaryKeyComparerFunc($x, $y);
              }',
             '($x, $y) => {
-                 return keyComparerFunc($x, $y);
+                 return toDictionaryKeyComparerFunc($x, $y);
              }',
-            '$x, $y => \keyComparerFunc($x, $y)',
-            '($x, $y) => \keyComparerFunc($x, $y)',
-            '$x, $y => return \keyComparerFunc($x, $y);',
-            '($x, $y) => return \keyComparerFunc($x, $y);',
-            '$x, $y => { return \keyComparerFunc($x, $y); }',
-            '($x, $y) => { return \keyComparerFunc($x, $y); }',
+            '$x, $y => \toDictionaryKeyComparerFunc($x, $y)',
+            '($x, $y) => \toDictionaryKeyComparerFunc($x, $y)',
+            '$x, $y => return \toDictionaryKeyComparerFunc($x, $y);',
+            '($x, $y) => return \toDictionaryKeyComparerFunc($x, $y);',
+            '$x, $y => { return \toDictionaryKeyComparerFunc($x, $y); }',
+            '($x, $y) => { return \toDictionaryKeyComparerFunc($x, $y); }',
             '$x, $y => {
-                 return \keyComparerFunc($x, $y);
+                 return \toDictionaryKeyComparerFunc($x, $y);
              }',
             '($x, $y) => {
-                 return \keyComparerFunc($x, $y);
+                 return \toDictionaryKeyComparerFunc($x, $y);
              }',
         ];
     }
@@ -162,62 +162,62 @@ class ToDictionaryTests extends TestCaseBase {
     protected function createKeyValidators() : array {
         return [
             function ($x) {
-                return keyValidatorFunc($x);
+                return toDictionaryKeyValidatorFunc($x);
             },
-            'keyValidatorFunc',
-            '\keyValidatorFunc',
-            new KeyValidatorClass(),
+            'toDictionaryKeyValidatorFunc',
+            '\toDictionaryKeyValidatorFunc',
+            new ToDictionaryKeyValidatorClass(),
             array($this, 'keyValidatorMethod1'),
             array(static::class, 'keyValidatorMethod2'),
-            '$x => keyValidatorFunc($x)',
-            '($x) => keyValidatorFunc($x)',
-            '$x => return keyValidatorFunc($x);',
-            '($x) => return keyValidatorFunc($x);',
-            '$x => { return keyValidatorFunc($x); }',
-            '($x) => { return keyValidatorFunc($x); }',
+            '$x => toDictionaryKeyValidatorFunc($x)',
+            '($x) => toDictionaryKeyValidatorFunc($x)',
+            '$x => return toDictionaryKeyValidatorFunc($x);',
+            '($x) => return toDictionaryKeyValidatorFunc($x);',
+            '$x => { return toDictionaryKeyValidatorFunc($x); }',
+            '($x) => { return toDictionaryKeyValidatorFunc($x); }',
             '$x => {
-                 return keyValidatorFunc($x);
+                 return toDictionaryKeyValidatorFunc($x);
              }',
             '($x) => {
-                 return keyValidatorFunc($x);
+                 return toDictionaryKeyValidatorFunc($x);
              }',
-            '$x => \keyValidatorFunc($x)',
-            '($x) => \keyValidatorFunc($x)',
-            '$x => return \keyValidatorFunc($x);',
-            '($x) => return \keyValidatorFunc($x);',
-            '$x => { return \keyValidatorFunc($x); }',
-            '($x) => { return \keyValidatorFunc($x); }',
+            '$x => \toDictionaryKeyValidatorFunc($x)',
+            '($x) => \toDictionaryKeyValidatorFunc($x)',
+            '$x => return \toDictionaryKeyValidatorFunc($x);',
+            '($x) => return \toDictionaryKeyValidatorFunc($x);',
+            '$x => { return \toDictionaryKeyValidatorFunc($x); }',
+            '($x) => { return \toDictionaryKeyValidatorFunc($x); }',
             '$x => {
-                 return \keyValidatorFunc($x);
+                 return \toDictionaryKeyValidatorFunc($x);
              }',
             '($x) => {
-                 return \keyValidatorFunc($x);
+                 return \toDictionaryKeyValidatorFunc($x);
              }',
         ];
     }
 
     public function itemValidatorMethod1($x) {
-        return itemValidatorFunc($x);
+        return toDictionaryItemValidatorFunc($x);
     }
 
     public static function itemValidatorMethod2($x) {
-        return itemValidatorFunc($x);
+        return toDictionaryItemValidatorFunc($x);
     }
 
     public function keyComparerMethod1($x, $y) {
-        return keyComparerFunc($x, $y);
+        return toDictionaryKeyComparerFunc($x, $y);
     }
 
     public static function keyComparerMethod2($x, $y) {
-        return keyComparerFunc($x, $y);
+        return toDictionaryKeyComparerFunc($x, $y);
     }
 
     public function keyValidatorMethod1($x) {
-        return keyValidatorFunc($x);
+        return toDictionaryKeyValidatorFunc($x);
     }
 
     public static function keyValidatorMethod2($x) {
-        return keyValidatorFunc($x);
+        return toDictionaryKeyValidatorFunc($x);
     }
 
     public function test1() {

@@ -33,33 +33,15 @@ use \System\Collections\IEnumerable;
 use \System\Linq\Enumerable;
 
 
-class Person {
-    public function __construct($name) {
-        $this->Name = $name;
-    }
-
-    public $Name;
-}
-
-class Pet {
-    public function __construct($name, Person $owner) {
-        $this->Name = $name;
-        $this->Owner = $owner;
-    }
-
-    public $Name;
-    public $Owner;
-}
-
-function personKeySelectorFunc(Person $person) : string {
+function groupJoinPersonKeySelectorFunc(Person $person) : string {
     return $person->Name;
 }
 
-function petKeySelectorFunc(Pet $pet) : string {
+function groupJoinPetKeySelectorFunc(Pet $pet) : string {
     return $pet->Owner->Name;
 }
 
-function selectorFunc(Person $person, IEnumerable $pets) : string {
+function groupJoinResultSelectorFunc(Person $person, IEnumerable $pets) : string {
     $petList = $pets->select(function(Pet $pet) {
                                  return $pet->Name;
                              })
@@ -70,21 +52,21 @@ function selectorFunc(Person $person, IEnumerable $pets) : string {
                    implode('", "', $petList));
 }
 
-class PersonKeySelectorClass {
+class GroupJoinPersonKeySelectorClass {
     public function __invoke(Person $person) {
-        return personKeySelectorFunc($person);
+        return groupJoinPersonKeySelectorFunc($person);
     }
 }
 
-class PetKeySelectorClass {
+class GroupJoinPetKeySelectorClass {
     public function __invoke(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return groupJoinPetKeySelectorFunc($pet);
     }
 }
 
-class ResultSelectorClass {
+class GroupJoinResultSelectorClass {
     public function __invoke(Person $person, IEnumerable $pets) {
-        return selectorFunc($person, $pets);
+        return groupJoinResultSelectorFunc($person, $pets);
     }
 }
 
@@ -125,24 +107,24 @@ class GroupJoinTests extends TestCaseBase {
         return [
             [
                 function(Person $person) {
-                    return personKeySelectorFunc($person);
+                    return groupJoinPersonKeySelectorFunc($person);
                 },
                 function(Pet $pet) {
-                    return petKeySelectorFunc($pet);
+                    return groupJoinPetKeySelectorFunc($pet);
                 },
                 function(Person $person, IEnumerable $pets) {
-                    return selectorFunc($person, $pets);
+                    return groupJoinResultSelectorFunc($person, $pets);
                 },
             ],
             [
-                'personKeySelectorFunc',
-                'petKeySelectorFunc',
-                'selectorFunc',
+                'groupJoinPersonKeySelectorFunc',
+                'groupJoinPetKeySelectorFunc',
+                'groupJoinResultSelectorFunc',
             ],
             [
-                '\personKeySelectorFunc',
-                '\petKeySelectorFunc',
-                '\selectorFunc',
+                '\groupJoinPersonKeySelectorFunc',
+                '\groupJoinPetKeySelectorFunc',
+                '\groupJoinResultSelectorFunc',
             ],
             [
                 array($this, 'personKeySelectorMethod1'),
@@ -155,69 +137,69 @@ class GroupJoinTests extends TestCaseBase {
                 array(static::class, 'resultSelectorMethod2'),
             ],
             [
-                new PersonKeySelectorClass(),
-                new PetKeySelectorClass(),
-                new ResultSelectorClass(),
+                new GroupJoinPersonKeySelectorClass(),
+                new GroupJoinPetKeySelectorClass(),
+                new GroupJoinResultSelectorClass(),
             ],
             [
-                '$person => personKeySelectorFunc($person)',
-                '$pet => \petKeySelectorFunc($pet)',
-                '$person, $pets => selectorFunc($person, $pets)',
+                '$person => groupJoinPersonKeySelectorFunc($person)',
+                '$pet => \groupJoinPetKeySelectorFunc($pet)',
+                '$person, $pets => groupJoinResultSelectorFunc($person, $pets)',
             ],
             [
-                '($person) => \personKeySelectorFunc($person)',
-                '($pet) => petKeySelectorFunc($pet)',
-                '($person, $pets) => selectorFunc($person, $pets)',
+                '($person) => \groupJoinPersonKeySelectorFunc($person)',
+                '($pet) => groupJoinPetKeySelectorFunc($pet)',
+                '($person, $pets) => groupJoinResultSelectorFunc($person, $pets)',
             ],
             [
                 '$person => $person->Name',
                 '$pet => $pet->Owner->Name',
-                '$person, $pets => \selectorFunc($person, $pets)',
+                '$person, $pets => \groupJoinResultSelectorFunc($person, $pets)',
             ],
             [
                 '($person) => $person->Name',
                 '($pet) => $pet->Owner->Name',
-                '($person, $pets) => \selectorFunc($person, $pets)',
+                '($person, $pets) => \groupJoinResultSelectorFunc($person, $pets)',
             ],
             [
                 '$person => return $person->Name;',
                 '$pet => return $pet->Owner->Name;',
-                '$person, $pets => return selectorFunc($person, $pets);',
+                '$person, $pets => return groupJoinResultSelectorFunc($person, $pets);',
             ],
             [
                 '($person) => return $person->Name;',
                 '($pet) => return $pet->Owner->Name;',
-                '($person, $pets) => return selectorFunc($person, $pets);',
+                '($person, $pets) => return groupJoinResultSelectorFunc($person, $pets);',
             ],
             [
                 '$person => return $person->Name;',
                 '$pet => return $pet->Owner->Name;',
-                '$person, $pets => return \selectorFunc($person, $pets);',
+                '$person, $pets => return \groupJoinResultSelectorFunc($person, $pets);',
             ],
             [
                 '($person) => return $person->Name;',
                 '($pet) => return $pet->Owner->Name;',
-                '($person, $pets) => return \selectorFunc($person, $pets);',
+                '($person, $pets) => return \groupJoinResultSelectorFunc($person, $pets);',
             ],
             [
                 '$person => { return $person->Name; }',
                 '$pet => { return $pet->Owner->Name; }',
-                '$person, $pets => { return selectorFunc($person, $pets); }',
+                '$person, $pets => { return groupJoinResultSelectorFunc($person, $pets); }',
             ],
             [
                 '($person) => { return $person->Name; }',
                 '($pet) => { return $pet->Owner->Name; }',
-                '($person, $pets) => { return selectorFunc($person, $pets); }',
+                '($person, $pets) => { return groupJoinResultSelectorFunc($person, $pets); }',
             ],
             [
                 '$person => { return $person->Name; }',
                 '$pet => { return $pet->Owner->Name; }',
-                '$person, $pets => { return \selectorFunc($person, $pets); }',
+                '$person, $pets => { return \groupJoinResultSelectorFunc($person, $pets); }',
             ],
             [
                 '($person) => { return $person->Name; }',
                 '($pet) => { return $pet->Owner->Name; }',
-                '($person, $pets) => { return \selectorFunc($person, $pets); }',
+                '($person, $pets) => { return \groupJoinResultSelectorFunc($person, $pets); }',
             ],
             [
                 '$person => {
@@ -227,7 +209,7 @@ return $person->Name;
 return $pet->Owner->Name;
 }',
                 '$person, $pets => {
-return selectorFunc($person, $pets);
+return groupJoinResultSelectorFunc($person, $pets);
 }',
             ],
             [
@@ -238,7 +220,7 @@ return $person->Name;
 return $pet->Owner->Name;
 }',
                 '($person, $pets) => {
-return selectorFunc($person, $pets);
+return groupJoinResultSelectorFunc($person, $pets);
 }',
             ],
             [
@@ -249,7 +231,7 @@ return $person->Name;
 return $pet->Owner->Name;
 }',
                 '$person, $pets => {
-return \selectorFunc($person, $pets);
+return \groupJoinResultSelectorFunc($person, $pets);
 }',
             ],
             [
@@ -260,7 +242,7 @@ return $person->Name;
 return $pet->Owner->Name;
 }',
                 '($person, $pets) => {
-return \selectorFunc($person, $pets);
+return \groupJoinResultSelectorFunc($person, $pets);
 }',
             ],
         ];
@@ -300,27 +282,27 @@ return \selectorFunc($person, $pets);
     }
 
     public function personKeySelectorMethod1(Person $person) {
-        return personKeySelectorFunc($person);
+        return groupJoinPersonKeySelectorFunc($person);
     }
 
     public static function personKeySelectorMethod2(Person $person) {
-        return personKeySelectorFunc($person);
+        return groupJoinPersonKeySelectorFunc($person);
     }
 
     public function petKeySelectorMethod1(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return groupJoinPetKeySelectorFunc($pet);
     }
 
     public static function petKeySelectorMethod2(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return groupJoinPetKeySelectorFunc($pet);
     }
 
     public function resultSelectorMethod1(Person $person, IEnumerable $pets) {
-        return selectorFunc($person, $pets);
+        return groupJoinResultSelectorFunc($person, $pets);
     }
 
     public static function resultSelectorMethod2(Person $person, IEnumerable $pets) {
-        return selectorFunc($person, $pets);
+        return groupJoinResultSelectorFunc($person, $pets);
     }
 
     public function testArray() {

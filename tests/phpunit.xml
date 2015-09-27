@@ -1,0 +1,88 @@
+<phpunit bootstrap="bootstrap.php">
+    <testsuites>
+        <testsuite name="System.Collections.IEnumerable">
+            <file>AggregateTests.php</file>
+            <file>AllTests.php</file>
+            <file>AnyTests.php</file>
+            <file>AppendToArrayTests.php</file>
+            <file>AsResettableTests.php</file>
+            <file>AverageTests.php</file>
+            <file>CastTests.php</file>
+            <file>ConcatTests.php</file>
+            <file>ConcatToStringTests.php</file>
+            <file>ConcatValuesTests.php</file>
+            <file>ContainsTests.php</file>
+            <file>CountTests.php</file>
+            <file>DefaultArrayIfEmptyTests.php</file>
+            <file>DefaultIfEmptyTests.php</file>
+            <file>DistinctTests.php</file>
+            <file>EachTests.php</file>
+            <file>ElementAtOrDefaultTests.php</file>
+            <file>ElementAtTests.php</file>
+            <file>ExceptTests.php</file>
+            <file>FirstOrDefaultTests.php</file>
+            <file>FirstTests.php</file>
+            <file>GroupByTests.php</file>
+            <file>GroupJoinTests.php</file>
+            <file>IntersectTests.php</file>
+            <file>IsEmptyTests.php</file>
+            <file>IsNotEmptyTests.php</file>
+            <file>JoinTests.php</file>
+            <file>JoinToStringCallbackTests.php</file>
+            <file>JoinToStringTests.php</file>
+            <file>LastOrDefaultTests.php</file>
+            <file>LastTests.php</file>
+            <file>MaxTests.php</file>
+            <file>MinTests.php</file>
+            <file>OfTypeTests.php</file>
+            <file>OrderByDescendingTests.php</file>
+            <file>OrderByTests.php</file>
+            <file>OrderDescendingTests.php</file>
+            <file>OrderTests.php</file>
+            <file>ProductTests.php</file>
+            <file>RandomizeTests.php</file>
+            <file>ResetTests.php</file>
+            <file>ReverseTests.php</file>
+            <file>SelectManyTests.php</file>
+            <file>SelectTests.php</file>
+            <file>SequenceEqualTests.php</file>
+            <file>SerializationTests.php</file>
+            <file>SingleOrDefaultTests.php</file>
+            <file>SingleTests.php</file>
+            <file>SkipTests.php</file>
+            <file>SkipWhileTests.php</file>
+            <file>SumTests.php</file>
+            <file>TakeTests.php</file>
+            <file>TakeWhileTests.php</file>
+            <file>ThenByDescendingTests.php</file>
+            <file>ThenByTests.php</file>
+            <file>ThenDescendingTests.php</file>
+            <file>ThenTests.php</file>
+            <file>ToArrayTests.php</file>
+            <file>ToDictionaryTests.php</file>
+            <file>ToJsonTests.php</file>
+            <file>ToListTests.php</file>
+            <file>ToSetTests.php</file>
+            <file>UnionTests.php</file>
+            <file>WithNewKeysAndValuesTests.php</file>
+            <file>WithNewKeysTests.php</file>
+            <file>ZipTests.php</file>
+        </testsuite>
+
+        <testsuite name="Lambda expressions">
+            <file>LambdaTests.php</file>
+        </testsuite>
+
+        <testsuite name="System.Collections.Collection">
+            <file>CollectionTests.php</file>
+        </testsuite>
+
+        <testsuite name="System.Collections.Dictionary">
+            <file>DictionaryTests.php</file>
+        </testsuite>
+
+        <testsuite name="System.Collections.Set">
+            <file>SetTests.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

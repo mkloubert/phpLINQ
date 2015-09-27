@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function equalityComparerFunc($x, $y) : bool {
+function containsEqualityComparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class ContainsEqualityComparerClass {
     public function __invoke($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return containsEqualityComparerFunc($x, $y);
     }
 }
 
@@ -57,46 +57,46 @@ class ContainsTests extends TestCaseBase {
         return [
             true,
             function($x, $y) : bool {
-                return equalityComparerFunc($x, $y);
+                return containsEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
+            'containsEqualityComparerFunc',
+            '\containsEqualityComparerFunc',
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            new EqualityComparerClass(),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            new ContainsEqualityComparerClass(),
+            '$x, $y => containsEqualityComparerFunc($x, $y)',
+            '($x, $y) => containsEqualityComparerFunc($x, $y)',
+            '$x, $y => return containsEqualityComparerFunc($x, $y);',
+            '($x, $y) => return containsEqualityComparerFunc($x, $y);',
+            '$x, $y => { return containsEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return containsEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return containsEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return containsEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \containsEqualityComparerFunc($x, $y)',
+            '($x, $y) => \containsEqualityComparerFunc($x, $y)',
+            '$x, $y => return \containsEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \containsEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \containsEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \containsEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \containsEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \containsEqualityComparerFunc($x, $y);
 }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return containsEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return containsEqualityComparerFunc($x, $y);
     }
 
     public function test1a() {

@@ -29,93 +29,11 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\IEnumerable;
 
-
-class CastTestClass {
-    public function __toString() {
-        return 'abc';
-    }
-}
-
-/**
- * @see \System\Collection\IEnumerable::cast()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class CastTests extends TestCaseBase {
-    public function testInt() {
-        foreach (static::sequenceListFromArray([null, 1, '2', 3.0, false, 4.5, 6.30, true]) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $items = static::sequenceToArray($seq->cast('int'));
-
-            $this->assertEquals(8, count($items));
-
-            $this->assertEquals(0, $items[0]);
-            $this->assertEquals(1, $items[1]);
-            $this->assertEquals(2, $items[2]);
-            $this->assertEquals(3, $items[3]);
-            $this->assertEquals(0, $items[4]);
-            $this->assertEquals(4, $items[5]);
-            $this->assertEquals(6, $items[6]);
-            $this->assertEquals(1, $items[7]);
-
-            foreach ($items as $x) {
-                $this->assertTrue('integer' === gettype($x));
-                $this->assertTrue(is_int($x));
-                $this->assertTrue(is_integer($x));
-            }
-        }
+class Person {
+    public function __construct($name) {
+        $this->Name = $name;
     }
 
-    public function testInteger() {
-        foreach (static::sequenceListFromArray([null, 1, '2', 3.0, false, 4.5, 6.30, true, '']) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $items = static::sequenceToArray($seq->cast('integer'));
-
-            $this->assertEquals(9, count($items));
-
-            $this->assertEquals(0, $items[0]);
-            $this->assertEquals(1, $items[1]);
-            $this->assertEquals(2, $items[2]);
-            $this->assertEquals(3, $items[3]);
-            $this->assertEquals(0, $items[4]);
-            $this->assertEquals(4, $items[5]);
-            $this->assertEquals(6, $items[6]);
-            $this->assertEquals(1, $items[7]);
-            $this->assertEquals(0, $items[8]);
-
-            foreach ($items as $x) {
-                $this->assertTrue('integer' === gettype($x));
-                $this->assertTrue(is_int($x));
-                $this->assertTrue(is_integer($x));
-            }
-        }
-    }
-
-    public function testString() {
-        foreach (static::sequenceListFromArray([1, '2', 3.0, null, new CastTestClass(), false, 4.5, 6.70]) as $seq) {
-            /* @var IEnumerable $seq */
-
-            $items = static::sequenceToArray($seq->cast('string'));
-
-            $this->assertEquals(8, count($items));
-
-            $this->assertEquals('1', $items[0]);
-            $this->assertEquals('2', $items[1]);
-            $this->assertEquals('3', $items[2]);
-            $this->assertEquals('', $items[3]);
-            $this->assertEquals('abc', $items[4]);
-            $this->assertEquals('', $items[5]);
-            $this->assertEquals('4.5', $items[6]);
-            $this->assertEquals('6.7', $items[7]);
-
-            foreach ($items as $x) {
-                $this->assertTrue('string' === gettype($x));
-                $this->assertTrue(is_string($x));
-            }
-        }
-    }
+    public $Name;
 }

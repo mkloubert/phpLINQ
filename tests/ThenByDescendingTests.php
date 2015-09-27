@@ -32,26 +32,25 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1FuncForTest1($x) : int {
+function thenByDescendingSelector1FuncForTest1($x) : int {
     return strlen($x);
 }
 
-function selector2FuncForTest1($x) {
+function thenByDescendingSelector2FuncForTest1($x) {
     return $x;
 }
 
-class SelectorClass1 {
+class ThenByDescendingSelector1ForTest1Class {
     public function __invoke($x) {
-        return selector1FuncForTest1($x);
+        return thenByDescendingSelector1FuncForTest1($x);
     }
 }
 
-class SelectorClass2 {
+class ThenByDescendingSelector2ForTest1Class {
     public function __invoke($x) {
-        return selector2FuncForTest1($x);
+        return thenByDescendingSelector2FuncForTest1($x);
     }
 }
-
 
 /**
  * @see \System\Linq\IOrderedEnumerable::thenByDescending()
@@ -67,8 +66,8 @@ class ThenByDescendingTests extends TestCaseBase {
     protected function createSelectorsForTest1() : array {
         return [
             [
-                function($x) { return selector1FuncForTest1($x); },
-                function($x) { return selector2FuncForTest1($x); },
+                function($x) { return thenByDescendingSelector1FuncForTest1($x); },
+                function($x) { return thenByDescendingSelector2FuncForTest1($x); },
             ],
             [
                 array($this, 'selector1Method1'),
@@ -79,32 +78,32 @@ class ThenByDescendingTests extends TestCaseBase {
                 array(static::class, 'selector2Method2'),
             ],
             [
-                new SelectorClass1(),
-                new SelectorClass2(),
+                new ThenByDescendingSelector1ForTest1Class(),
+                new ThenByDescendingSelector2ForTest1Class(),
             ],
             [
-                'selector1FuncForTest1',
-                'selector2FuncForTest1',
+                'thenByDescendingSelector1FuncForTest1',
+                'thenByDescendingSelector2FuncForTest1',
             ],
             [
-                '\selector1FuncForTest1',
-                '\selector2FuncForTest1',
+                '\thenByDescendingSelector1FuncForTest1',
+                '\thenByDescendingSelector2FuncForTest1',
             ],
             [
-                '$x => selector1FuncForTest1($x)',
+                '$x => thenByDescendingSelector1FuncForTest1($x)',
                 '$x => $x',
             ],
             [
-                '($x) => \selector1FuncForTest1($x)',
+                '($x) => \thenByDescendingSelector1FuncForTest1($x)',
                 '($x) => $x',
             ],
             [
                 '$x => return strlen($x);',
-                '$x => return selector2FuncForTest1($x);',
+                '$x => return thenByDescendingSelector2FuncForTest1($x);',
             ],
             [
                 '($x) => return strlen($x);',
-                '($x) => return \selector2FuncForTest1($x);',
+                '($x) => return \thenByDescendingSelector2FuncForTest1($x);',
             ],
             [
                 '($x) => { return strlen($x); }',
@@ -157,18 +156,18 @@ return $y;
     }
 
     public function selector1Method1($x) {
-        return selector1FuncForTest1($x);
+        return thenByDescendingSelector1FuncForTest1($x);
     }
 
     public static function selector1Method2($x) {
-        return selector1FuncForTest1($x);
+        return thenByDescendingSelector1FuncForTest1($x);
     }
 
     public function selector2Method1($x) {
-        return selector2FuncForTest1($x);
+        return thenByDescendingSelector2FuncForTest1($x);
     }
 
     public static function selector2Method2($x) {
-        return selector2FuncForTest1($x);
+        return thenByDescendingSelector2FuncForTest1($x);
     }
 }

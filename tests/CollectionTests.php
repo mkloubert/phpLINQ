@@ -33,13 +33,13 @@ use \System\ArgumentOutOfRangeException;
 use \System\Collections\Collection;
 
 
-function equalityComparer1Func($x, $y) : bool {
+function collectionItemComparerFunc($x, $y) : bool {
     return 0 === strcasecmp(trim($x), trim($y));
 }
 
-class EqualityComparer1Class {
+class CollectionItemComparerClass {
     public function __invoke($x, $y) {
-        return equalityComparer1Func($x, $y);
+        return collectionItemComparerFunc($x, $y);
     }
 }
 
@@ -58,46 +58,46 @@ class CollectionTests extends TestCaseBase {
     protected function createEqualityComparers1() : array {
         return [
             function ($x, $y) {
-                return equalityComparer1Func($x, $y);
+                return collectionItemComparerFunc($x, $y);
             },
-            'equalityComparer1Func',
-            '\equalityComparer1Func',
-            new EqualityComparer1Class(),
-            array($this, 'equalityComparer1Method1'),
-            array(static::class, 'equalityComparer1Method2'),
-            '$x, $y => equalityComparer1Func($x, $y)',
-            '($x, $y) => equalityComparer1Func($x, $y)',
-            '$x, $y => return equalityComparer1Func($x, $y);',
-            '($x, $y) => return equalityComparer1Func($x, $y);',
-            '$x, $y => { return equalityComparer1Func($x, $y); }',
-            '($x, $y) => { return equalityComparer1Func($x, $y); }',
+            'collectionItemComparerFunc',
+            '\collectionItemComparerFunc',
+            new CollectionItemComparerClass(),
+            array($this, 'itemComparerMethod1'),
+            array(static::class, 'itemComparerMethod2'),
+            '$x, $y => collectionItemComparerFunc($x, $y)',
+            '($x, $y) => collectionItemComparerFunc($x, $y)',
+            '$x, $y => return collectionItemComparerFunc($x, $y);',
+            '($x, $y) => return collectionItemComparerFunc($x, $y);',
+            '$x, $y => { return collectionItemComparerFunc($x, $y); }',
+            '($x, $y) => { return collectionItemComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparer1Func($x, $y);
+return collectionItemComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparer1Func($x, $y);
+return collectionItemComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparer1Func($x, $y)',
-            '($x, $y) => \equalityComparer1Func($x, $y)',
-            '$x, $y => return \equalityComparer1Func($x, $y);',
-            '($x, $y) => return \equalityComparer1Func($x, $y);',
-            '$x, $y => { return \equalityComparer1Func($x, $y); }',
-            '($x, $y) => { return \equalityComparer1Func($x, $y); }',
+            '$x, $y => \collectionItemComparerFunc($x, $y)',
+            '($x, $y) => \collectionItemComparerFunc($x, $y)',
+            '$x, $y => return \collectionItemComparerFunc($x, $y);',
+            '($x, $y) => return \collectionItemComparerFunc($x, $y);',
+            '$x, $y => { return \collectionItemComparerFunc($x, $y); }',
+            '($x, $y) => { return \collectionItemComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparer1Func($x, $y);
+return \collectionItemComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparer1Func($x, $y);
+return \collectionItemComparerFunc($x, $y);
 }',
         ];
     }
 
-    public function equalityComparer1Method1($x, $y) {
-        return equalityComparer1Func($x, $y);
+    public function itemComparerMethod1($x, $y) {
+        return collectionItemComparerFunc($x, $y);
     }
 
-    public static function equalityComparer1Method2($x, $y) {
-        return equalityComparer1Func($x, $y);
+    public static function itemComparerMethod2($x, $y) {
+        return collectionItemComparerFunc($x, $y);
     }
 
     public function testAdd() {

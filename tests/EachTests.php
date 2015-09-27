@@ -33,7 +33,7 @@ use \System\Collections\IEachItemContext;
 use \System\Collections\IEnumerable;
 
 
-function actionFunc($x, IEachItemContext $ctx) {
+function eachActionFunc($x, IEachItemContext $ctx) {
     if ($ctx->isFirst()) {
         $ctx->result($x);
         return;
@@ -42,9 +42,9 @@ function actionFunc($x, IEachItemContext $ctx) {
     $ctx->result($ctx->result() + $x);
 }
 
-class ActionClass {
+class EachActionClass {
     public function __invoke($x, IEachItemContext $ctx) {
-        actionFunc($x, $ctx);
+        eachActionFunc($x, $ctx);
     }
 }
 
@@ -62,42 +62,42 @@ class EachTests extends TestCaseBase {
     protected function createActions() : array {
         return [
             function ($x, IEachItemContext $ctx) {
-                actionFunc($x, $ctx);
+                eachActionFunc($x, $ctx);
             },
-            'actionFunc',
-            '\actionFunc',
+            'eachActionFunc',
+            '\eachActionFunc',
             array($this, 'actionMethod1'),
             array(static::class, 'actionMethod2'),
-            new ActionClass(),
-            '$x, $ctx => actionFunc($x, $ctx)',
-            '$x, $ctx => \actionFunc($x, $ctx)',
-            '($x, $ctx) => actionFunc($x, $ctx)',
-            '($x, $ctx) => \actionFunc($x, $ctx)',
-            '$x, $ctx => { actionFunc($x, $ctx); }',
-            '$x, $ctx => { \actionFunc($x, $ctx); }',
-            '($x, $ctx) => { actionFunc($x, $ctx); }',
-            '($x, $ctx) => { \actionFunc($x, $ctx); }',
+            new EachActionClass(),
+            '$x, $ctx => eachActionFunc($x, $ctx)',
+            '$x, $ctx => \eachActionFunc($x, $ctx)',
+            '($x, $ctx) => eachActionFunc($x, $ctx)',
+            '($x, $ctx) => \eachActionFunc($x, $ctx)',
+            '$x, $ctx => { eachActionFunc($x, $ctx); }',
+            '$x, $ctx => { \eachActionFunc($x, $ctx); }',
+            '($x, $ctx) => { eachActionFunc($x, $ctx); }',
+            '($x, $ctx) => { \eachActionFunc($x, $ctx); }',
             '$x, $ctx => {
-actionFunc($x, $ctx);
+eachActionFunc($x, $ctx);
 }',
             '$x, $ctx => {
-\actionFunc($x, $ctx);
+\eachActionFunc($x, $ctx);
 }',
             '($x, $ctx) => {
-actionFunc($x, $ctx);
+eachActionFunc($x, $ctx);
 }',
             '($x, $ctx) => {
-\actionFunc($x, $ctx);
+\eachActionFunc($x, $ctx);
 }',
         ];
     }
 
     public function actionMethod1($x, IEachItemContext $ctx) {
-        actionFunc($x, $ctx);
+        eachActionFunc($x, $ctx);
     }
 
     public static function actionMethod2($x, IEachItemContext $ctx) {
-        actionFunc($x, $ctx);
+        eachActionFunc($x, $ctx);
     }
 
     public function test1() {

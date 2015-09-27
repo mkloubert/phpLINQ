@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function equalityComparerFunc($x, $y) : bool {
+function exceptEqualityComparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class ExceptEqualityComparerClass {
     public function __invoke($x, $y) {
-        return equalityComparerFunc($x, $y);
+        return exceptEqualityComparerFunc($x, $y);
     }
 }
 
@@ -57,46 +57,46 @@ class ExceptTests extends TestCaseBase {
         return [
             true,
             function ($x, $y) : bool {
-                return equalityComparerFunc($x, $y);
+                return exceptEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
+            'exceptEqualityComparerFunc',
+            '\exceptEqualityComparerFunc',
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            new EqualityComparerClass(),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            new ExceptEqualityComparerClass(),
+            '$x, $y => exceptEqualityComparerFunc($x, $y)',
+            '($x, $y) => exceptEqualityComparerFunc($x, $y)',
+            '$x, $y => return exceptEqualityComparerFunc($x, $y);',
+            '($x, $y) => return exceptEqualityComparerFunc($x, $y);',
+            '$x, $y => { return exceptEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return exceptEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return exceptEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return exceptEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \exceptEqualityComparerFunc($x, $y)',
+            '($x, $y) => \exceptEqualityComparerFunc($x, $y)',
+            '$x, $y => return \exceptEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \exceptEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \exceptEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \exceptEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \exceptEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \exceptEqualityComparerFunc($x, $y);
 }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return exceptEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return exceptEqualityComparerFunc($x, $y);
     }
 
     public function test1Array() {

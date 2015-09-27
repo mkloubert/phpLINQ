@@ -33,53 +33,35 @@ use \System\Collections\IEnumerable;
 use \System\Linq\Enumerable;
 
 
-class Person {
-    public function __construct($name) {
-        $this->Name = $name;
-    }
-
-    public $Name;
-}
-
-class Pet {
-    public function __construct($name, Person $owner) {
-        $this->Name = $name;
-        $this->Owner = $owner;
-    }
-
-    public $Name;
-    public $Owner;
-}
-
-function personKeySelectorFunc(Person $person) : string {
+function joinPersonKeySelectorFunc(Person $person) : string {
     return $person->Name;
 }
 
-function petKeySelectorFunc(Pet $pet) : string {
+function joinPetKeySelectorFunc(Pet $pet) : string {
     return $pet->Owner->Name;
 }
 
-function selectorFunc(Person $person, Pet $pet) : string {
+function joinResultSelectorFunc(Person $person, Pet $pet) : string {
     return sprintf('Owner: %s; Pet: %s',
                    $person->Name,
                    $pet->Name);
 }
 
-class PersonKeySelectorClass {
+class JoinPersonKeySelectorClass {
     public function __invoke(Person $person) {
-        return personKeySelectorFunc($person);
+        return joinPersonKeySelectorFunc($person);
     }
 }
 
-class PetKeySelectorClass {
+class JoinPetKeySelectorClass {
     public function __invoke(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return joinPetKeySelectorFunc($pet);
     }
 }
 
-class ResultSelectorClass {
+class JoinResultSelectorClass {
     public function __invoke(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+        return joinResultSelectorFunc($person, $pet);
     }
 }
 
@@ -119,24 +101,24 @@ class JoinTests extends TestCaseBase {
         return [
             [
                 function(Person $person) {
-                    return personKeySelectorFunc($person);
+                    return joinPersonKeySelectorFunc($person);
                 },
                 function(Pet $pet) {
-                    return petKeySelectorFunc($pet);
+                    return joinPetKeySelectorFunc($pet);
                 },
                 function(Person $person, Pet $pet) {
-                    return selectorFunc($person, $pet);
+                    return joinResultSelectorFunc($person, $pet);
                 },
             ],
             [
-                'personKeySelectorFunc',
-                'petKeySelectorFunc',
-                'selectorFunc',
+                'joinPersonKeySelectorFunc',
+                'joinPetKeySelectorFunc',
+                'joinResultSelectorFunc',
             ],
             [
-                '\personKeySelectorFunc',
-                '\petKeySelectorFunc',
-                '\selectorFunc',
+                '\joinPersonKeySelectorFunc',
+                '\joinPetKeySelectorFunc',
+                '\joinResultSelectorFunc',
             ],
             [
                 array($this, 'personKeySelectorMethod1'),
@@ -149,19 +131,19 @@ class JoinTests extends TestCaseBase {
                 array(static::class, 'resultSelectorMethod2'),
             ],
             [
-                new PersonKeySelectorClass(),
-                new PetKeySelectorClass(),
-                new ResultSelectorClass(),
+                new JoinPersonKeySelectorClass(),
+                new JoinPetKeySelectorClass(),
+                new JoinResultSelectorClass(),
             ],
             [
-                '$person => \personKeySelectorFunc($person)',
-                '$pet => \petKeySelectorFunc($pet)',
-                '$person, $pet => selectorFunc($person, $pet)',
+                '$person => \joinPersonKeySelectorFunc($person)',
+                '$pet => \joinPetKeySelectorFunc($pet)',
+                '$person, $pet => joinResultSelectorFunc($person, $pet)',
             ],
             [
-                '($person) => personKeySelectorFunc($person)',
-                '($pet) => petKeySelectorFunc($pet)',
-                '($person, $pet) => \selectorFunc($person, $pet)',
+                '($person) => joinPersonKeySelectorFunc($person)',
+                '($pet) => joinPetKeySelectorFunc($pet)',
+                '($person, $pet) => \joinResultSelectorFunc($person, $pet)',
             ],
             [
                 '$person => return $person->Name;',
@@ -244,27 +226,27 @@ return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
     }
 
     public function personKeySelectorMethod1(Person $person) {
-        return personKeySelectorFunc($person);
+        return joinPersonKeySelectorFunc($person);
     }
 
     public static function personKeySelectorMethod2(Person $person) {
-        return personKeySelectorFunc($person);
+        return joinPersonKeySelectorFunc($person);
     }
 
     public function petKeySelectorMethod1(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return joinPetKeySelectorFunc($pet);
     }
 
     public static function petKeySelectorMethod2(Pet $pet) {
-        return petKeySelectorFunc($pet);
+        return joinPetKeySelectorFunc($pet);
     }
 
     public function resultSelectorMethod1(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+        return joinResultSelectorFunc($person, $pet);
     }
 
     public static function resultSelectorMethod2(Person $person, Pet $pet) {
-        return selectorFunc($person, $pet);
+        return joinResultSelectorFunc($person, $pet);
     }
 
     public function testArray() {

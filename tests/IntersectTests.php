@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function equalityComparerFunc($x, $y) : bool {
+function intersectEqualityComparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
-class EqualityComparerClass {
+class IntersectEqualityComparerClass {
     public function __invoke($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return intersectEqualityComparerFunc($x, $y);
     }
 }
 
@@ -57,46 +57,46 @@ class IntersectTests extends TestCaseBase {
         return [
             true,
             function($x, $y) : bool {
-                return equalityComparerFunc($x, $y);
+                return intersectEqualityComparerFunc($x, $y);
             },
-            'equalityComparerFunc',
-            '\equalityComparerFunc',
+            'intersectEqualityComparerFunc',
+            '\intersectEqualityComparerFunc',
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
-            new EqualityComparerClass(),
-            '$x, $y => equalityComparerFunc($x, $y)',
-            '($x, $y) => equalityComparerFunc($x, $y)',
-            '$x, $y => return equalityComparerFunc($x, $y);',
-            '($x, $y) => return equalityComparerFunc($x, $y);',
-            '$x, $y => { return equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return equalityComparerFunc($x, $y); }',
+            new IntersectEqualityComparerClass(),
+            '$x, $y => intersectEqualityComparerFunc($x, $y)',
+            '($x, $y) => intersectEqualityComparerFunc($x, $y)',
+            '$x, $y => return intersectEqualityComparerFunc($x, $y);',
+            '($x, $y) => return intersectEqualityComparerFunc($x, $y);',
+            '$x, $y => { return intersectEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return intersectEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return equalityComparerFunc($x, $y);
+return intersectEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return equalityComparerFunc($x, $y);
+return intersectEqualityComparerFunc($x, $y);
 }',
-            '$x, $y => \equalityComparerFunc($x, $y)',
-            '($x, $y) => \equalityComparerFunc($x, $y)',
-            '$x, $y => return \equalityComparerFunc($x, $y);',
-            '($x, $y) => return \equalityComparerFunc($x, $y);',
-            '$x, $y => { return \equalityComparerFunc($x, $y); }',
-            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => \intersectEqualityComparerFunc($x, $y)',
+            '($x, $y) => \intersectEqualityComparerFunc($x, $y)',
+            '$x, $y => return \intersectEqualityComparerFunc($x, $y);',
+            '($x, $y) => return \intersectEqualityComparerFunc($x, $y);',
+            '$x, $y => { return \intersectEqualityComparerFunc($x, $y); }',
+            '($x, $y) => { return \intersectEqualityComparerFunc($x, $y); }',
             '$x, $y => {
-return \equalityComparerFunc($x, $y);
+return \intersectEqualityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return \equalityComparerFunc($x, $y);
+return \intersectEqualityComparerFunc($x, $y);
 }',
         ];
     }
 
     public function equalityComparerMethod1($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return intersectEqualityComparerFunc($x, $y);
     }
 
     public static function equalityComparerMethod2($x, $y) : bool {
-        return equalityComparerFunc($x, $y);
+        return intersectEqualityComparerFunc($x, $y);
     }
 
     public function test1Array() {

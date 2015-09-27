@@ -34,13 +34,13 @@ use \System\Collections\EnumerableException;
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
+function singlePredicateFunc($x) : bool {
     return 0 === $x % 2;
 }
 
-class PredicateClass {
+class SinglePredicateClass {
     public function __invoke($x) {
-        return predicateFunc($x);
+        return singlePredicateFunc($x);
     }
 }
 
@@ -58,46 +58,46 @@ class SingleTests extends TestCaseBase {
     protected function createPredicates() : array {
         return [
             function($x) {
-                return predicateFunc($x);
+                return singlePredicateFunc($x);
             },
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
-            new PredicateClass(),
-            'predicateFunc',
-            '\predicateFunc',
-            '$x => predicateFunc($x)',
-            '($x) => predicateFunc($x)',
-            '$x => return predicateFunc($x);',
-            '($x) => return predicateFunc($x);',
-            '$x => { return predicateFunc($x); }',
-            '($x) => { return predicateFunc($x); }',
+            new SinglePredicateClass(),
+            'singlePredicateFunc',
+            '\singlePredicateFunc',
+            '$x => singlePredicateFunc($x)',
+            '($x) => singlePredicateFunc($x)',
+            '$x => return singlePredicateFunc($x);',
+            '($x) => return singlePredicateFunc($x);',
+            '$x => { return singlePredicateFunc($x); }',
+            '($x) => { return singlePredicateFunc($x); }',
             '$x => {
-return predicateFunc($x);
+return singlePredicateFunc($x);
 }',
             '($x) => {
-return predicateFunc($x);
+return singlePredicateFunc($x);
 }',
-            '$x => \predicateFunc($x)',
-            '($x) => \predicateFunc($x)',
-            '$x => return \predicateFunc($x);',
-            '($x) => return \predicateFunc($x);',
-            '$x => { return \predicateFunc($x); }',
-            '($x) => { return \predicateFunc($x); }',
+            '$x => \singlePredicateFunc($x)',
+            '($x) => \singlePredicateFunc($x)',
+            '$x => return \singlePredicateFunc($x);',
+            '($x) => return \singlePredicateFunc($x);',
+            '$x => { return \singlePredicateFunc($x); }',
+            '($x) => { return \singlePredicateFunc($x); }',
             '$x => {
-return \predicateFunc($x);
+return \singlePredicateFunc($x);
 }',
             '($x) => {
-return \predicateFunc($x);
+return \singlePredicateFunc($x);
 }',
         ];
     }
 
     public function predicateMethod1($x) {
-        return predicateFunc($x);
+        return singlePredicateFunc($x);
     }
 
     public static function predicateMethod2($x) {
-        return predicateFunc($x);
+        return singlePredicateFunc($x);
     }
 
     public function testWithPredicate() {

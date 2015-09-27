@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
+function allPredicateFunc($x) : bool {
     return 0 === $x % 2;
 }
 
-class PredciateClass {
+class AllPredciateClass {
     public function __invoke($x) {
-        return predicateFunc($x);
+        return allPredicateFunc($x);
     }
 }
 
@@ -56,46 +56,46 @@ class AllTests extends TestCaseBase {
     protected function createPredicates() : array {
         return [
             function($x) : bool {
-                return predicateFunc($x);
+                return allPredicateFunc($x);
             },
-            'predicateFunc',
-            '\predicateFunc',
+            'allPredicateFunc',
+            '\allPredicateFunc',
             array($this, 'predciateMethod1'),
             array(static::class, 'predciateMethod2'),
-            new PredciateClass(),
-            '$x => predicateFunc($x)',
-            '($x) => predicateFunc($x)',
-            '$x => return predicateFunc($x);',
-            '($x) => return predicateFunc($x);',
-            '$x => { return predicateFunc($x); }',
-            '($x) => { return predicateFunc($x); }',
+            new AllPredciateClass(),
+            '$x => allPredicateFunc($x)',
+            '($x) => allPredicateFunc($x)',
+            '$x => return allPredicateFunc($x);',
+            '($x) => return allPredicateFunc($x);',
+            '$x => { return allPredicateFunc($x); }',
+            '($x) => { return allPredicateFunc($x); }',
             '$x => {
-return predicateFunc($x);
+return allPredicateFunc($x);
 }',
             '($x) => {
-return predicateFunc($x);
+return allPredicateFunc($x);
 }',
-            '$x => \predicateFunc($x)',
-            '($x) => \predicateFunc($x)',
-            '$x => return \predicateFunc($x);',
-            '($x) => return \predicateFunc($x);',
-            '$x => { return \predicateFunc($x); }',
-            '($x) => { return \predicateFunc($x); }',
+            '$x => \allPredicateFunc($x)',
+            '($x) => \allPredicateFunc($x)',
+            '$x => return \allPredicateFunc($x);',
+            '($x) => return \allPredicateFunc($x);',
+            '$x => { return \allPredicateFunc($x); }',
+            '($x) => { return \allPredicateFunc($x); }',
             '$x => {
-return \predicateFunc($x);
+return \allPredicateFunc($x);
 }',
             '($x) => {
-return \predicateFunc($x);
+return \allPredicateFunc($x);
 }',
         ];
     }
 
     public function predciateMethod1($x) : bool {
-        return predicateFunc($x);
+        return allPredicateFunc($x);
     }
 
     public static function predciateMethod2($x) : bool {
-        return predicateFunc($x);
+        return allPredicateFunc($x);
     }
 
     public function test1() {

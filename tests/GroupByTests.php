@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($x) : string {
+function groupByKeySelectorFunc($x) : string {
     if (is_numeric($x)) {
         return 'number';
     }
@@ -48,9 +48,9 @@ function keySelectorFunc($x) : string {
     return 'other';
 }
 
-class KeySelectorClass {
+class GroupByKeySelectorClass {
     public function __invoke($x) {
-        return keySelectorFunc($x);
+        return groupByKeySelectorFunc($x);
     }
 }
 
@@ -68,46 +68,46 @@ class GroupByTests extends TestCaseBase {
     protected function createKeySelectors() : array {
         return [
             function($x) {
-                return keySelectorFunc($x);
+                return groupByKeySelectorFunc($x);
             },
-            'keySelectorFunc',
-            '\keySelectorFunc',
+            'groupByKeySelectorFunc',
+            '\groupByKeySelectorFunc',
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
-            new KeySelectorClass(),
-            '$x => keySelectorFunc($x)',
-            '($x) => keySelectorFunc($x)',
-            '$x => \keySelectorFunc($x)',
-            '($x) => \keySelectorFunc($x)',
-            '$x => return keySelectorFunc($x);',
-            '($x) => return keySelectorFunc($x);',
-            '$x => return \keySelectorFunc($x);',
-            '($x) => return \keySelectorFunc($x);',
-            '$x => { return keySelectorFunc($x); }',
-            '($x) => { return keySelectorFunc($x); }',
-            '$x => { return \keySelectorFunc($x); }',
-            '($x) => { return \keySelectorFunc($x); }',
+            new GroupByKeySelectorClass(),
+            '$x => groupByKeySelectorFunc($x)',
+            '($x) => groupByKeySelectorFunc($x)',
+            '$x => \groupByKeySelectorFunc($x)',
+            '($x) => \groupByKeySelectorFunc($x)',
+            '$x => return groupByKeySelectorFunc($x);',
+            '($x) => return groupByKeySelectorFunc($x);',
+            '$x => return \groupByKeySelectorFunc($x);',
+            '($x) => return \groupByKeySelectorFunc($x);',
+            '$x => { return groupByKeySelectorFunc($x); }',
+            '($x) => { return groupByKeySelectorFunc($x); }',
+            '$x => { return \groupByKeySelectorFunc($x); }',
+            '($x) => { return \groupByKeySelectorFunc($x); }',
             '$x => {
-return keySelectorFunc($x);
+return groupByKeySelectorFunc($x);
 }',
             '($x) => {
-return keySelectorFunc($x);
+return groupByKeySelectorFunc($x);
 }',
             '$x => {
-return \keySelectorFunc($x);
+return \groupByKeySelectorFunc($x);
 }',
             '($x) => {
-return \keySelectorFunc($x);
+return \groupByKeySelectorFunc($x);
 }',
         ];
     }
 
     public function keySelectorMethod1($x) {
-        return keySelectorFunc($x);
+        return groupByKeySelectorFunc($x);
     }
 
     public static function keySelectorMethod2($x) {
-        return keySelectorFunc($x);
+        return groupByKeySelectorFunc($x);
     }
 
     public function test1() {

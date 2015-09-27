@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($key, $item) : string {
+function toArrayKeySelectorFunc($key, $item) : string {
     return sprintf('%s%s', strtoupper($key), $item + 1);
 }
 
-class KeySelectorClass {
+class ToArrayKeySelectorClass {
     public function __invoke($key, $item) {
-        return keySelectorFunc($key, $item);
+        return toArrayKeySelectorFunc($key, $item);
     }
 }
 
@@ -56,25 +56,25 @@ class ToArrayTests extends TestCaseBase {
     protected function createKeySelectors() : array {
         return array(
             function($key, $item) {
-                return keySelectorFunc($key, $item);
+                return toArrayKeySelectorFunc($key, $item);
             },
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
-            new KeySelectorClass(),
-            'keySelectorFunc',
-            '$key, $item => keySelectorFunc($key, $item)',
-            '($key, $item) => keySelectorFunc($key, $item)',
-            '$key, $item => return keySelectorFunc($key, $item); ',
-            '($key, $item) =>  return keySelectorFunc($key, $item);',
-            '$key, $item => { return keySelectorFunc($key, $item); }',
-            '($key, $item) => { return keySelectorFunc($key, $item);  }',
+            new ToArrayKeySelectorClass(),
+            'toArrayKeySelectorFunc',
+            '$key, $item => toArrayKeySelectorFunc($key, $item)',
+            '($key, $item) => toArrayKeySelectorFunc($key, $item)',
+            '$key, $item => return toArrayKeySelectorFunc($key, $item); ',
+            '($key, $item) =>  return toArrayKeySelectorFunc($key, $item);',
+            '$key, $item => { return toArrayKeySelectorFunc($key, $item); }',
+            '($key, $item) => { return toArrayKeySelectorFunc($key, $item);  }',
             '$key, $item => {
-return keySelectorFunc($key, $item);
+return toArrayKeySelectorFunc($key, $item);
 }',
             '($key, $item) =>  {
-return keySelectorFunc($key, $item);
+return toArrayKeySelectorFunc($key, $item);
 }',
-            '\keySelectorFunc',
+            '\toArrayKeySelectorFunc',
         );
     }
 
@@ -111,10 +111,10 @@ return keySelectorFunc($key, $item);
     }
 
     public function keySelectorMethod1($key, $item) {
-        return keySelectorFunc($key, $item);
+        return toArrayKeySelectorFunc($key, $item);
     }
 
     public static function keySelectorMethod2($key, $item) {
-        return keySelectorFunc($key, $item);
+        return toArrayKeySelectorFunc($key, $item);
     }
 }

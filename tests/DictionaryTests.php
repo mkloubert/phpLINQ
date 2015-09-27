@@ -33,16 +33,34 @@ use \System\ArgumentException;
 use \System\Collections\Dictionary;
 
 
-function keyComparer($x, $y) : bool {
+function dictionaryKeyComparerFunc($x, $y) : bool {
     return 0 === strcasecmp(trim($x), trim($y));
 }
 
-function keyValidator($x) : bool {
+function dictionaryKeyValidatorFunc($x) : bool {
     return is_string($x);
 }
 
-function valueValidator($x) : bool {
+function dictionaryValueValidatorFunc($x) : bool {
     return is_numeric($x);
+}
+
+class DictionaryKeyComparerClass {
+    public function __invoke($x, $y) {
+        return dictionaryKeyComparerFunc($x, $y);
+    }
+}
+
+class DictionaryKeyValidatorClass {
+    public function __invoke($x) {
+        return dictionaryKeyValidatorFunc($x);
+    }
+}
+
+class DictionaryValueValidatorClass {
+    public function __invoke($x) {
+        return dictionaryValueValidatorFunc($x);
+    }
 }
 
 /**
@@ -59,10 +77,13 @@ class DictionaryTests extends TestCaseBase {
     protected function createKeyComparers() : array {
         return [
             function($x, $y) {
-                return keyComparer($x, $y);
+                return dictionaryKeyComparerFunc($x, $y);
             },
-            'keyComparer',
-            '\keyComparer',
+            'dictionaryKeyComparerFunc',
+            '\dictionaryKeyComparerFunc',
+            new DictionaryKeyComparerClass(),
+            [$this, 'keyComparerMethod1'],
+            [static::class, 'keyComparerMethod2'],
         ];
     }
 
@@ -74,10 +95,13 @@ class DictionaryTests extends TestCaseBase {
     protected function createKeyValidators() : array {
         return [
             function($x) {
-                return keyValidator($x);
+                return dictionaryKeyValidatorFunc($x);
             },
-            'keyValidator',
-            '\keyValidator',
+            'dictionaryKeyValidatorFunc',
+            '\dictionaryKeyValidatorFunc',
+            new DictionaryKeyValidatorClass(),
+            [$this, 'keyValidatorMethod1'],
+            [static::class, 'keyValidatorMethod2'],
         ];
     }
 
@@ -89,11 +113,30 @@ class DictionaryTests extends TestCaseBase {
     protected function createValueValidators() : array {
         return [
             function($x) {
-                return valueValidator($x);
+                return dictionaryValueValidatorFunc($x);
             },
-            'valueValidator',
-            '\valueValidator',
+            'dictionaryValueValidatorFunc',
+            '\dictionaryValueValidatorFunc',
+            new DictionaryValueValidatorClass(),
+            [$this, 'valueValidatorMethod1'],
+            [static::class, 'valueValidatorMethod2'],
         ];
+    }
+
+    public function keyComparerMethod1($x, $y) {
+        return dictionaryKeyComparerFunc($x, $y);
+    }
+
+    public static function keyComparerMethod2($x, $y) {
+        return dictionaryKeyComparerFunc($x, $y);
+    }
+
+    public function keyValidatorMethod1($x) {
+        return dictionaryKeyValidatorFunc($x);
+    }
+
+    public static function keyValidatorMethod2($x) {
+        return dictionaryKeyValidatorFunc($x);
     }
 
     public function testAdd() {
@@ -256,5 +299,13 @@ class DictionaryTests extends TestCaseBase {
             $this->assertEquals(3, count($dict->values()));
             $this->checkForExpectedValues($dict->values()->asResettable(), [1.2, 3, '4.5']);
         }
+    }
+
+    public function valueValidatorMethod1($x) {
+        return dictionaryValueValidatorFunc($x);
+    }
+
+    public static function valueValidatorMethod2($x) {
+        return dictionaryValueValidatorFunc($x);
     }
 }

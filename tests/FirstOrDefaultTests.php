@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) : bool {
+function firstOrDefaultPredicateFunc($x) : bool {
     return $x > 2;
 }
 
-class PredicateClass {
+class FirstOrDefaultPredicateClass {
     public function __invoke($x) {
-        return predicateFunc($x);
+        return firstOrDefaultPredicateFunc($x);
     }
 }
 
@@ -56,46 +56,46 @@ class FirstOrDefaultTests extends TestCaseBase {
     protected function createPredicates() : array {
         return array(
             function ($x) : bool {
-                return predicateFunc($x);
+                return firstOrDefaultPredicateFunc($x);
             },
-            'predicateFunc',
-            '\predicateFunc',
+            'firstOrDefaultPredicateFunc',
+            '\firstOrDefaultPredicateFunc',
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
-            new PredicateClass(),
-            '$x => predicateFunc($x)',
-            '($x) => predicateFunc($x)',
-            '$x => return predicateFunc($x);',
-            '($x) => return predicateFunc($x);',
-            '$x => { return predicateFunc($x); }',
-            '($x) => { return predicateFunc($x); }',
+            new FirstOrDefaultPredicateClass(),
+            '$x => firstOrDefaultPredicateFunc($x)',
+            '($x) => firstOrDefaultPredicateFunc($x)',
+            '$x => return firstOrDefaultPredicateFunc($x);',
+            '($x) => return firstOrDefaultPredicateFunc($x);',
+            '$x => { return firstOrDefaultPredicateFunc($x); }',
+            '($x) => { return firstOrDefaultPredicateFunc($x); }',
             '$x => {
-return predicateFunc($x);
+return firstOrDefaultPredicateFunc($x);
 }',
             '($x) => {
-return predicateFunc($x);
+return firstOrDefaultPredicateFunc($x);
 }',
-            '$x => \predicateFunc($x)',
-            '($x) => \predicateFunc($x)',
-            '$x => return \predicateFunc($x);',
-            '($x) => return \predicateFunc($x);',
-            '$x => { return \predicateFunc($x); }',
-            '($x) => { return \predicateFunc($x); }',
+            '$x => \firstOrDefaultPredicateFunc($x)',
+            '($x) => \firstOrDefaultPredicateFunc($x)',
+            '$x => return \firstOrDefaultPredicateFunc($x);',
+            '($x) => return \firstOrDefaultPredicateFunc($x);',
+            '$x => { return \firstOrDefaultPredicateFunc($x); }',
+            '($x) => { return \firstOrDefaultPredicateFunc($x); }',
             '$x => {
-return \predicateFunc($x);
+return \firstOrDefaultPredicateFunc($x);
 }',
             '($x) => {
-return \predicateFunc($x);
+return \firstOrDefaultPredicateFunc($x);
 }',
         );
     }
 
     public function predicateMethod1($x) {
-        return predicateFunc($x);
+        return firstOrDefaultPredicateFunc($x);
     }
 
     public static function predicateMethod2($x) {
-        return predicateFunc($x);
+        return firstOrDefaultPredicateFunc($x);
     }
 
     public function testNoPredicate1a() {

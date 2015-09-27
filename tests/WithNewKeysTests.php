@@ -32,13 +32,13 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($x) : string {
+function withNewKeysKeySelectorFunc($x) : string {
     return chr(ord('A') + $x);
 }
 
-class KeySelectorClass {
+class WithNewKeysKeySelectorClass {
     public function __invoke($x) {
-        return keySelectorFunc($x);
+        return withNewKeysKeySelectorFunc($x);
     }
 }
 
@@ -56,46 +56,46 @@ class WithNewKeysTests extends TestCaseBase {
     protected function createKeySelectors() : array {
         return [
             function($x) {
-                return keySelectorFunc($x);
+                return withNewKeysKeySelectorFunc($x);
             },
-            'keySelectorFunc',
-            '\keySelectorFunc',
-            new KeySelectorClass(),
+            'withNewKeysKeySelectorFunc',
+            '\withNewKeysKeySelectorFunc',
+            new WithNewKeysKeySelectorClass(),
             [$this, 'keySelectorMethod1'],
             [static::class, 'keySelectorMethod2'],
-            '$x => keySelectorFunc($x)',
-            '$x => \keySelectorFunc($x)',
-            '($x) => keySelectorFunc($x)',
-            '($x) => \keySelectorFunc($x)',
-            '$x => return keySelectorFunc($x);',
-            '$x => return \keySelectorFunc($x);',
-            '($x) => return keySelectorFunc($x);',
-            '($x) => return \keySelectorFunc($x);',
-            '$x => { return keySelectorFunc($x); }',
-            '$x => { return \keySelectorFunc($x); }',
-            '($x) => { return keySelectorFunc($x); }',
-            '($x) => { return \keySelectorFunc($x); }',
+            '$x => withNewKeysKeySelectorFunc($x)',
+            '$x => \withNewKeysKeySelectorFunc($x)',
+            '($x) => withNewKeysKeySelectorFunc($x)',
+            '($x) => \withNewKeysKeySelectorFunc($x)',
+            '$x => return withNewKeysKeySelectorFunc($x);',
+            '$x => return \withNewKeysKeySelectorFunc($x);',
+            '($x) => return withNewKeysKeySelectorFunc($x);',
+            '($x) => return \withNewKeysKeySelectorFunc($x);',
+            '$x => { return withNewKeysKeySelectorFunc($x); }',
+            '$x => { return \withNewKeysKeySelectorFunc($x); }',
+            '($x) => { return withNewKeysKeySelectorFunc($x); }',
+            '($x) => { return \withNewKeysKeySelectorFunc($x); }',
             '$x => {
-return keySelectorFunc($x);
+return withNewKeysKeySelectorFunc($x);
 }',
             '$x => {
-return \keySelectorFunc($x);
+return \withNewKeysKeySelectorFunc($x);
 }',
             '($x) => {
-return keySelectorFunc($x);
+return withNewKeysKeySelectorFunc($x);
 }',
             '($x) => {
-return \keySelectorFunc($x);
+return \withNewKeysKeySelectorFunc($x);
 }',
         ];
     }
 
     public function keySelectorMethod1($x) {
-        return keySelectorFunc($x);
+        return withNewKeysKeySelectorFunc($x);
     }
 
     public static function keySelectorMethod2($x) {
-        return keySelectorFunc($x);
+        return withNewKeysKeySelectorFunc($x);
     }
 
     public function test1() {
