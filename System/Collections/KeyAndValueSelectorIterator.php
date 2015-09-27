@@ -37,7 +37,7 @@ use \System\Object;
 
 /**
  * Iterator that wraps a sequence by using a selector
- * hat produces new keys AND values.
+ * that produces new keys AND values.
  *
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
