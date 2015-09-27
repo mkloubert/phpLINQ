@@ -64,17 +64,29 @@ class FirstTests extends TestCaseBase {
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
             new PredicateClass(),
-            '$x => $x > 2',
-            '($x) => $x > 2',
-            '$x => return $x > 2;',
-            '($x) => return $x > 2;',
-            '$x => { return $x > 2; }',
-            '($x) => { return $x > 2; }',
+            '$x => predicateFunc($x)',
+            '($x) => predicateFunc($x)',
+            '$x => return predicateFunc($x);',
+            '($x) => return predicateFunc($x);',
+            '$x => { return predicateFunc($x); }',
+            '($x) => { return predicateFunc($x); }',
             '$x => {
-return $x > 2;
+return predicateFunc($x);
 }',
             '($x) => {
-return $x > 2;
+return predicateFunc($x);
+}',
+            '$x => \predicateFunc($x)',
+            '($x) => \predicateFunc($x)',
+            '$x => return \predicateFunc($x);',
+            '($x) => return \predicateFunc($x);',
+            '$x => { return \predicateFunc($x); }',
+            '($x) => { return \predicateFunc($x); }',
+            '$x => {
+return \predicateFunc($x);
+}',
+            '($x) => {
+return \predicateFunc($x);
 }',
         );
     }
@@ -100,6 +112,9 @@ return $x > 2;
     public function testNoPredicate1b() {
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
+
+            unset($item);
+            unset($thrownEx);
 
             try {
                 $item = $seq->first();
@@ -127,6 +142,9 @@ return $x > 2;
     public function testNoPredicate2b() {
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
+
+            unset($item);
+            unset($thrownEx);
 
             try {
                 $item = $seq->first(null);
@@ -157,6 +175,9 @@ return $x > 2;
         foreach ($this->createPredicates() as $predicate) {
             foreach (static::sequenceListFromArray([1, 2]) as $seq) {
                 /* @var IEnumerable $seq */
+
+                unset($item);
+                unset($thrownEx);
 
                 try {
                     $item = $seq->first($predicate);

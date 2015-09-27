@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1FuncForTest1($x) {
+function selector1FuncForTest1($x) : int {
     return strlen($x);
 }
 
@@ -91,20 +91,20 @@ class ThenByDescendingTests extends TestCaseBase {
                 '\selector2FuncForTest1',
             ],
             [
-                '$x => strlen($x)',
+                '$x => selector1FuncForTest1($x)',
                 '$x => $x',
             ],
             [
-                '($x) => strlen($x)',
+                '($x) => \selector1FuncForTest1($x)',
                 '($x) => $x',
             ],
             [
                 '$x => return strlen($x);',
-                '$x => return $x;',
+                '$x => return selector2FuncForTest1($x);',
             ],
             [
                 '($x) => return strlen($x);',
-                '($x) => return $x;',
+                '($x) => return \selector2FuncForTest1($x);',
             ],
             [
                 '($x) => { return strlen($x); }',

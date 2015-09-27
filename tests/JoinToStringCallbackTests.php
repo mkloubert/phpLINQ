@@ -33,7 +33,7 @@ use \System\Collections\IIndexedItemContext;
 use \System\Collections\IEnumerable;
 
 
-function separatorFactoryFunc($x, IIndexedItemContext $ctx) {
+function separatorFactoryFunc($x, IIndexedItemContext $ctx) : string {
     return !$ctx->isLast() ? ', ' : ' and ';
 }
 
@@ -64,17 +64,29 @@ class JoinToStringCallbackTests extends TestCaseBase {
             array($this, 'separatorFactoryMethod1'),
             array(static::class, 'separatorFactoryMethod2'),
             new SeparatorFactoryClass(),
-            '$x, $ctx => !$ctx->isLast() ? ", " : " and "',
-            '($x, $ctx) => !$ctx->isLast() ? ", " : " and "',
-            '$x, $ctx => return !$ctx->isLast() ? ", " : " and ";',
-            '($x, $ctx) => return !$ctx->isLast() ? ", " : " and ";',
-            '$x, $ctx => { return !$ctx->isLast() ? ", " : " and "; }',
-            '($x, $ctx) => { return !$ctx->isLast() ? ", " : " and "; }',
+            '$x, $ctx => separatorFactoryFunc($x, $ctx)',
+            '($x, $ctx) => separatorFactoryFunc($x, $ctx)',
+            '$x, $ctx => return separatorFactoryFunc($x, $ctx);',
+            '($x, $ctx) => return separatorFactoryFunc($x, $ctx);',
+            '$x, $ctx => { return separatorFactoryFunc($x, $ctx); }',
+            '($x, $ctx) => { return separatorFactoryFunc($x, $ctx); }',
             '$x, $ctx => {
-return !$ctx->isLast() ? ", " : " and ";
+return separatorFactoryFunc($x, $ctx);
 }',
             '($x, $ctx) => {
-return !$ctx->isLast() ? ", " : " and ";
+return separatorFactoryFunc($x, $ctx);
+}',
+            '$x, $ctx => \separatorFactoryFunc($x, $ctx)',
+            '($x, $ctx) => \separatorFactoryFunc($x, $ctx)',
+            '$x, $ctx => return \separatorFactoryFunc($x, $ctx);',
+            '($x, $ctx) => return \separatorFactoryFunc($x, $ctx);',
+            '$x, $ctx => { return \separatorFactoryFunc($x, $ctx); }',
+            '($x, $ctx) => { return \separatorFactoryFunc($x, $ctx); }',
+            '$x, $ctx => {
+return \separatorFactoryFunc($x, $ctx);
+}',
+            '($x, $ctx) => {
+return \separatorFactoryFunc($x, $ctx);
 }',
         ];
     }

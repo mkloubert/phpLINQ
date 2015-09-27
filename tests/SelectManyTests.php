@@ -32,11 +32,11 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1Func($x) {
+function selector1Func($x) : array {
     return [$x, $x * 10, $x * 100];
 }
 
-function selector2Func($x) {
+function selector2Func($x) : Iterator {
     return new ArrayIterator(selector1Func($x));
 }
 

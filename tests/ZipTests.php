@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function zipFunc($itemA, $itemB) {
+function zipFunc($itemA, $itemB) : string {
     return sprintf('%s%s', $itemA, $itemB);
 }
 
@@ -59,18 +59,30 @@ class ZipTests extends TestCaseBase {
             function($itemA, $itemB) {
                 return zipFunc($itemA, $itemB);
             },
-            '$itemA, $itemB => sprintf("%s%s", $itemA, $itemB)',
-            '($itemA, $itemB) => sprintf("%s%s", $itemA, $itemB)',
-            '$itemA, $itemB => return sprintf("%s%s", $itemA, $itemB);',
-            '($itemA, $itemB) => return sprintf("%s%s", $itemA, $itemB);',
+            '$itemA, $itemB => zipFunc($itemA, $itemB)',
+            '($itemA, $itemB) => zipFunc($itemA, $itemB)',
+            '$itemA, $itemB => return zipFunc($itemA, $itemB);',
+            '($itemA, $itemB) => return zipFunc($itemA, $itemB);',
             '$itemA, $itemB => {
-return sprintf("%s%s", $itemA, $itemB);
+return zipFunc($itemA, $itemB);
 }',
             '($itemA, $itemB) => {
-return sprintf("%s%s", $itemA, $itemB);
+return zipFunc($itemA, $itemB);
 }',
-            '$itemA, $itemB => {return sprintf("%s%s", $itemA, $itemB); }',
-            '($itemA, $itemB) => { return sprintf("%s%s", $itemA, $itemB);}',
+            '$itemA, $itemB => {return zipFunc($itemA, $itemB); }',
+            '($itemA, $itemB) => { return zipFunc($itemA, $itemB);}',
+            '$itemA, $itemB => \zipFunc($itemA, $itemB)',
+            '($itemA, $itemB) => \zipFunc($itemA, $itemB)',
+            '$itemA, $itemB => return \zipFunc($itemA, $itemB);',
+            '($itemA, $itemB) => return \zipFunc($itemA, $itemB);',
+            '$itemA, $itemB => {
+return \zipFunc($itemA, $itemB);
+}',
+            '($itemA, $itemB) => {
+return \zipFunc($itemA, $itemB);
+}',
+            '$itemA, $itemB => {return \zipFunc($itemA, $itemB); }',
+            '($itemA, $itemB) => { return \zipFunc($itemA, $itemB);}',
             array($this, 'zipper1'),
             array(static::class, 'zipper2'),
             new ZipperClass(),

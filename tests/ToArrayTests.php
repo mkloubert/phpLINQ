@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($key, $item) {
+function keySelectorFunc($key, $item) : string {
     return sprintf('%s%s', strtoupper($key), $item + 1);
 }
 
@@ -62,17 +62,17 @@ class ToArrayTests extends TestCaseBase {
             array(static::class, 'keySelectorMethod2'),
             new KeySelectorClass(),
             'keySelectorFunc',
-            '$key, $item => sprintf("%s%s", strtoupper($key), $item + 1)',
-            '($key, $item) => sprintf("%s%s", strtoupper($key), $item + 1)',
-            '$key, $item => return sprintf("%s%s", strtoupper($key), $item + 1); ',
-            '($key, $item) =>  return  sprintf("%s%s", strtoupper($key), $item + 1);',
-            '$key, $item => { return sprintf("%s%s", strtoupper($key), $item + 1); }',
-            '($key, $item) => { return  sprintf("%s%s", strtoupper($key), $item + 1);  }',
+            '$key, $item => keySelectorFunc($key, $item)',
+            '($key, $item) => keySelectorFunc($key, $item)',
+            '$key, $item => return keySelectorFunc($key, $item); ',
+            '($key, $item) =>  return keySelectorFunc($key, $item);',
+            '$key, $item => { return keySelectorFunc($key, $item); }',
+            '($key, $item) => { return keySelectorFunc($key, $item);  }',
             '$key, $item => {
-return sprintf("%s%s", strtoupper($key), $item + 1);
+return keySelectorFunc($key, $item);
 }',
             '($key, $item) =>  {
-return  sprintf("%s%s", strtoupper($key), $item + 1);
+return keySelectorFunc($key, $item);
 }',
             '\keySelectorFunc',
         );

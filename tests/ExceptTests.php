@@ -64,17 +64,29 @@ class ExceptTests extends TestCaseBase {
             array($this, 'equalityComparerMethod1'),
             array(static::class, 'equalityComparerMethod2'),
             new EqualityComparerClass(),
-            '$x, $y => $x === $y',
-            '($x, $y) => $x === $y',
-            '$x, $y => return $x === $y;',
-            '($x, $y) => return $x === $y;',
-            '$x, $y => { return $x === $y; }',
-            '($x, $y) => { return $x === $y; }',
+            '$x, $y => equalityComparerFunc($x, $y)',
+            '($x, $y) => equalityComparerFunc($x, $y)',
+            '$x, $y => return equalityComparerFunc($x, $y);',
+            '($x, $y) => return equalityComparerFunc($x, $y);',
+            '$x, $y => { return equalityComparerFunc($x, $y); }',
+            '($x, $y) => { return equalityComparerFunc($x, $y); }',
             '$x, $y => {
-return $x === $y;
+return equalityComparerFunc($x, $y);
 }',
             '($x, $y) => {
-return $x === $y;
+return equalityComparerFunc($x, $y);
+}',
+            '$x, $y => \equalityComparerFunc($x, $y)',
+            '($x, $y) => \equalityComparerFunc($x, $y)',
+            '$x, $y => return \equalityComparerFunc($x, $y);',
+            '($x, $y) => return \equalityComparerFunc($x, $y);',
+            '$x, $y => { return \equalityComparerFunc($x, $y); }',
+            '($x, $y) => { return \equalityComparerFunc($x, $y); }',
+            '$x, $y => {
+return \equalityComparerFunc($x, $y);
+}',
+            '($x, $y) => {
+return \equalityComparerFunc($x, $y);
 }',
         ];
     }

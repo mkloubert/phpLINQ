@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 // phpLINQ
 spl_autoload_register(function($className) {
     $classFile = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .

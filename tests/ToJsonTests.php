@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($key) {
+function keySelectorFunc($key) : string {
     return chr(ord('A') + $key);
 }
 
@@ -63,17 +63,29 @@ class ToJsonTests extends TestCaseBase {
             array($this, 'keySelectorMethod1'),
             array(static::class, 'keySelectorMethod2'),
             new KeySelectorClass(),
-            '$key => chr(ord("A") + $key)',
-            '($key) => chr(ord("A") + $key)',
-            '$key => return chr(ord("A") + $key);',
-            '($key) => return chr(ord("A") + $key);',
-            '$key => { return chr(ord("A") + $key); }',
-            '($key) => { return chr(ord("A") + $key); }',
+            '$key => keySelectorFunc($key)',
+            '($key) => keySelectorFunc($key)',
+            '$key => return keySelectorFunc($key);',
+            '($key) => return keySelectorFunc($key);',
+            '$key => { return keySelectorFunc($key); }',
+            '($key) => { return keySelectorFunc($key); }',
             '$key => {
-return chr(ord("A") + $key);
+return keySelectorFunc($key);
 }',
             '($key) => {
-return chr(ord("A") + $key);
+return keySelectorFunc($key);
+}',
+            '$key => \keySelectorFunc($key)',
+            '($key) => \keySelectorFunc($key)',
+            '$key => return \keySelectorFunc($key);',
+            '($key) => return \keySelectorFunc($key);',
+            '$key => { return \keySelectorFunc($key); }',
+            '($key) => { return \keySelectorFunc($key); }',
+            '$key => {
+return \keySelectorFunc($key);
+}',
+            '($key) => {
+return \keySelectorFunc($key);
 }',
         ];
     }

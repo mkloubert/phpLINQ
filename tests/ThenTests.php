@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function selector1FuncForTest1($x) {
+function selector1FuncForTest1($x) : int {
     return strlen($x);
 }
 
@@ -75,23 +75,44 @@ class ThenTests extends TestCaseBase {
                 '\selector1FuncForTest1',
             ],
             [
-                '$x => strlen($x)',
+                '$x => selector1FuncForTest1($x)',
             ],
             [
-                '($x) => strlen($x)',
+                '($x) => selector1FuncForTest1($x)',
             ],
             [
-                '$x => return strlen($x);',
+                '$x => return selector1FuncForTest1($x);',
             ],
             [
-                '($x) => return strlen($x);',
+                '($x) => return selector1FuncForTest1($x);',
             ],
             [
-                '($x) => { return strlen($x); }',
+                '($x) => { return selector1FuncForTest1($x); }',
             ],
             [
                 '($x) => {
-$y = strlen($x);
+$y = selector1FuncForTest1($x);
+return $y;
+}',
+            ],
+            [
+                '$x => \selector1FuncForTest1($x)',
+            ],
+            [
+                '($x) => \selector1FuncForTest1($x)',
+            ],
+            [
+                '$x => return \selector1FuncForTest1($x);',
+            ],
+            [
+                '($x) => return \selector1FuncForTest1($x);',
+            ],
+            [
+                '($x) => { return \selector1FuncForTest1($x); }',
+            ],
+            [
+                '($x) => {
+$y = \selector1FuncForTest1($x);
 return $y;
 }',
             ],

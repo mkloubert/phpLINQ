@@ -63,17 +63,29 @@ class LastOrDefaultTests extends TestCaseBase {
             array($this, 'predicateMethod1'),
             array(static::class, 'predicateMethod2'),
             new PredicateClass(),
-            '$x => $x < 4',
-            '($x) => $x < 4',
-            '$x => return $x < 4;',
-            '($x) => return $x < 4;',
-            '$x => { return $x < 4; }',
-            '($x) => { return $x < 4; }',
+            '$x => predicateFunc($x)',
+            '($x) => predicateFunc($x)',
+            '$x => return predicateFunc($x);',
+            '($x) => return predicateFunc($x);',
+            '$x => { return predicateFunc($x); }',
+            '($x) => { return predicateFunc($x); }',
             '$x => {
-return $x < 4;
+return predicateFunc($x);
 }',
             '($x) => {
-return $x < 4;
+return predicateFunc($x);
+}',
+            '$x => \predicateFunc($x)',
+            '($x) => \predicateFunc($x)',
+            '$x => return \predicateFunc($x);',
+            '($x) => return \predicateFunc($x);',
+            '$x => { return \predicateFunc($x); }',
+            '($x) => { return \predicateFunc($x); }',
+            '$x => {
+return \predicateFunc($x);
+}',
+            '($x) => {
+return \predicateFunc($x);
 }',
         );
     }

@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function whereFunc($x) {
+function whereFunc($x) : bool {
     return 0 === $x % 2;
 }
 
@@ -63,16 +63,27 @@ class WhereTests extends TestCaseBase {
             new WhereClass(),
             'whereFunc',
             '\whereFunc',
-            '$x => 0 === $x % 2',
-            '($x) => 0 === $x % 2',
-            '$x => return 0 === $x % 2;',
-            '($x) => return 0 === $x % 2;',
-            '$x => {return 0 === $x % 2; }',
-            '($x) =>   { return 0 === $x % 2;}',
+            '$x => whereFunc($x)',
+            '($x) => whereFunc($x)',
+            '$x => return whereFunc($x);',
+            '($x) => return whereFunc($x);',
+            '$x => {return whereFunc($x); }',
+            '($x) => { return whereFunc($x);}',
             '$x => {
-return 0 === $x % 2; }',
+return whereFunc($x); }',
             '($x) => {
-return 0 === $x % 2;
+return whereFunc($x);
+}',
+            '$x => \whereFunc($x)',
+            '($x) => \whereFunc($x)',
+            '$x => return \whereFunc($x);',
+            '($x) => return \whereFunc($x);',
+            '$x => {return \whereFunc($x); }',
+            '($x) => { return \whereFunc($x);}',
+            '$x => {
+return \whereFunc($x); }',
+            '($x) => {
+return \whereFunc($x);
 }',
         );
     }

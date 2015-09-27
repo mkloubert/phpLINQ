@@ -34,7 +34,7 @@ use \System\Collections\EnumerableException;
 use \System\Collections\IEnumerable;
 
 
-function predicateFunc($x) {
+function predicateFunc($x) : bool {
     return 0 === $x % 2;
 }
 
@@ -65,17 +65,29 @@ class SingleTests extends TestCaseBase {
             new PredicateClass(),
             'predicateFunc',
             '\predicateFunc',
-            '$x => 0 === $x % 2',
-            '($x) => 0 === $x % 2',
-            '$x => return 0 === $x % 2;',
-            '($x) => return 0 === $x % 2;',
-            '$x => { return 0 === $x % 2; }',
-            '($x) => { return 0 === $x % 2; }',
+            '$x => predicateFunc($x)',
+            '($x) => predicateFunc($x)',
+            '$x => return predicateFunc($x);',
+            '($x) => return predicateFunc($x);',
+            '$x => { return predicateFunc($x); }',
+            '($x) => { return predicateFunc($x); }',
             '$x => {
-return 0 === $x % 2;
+return predicateFunc($x);
 }',
             '($x) => {
-return 0 === $x % 2;
+return predicateFunc($x);
+}',
+            '$x => \predicateFunc($x)',
+            '($x) => \predicateFunc($x)',
+            '$x => return \predicateFunc($x);',
+            '($x) => return \predicateFunc($x);',
+            '$x => { return \predicateFunc($x); }',
+            '($x) => { return \predicateFunc($x); }',
+            '$x => {
+return \predicateFunc($x);
+}',
+            '($x) => {
+return \predicateFunc($x);
 }',
         ];
     }

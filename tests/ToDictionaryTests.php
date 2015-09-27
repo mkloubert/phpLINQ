@@ -97,6 +97,18 @@ class ToDictionaryTests extends TestCaseBase {
             '($x) => {
                  return itemValidatorFunc($x);
              }',
+            '$x => \itemValidatorFunc($x)',
+            '($x) => \itemValidatorFunc($x)',
+            '$x => return \itemValidatorFunc($x);',
+            '($x) => return \itemValidatorFunc($x);',
+            '$x => { return \itemValidatorFunc($x); }',
+            '($x) => { return \itemValidatorFunc($x); }',
+            '$x => {
+                 return \itemValidatorFunc($x);
+             }',
+            '($x) => {
+                 return \itemValidatorFunc($x);
+             }',
         ];
     }
 
@@ -127,6 +139,18 @@ class ToDictionaryTests extends TestCaseBase {
             '($x, $y) => {
                  return keyComparerFunc($x, $y);
              }',
+            '$x, $y => \keyComparerFunc($x, $y)',
+            '($x, $y) => \keyComparerFunc($x, $y)',
+            '$x, $y => return \keyComparerFunc($x, $y);',
+            '($x, $y) => return \keyComparerFunc($x, $y);',
+            '$x, $y => { return \keyComparerFunc($x, $y); }',
+            '($x, $y) => { return \keyComparerFunc($x, $y); }',
+            '$x, $y => {
+                 return \keyComparerFunc($x, $y);
+             }',
+            '($x, $y) => {
+                 return \keyComparerFunc($x, $y);
+             }',
         ];
     }
 
@@ -156,6 +180,18 @@ class ToDictionaryTests extends TestCaseBase {
              }',
             '($x) => {
                  return keyValidatorFunc($x);
+             }',
+            '$x => \keyValidatorFunc($x)',
+            '($x) => \keyValidatorFunc($x)',
+            '$x => return \keyValidatorFunc($x);',
+            '($x) => return \keyValidatorFunc($x);',
+            '$x => { return \keyValidatorFunc($x); }',
+            '($x) => { return \keyValidatorFunc($x); }',
+            '$x => {
+                 return \keyValidatorFunc($x);
+             }',
+            '($x) => {
+                 return \keyValidatorFunc($x);
              }',
         ];
     }

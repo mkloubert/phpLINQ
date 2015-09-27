@@ -77,6 +77,18 @@ return equalityComparer1Func($x, $y);
             '($x, $y) => {
 return equalityComparer1Func($x, $y);
 }',
+            '$x, $y => \equalityComparer1Func($x, $y)',
+            '($x, $y) => \equalityComparer1Func($x, $y)',
+            '$x, $y => return \equalityComparer1Func($x, $y);',
+            '($x, $y) => return \equalityComparer1Func($x, $y);',
+            '$x, $y => { return \equalityComparer1Func($x, $y); }',
+            '($x, $y) => { return \equalityComparer1Func($x, $y); }',
+            '$x, $y => {
+return \equalityComparer1Func($x, $y);
+}',
+            '($x, $y) => {
+return \equalityComparer1Func($x, $y);
+}',
         ];
     }
 

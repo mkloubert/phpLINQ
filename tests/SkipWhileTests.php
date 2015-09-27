@@ -63,17 +63,29 @@ class SkipWhileTests extends TestCaseBase {
             array($this, 'predciateMethod1'),
             array(static::class, 'predciateMethod2'),
             new PredciateClass(),
-            '$x => $x < 3',
-            '($x) => $x < 3',
-            '$x => return $x < 3;',
-            '($x) => return $x < 3;',
-            '$x => { return $x < 3; }',
-            '($x) => { return $x < 3; }',
+            '$x => predicateFunc($x)',
+            '($x) => predicateFunc($x)',
+            '$x => return predicateFunc($x);',
+            '($x) => return predicateFunc($x);',
+            '$x => { return predicateFunc($x); }',
+            '($x) => { return predicateFunc($x); }',
             '$x => {
-return $x < 3;
+return predicateFunc($x);
 }',
             '($x) => {
-return $x < 3;
+return predicateFunc($x);
+}',
+            '$x => \predicateFunc($x)',
+            '($x) => \predicateFunc($x)',
+            '$x => return \predicateFunc($x);',
+            '($x) => return \predicateFunc($x);',
+            '$x => { return \predicateFunc($x); }',
+            '($x) => { return \predicateFunc($x); }',
+            '$x => {
+return \predicateFunc($x);
+}',
+            '($x) => {
+return \predicateFunc($x);
 }',
         ];
     }

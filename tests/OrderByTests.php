@@ -64,27 +64,39 @@ class OrderByTests extends TestCaseBase {
             array($this, 'selectorMethod1'),
             array(static::class, 'selectorMethod2'),
             new SelectorClass(),
-            '$x => $x',
-            '($x) => $x',
-            '$x => return $x;',
-            '($x) => return $x;',
-            '$x => { return $x; }',
-            '($x) => { return $x; }',
+            '$x => selectorFunc($x)',
+            '($x) => selectorFunc($x)',
+            '$x => return selectorFunc($x);',
+            '($x) => return selectorFunc($x);',
+            '$x => { return selectorFunc($x); }',
+            '($x) => { return selectorFunc($x); }',
             '$x => {
-return $x;
+return selectorFunc($x);
 }',
             '($x) => {
-return $x;
+return selectorFunc($x);
+}',
+            '$x => \selectorFunc($x)',
+            '($x) => \selectorFunc($x)',
+            '$x => return \selectorFunc($x);',
+            '($x) => return \selectorFunc($x);',
+            '$x => { return \selectorFunc($x); }',
+            '($x) => { return \selectorFunc($x); }',
+            '$x => {
+return \selectorFunc($x);
+}',
+            '($x) => {
+return \selectorFunc($x);
 }',
         ];
     }
 
     public function selectorMethod1($x) {
-        return $x;
+        return selectorFunc($x);
     }
 
     public static function selectorMethod2($x) {
-        return $x;
+        return selectorFunc($x);
     }
 
     public function testNoComparer() {

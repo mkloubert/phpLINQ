@@ -51,15 +51,15 @@ class Pet {
     public $Owner;
 }
 
-function personKeySelectorFunc(Person $person) {
+function personKeySelectorFunc(Person $person) : string {
     return $person->Name;
 }
 
-function petKeySelectorFunc(Pet $pet) {
+function petKeySelectorFunc(Pet $pet) : string {
     return $pet->Owner->Name;
 }
 
-function selectorFunc(Person $person, IEnumerable $pets) {
+function selectorFunc(Person $person, IEnumerable $pets) : string {
     $petList = $pets->select(function(Pet $pet) {
                                  return $pet->Name;
                              })
@@ -160,13 +160,13 @@ class GroupJoinTests extends TestCaseBase {
                 new ResultSelectorClass(),
             ],
             [
-                '$person => $person->Name',
-                '$pet => $pet->Owner->Name',
+                '$person => personKeySelectorFunc($person)',
+                '$pet => \petKeySelectorFunc($pet)',
                 '$person, $pets => selectorFunc($person, $pets)',
             ],
             [
-                '($person) => $person->Name',
-                '($pet) => $pet->Owner->Name',
+                '($person) => \personKeySelectorFunc($person)',
+                '($pet) => petKeySelectorFunc($pet)',
                 '($person, $pets) => selectorFunc($person, $pets)',
             ],
             [

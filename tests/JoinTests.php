@@ -51,15 +51,15 @@ class Pet {
     public $Owner;
 }
 
-function personKeySelectorFunc(Person $person) {
+function personKeySelectorFunc(Person $person) : string {
     return $person->Name;
 }
 
-function petKeySelectorFunc(Pet $pet) {
+function petKeySelectorFunc(Pet $pet) : string {
     return $pet->Owner->Name;
 }
 
-function selectorFunc(Person $person, Pet $pet) {
+function selectorFunc(Person $person, Pet $pet) : string {
     return sprintf('Owner: %s; Pet: %s',
                    $person->Name,
                    $pet->Name);
@@ -154,14 +154,14 @@ class JoinTests extends TestCaseBase {
                 new ResultSelectorClass(),
             ],
             [
-                '$person => $person->Name',
-                '$pet => $pet->Owner->Name',
-                '$person, $pet => sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name)',
+                '$person => \personKeySelectorFunc($person)',
+                '$pet => \petKeySelectorFunc($pet)',
+                '$person, $pet => selectorFunc($person, $pet)',
             ],
             [
-                '($person) => $person->Name',
-                '($pet) => $pet->Owner->Name',
-                '($person, $pet) => sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name)',
+                '($person) => personKeySelectorFunc($person)',
+                '($pet) => petKeySelectorFunc($pet)',
+                '($person, $pet) => \selectorFunc($person, $pet)',
             ],
             [
                 '$person => return $person->Name;',

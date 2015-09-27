@@ -53,6 +53,9 @@ class ElementAtTests extends TestCaseBase {
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
 
+            unset($element);
+            unset($thrownEx);
+
             try {
                 $element = $seq->elementAt(2);
             }
@@ -69,6 +72,9 @@ class ElementAtTests extends TestCaseBase {
     public function test3() {
         foreach (static::sequenceListFromArray([1, 2]) as $seq) {
             /* @var IEnumerable $seq */
+
+            unset($element);
+            unset($thrownEx);
 
             try {
                 $element = $seq->elementAt(2);

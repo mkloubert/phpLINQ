@@ -63,17 +63,29 @@ class AllTests extends TestCaseBase {
             array($this, 'predciateMethod1'),
             array(static::class, 'predciateMethod2'),
             new PredciateClass(),
-            '$x => 0 === $x % 2',
-            '($x) => 0 === $x % 2',
-            '$x => return 0 === $x % 2;',
-            '($x) => return 0 === $x % 2;',
-            '$x => { return 0 === $x % 2; }',
-            '($x) => { return 0 === $x % 2; }',
+            '$x => predicateFunc($x)',
+            '($x) => predicateFunc($x)',
+            '$x => return predicateFunc($x);',
+            '($x) => return predicateFunc($x);',
+            '$x => { return predicateFunc($x); }',
+            '($x) => { return predicateFunc($x); }',
             '$x => {
-return 0 === $x % 2;
+return predicateFunc($x);
 }',
             '($x) => {
-return 0 === $x % 2;
+return predicateFunc($x);
+}',
+            '$x => \predicateFunc($x)',
+            '($x) => \predicateFunc($x)',
+            '$x => return \predicateFunc($x);',
+            '($x) => return \predicateFunc($x);',
+            '$x => { return \predicateFunc($x); }',
+            '($x) => { return \predicateFunc($x); }',
+            '$x => {
+return \predicateFunc($x);
+}',
+            '($x) => {
+return \predicateFunc($x);
 }',
         ];
     }

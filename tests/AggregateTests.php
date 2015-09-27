@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function stringConcatAccumulatorFunc($result, $x) {
+function stringConcatAccumulatorFunc($result, $x) : string {
     return $result . $x;
 }
 
@@ -63,17 +63,29 @@ class AggregateTests extends TestCaseBase {
             array($this, 'stringConcatAccumulatorMethod1'),
             array(static::class, 'stringConcatAccumulatorMethod2'),
             new StringConcatAccumulatorClass(),
-            '$result, $x => $result . $x',
-            '($result, $x) => $result . $x',
-            '$result, $x => return $result . $x;',
-            '($result, $x) => return $result . $x;',
-            '$result, $x => { return $result . $x; }',
-            '($result, $x) => { return $result . $x; }',
+            '$result, $x => stringConcatAccumulatorFunc($result, $x)',
+            '($result, $x) => stringConcatAccumulatorFunc($result, $x)',
+            '$result, $x => return stringConcatAccumulatorFunc($result, $x);',
+            '($result, $x) => return stringConcatAccumulatorFunc($result, $x);',
+            '$result, $x => { return stringConcatAccumulatorFunc($result, $x); }',
+            '($result, $x) => { return stringConcatAccumulatorFunc($result, $x); }',
             '$result, $x => {
-return $result . $x;
+return stringConcatAccumulatorFunc($result, $x);
 }',
             '($result, $x) => {
-return $result . $x;
+return stringConcatAccumulatorFunc($result, $x);
+}',
+            '$result, $x => \stringConcatAccumulatorFunc($result, $x)',
+            '($result, $x) => \stringConcatAccumulatorFunc($result, $x)',
+            '$result, $x => return \stringConcatAccumulatorFunc($result, $x);',
+            '($result, $x) => return \stringConcatAccumulatorFunc($result, $x);',
+            '$result, $x => { return \stringConcatAccumulatorFunc($result, $x); }',
+            '($result, $x) => { return \stringConcatAccumulatorFunc($result, $x); }',
+            '$result, $x => {
+return \stringConcatAccumulatorFunc($result, $x);
+}',
+            '($result, $x) => {
+return \stringConcatAccumulatorFunc($result, $x);
 }',
         ];
     }

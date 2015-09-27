@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function keySelectorFunc($x) {
+function keySelectorFunc($x) : string {
     if (is_numeric($x)) {
         return 'number';
     }

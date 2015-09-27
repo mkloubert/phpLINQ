@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function selectorFunc($x) {
+function selectorFunc($x) : string {
     return strtoupper($x);
 }
 
@@ -61,19 +61,31 @@ class SelectTests extends TestCaseBase {
             array($this, 'selector1'),
             array(static::class, 'selector2'),
             new SelectorClass(),
-            '$x => strtoupper($x)',
-            '($x) => strtoupper($x)',
-            '$x => return strtoupper($x);',
-            '($x) => return strtoupper($x);',
-            '$x => { return strtoupper($x);}',
-            '($x) => {return strtoupper($x);}',
-            '$x => { return strtoupper($x);
+            '$x => selectorFunc($x)',
+            '($x) => selectorFunc($x)',
+            '$x => return selectorFunc($x);',
+            '($x) => return selectorFunc($x);',
+            '$x => { return selectorFunc($x);}',
+            '($x) => {return selectorFunc($x);}',
+            '$x => { return selectorFunc($x);
 }',
             '($x) => {
-return strtoupper($x);
+return selectorFunc($x);
+}',
+            '$x => \selectorFunc($x)',
+            '($x) => \selectorFunc($x)',
+            '$x => return \selectorFunc($x);',
+            '($x) => return \selectorFunc($x);',
+            '$x => { return \selectorFunc($x);}',
+            '($x) => {return \selectorFunc($x);}',
+            '$x => { return \selectorFunc($x);
+}',
+            '($x) => {
+return \selectorFunc($x);
 }',
             'selectorFunc',
             '\selectorFunc',
+
         );
     }
 

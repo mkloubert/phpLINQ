@@ -32,7 +32,7 @@
 use \System\Collections\IEnumerable;
 
 
-function comparerFunc($x, $y) {
+function comparerFunc($x, $y) : bool {
     return $x === $y;
 }
 
@@ -67,17 +67,29 @@ class DistinctTests extends TestCaseBase {
             array($this, 'comparerMethod1'),
             array(static::class, 'comparerMethod2'),
             new EqualityComparerClass(),
-            '$x, $y => $x === $y',
-            '($x, $y) => $x === $y',
-            '$x, $y => return $x === $y;',
-            '($x, $y) => return $x === $y;',
-            '$x, $y => { return $x === $y; }',
-            '($x, $y) => { return $x === $y; }',
+            '$x, $y => comparerFunc($x, $y)',
+            '($x, $y) => comparerFunc($x, $y)',
+            '$x, $y => return comparerFunc($x, $y);',
+            '($x, $y) => return comparerFunc($x, $y);',
+            '$x, $y => { return comparerFunc($x, $y); }',
+            '($x, $y) => { return comparerFunc($x, $y); }',
             '$x, $y => {
-return $x === $y;
+return comparerFunc($x, $y);
 }',
             '($x, $y) => {
-return $x === $y;
+return comparerFunc($x, $y);
+}',
+            '$x, $y => \comparerFunc($x, $y)',
+            '($x, $y) => \comparerFunc($x, $y)',
+            '$x, $y => return \comparerFunc($x, $y);',
+            '($x, $y) => return \comparerFunc($x, $y);',
+            '$x, $y => { return \comparerFunc($x, $y); }',
+            '($x, $y) => { return \comparerFunc($x, $y); }',
+            '$x, $y => {
+return \comparerFunc($x, $y);
+}',
+            '($x, $y) => {
+return \comparerFunc($x, $y);
 }',
         ];
     }
