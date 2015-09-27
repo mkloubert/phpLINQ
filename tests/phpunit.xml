@@ -19,7 +19,6 @@
             <file>EachTests.php</file>
             <file>ElementAtOrDefaultTests.php</file>
             <file>ElementAtTests.php</file>
-            <file>EnumerableTests.php</file>
             <file>ExceptTests.php</file>
             <file>FirstOrDefaultTests.php</file>
             <file>FirstTests.php</file>
@@ -47,7 +46,6 @@
             <file>SelectManyTests.php</file>
             <file>SelectTests.php</file>
             <file>SequenceEqualTests.php</file>
-            <file>SerializationTests.php</file>
             <file>SingleOrDefaultTests.php</file>
             <file>SingleTests.php</file>
             <file>SkipTests.php</file>
@@ -55,10 +53,6 @@
             <file>SumTests.php</file>
             <file>TakeTests.php</file>
             <file>TakeWhileTests.php</file>
-            <file>ThenByDescendingTests.php</file>
-            <file>ThenByTests.php</file>
-            <file>ThenDescendingTests.php</file>
-            <file>ThenTests.php</file>
             <file>ToArrayTests.php</file>
             <file>ToDictionaryTests.php</file>
             <file>ToJsonTests.php</file>
@@ -75,6 +69,10 @@
             <file>LambdaTests.php</file>
         </testsuite>
 
+        <testsuite name="Serialization">
+            <file>SerializationTests.php</file>
+        </testsuite>
+
         <testsuite name="System.Collections.Collection">
             <file>CollectionTests.php</file>
         </testsuite>
@@ -85,6 +83,17 @@
 
         <testsuite name="System.Collections.Set">
             <file>SetTests.php</file>
+        </testsuite>
+
+        <testsuite name="System.Linq.EnumerableTests">
+            <file>EnumerableTests.php</file>
+        </testsuite>
+
+        <testsuite name="System.Collections.IOrderedEnumerable">
+            <file>ThenByDescendingTests.php</file>
+            <file>ThenByTests.php</file>
+            <file>ThenDescendingTests.php</file>
+            <file>ThenTests.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
