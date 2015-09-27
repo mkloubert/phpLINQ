@@ -89,7 +89,7 @@
             <file>EnumerableTests.php</file>
         </testsuite>
 
-        <testsuite name="System.Collections.IOrderedEnumerable">
+        <testsuite name="System.Linq.IOrderedEnumerable">
             <file>ThenByDescendingTests.php</file>
             <file>ThenByTests.php</file>
             <file>ThenDescendingTests.php</file>
