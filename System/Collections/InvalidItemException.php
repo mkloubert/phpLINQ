@@ -29,16 +29,18 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Collections;
+
+use \System\ArgumentException;
 
 
 /**
- * For an argument that is out of range.
+ * Indicates that an item / value is invalid.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ArgumentOutOfRangeException extends ArgumentException {
+class InvalidItemException extends ArgumentException {
     /**
      * @var mixed
      */
@@ -54,7 +56,7 @@ class ArgumentOutOfRangeException extends ArgumentException {
      * @param int $code The code.
      * @param \Exception $innerException The inner exception.
      */
-    public function __construct(string $paramName = '', $actualValue = null,
+    public function __construct($actualValue = null, string $paramName = '',
                                 string $message = '', \Exception $innerException = null, $code = 0) {
 
         $this->_actualValue = $actualValue;
@@ -65,9 +67,9 @@ class ArgumentOutOfRangeException extends ArgumentException {
 
 
     /**
-     * Gets the underlying value.
+     * Gets the underlying value of the item.
      *
-     * @return mixed The underlying value.
+     * @return mixed The underlying value of the item.
      */
     public function actualValue() {
         return $this->_actualValue;

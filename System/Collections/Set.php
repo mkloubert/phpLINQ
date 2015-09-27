@@ -164,11 +164,11 @@ final class Set extends ArrayCollectionBase implements ISet {
      *
      * @param mixed $item The item to check.
      *
-     * @throws ArgumentException Is invalid item.
+     * @throws InvalidItemException Is invalid item.
      */
     protected final function throwIfItemIsInvalid($item) {
         if (!$this->isItemValid($item)) {
-            throw new ArgumentException('item', 'Item is not valid!');
+            throw new InvalidItemException($item, 'item');
         }
     }
 

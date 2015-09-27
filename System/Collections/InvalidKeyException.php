@@ -29,16 +29,18 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Collections;
+
+use \System\ArgumentException;
 
 
 /**
- * For an argument that is out of range.
+ * Indicates that a key is invalid.
  *
- * @package System
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ArgumentOutOfRangeException extends ArgumentException {
+class InvalidKeyException extends ArgumentException {
     /**
      * @var mixed
      */
@@ -48,13 +50,13 @@ class ArgumentOutOfRangeException extends ArgumentException {
     /**
      * Initializes a new instance of that class.
      *
-     * @param string $paramName The name of the underlying parameter.
      * @param mixed $actualValue The underlying value.
+     * @param string $paramName The name of the underlying parameter.
      * @param string $message The message.
      * @param int $code The code.
      * @param \Exception $innerException The inner exception.
      */
-    public function __construct(string $paramName = '', $actualValue = null,
+    public function __construct($actualValue = null, string $paramName = '',
                                 string $message = '', \Exception $innerException = null, $code = 0) {
 
         $this->_actualValue = $actualValue;
@@ -65,9 +67,9 @@ class ArgumentOutOfRangeException extends ArgumentException {
 
 
     /**
-     * Gets the underlying value.
+     * Gets the underlying value of the key.
      *
-     * @return mixed The underlying value.
+     * @return mixed The underlying value of the key.
      */
     public function actualValue() {
         return $this->_actualValue;

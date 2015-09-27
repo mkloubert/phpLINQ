@@ -173,7 +173,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
         return $defValue;
     }
 
-    private function indexOfByOffset($offset) {
+    private function indexOfByKey($offset) {
         foreach ($this->_items as $index => $item) {
             if ($this->compareKeys($item->key, $offset)) {
                 return $index;
@@ -246,61 +246,61 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     /**
      * {@inheritDoc}
      */
-    public final function offsetExists($offset) {
-        $this->throwIfKeyIsInvalid($offset);
+    public final function offsetExists($key) {
+        $this->throwIfKeyIsInvalid($key);
 
-        return $this->containsKey($offset);
+        return $this->containsKey($key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function offsetGet($offset) {
-        $this->throwIfKeyIsInvalid($offset);
+    public final function offsetGet($key) {
+        $this->throwIfKeyIsInvalid($key);
 
-        $i = $this->indexOfByOffset($offset);
+        $i = $this->indexOfByKey($key);
         if (false !== $i) {
             return $this->_items[$i]->value;
         }
 
-        $this->throwKeyOutOfRangeException($offset);
+        $this->throwKeyOutOfRangeException($key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function offsetSet($offset, $value) {
-        $this->throwIfKeyIsInvalid($offset);
+    public final function offsetSet($key, $value) {
+        $this->throwIfKeyIsInvalid($key);
 
         $this->throwIfReadOnly();
 
         $doAdd = false;
-        if (null === $offset) {
+        if (null === $key) {
             $doAdd = true;
 
             // find next index
-            $offset = $this->count();
-            while ($this->containsKey($offset)) {
-                ++$offset;
+            $key = $this->count();
+            while ($this->containsKey($key)) {
+                ++$key;
             }
         }
 
-        $i = $this->indexOfByOffset($offset);
+        $i = $this->indexOfByKey($key);
         if (!$doAdd && (false !== $i)) {
             $this->_items[$i]->value = $value;
         }
         else {
-            $this->add($offset, $value);
+            $this->add($key, $value);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function offsetUnset($offset) {
-        $this->throwIfKeyIsInvalid($offset);
+    public final function offsetUnset($key) {
+        $this->throwIfKeyIsInvalid($key);
 
-        $this->removeKey($offset);
+        $this->removeKey($key);
     }
 
     /**
@@ -325,7 +325,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      * @see Dictionary::removeKey()
      */
     protected function removeKeyInner($key) : bool {
-        $i = $this->indexOfByOffset($key);
+        $i = $this->indexOfByKey($key);
         if (false !== $i) {
             \array_splice($this->_items, $i, 1);
             return true;
@@ -339,11 +339,11 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      *
      * @param mixed $key The key to check.
      *
-     * @throws ArgumentException Is invalid key.
+     * @throws InvalidKeyException Is invalid key.
      */
     protected final function throwIfKeyIsInvalid($key) {
         if (!$this->isKeyValid($key)) {
-            throw new ArgumentException('key', 'Key is not valid!');
+            throw new InvalidKeyException($key, 'key');
         }
     }
 
@@ -352,11 +352,11 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      *
      * @param mixed $value The value to check.
      *
-     * @throws ArgumentException Is invalid value.
+     * @throws InvalidItemException Is invalid value.
      */
     protected final function throwIfValueIsInvalid($value) {
         if (!$this->isValueValid($value)) {
-            throw new ArgumentException('value', 'Value is not valid!');
+            throw new InvalidItemException($value, 'value');
         }
     }
 

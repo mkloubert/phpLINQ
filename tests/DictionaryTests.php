@@ -31,6 +31,8 @@
 
 use \System\ArgumentException;
 use \System\Collections\Dictionary;
+use \System\Collections\InvalidItemException;
+use \System\Collections\InvalidKeyException;
 
 
 function dictionaryKeyComparerFunc($x, $y) : bool {
@@ -187,7 +189,7 @@ class DictionaryTests extends TestCaseBase {
                 try {
                     $dict->add($key, 12);
                 }
-                catch (ArgumentException $ex) {
+                catch (\Exception $ex) {
                     $thrownEx = $ex;
                 }
 
@@ -237,12 +239,12 @@ class DictionaryTests extends TestCaseBase {
                 try {
                     $dict->add($key, 23979);
                 }
-                catch (ArgumentException $ex) {
+                catch (\Exception $ex) {
                     $thrownEx = $ex;
                 }
 
                 $this->assertTrue(isset($thrownEx));
-                $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+                $this->assertInstanceOf(InvalidKeyException::class, $thrownEx);
             }
 
             $dict->add('b', 3);
@@ -275,12 +277,12 @@ class DictionaryTests extends TestCaseBase {
                 try {
                     $dict->add('b', $value);
                 }
-                catch (ArgumentException $ex) {
+                catch (\Exception $ex) {
                     $thrownEx = $ex;
                 }
 
                 $this->assertTrue(isset($thrownEx));
-                $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+                $this->assertInstanceOf(InvalidItemException::class, $thrownEx);
             }
 
             $dict->add('b', 3);

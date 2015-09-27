@@ -29,7 +29,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\ArgumentException;
+use \System\Collections\InvalidItemException;
 use \System\Collections\Set;
 
 
@@ -276,14 +276,14 @@ return \setEqualityComparerFunc($x, $y);
             try {
                 $s->add(3.0);
             }
-            catch (ArgumentException $ex) {
+            catch (\Exception $ex) {
                 $thrownEx = $ex;
             }
 
             $this->assertEquals(2, count($s));
             $this->checkForExpectedValues($s, [1, '2']);
             $this->assertTrue(isset($thrownEx));
-            $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+            $this->assertInstanceOf(InvalidItemException::class, $thrownEx);
         }
     }
 

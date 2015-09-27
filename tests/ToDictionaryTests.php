@@ -31,6 +31,8 @@
 
 use \System\ArgumentException;
 use \System\Collections\IDictionary;
+use \System\Collections\InvalidItemException;
+use \System\Collections\InvalidKeyException;
 use \System\Linq\Enumerable;
 
 
@@ -247,23 +249,28 @@ class ToDictionaryTests extends TestCaseBase {
 
         foreach ($keyValidatorList as $keyValidator) {
             foreach ($this->createItemValidators() as $itemValidator) {
+                unset($dict1);
+                unset($dict2);
+                unset($thrownEx1);
+                unset($thrownEx2);
+
                 try {
                     $dict1 = Enumerable::create(['a' => 111, 'b' => 2.7, 'C' => '33three'])
                                        ->toDictionary(null, $keyValidator, $itemValidator);
                 }
-                catch (ArgumentException $ex) {
+                catch (\Exception $ex) {
                     $thrownEx1 = $ex;
                 }
 
                 $this->assertFalse(isset($dict1));
                 $this->assertTrue(isset($thrownEx1));
-                $this->assertInstanceOf(ArgumentException::class, $thrownEx1);
+                $this->assertInstanceOf(InvalidItemException::class, $thrownEx1);
 
                 try {
                     $dict2 = Enumerable::create(['a' => 111, 'B' => 2.7, 'c' => '33'])
                                        ->toDictionary(null, $keyValidator, $itemValidator);
                 }
-                catch (ArgumentException $ex) {
+                catch (\Exception $ex) {
                     $thrownEx2 = $ex;
                 }
 
@@ -303,11 +310,16 @@ class ToDictionaryTests extends TestCaseBase {
 
     public function testKeyValidators() {
         foreach ($this->createKeyValidators() as $keyValidator) {
+            unset($dict1);
+            unset($dict2);
+            unset($thrownEx1);
+            unset($thrownEx2);
+
             try {
                 $dict1 = Enumerable::create(['a' => 111, 'b' => 2.7, 'C' => '33three'])
                                    ->toDictionary(null, $keyValidator);
             }
-            catch (ArgumentException $ex) {
+            catch (\Exception $ex) {
                 $thrownEx1 = $ex;
             }
 
@@ -325,13 +337,13 @@ class ToDictionaryTests extends TestCaseBase {
                 $dict2 = Enumerable::create(['a' => 111, 2 => 3, 'C' => '33three'])
                                    ->toDictionary(null, $keyValidator);
             }
-            catch (ArgumentException $ex) {
+            catch (\Exception $ex) {
                 $thrownEx2 = $ex;
             }
 
             $this->assertFalse(isset($dict2));
             $this->assertTrue(isset($thrownEx2));
-            $this->assertInstanceOf(ArgumentException::class, $thrownEx2);
+            $this->assertInstanceOf(InvalidKeyException::class, $thrownEx2);
         }
     }
 }

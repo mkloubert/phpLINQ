@@ -53,7 +53,7 @@ class ArgumentException extends Exception {
      * @param int $code The code.
      * @param \Exception $innerException The inner exception.
      */
-    public function __construct(string $paramName = null,
+    public function __construct(string $paramName = '',
                                 string $message = '', \Exception $innerException = null, int $code = 0) {
 
         $this->_paramName = $paramName;
