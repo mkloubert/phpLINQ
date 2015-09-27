@@ -124,7 +124,7 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
+    public final function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
         return $this->iterateWithItemContext(function($x, IItemContext $ctx) use (&$arr, $withKeys) {
                                                  if (!$withKeys) {
                                                      $arr[] = $x;

@@ -105,20 +105,6 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     /**
      * {@inheritDoc}
      */
-    public final function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
-        return $this->iterateWithItemContext(function(IDictionaryEntry $x) use (&$arr, $withKeys) {
-            if (!$withKeys) {
-                $arr[] = $x->value();
-            }
-            else {
-                $arr[$x->key()] = $x->value();
-            }
-        }, $this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function asEnumerable() : IEnumerable {
         $items = [];
         foreach ($this->_items as $i) {
