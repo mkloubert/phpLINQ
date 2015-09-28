@@ -33,7 +33,7 @@ namespace System\Collections;
 
 use \System\ArgumentException;
 use \System\ArgumentOutOfRangeException;
-use \System\InvalidOperationException;
+use \System\Collections\ObjectModel\ReadOnlyDictionary;
 
 
 /**
@@ -46,6 +46,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     private $_keyEqualityComparer;
     private $_keyValidator;
     private $_valueValidator;
+
 
     /**
      * Initializes a new instance of that class.
@@ -83,7 +84,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      * {@inheritDoc}
      */
     public final function add($key, $value) {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $this->throwIfKeyIsInvalid($key);
         $this->throwIfValueIsInvalid($value);
@@ -117,8 +118,23 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     /**
      * {@inheritDoc}
      */
+    public final function asReadOnly() : IReadOnlyDictionary {
+        $newSeq = static::createEnumerable($this->_items)
+                        ->withNewKeysAndValues('($key, $item) => $item->key',
+                                               '$item => $item->value');
+
+        return !$this->isReadOnly() ? new ReadOnlyDictionary($newSeq,
+                                                             $this->_keyEqualityComparer,
+                                                             $this->_keyValidator,
+                                                             $this->_valueValidator)
+                                    : $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function clear() {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $this->clearInner();
     }
@@ -183,30 +199,9 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isFixedSize() : bool {
-        return $this->isReadOnly();
-    }
-
     private function isKeyValid($key) : bool {
         return \call_user_func($this->_keyValidator,
                                $key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isReadOnly() : bool {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isSynchronized() : bool {
-        return false;
     }
 
     private function isValueValid($key) : bool {
@@ -272,8 +267,6 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
     public final function offsetSet($key, $value) {
         $this->throwIfKeyIsInvalid($key);
 
-        $this->throwIfReadOnly();
-
         $doAdd = false;
         if (null === $key) {
             $doAdd = true;
@@ -287,6 +280,8 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
 
         $i = $this->indexOfByKey($key);
         if (!$doAdd && (false !== $i)) {
+            $this->throwIfReadOnly();
+
             $this->_items[$i]->value = $value;
         }
         else {
@@ -315,8 +310,7 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      */
     public final function removeKey($key) : bool {
         $this->throwIfKeyIsInvalid($key);
-
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         return $this->removeKeyInner($key);
     }
@@ -360,19 +354,20 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
         }
     }
 
-    /**
-     * Throws an exception if that dictionary is read-only.
-     *
-     * @throws InvalidOperationException Dictionary is read-only.
-     */
-    protected final function throwIfReadOnly() {
-        if ($this->isReadOnly()) {
-            throw new InvalidOperationException('Dictionary is read only!');
-        }
-    }
-
     private function throwKeyOutOfRangeException($key) {
         throw new ArgumentOutOfRangeException($key, 'key', 'Key not found!');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function toArray($keySelector = null) : array {
+        return static::createEnumerable($this->_items)
+                     ->withNewKeysAndValues('($key, $item) => $item->key',
+                                            function(\stdClass $item) : IDictionaryEntry {
+                                                return new DictionaryEntry($item->key, $item->value);
+                                            })
+                     ->toArray($keySelector);
     }
 
     /**

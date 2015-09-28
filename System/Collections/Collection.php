@@ -33,7 +33,7 @@ namespace System\Collections;
 
 use \System\ArgumentException;
 use \System\ArgumentOutOfRangeException;
-use \System\InvalidOperationException;
+use \System\Collections\ObjectModel\ReadOnlyCollection;
 
 
 /**
@@ -78,7 +78,7 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function add($item) : int {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
         $this->throwIfItemIsInvalid($item);
 
         return $this->addInner($item);
@@ -118,8 +118,18 @@ class Collection extends ArrayCollectionBase implements IList {
     /**
      * {@inheritDoc}
      */
+    public final function asReadOnly() : IReadOnlyList {
+        return !$this->isReadOnly() ? new ReadOnlyCollection($this->_items,
+                                                             $this->_equalityComparer,
+                                                             $this->_itemValidator)
+                                    : $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function clear() {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $this->clearInner();
     }
@@ -162,7 +172,7 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function insert(int $index, $item) {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
         $this->throwIfItemIsInvalid($item);
 
         $this->insertInner($index, $item);
@@ -184,30 +194,9 @@ class Collection extends ArrayCollectionBase implements IList {
         \array_splice($this->_items, $index, 0, [$item]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isFixedSize() : bool {
-        return $this->isReadOnly();
-    }
-
     private function isItemValid($item) : bool {
         return \call_user_func($this->_itemValidator,
                                $item);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isReadOnly() : bool {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isSynchronized() : bool {
-        return false;
     }
 
     /**
@@ -232,13 +221,14 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function offsetSet($index, $value) {
-        $this->throwIfReadOnly();
         $this->throwIfItemIsInvalid($value);
 
         if (null === $index) {
             $this->add($value);
             return;
         }
+
+        $this->throwIfReadOnly();
 
         if (!$this->offsetExists($index)) {
             $this->throwIndexOutOfRange($index);
@@ -258,7 +248,7 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function remove($item) : bool {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $index = $this->indexOf($item);
         if ($index > -1) {
@@ -273,7 +263,7 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function removeAt(int $index) {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $this->removeAtInner($index);
     }
@@ -300,17 +290,6 @@ class Collection extends ArrayCollectionBase implements IList {
     protected final function throwIfItemIsInvalid($item) {
         if (!$this->isItemValid($item)) {
             throw new ArgumentException('item', 'Item is not valid!');
-        }
-    }
-
-    /**
-     * Throws an exception if that collection is read-only.
-     *
-     * @throws InvalidOperationException Collection is read-only.
-     */
-    protected final function throwIfReadOnly() {
-        if ($this->isReadOnly()) {
-            throw new InvalidOperationException('Collection is read only!');
         }
     }
 

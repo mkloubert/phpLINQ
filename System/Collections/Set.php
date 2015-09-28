@@ -21,8 +21,7 @@
 
 namespace System\Collections;
 
-use System\ArgumentException;
-use \System\InvalidOperationException;
+use \System\Collections\ObjectModel\ReadOnlySet;
 
 
 /**
@@ -31,7 +30,7 @@ use \System\InvalidOperationException;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-final class Set extends ArrayCollectionBase implements ISet {
+class Set extends ArrayCollectionBase implements ISet {
     private $_equalityComparer;
     private $_itemValidator;
 
@@ -67,7 +66,7 @@ final class Set extends ArrayCollectionBase implements ISet {
      * {@inheritDoc}
      */
     public final function add($item) : bool {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
         $this->throwIfItemIsInvalid($item);
 
         return $this->addInner($item);
@@ -88,8 +87,18 @@ final class Set extends ArrayCollectionBase implements ISet {
     /**
      * {@inheritDoc}
      */
+    public final function asReadOnly() : IReadOnlySet {
+        return !$this->isReadOnly() ? new ReadOnlySet($this->_items,
+                                                      $this->_equalityComparer,
+                                                      $this->_itemValidator)
+                                    : $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function clear() {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
 
         $this->clearInner();
     }
@@ -129,15 +138,9 @@ final class Set extends ArrayCollectionBase implements ISet {
     /**
      * {@inheritDoc}
      */
-    public function isReadOnly() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function remove($item) : bool {
-        $this->throwIfReadOnly();
+        $this->throwIfFixedSize();
+        $this->throwIfItemIsInvalid($item);
 
         return $this->removeInner($item);
     }
@@ -169,17 +172,6 @@ final class Set extends ArrayCollectionBase implements ISet {
     protected final function throwIfItemIsInvalid($item) {
         if (!$this->isItemValid($item)) {
             throw new InvalidItemException($item, 'item');
-        }
-    }
-
-    /**
-     * Throws an exception if that set is read-only.
-     *
-     * @throws InvalidOperationException Instance is read-only.
-     */
-    protected final function throwIfReadOnly() {
-        if ($this->isReadOnly()) {
-            throw new InvalidOperationException('Set is read only!');
         }
     }
 }

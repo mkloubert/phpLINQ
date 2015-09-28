@@ -33,12 +33,19 @@ namespace System\Collections;
 
 
 /**
- * A list that provides methods for read operations.
+ * Describes a list that provides methods for read operations.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-interface IReadOnlyList extends \ArrayAccess, IEnumerable {
+interface IReadOnlyList extends \ArrayAccess, IReadOnlyCollection {
+    /**
+     * Returns that list as read-only version.
+     *
+     * @return IReadOnlyList The read-only version of that list.
+     */
+    function asReadOnly() : IReadOnlyList;
+
     /**
      * Checks if the list contains an item.
      *
@@ -56,25 +63,4 @@ interface IReadOnlyList extends \ArrayAccess, IEnumerable {
      * @return int The zero based index or -1 if not found.
      */
     function indexOf($item) : int;
-
-    /**
-     * Gets a value indicating whether the list object has a fixed size.
-     *
-     * @return bool The read-only or not.
-     */
-    function isFixedSize() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is read-only.
-     *
-     * @return bool The read-only or not.
-     */
-    function isReadOnly() : bool;
-
-    /**
-     * Gets a value indicating whether the list object is thread-safe.
-     *
-     * @return bool The synchronized or not.
-     */
-    function isSynchronized() : bool;
 }

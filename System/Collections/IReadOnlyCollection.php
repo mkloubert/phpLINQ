@@ -33,39 +33,30 @@ namespace System\Collections;
 
 
 /**
- * Describes a dictionary that provides methods for read operations.
+ * Describes a collection that provides methods for read operations.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-interface IReadOnlyDictionary extends \ArrayAccess, IReadOnlyCollection {
+interface IReadOnlyCollection extends IEnumerable {
     /**
-     * Returns that dictionary as read-only version.
+     * Gets a value indicating whether the collection has a fixed size.
      *
-     * @return IReadOnlyDictionary The read-only version of that dictionary.
+     * @return bool Has a fixed size or not.
      */
-    function asReadOnly() : IReadOnlyDictionary;
+    function isFixedSize() : bool;
 
     /**
-     * Checks if a key exists or not.
+     * Gets a value indicating whether the collection is read-only.
      *
-     * @param mixed $key The kex to check.
-     *
-     * @return bool Key exsists or not.
+     * @return bool Is read-only or not.
      */
-    function containsKey($key) : bool;
+    function isReadOnly() : bool;
 
     /**
-     * Returns all keys of that dictionary.
+     * Gets a value indicating whether the collection is thread-safe.
      *
-     * @return IEnumerable The keys.
+     * @return bool Is synchronized or not.
      */
-    function keys() : IEnumerable;
-
-    /**
-     * Returns all values of that dictionary.
-     *
-     * @return IEnumerable The values.
-     */
-    function values() : IEnumerable;
+    function isSynchronized() : bool;
 }

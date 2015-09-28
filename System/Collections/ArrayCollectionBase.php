@@ -31,6 +31,7 @@
 
 namespace System\Collections;
 
+use \System\InvalidOperationException;
 use \System\Linq\Enumerable;
 
 
@@ -40,7 +41,7 @@ use \System\Linq\Enumerable;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-abstract class ArrayCollectionBase extends Enumerable {
+abstract class ArrayCollectionBase extends Enumerable implements IReadOnlyCollection {
     /**
      * @var array
      */
@@ -89,6 +90,27 @@ abstract class ArrayCollectionBase extends Enumerable {
     /**
      * {@inheritDoc}
      */
+    public function isFixedSize() : bool {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isReadOnly() : bool {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isSynchronized() : bool {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function key() {
         return $this->valid() ? $this->_key
                               : $this->getEOFKey();
@@ -117,6 +139,36 @@ abstract class ArrayCollectionBase extends Enumerable {
      */
     public function serialize() {
         return \serialize($this->_items);
+    }
+
+    /**
+     * Throws an exception if that collection is read-only.
+     *
+     * @throws InvalidOperationException Collection is read-only.
+     */
+    protected final function throwIfFixedSize() {
+        if ($this->isFixedSize()) {
+            throw new InvalidOperationException('Collection has a fixed size!');
+        }
+    }
+
+    /**
+     * Throws an exception if that collection is read-only.
+     *
+     * @throws InvalidOperationException Collection is read-only.
+     */
+    protected final function throwIfReadOnly() {
+        if ($this->isReadOnly()) {
+            throw new InvalidOperationException('Collection is read only!');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($keySelector = null) : array {
+        return static::createEnumerable($this->_items)
+                     ->toArray($keySelector);
     }
 
     /**

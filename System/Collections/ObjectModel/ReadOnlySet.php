@@ -29,43 +29,29 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System\Collections;
+namespace System\Collections\ObjectModel;
+
+use \System\Collections\Set;
 
 
 /**
- * Describes a dictionary that provides methods for read operations.
+ * A read-only set.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- * @package System\Collections
+ * @package System\Collections\ObjectModel
  */
-interface IReadOnlyDictionary extends \ArrayAccess, IReadOnlyCollection {
+class ReadOnlySet extends Set {
     /**
-     * Returns that dictionary as read-only version.
-     *
-     * @return IReadOnlyDictionary The read-only version of that dictionary.
+     * {@inheritDoc}
      */
-    function asReadOnly() : IReadOnlyDictionary;
+    public final function isFixedSize() : bool {
+        return true;
+    }
 
     /**
-     * Checks if a key exists or not.
-     *
-     * @param mixed $key The kex to check.
-     *
-     * @return bool Key exsists or not.
+     * {@inheritDoc}
      */
-    function containsKey($key) : bool;
-
-    /**
-     * Returns all keys of that dictionary.
-     *
-     * @return IEnumerable The keys.
-     */
-    function keys() : IEnumerable;
-
-    /**
-     * Returns all values of that dictionary.
-     *
-     * @return IEnumerable The values.
-     */
-    function values() : IEnumerable;
+    public final function isReadOnly() : bool {
+        return true;
+    }
 }

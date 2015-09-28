@@ -31,7 +31,7 @@
 
 namespace System;
 
-use \System\Collections\EnumerableBase;
+use \System\Linq\Enumerable;
 
 
 /**
@@ -40,7 +40,7 @@ use \System\Collections\EnumerableBase;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ClrString extends EnumerableBase implements IString {
+class ClrString extends Enumerable implements IString {
     /**
      * @var string
      */

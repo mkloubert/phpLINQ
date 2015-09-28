@@ -33,39 +33,25 @@ namespace System\Collections;
 
 
 /**
- * Describes a dictionary that provides methods for read operations.
+ * Describes a set that provides methods for read operations.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  * @package System\Collections
  */
-interface IReadOnlyDictionary extends \ArrayAccess, IReadOnlyCollection {
+interface IReadOnlySet extends IReadOnlyCollection {
     /**
-     * Returns that dictionary as read-only version.
+     * Returns that set as read-only version.
      *
-     * @return IReadOnlyDictionary The read-only version of that dictionary.
+     * @return IReadOnlySet The read-only version of that set.
      */
-    function asReadOnly() : IReadOnlyDictionary;
+    function asReadOnly() : IReadOnlySet;
 
     /**
-     * Checks if a key exists or not.
+     * Checks if the set contains an item.
      *
-     * @param mixed $key The kex to check.
+     * @param mixed $item The item to check.
      *
-     * @return bool Key exsists or not.
+     * @return bool Contains item or not.
      */
-    function containsKey($key) : bool;
-
-    /**
-     * Returns all keys of that dictionary.
-     *
-     * @return IEnumerable The keys.
-     */
-    function keys() : IEnumerable;
-
-    /**
-     * Returns all values of that dictionary.
-     *
-     * @return IEnumerable The values.
-     */
-    function values() : IEnumerable;
+    function containsItem($item) : bool;
 }

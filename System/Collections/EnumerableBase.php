@@ -31,6 +31,7 @@
 
 namespace System\Collections;
 
+use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
 use \System\ClrString;
@@ -126,7 +127,9 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable {
+    public final function appendToArray(&$arr, bool $withKeys = false) : IEnumerable {
+        static::throwIfNoValidArray($arr);
+
         return $this->iterateWithItemContext(function($x, IItemContext $ctx) use (&$arr, $withKeys) {
                                                  if (!$withKeys) {
                                                      $arr[] = $x;
@@ -975,6 +978,9 @@ abstract class EnumerableBase extends Object implements IEnumerable {
                                         return \is_int($x);
                                         break;
 
+                                    case 'numeric':
+                                        return \is_numeric($x);
+
                                     case 'scalar':
                                         return \is_scalar($x);
                                         break;
@@ -1416,9 +1422,29 @@ abstract class EnumerableBase extends Object implements IEnumerable {
     }
 
     /**
+     * Throws an exception if a value is no valid array type.
+     *
+     * @param mixed $arr The value to check.
+     *
+     * @throws ArgumentException No valid array type.
+     * @throws ArgumentNullException $arr is (null).
+     */
+    protected static function throwIfNoValidArray($arr) {
+        if (null === $arr) {
+            throw new ArgumentNullException('arr');
+        }
+
+        if (\is_array($arr) || ($arr instanceof \ArrayAccess)) {
+            return;
+        }
+
+        throw new ArgumentException('arr');
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public final function toArray($keySelector = null) : array {
+    public function toArray($keySelector = null) : array {
         if (true === $keySelector) {
             $keySelector = function($key) {
                 return $key;

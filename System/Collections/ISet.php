@@ -28,7 +28,7 @@ namespace System\Collections;
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface ISet extends IEnumerable {
+interface ISet extends IReadOnlySet {
     /**
      * Adds a new item.
      *
@@ -42,22 +42,6 @@ interface ISet extends IEnumerable {
      * Removes all items.
      */
     function clear();
-
-    /**
-     * Checks if the set contains an item.
-     *
-     * @param mixed $item The item to check.
-     *
-     * @return bool Contains item or not.
-     */
-    function containsItem($item) : bool;
-
-    /**
-     * Gets a value indicating whether the set object is read-only.
-     *
-     * @return bool Is read-only or not.
-     */
-    function isReadOnly();
 
     /**
      * Removes an item.

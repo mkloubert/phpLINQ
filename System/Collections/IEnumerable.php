@@ -88,12 +88,15 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Appends the items of that sequence to an array.
      *
-     * @param array $arr The target array.
+     * @param array|\ArrayAccess $arr The target array.
      * @param bool $withKeys Also apply keys or not.
      *
      * @return IEnumerable That instance.
+     *
+     * @throws ArgumentException $arr is no valid array type.
+     * @throws ArgumentNullException $arr is (null).
      */
-    function appendToArray(array &$arr, bool $withKeys = false) : IEnumerable;
+    function appendToArray(&$arr, bool $withKeys = false) : IEnumerable;
 
     /**
      * Returns that instance as sequence.

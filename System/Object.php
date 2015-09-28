@@ -295,8 +295,10 @@ class Object implements IObject {
                 return false;
             }
 
+            // get anything that is after =>
             $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])));
 
+            // remove surrounding {}
             while ((\strlen($lambdaBody) >= 2) &&
                    ('{' === \substr($lambdaBody, 0, 1)) && ('}' === \substr($lambdaBody, -1))) {
 
@@ -304,14 +306,17 @@ class Object implements IObject {
             }
 
             if ((';' !== \substr($lambdaBody, -1))) {
+                // auto add return statement
                 $lambdaBody = \sprintf('return %s;',
                                        $lambdaBody);
             }
 
             if ('' === $lambdaBody) {
+                // keep sure to return (null) if body is empty
                 $lambdaBody = 'return null;';
             }
 
+            // build closure
             return eval(\sprintf('return function(%s) { %s };',
                                  $lambdaMatches[3], $lambdaBody));
         }

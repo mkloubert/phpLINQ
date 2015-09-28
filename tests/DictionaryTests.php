@@ -30,7 +30,9 @@
  **********************************************************************************************************************/
 
 use \System\ArgumentException;
+use \System\InvalidOperationException;
 use \System\Collections\Dictionary;
+use \System\Collections\IDictionaryEntry;
 use \System\Collections\InvalidItemException;
 use \System\Collections\InvalidKeyException;
 
@@ -301,6 +303,84 @@ class DictionaryTests extends TestCaseBase {
             $this->assertEquals(3, count($dict->values()));
             $this->checkForExpectedValues($dict->values()->asResettable(), [1.2, 3, '4.5']);
         }
+    }
+
+    public function testAsReadOnly() {
+        $dict = new Dictionary(['a' => 1, 'B' => '3', ' c ' => 4.2]);
+
+        $this->assertEquals(3, count($dict));
+
+        $this->assertFalse($dict->isReadOnly());
+
+        $roDict = $dict->asReadOnly();
+        $this->assertTrue($roDict->isReadOnly());
+
+        if (method_exists($roDict, 'add')) {
+            try {
+                $roDict->add('d', 55);
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(InvalidOperationException::class, $thrownEx);
+        }
+
+        unset($thrownEx);
+
+        if (method_exists($roDict, 'remove')) {
+            try {
+                $roDict->remove('a');
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(InvalidOperationException::class, $thrownEx);
+        }
+
+        unset($thrownEx);
+
+        if (method_exists($roDict, 'removeKey')) {
+            try {
+                $roDict->removeKey('B');
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(InvalidOperationException::class, $thrownEx);
+        }
+    }
+
+    public function testToArray() {
+        $dict = new Dictionary(['a' => 1, 'B' => '3', ' c ' => 4.2]);
+
+        $this->assertEquals(3, count($dict));
+
+        $this->assertTrue(isset($dict['a']));
+        $this->assertSame(1, $dict['a']);
+        $this->assertTrue(isset($dict['B']));
+        $this->assertSame('3', $dict['B']);
+        $this->assertTrue(isset($dict[' c ']));
+        $this->assertSame(4.2, $dict[' c ']);
+
+        $arr1 = $dict->toArray(true);
+        $this->assertFalse(isset($arr1[0]));
+        $this->assertTrue(isset($arr1['a']));
+        $this->assertInstanceOf(IDictionaryEntry::class, $arr1['a']);
+        $this->assertSame(1, $arr1['a']->value());
+        $this->assertFalse(isset($arr1[1]));
+        $this->assertTrue(isset($arr1['B']));
+        $this->assertSame('3', $arr1['B']->value());
+        $this->assertInstanceOf(IDictionaryEntry::class, $arr1['B']);
+        $this->assertFalse(isset($arr1[2]));
+        $this->assertTrue(isset($arr1[' c ']));
+        $this->assertInstanceOf(IDictionaryEntry::class, $arr1[' c ']);
+        $this->assertSame(4.2, $arr1[' c ']->value());
     }
 
     public function valueValidatorMethod1($x) {
