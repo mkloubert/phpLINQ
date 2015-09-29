@@ -422,7 +422,7 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    protected static function createEnumerable($items = null) : IEnumerable {
+    protected final static function createEnumerable($items = null) : IEnumerable {
         return new self(static::asIterator($items, true));
     }
 

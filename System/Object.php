@@ -202,7 +202,12 @@ class Object implements IObject {
      */
     public static function getRealValue($val) {
         while ($val instanceof IValueWrapper) {
-            $val = $val->getWrappedValue();
+            $wrappedValue = $val->getWrappedValue();
+            if ($wrappedValue === $val) {
+                break;
+            }
+
+            $val = $wrappedValue;
         }
 
         return $val;
