@@ -101,12 +101,12 @@ return \distinctComparerFunc($x, $y);
             $items = static::sequenceToArray($seq->distinct());
 
             $this->assertEquals(6, count($items));
-            $this->assertEquals(1, $items[0]);
-            $this->assertEquals(2, $items[1]);
-            $this->assertEquals('3', $items[2]);
-            $this->assertEquals(4, $items[3]);
-            $this->assertEquals(5.0, $items[4]);
-            $this->assertEquals(6, $items[5]);
+            $this->assertSame(1, $items[0]);
+            $this->assertSame(2, $items[1]);
+            $this->assertSame('3', $items[2]);
+            $this->assertSame(4, $items[3]);
+            $this->assertSame(5.0, $items[4]);
+            $this->assertSame(6, $items[5]);
         }
     }
 
@@ -118,14 +118,14 @@ return \distinctComparerFunc($x, $y);
                 $items = static::sequenceToArray($seq->distinct($equalityComparer));
 
                 $this->assertEquals(8, count($items));
-                $this->assertEquals(1, $items[0]);
-                $this->assertEquals(2, $items[1]);
-                $this->assertEquals('3', $items[2]);
-                $this->assertEquals(3, $items[3]);
-                $this->assertEquals(4, $items[4]);
-                $this->assertEquals(5.0, $items[5]);
-                $this->assertEquals(6, $items[6]);
-                $this->assertEquals(5, $items[7]);
+                $this->assertSame(1, $items[0]);
+                $this->assertSame(2, $items[1]);
+                $this->assertSame('3', $items[2]);
+                $this->assertSame(3, $items[3]);
+                $this->assertSame(4, $items[4]);
+                $this->assertSame(5.0, $items[5]);
+                $this->assertSame(6, $items[6]);
+                $this->assertSame(5, $items[7]);
             }
         }
     }
