@@ -43,7 +43,7 @@ class AllPredciateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::all()
+ * @see \System\Collections\IEnumerable::all()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

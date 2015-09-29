@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::product()
+ * @see \System\Collections\IEnumerable::product()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

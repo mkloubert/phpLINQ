@@ -43,7 +43,7 @@ class SelectSelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::select()
+ * @see \System\Collections\IEnumerable::select()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

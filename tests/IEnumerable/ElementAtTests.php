@@ -34,7 +34,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::elementAt()
+ * @see \System\Collections\IEnumerable::elementAt()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

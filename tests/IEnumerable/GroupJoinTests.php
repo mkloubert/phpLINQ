@@ -71,7 +71,7 @@ class GroupJoinResultSelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::groupJoin()
+ * @see \System\Collections\IEnumerable::groupJoin()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::max()
+ * @see \System\Collections\IEnumerable::max()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

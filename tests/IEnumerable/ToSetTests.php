@@ -43,7 +43,7 @@ class ToSetEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toSet()
+ * @see \System\Collections\IEnumerable::toSet()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

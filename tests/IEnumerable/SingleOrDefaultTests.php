@@ -44,7 +44,7 @@ class SingleOrDefaultPredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::singleOrDefault()
+ * @see \System\Collections\IEnumerable::singleOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

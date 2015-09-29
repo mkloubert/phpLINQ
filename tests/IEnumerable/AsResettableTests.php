@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::asResettable()
+ * @see \System\Collections\IEnumerable::asResettable()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

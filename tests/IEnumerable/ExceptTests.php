@@ -43,7 +43,7 @@ class ExceptEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::except()
+ * @see \System\Collections\IEnumerable::except()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

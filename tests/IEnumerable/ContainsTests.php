@@ -43,7 +43,7 @@ class ContainsEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::contains()
+ * @see \System\Collections\IEnumerable::contains()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::average()
+ * @see \System\Collections\IEnumerable::average()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

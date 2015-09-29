@@ -43,7 +43,7 @@ class SkipWhilePredciateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::skipWhile()
+ * @see \System\Collections\IEnumerable::skipWhile()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

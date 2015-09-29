@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::isNotEmpty()
+ * @see \System\Collections\IEnumerable::isNotEmpty()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

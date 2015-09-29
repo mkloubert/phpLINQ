@@ -43,7 +43,7 @@ class ToJsonKeySelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toJson()
+ * @see \System\Collections\IEnumerable::toJson()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
@@ -98,11 +98,6 @@ return \toJsonKeySelectorFunc($key);
         return toJsonKeySelectorFunc($x);
     }
 
-    /**
-     * @see \System\Collection\IEnumerable::toJson()
-     *
-     * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
-     */
     public function test1() {
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */

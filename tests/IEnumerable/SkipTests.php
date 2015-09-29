@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::skip()
+ * @see \System\Collections\IEnumerable::skip()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

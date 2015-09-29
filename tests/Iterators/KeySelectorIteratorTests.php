@@ -29,120 +29,108 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\Collections\IEnumerable;
+use \System\Collections\KeySelectorIterator;
 
 
-function groupByKeySelectorFunc($x) : string {
-    if (is_numeric($x)) {
-        return 'number';
-    }
-
-    if (empty($x)) {
-        return 'empty';
-    }
-
-    if (is_string($x)) {
-        return 'string';
-    }
-
-    return 'other';
-}
-
-class GroupByKeySelectorClass {
-    public function __invoke($x) {
-        return groupByKeySelectorFunc($x);
-    }
+function keySelectorIteratorKeySelectorFunc($x) {
+    return strtoupper($x);
 }
 
 /**
- * @see \System\Collections\IEnumerable::groupBy()
+ * @see \System\Collections\KeySelectorIterator
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class GroupByTests extends TestCaseBase {
+class KeySelectorIteratorTests extends TestCaseBase {
     /**
-     * Creates the key selectors for the tests.
+     * Creates the selectors for the tests.
      *
-     * @return array The key selectors.
+     * @return array The selectors.
      */
-    protected function createKeySelectors() : array {
+    protected function createSelectors() : array {
         return [
-            function($x) {
-                return groupByKeySelectorFunc($x);
-            },
-            'groupByKeySelectorFunc',
-            '\groupByKeySelectorFunc',
-            array($this, 'keySelectorMethod1'),
-            array(static::class, 'keySelectorMethod2'),
-            new GroupByKeySelectorClass(),
-            '$x => groupByKeySelectorFunc($x)',
-            '($x) => groupByKeySelectorFunc($x)',
-            '$x => \groupByKeySelectorFunc($x)',
-            '($x) => \groupByKeySelectorFunc($x)',
-            '$x => return groupByKeySelectorFunc($x);',
-            '($x) => return groupByKeySelectorFunc($x);',
-            '$x => return \groupByKeySelectorFunc($x);',
-            '($x) => return \groupByKeySelectorFunc($x);',
-            '$x => { return groupByKeySelectorFunc($x); }',
-            '($x) => { return groupByKeySelectorFunc($x); }',
-            '$x => { return \groupByKeySelectorFunc($x); }',
-            '($x) => { return \groupByKeySelectorFunc($x); }',
-            '$x => {
-return groupByKeySelectorFunc($x);
+            [
+                'keySelectorIteratorKeySelectorFunc',
+            ],
+            [
+                '\keySelectorIteratorKeySelectorFunc',
+            ],
+            [
+                function($x) {
+                    return keySelectorIteratorKeySelectorFunc($x);
+                }
+            ],
+            [
+                [$this, 'keySelectorMethod1'],
+            ],
+            [
+                [static::class, 'keySelectorMethod2'],
+            ],
+            [
+                '$x => keySelectorIteratorKeySelectorFunc($x)',
+            ],
+            [
+                '($x) => keySelectorIteratorKeySelectorFunc($x)',
+            ],
+            [
+                '$x => return keySelectorIteratorKeySelectorFunc($x);',
+            ],
+            [
+                '($x) => return keySelectorIteratorKeySelectorFunc($x);',
+            ],
+            [
+                '$x => { return keySelectorIteratorKeySelectorFunc($x); }',
+            ],
+            [
+                '($x) => { return keySelectorIteratorKeySelectorFunc($x); }',
+            ],
+            [
+                '$x => {
+return keySelectorIteratorKeySelectorFunc($x);
 }',
-            '($x) => {
-return groupByKeySelectorFunc($x);
+            ],
+            [
+                '($x) => {
+return keySelectorIteratorKeySelectorFunc($x);
 }',
-            '$x => {
-return \groupByKeySelectorFunc($x);
-}',
-            '($x) => {
-return \groupByKeySelectorFunc($x);
-}',
+            ],
         ];
     }
 
     public function keySelectorMethod1($x) {
-        return groupByKeySelectorFunc($x);
+        return static::keySelectorMethod2($x);
     }
 
     public static function keySelectorMethod2($x) {
-        return groupByKeySelectorFunc($x);
+        return keySelectorIteratorKeySelectorFunc($x);
     }
 
     public function test1() {
-        foreach ($this->createKeySelectors() as $keySelector) {
-            foreach (static::sequenceListFromArray([true, 5979, '', 'TM', false, '23979', 'MK', null]) as $seq) {
-                /* @var IEnumerable $seq */
+        foreach ($this->createSelectors() as $selectors) {
+            list($keySelector) = $selectors;
 
-                $items = static::sequenceToArray($seq->groupBy($keySelector));
+            foreach (static::sequenceListFromArray(['a' => 1, 'B' => 2.0, 'c' => '3.4']) as $seq) {
+                $destIterator = new KeySelectorIterator($seq,
+                                                        $keySelector);
 
-                $this->assertEquals(4, count($items));
-                $this->assertEquals('other' , $items[0]->key());
-                $this->assertEquals('number', $items[1]->key());
-                $this->assertEquals('empty' , $items[2]->key());
-                $this->assertEquals('string', $items[3]->key());
+                $arr = iterator_to_array($destIterator);
 
-                $otherItems = static::sequenceToArray($items[0]->getIterator());
-                $numberItems = static::sequenceToArray($items[1]->getIterator());
-                $emptyItems = static::sequenceToArray($items[2]->getIterator());
-                $stringItems = static::sequenceToArray($items[3]->getIterator());
+                $this->assertEquals(3, count($arr));
 
-                $this->assertEquals(1, count($otherItems));
-                $this->assertTrue($otherItems[0]);
+                $this->assertFalse(isset($arr['a']));
+                $this->assertFalse(isset($arr[0]));
+                $this->assertTrue(isset($arr['A']));
+                $this->assertSame(1, $arr['A']);
 
-                $this->assertEquals(2, count($numberItems));
-                $this->assertEquals(5979, $numberItems[0]);
-                $this->assertEquals(23979, $numberItems[1]);
+                $this->assertFalse(isset($arr['b']));
+                $this->assertFalse(isset($arr[1]));
+                $this->assertTrue(isset($arr['B']));
+                $this->assertSame(2.0, $arr['B']);
 
-                $this->assertEquals(3, count($emptyItems));
-                $this->assertTrue('' === $emptyItems[0]);
-                $this->assertTrue(false === $emptyItems[1]);
-                $this->assertTrue(null === $emptyItems[2]);
-
-                $this->assertEquals(2, count($stringItems));
-                $this->assertEquals('TM', $stringItems[0]);
-                $this->assertEquals('MK', $stringItems[1]);
+                $this->assertFalse(isset($arr['c']));
+                $this->assertFalse(isset($arr[2]));
+                $this->assertTrue(isset($arr['C']));
+                $this->assertSame('3.4', $arr['C']);
             }
         }
     }

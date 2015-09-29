@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::sum()
+ * @see \System\Collections\IEnumerable::sum()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

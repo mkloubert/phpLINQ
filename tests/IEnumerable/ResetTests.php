@@ -33,7 +33,7 @@ use \System\Linq\Enumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::reset()
+ * @see \System\Collections\IEnumerable::reset()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

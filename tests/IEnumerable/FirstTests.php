@@ -44,7 +44,7 @@ class FirstPredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::first()
+ * @see \System\Collections\IEnumerable::first()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

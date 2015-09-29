@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::elementAtOrDefault()
+ * @see \System\Collections\IEnumerable::elementAtOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

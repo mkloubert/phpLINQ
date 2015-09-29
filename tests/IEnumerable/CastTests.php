@@ -39,7 +39,7 @@ class CastTestClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::cast()
+ * @see \System\Collections\IEnumerable::cast()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

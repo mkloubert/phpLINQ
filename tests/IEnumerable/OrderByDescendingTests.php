@@ -43,7 +43,7 @@ class OrderByDescendingSelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::orderByDescening()
+ * @see \System\Collections\IEnumerable::orderByDescening()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -1,5 +1,18 @@
 <phpunit bootstrap="bootstrap.php">
     <testsuites>
+        <testsuite name="Iterators">
+            <file>Iterators/KeySelectorIteratorTests.php</file>
+            <file>Iterators/KeyAndValueSelectorIteratorTests.php</file>
+        </testsuite>
+
+        <testsuite name="Lambda expressions">
+            <file>LambdaTests.php</file>
+        </testsuite>
+
+        <testsuite name="Serialization">
+            <file>SerializationTests.php</file>
+        </testsuite>
+
         <testsuite name="System.Collections.IEnumerable">
             <file>IEnumerable/AggregateTests.php</file>
             <file>IEnumerable/AllTests.php</file>
@@ -63,14 +76,6 @@
             <file>IEnumerable/WithNewKeysAndValuesTests.php</file>
             <file>IEnumerable/WithNewKeysTests.php</file>
             <file>IEnumerable/ZipTests.php</file>
-        </testsuite>
-
-        <testsuite name="Lambda expressions">
-            <file>LambdaTests.php</file>
-        </testsuite>
-
-        <testsuite name="Serialization">
-            <file>SerializationTests.php</file>
         </testsuite>
 
         <testsuite name="System.Collections.IDictionary">

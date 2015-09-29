@@ -43,7 +43,7 @@ class ToArrayKeySelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toArray()
+ * @see \System\Collections\IEnumerable::toArray()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

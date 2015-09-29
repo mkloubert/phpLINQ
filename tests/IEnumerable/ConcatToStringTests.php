@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::concatToString()
+ * @see \System\Collections\IEnumerable::concatToString()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::take()
+ * @see \System\Collections\IEnumerable::take()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

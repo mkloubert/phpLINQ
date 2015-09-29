@@ -45,7 +45,7 @@ class SinglePredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::single()
+ * @see \System\Collections\IEnumerable::single()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

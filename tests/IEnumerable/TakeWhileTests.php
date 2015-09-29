@@ -43,7 +43,7 @@ class TakeWhilePredciateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::takeWhile()
+ * @see \System\Collections\IEnumerable::takeWhile()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

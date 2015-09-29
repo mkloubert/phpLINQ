@@ -43,7 +43,7 @@ class ToListEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toList()
+ * @see \System\Collections\IEnumerable::toList()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

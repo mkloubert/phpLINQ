@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::ofType()
+ * @see \System\Collections\IEnumerable::ofType()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

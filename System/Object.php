@@ -95,6 +95,11 @@ class Object implements IObject {
 
             if ($y instanceof IObject) {
                 if ($y instanceof IComparable) {
+                    $yComparedToX = $y->compareTo($x);
+                    if (\PHP_INT_MIN === $yComparedToX) {
+                        return \PHP_INT_MAX;
+                    }
+
                     return $y->compareTo($x) * -1;
                 }
 
@@ -339,7 +344,7 @@ class Object implements IObject {
     public static function toReflectionFunction($func) : \ReflectionFunctionAbstract {
         if (\is_object($func)) {
             if (\method_exists($func, '__invoke')) {
-                $func = array($func, '__invoke');
+                $func = [$func, '__invoke'];
             }
         }
 

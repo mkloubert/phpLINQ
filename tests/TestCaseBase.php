@@ -71,7 +71,7 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
      */
     protected static function generatorFromArray(array $arr = []) : Generator {
         foreach ($arr as $key => $value) {
-            yield $value;
+            yield $key => $value;
         }
     }
 

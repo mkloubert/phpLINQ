@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::min()
+ * @see \System\Collections\IEnumerable::min()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -44,7 +44,7 @@ class JoinToStringSeparatorFactoryClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::joinToStringCallback()
+ * @see \System\Collections\IEnumerable::joinToStringCallback()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -43,7 +43,7 @@ class SequenceEqualEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::sequenceEqual()
+ * @see \System\Collections\IEnumerable::sequenceEqual()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -43,7 +43,7 @@ class UnionEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::union()
+ * @see \System\Collections\IEnumerable::union()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

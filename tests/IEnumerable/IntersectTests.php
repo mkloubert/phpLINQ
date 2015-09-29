@@ -43,7 +43,7 @@ class IntersectEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::intersect()
+ * @see \System\Collections\IEnumerable::intersect()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

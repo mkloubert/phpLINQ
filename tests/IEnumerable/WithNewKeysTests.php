@@ -43,7 +43,7 @@ class WithNewKeysKeySelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::withNewKeys()
+ * @see \System\Collections\IEnumerable::withNewKeys()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -394,11 +394,8 @@ class Enumerable extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function count() {
-        if ($this->_i instanceof \Countable) {
-            return $this->_i->count();
-        }
-
         $result = 0;
+
         while ($this->valid()) {
             ++$result;
 

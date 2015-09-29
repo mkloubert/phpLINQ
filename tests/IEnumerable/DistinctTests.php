@@ -43,7 +43,7 @@ class DistinctEqualityComparerClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::distinct()
+ * @see \System\Collections\IEnumerable::distinct()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

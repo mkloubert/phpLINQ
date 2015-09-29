@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::randomize()
+ * @see \System\Collections\IEnumerable::randomize()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

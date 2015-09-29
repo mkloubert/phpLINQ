@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::defaultArrayIfEmpty()
+ * @see \System\Collections\IEnumerable::defaultArrayIfEmpty()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

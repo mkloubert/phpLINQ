@@ -67,7 +67,7 @@ class ToDictionaryKeyValidatorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::toDictionary()
+ * @see \System\Collections\IEnumerable::toDictionary()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

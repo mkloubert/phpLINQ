@@ -49,7 +49,7 @@ class EachActionClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::each()
+ * @see \System\Collections\IEnumerable::each()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

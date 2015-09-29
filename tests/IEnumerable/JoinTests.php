@@ -66,7 +66,7 @@ class JoinResultSelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::join()
+ * @see \System\Collections\IEnumerable::join()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

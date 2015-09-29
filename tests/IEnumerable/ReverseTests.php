@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::reverse()
+ * @see \System\Collections\IEnumerable::reverse()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

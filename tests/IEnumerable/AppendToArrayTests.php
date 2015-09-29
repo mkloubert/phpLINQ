@@ -31,7 +31,7 @@
 
 
 /**
- * @see \System\Collection\IEnumerable::appendToArray()
+ * @see \System\Collections\IEnumerable::appendToArray()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

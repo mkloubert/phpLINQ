@@ -43,7 +43,7 @@ class AnyPredciateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::any()
+ * @see \System\Collections\IEnumerable::any()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

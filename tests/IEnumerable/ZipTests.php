@@ -43,7 +43,7 @@ class ZipperClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::zip()
+ * @see \System\Collections\IEnumerable::zip()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -43,7 +43,7 @@ class OrderBySelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::orderBy()
+ * @see \System\Collections\IEnumerable::orderBy()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

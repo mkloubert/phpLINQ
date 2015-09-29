@@ -65,7 +65,7 @@ class SelectManySelector3Class {
 }
 
 /**
- * @see \System\Collection\IEnumerable::selectMany()
+ * @see \System\Collections\IEnumerable::selectMany()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

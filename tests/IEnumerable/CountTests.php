@@ -33,7 +33,7 @@ use \System\Collections\IEnumerable;
 
 
 /**
- * @see \System\Collection\IEnumerable::count()
+ * @see \System\Collections\IEnumerable::count()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

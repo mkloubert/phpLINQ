@@ -43,7 +43,7 @@ class FirstOrDefaultPredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::firstOrDefault()
+ * @see \System\Collections\IEnumerable::firstOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

@@ -44,7 +44,7 @@ class LastPredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::last()
+ * @see \System\Collections\IEnumerable::last()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

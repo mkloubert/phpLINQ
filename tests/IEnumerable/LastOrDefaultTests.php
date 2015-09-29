@@ -43,7 +43,7 @@ class LastOrDefaultPredicateClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::lastOrDefault()
+ * @see \System\Collections\IEnumerable::lastOrDefault()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

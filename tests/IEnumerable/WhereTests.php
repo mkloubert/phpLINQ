@@ -43,7 +43,7 @@ class WhereClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::where()
+ * @see \System\Collections\IEnumerable::where()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

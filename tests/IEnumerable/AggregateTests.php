@@ -43,7 +43,7 @@ class StringConcatAccumulatorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::aggregate()
+ * @see \System\Collections\IEnumerable::aggregate()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */

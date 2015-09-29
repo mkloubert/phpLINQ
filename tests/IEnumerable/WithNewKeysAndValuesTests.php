@@ -53,7 +53,7 @@ class ValueSelectorClass {
 }
 
 /**
- * @see \System\Collection\IEnumerable::withNewKeysAndValues()
+ * @see \System\Collections\IEnumerable::withNewKeysAndValues()
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
