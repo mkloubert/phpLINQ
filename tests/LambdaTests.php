@@ -38,7 +38,7 @@ use \System\Object;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class LambdaTests extends TestCaseBase {
-    public function test1() {
+    public function testInvalidExpressions() {
         $this->assertTrue(Object::isLambda('$x => trim($x)'));
         $this->assertTrue(Object::isLambda('($x) => trim($x)'));
         $this->assertTrue(Object::isLambda('$x => return trim($x);'));
@@ -66,7 +66,7 @@ return trim($x);
 }'));
     }
 
-    public function test2() {
+    public function testWith1Argument() {
         $lambdas = [
             '$x => strtoupper($x)',
             '($x) => strtoupper($x)',
@@ -102,7 +102,7 @@ return \strtoupper($x);
         }
     }
 
-    public function test3() {
+    public function testWith2Arguments() {
         $lambdas = [
             '$x, $y => $x + $y',
             '($x, $y) => $x + $y',
@@ -126,7 +126,7 @@ return $x + $y;
         }
     }
 
-    public function test4() {
+    public function testWith2ArgumentsAndNoResult() {
         $lambdas = [
             '$x, $y => $x + $y;',
             '($x, $y) => $x + $y;',
