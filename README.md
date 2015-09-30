@@ -6,16 +6,16 @@ Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Frame
 
 Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki) in the wiki or the [API](http://phplinq.marcel-kloubert.eu/api/) documentation.
 
-## Refactoring
-
-The library is currently refactored!
-
-The documentation describes the code of the following branch: [v1](https://github.com/mkloubert/phpLINQ/tree/v1)
-
 ## Requirements
 
 * PHP 5.3+ ([branch v2](https://github.com/mkloubert/phpLINQ/tree/v2) or [branch v1](https://github.com/mkloubert/phpLINQ/tree/v1))
 * PHP 7+ (master branch)
+
+## Features
+
+* [Lambda expressions](https://github.com/mkloubert/phpLINQ/wiki/Lambda-expression)
+* Any kind of [lists or iterators](https://github.com/mkloubert/phpLINQ/wiki/Sequence) can be used
+* Most methods are chainable as in [.NET](https://en.wikipedia.org/wiki/.NET_Framework) context
 
 ## Examples
 
