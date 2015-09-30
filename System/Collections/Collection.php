@@ -150,7 +150,16 @@ class Collection extends ArrayCollectionBase implements IList {
      * {@inheritDoc}
      */
     public final function containsItem($item) : bool {
-        return $this->indexOf($item) > -1;
+        foreach (\func_get_args() as $itemToCheck) {
+            $this->throwIfItemIsInvalid($itemToCheck);
+
+            if ($this->indexOf($itemToCheck) < 0) {
+                // not found
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

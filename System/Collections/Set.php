@@ -119,15 +119,24 @@ class Set extends ArrayCollectionBase implements ISet {
      * {@inheritDoc}
      */
     public function containsItem($item) : bool {
-        foreach ($this->_items as $i) {
-            if ($this->compareItems($item, $i)) {
-                // found
-                return true;
+        foreach (\func_get_args() as $itemToCheck) {
+            $this->throwIfItemIsInvalid($itemToCheck);
+
+            $found = false;
+            foreach ($this->_items as $i) {
+                if ($this->compareItems($itemToCheck, $i)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                // at least one item was not found
+                return false;
             }
         }
 
-        // not found
-        return false;
+        return true;
     }
 
     private function isItemValid($item) : bool {

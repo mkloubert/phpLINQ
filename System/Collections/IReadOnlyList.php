@@ -49,7 +49,7 @@ interface IReadOnlyList extends \ArrayAccess, IReadOnlyCollection {
     /**
      * Checks if the list contains an item.
      *
-     * @param mixed $item The item to check.
+     * @param mixed ...$item One or more item to check.
      *
      * @return boolean Contains item or not.
      */

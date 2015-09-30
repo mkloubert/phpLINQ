@@ -326,9 +326,12 @@ return \collectionItemComparerFunc($x, $y);
         $this->assertFalse($coll->containsItem(4));
         $this->assertFalse($coll->containsItem(4.0));
         $this->assertFalse($coll->containsItem('4'));
+
+        $this->assertTrue($coll->containsItem(3.5, 2));
+        $this->assertFalse($coll->containsItem(1, 4));
     }
 
-    public function testContainsItem2() {
+    public function testContainsItemWithEqualityComparer() {
         foreach ($this->createEqualityComparers1() as $equalityComparer) {
             $coll = new Collection(['a', 'B', 'c'], $equalityComparer);
 
@@ -351,6 +354,9 @@ return \collectionItemComparerFunc($x, $y);
 
             $this->assertFalse($coll->containsItem(null));
             $this->assertFalse($coll->containsItem(null));
+
+            $this->assertTrue($coll->containsItem('C', 'A'));
+            $this->assertFalse($coll->containsItem('a', 'd'));
         }
     }
 

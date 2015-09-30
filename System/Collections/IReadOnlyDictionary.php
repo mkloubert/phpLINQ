@@ -49,7 +49,7 @@ interface IReadOnlyDictionary extends \ArrayAccess, IReadOnlyCollection {
     /**
      * Checks if a key exists or not.
      *
-     * @param mixed $key The kex to check.
+     * @param mixed ...$key One or more key to check.
      *
      * @return bool Key exsists or not.
      */

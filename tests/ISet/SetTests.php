@@ -230,6 +230,9 @@ return \setEqualityComparerFunc($x, $y);
         $this->assertFalse($s->containsItem(5));
         $this->assertFalse($s->containsItem(5.0));
         $this->assertFalse($s->containsItem('5'));
+
+        $this->assertTrue($s->containsItem(1.4, '3'));
+        $this->assertFalse($s->containsItem(2, 5));
     }
 
     public function testContainsItemWithEqualityComparer() {
@@ -252,6 +255,9 @@ return \setEqualityComparerFunc($x, $y);
             $this->assertFalse($s->containsItem(5));
             $this->assertFalse($s->containsItem(5.0));
             $this->assertFalse($s->containsItem('5'));
+
+            $this->assertTrue($s->containsItem(1.4, '3'));
+            $this->assertFalse($s->containsItem(2.0, '3'));
         }
     }
 

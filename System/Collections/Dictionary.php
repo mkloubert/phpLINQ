@@ -155,15 +155,24 @@ class Dictionary extends ArrayCollectionBase implements IDictionary {
      * {@inheritDoc}
      */
     public final function containsKey($key) : bool {
-        $this->throwIfKeyIsInvalid($key);
+        foreach (\func_get_args() as $keyToCheck) {
+            $this->throwIfKeyIsInvalid($keyToCheck);
 
-        foreach ($this->keys() as $dictKey) {
-            if ($this->compareKeys($dictKey, $key)) {
-                return true;
+            $found = false;
+            foreach ($this->keys() as $dictKey) {
+                if ($this->compareKeys($dictKey, $keyToCheck)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                // at least one key was not found
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
