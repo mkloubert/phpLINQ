@@ -75,7 +75,7 @@ class LambdaExpression extends \System\Object {
      *
      * @return mixed The result of the invocation.
      */
-    public function __invoke() {
+    public final function __invoke() {
         return \call_user_func_array($this->_closure,
                                      \func_get_args());
     }
