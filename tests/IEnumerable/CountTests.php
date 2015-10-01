@@ -38,19 +38,40 @@ use \System\Collections\IEnumerable;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class CountTests extends TestCaseBase {
-    public function test1() {
+    public function test1a() {
         foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $this->assertEquals(5, $seq->count());
+            $this->assertSame(5, $seq->count());
         }
     }
 
-    public function test1Count() {
+    public function test1b() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4, 5]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            $seq->next();
+            $this->assertSame(4, $seq->count());
+        }
+    }
+
+    public function test1aCount() {
         foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $this->assertEquals(4, count($seq));
+            $this->assertSame(4, count($seq));
+        }
+    }
+
+    public function test1bCount() {
+        foreach (static::sequenceListFromArray([1, 2, 3, 4]) as $seq) {
+            /* @var IEnumerable $seq */
+
+            while ($seq->valid()) {
+                $seq->next();
+            }
+
+            $this->assertSame(0, count($seq));
         }
     }
 }

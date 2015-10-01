@@ -98,7 +98,7 @@ return \distinctComparerFunc($x, $y);
         foreach (static::sequenceListFromArray([1, 2, '3', 3, 4, 5.0, 6, 5]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->distinct());
+            $items = static::sequenceToArray($seq->distinct(), false);
 
             $this->assertEquals(6, count($items));
             $this->assertSame(1, $items[0]);
@@ -115,7 +115,7 @@ return \distinctComparerFunc($x, $y);
             foreach (static::sequenceListFromArray([1, 2, '3', 3, 4, 5.0, 6, 5]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $items = static::sequenceToArray($seq->distinct($equalityComparer));
+                $items = static::sequenceToArray($seq->distinct($equalityComparer), false);
 
                 $this->assertEquals(8, count($items));
                 $this->assertSame(1, $items[0]);

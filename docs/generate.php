@@ -29,23 +29,64 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+chdir(__DIR__);
 
-/**
- * @see \System\Collections\IEnumerable::randomize()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
-        }
+spl_autoload_register(function($clsName) {
+    $classFile = false;
+
+    $classDir = false;
+    if (0 === stripos($clsName, "System\\")) {
+        $classDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
+    }
+    else if (0 === stripos($clsName, "phpLINQ\\")) {
+        $classDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR);
+    }
+
+    if (false !== $classDir) {
+        $classFile = realpath($classDir . DIRECTORY_SEPARATOR .
+            str_replace("\\", DIRECTORY_SEPARATOR, $clsName) .
+            '.php');
+    }
+
+    if (false !== $classFile) {
+        require_once $classFile;
+    }
+});
+
+
+$docFile = null;
+$docFileFound = null;
+$docXml = null;
+$outDir = './out';
+
+
+$docFile = trim($docFile);
+if ('' !== $docFile) {
+    $docFile = realpath($docFile);
+    if (false === $docFile) {
+        $docFileNotFound = true;
     }
 }
+else {
+    $docFile = realpath('./docs.xml');
+    if (false !== $docFile) {
+        $docFileNotFound = false;
+    }
+}
+
+if (true === $docFileFound) {
+    exit(1);
+}
+
+if (false === $docFileNotFound) {
+    $docXml = simplexml_load_file($docFile);
+}
+
+if (false === $docXml) {
+    exit(2);
+}
+
+
+$proj = \phpLINQ\Docs\Project::fromXml($docXml);
+$proj->generateDocumentation();

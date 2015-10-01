@@ -42,14 +42,14 @@ class ReverseTests extends TestCaseBase {
         foreach (static::sequenceListFromArray([3, 5, 2, 77, 12]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->reverse());
+            $items = static::sequenceToArray($seq->reverse(), false);
 
             $this->assertEquals(5, count($items));
-            $this->assertEquals(12, $items[0]);
-            $this->assertEquals(77, $items[1]);
-            $this->assertEquals(2, $items[2]);
-            $this->assertEquals(5, $items[3]);
-            $this->assertEquals(3, $items[4]);
+            $this->assertSame(12, $items[0]);
+            $this->assertSame(77, $items[1]);
+            $this->assertSame(2, $items[2]);
+            $this->assertSame(5, $items[3]);
+            $this->assertSame(3, $items[4]);
         }
     }
 
@@ -57,7 +57,7 @@ class ReverseTests extends TestCaseBase {
         foreach (static::sequenceListFromArray([]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->reverse());
+            $items = static::sequenceToArray($seq->reverse(), false);
 
             $this->assertEquals(0, count($items));
         }

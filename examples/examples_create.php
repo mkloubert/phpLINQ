@@ -62,11 +62,10 @@ foreach ($seq as $item) {
 }
 ';
 
-if (isPHP_5_5()) {
-    // example #1
-    $examples[] = new Example();
-    $examples[2]->title      = 'Generator';
-    $examples[2]->sourceCode = 'use \\System\\Linq\\Enumerable;
+// example #3
+$examples[] = new Example();
+$examples[2]->title      = 'Generator';
+$examples[2]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $createItems = function() {
     yield 555;
@@ -84,7 +83,6 @@ foreach ($seq as $item) {
 }
 ';
 
-}
 
 
 require_once './shutdown.inc.php';

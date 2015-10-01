@@ -29,23 +29,112 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+namespace phpLINQ\Docs;
 
-/**
- * @see \System\Collections\IEnumerable::randomize()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
+use \phpLINQ\Docs\Classes\Class_;
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
+
+class Project extends DocObjectBase {
+    /**
+     * @var Class_[]
+     */
+    private $_classes;
+    /**
+     * @var \SimpleXMLElement
+     */
+    private $_xml;
+
+
+    protected function __construct(\SimpleXMLElement $xml) {
+        $this->_xml = $xml;
+    }
+
+
+    /**
+     * @return Class_[]
+     */
+    public function classes() {
+        if (null === $this->_classes) {
+            $classList = [];
+
+            if ($this->xml()->classes) {
+                foreach ($this->xml()->classes as $classesNode) {
+                    if ($classesNode->class) {
+                        foreach ($classesNode->class as $classNode) {
+                            $className = \trim($classNode['name']);
+                            $className = \str_ireplace('.', "\\", $className);
+
+                            while (0 === stripos($className, "\\")) {
+                                $className = trim(substr($className, 1));
+                            }
+
+                            while ((strlen($className) > 0) &&
+                                ("\\" == substr($className, -1))) {
+
+                                $className = trim(substr($className, 0, strlen($className) - 1));
+                            }
+
+                            if ('' === $className) {
+                                continue;
+                            }
+
+                            $className = "\\" . $className;
+
+                            if (!\interface_exists($className) &&
+                                !\class_exists($className)) {
+
+                                continue;
+                            }
+
+                            $classList[] = new Class_($this,
+                                                      new \ReflectionClass($className),
+                                                      $classNode);
+                        }
+                    }
+                }
+            }
+
+            usort($classList, function(Class_ $x, Class_ $y) {
+                return \strcasecmp($x->reflector()->getName(),
+                                   $y->reflector()->getName());
+            });
+
+            $this->_classes = $classList;
         }
+
+        return $this->_classes;
+    }
+
+    public static function fromXml(\SimpleXMLElement $xml = null) {
+        if (null === $xml) {
+            $xml = \simplexml_load_string('<documentation />');
+        }
+
+        return new static($xml);
+    }
+
+    public static function fromXmlFile($file) {
+        $file = \realpath($file);
+        if (false === $file) {
+            return null;
+        }
+
+        $result = @simplexml_load_file($file);
+        if (false === $result) {
+            return false;
+        }
+
+        return static::fromXml($result);
+    }
+
+    public function generateDocumentation() {
+
+    }
+
+    /**
+     * @return \SimpleXMLElement
+     */
+    public function xml() {
+        return $this->_xml;
     }
 }

@@ -427,7 +427,8 @@ $pageTitle = 'Home';
                switch (result.code) {
                    case 0:
                        resultArea.text(phplinq_ParseResultForOutput(result.data.content));
-                       phplinq_ShowSuccess('Code was executed after ' + result.data.duration + ' seconds.');
+                       phplinq_ShowSuccess('Code was executed after ' + result.data.time.duration + ' seconds ' +
+                                           'and required ' + result.data.memory.allocated.difference + ' bytes of RAM.');
                        break;
 
                    case -1:

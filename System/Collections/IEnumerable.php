@@ -88,7 +88,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Appends the items of that sequence to an array.
      *
-     * @param array|\ArrayAccess $arr The target array.
+     * @param array|\ArrayAccess &$arr The target array.
      * @param bool $withKeys Also apply keys or not.
      *
      * @return IEnumerable That instance.
@@ -437,64 +437,52 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     /**
      * Orders the items of that sequence ascending by using the items as sort value.
      *
-     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
-     *                                             If there is only one argument and this argument is a boolean it is
-     *                                             used as value for $preventKeys.
-     * @param bool $preventKeys Prevent keys or not.
+     * @param callable $comparer The custom comparer to use.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function order($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function order($comparer = null) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence ascending by using a specific sort value.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
-     *                                             If there are only two arguments and this argument is a boolean it
-     *                                             is used as value for $preventKeys.
-     * @param bool $preventKeys Prevent keys or not.
+     * @param callable $comparer The custom comparer to use.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderBy($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderBy($selector, $comparer = null) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using a specific sort value.
      *
      * @param callable|bool $selector The selector for the sort values.
      *                                (true) indicates to use the items itself as sort values.
-     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
-     *                                             If there are only two arguments and this argument is a boolean it
-     *                                             is used as value for $preventKeys.
-     * @param bool $preventKeys Prevent keys or not.
+     * @param callable $comparer The custom comparer to use.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $selector / $comparer is no valid callable / lambda expression.
      * @throws ArgumentNullException $selector is (null).
      */
-    function orderByDescending($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderByDescending($selector, $comparer = null) : IOrderedEnumerable;
 
     /**
      * Orders the items of that sequence descending by using the items as sort value.
      *
-     * @param callable|bool $comparerOrPreventKeys The custom comparer to use.
-     *                                        If there is only one argument and this argument is a boolean it is used
-     *                                        as value for $preventKeys.
-     * @param bool $preventKeys Prevent keys or not.
+     * @param callable $comparer The custom comparer to use.
      *
      * @return IOrderedEnumerable The new sequence.
      *
      * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    function orderDescending($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable;
+    function orderDescending($comparer = null) : IOrderedEnumerable;
 
     /**
      * Calculates the product of the items.
@@ -510,11 +498,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @param callable|bool $seeder The custom function that initializes the random number generator.
      *                              If this value is (true), a default logic is used.
-     * @param callable|bool $randProviderOrPreventKeys The custom function that provides the random values.
-     *                                                 If there are less than two arguments submitted and this value is
-     *                                                 a boolean, it is handled as value for $preventKeys and it is set
-     *                                                 to default.
-     * @param bool $preventKeys Prevent keys or not.
+     * @param callable $randProvider The custom function that provides the random values.
      *
      * @return IOrderedEnumerable The new sequence.
      *
@@ -522,8 +506,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      */
     function randomize(
         $seeder = null,
-        $randProviderOrPreventKeys = null,
-        bool $preventKeys = false
+        $randProvider = null
     ) : IOrderedEnumerable;
 
     /**
@@ -535,11 +518,10 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
 
     /**
      * Returns the items of that sequence in reverse order.
-     * @param bool $preventKeys Prevent keys or not.
      *
      * @return IOrderedEnumerable The new sequence.
      */
-    function reverse(bool $preventKeys = false) : IOrderedEnumerable;
+    function reverse() : IOrderedEnumerable;
 
     /**
      * Projects each element of that sequence to a new sequence.
@@ -570,14 +552,17 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Checks if another sequence has the same elements as that sequence.
      *
      * @param mixed $other The other sequence.
-     * @param callable|bool $equalityComparer The custom equality comparer to use.
+     * @param callable|bool $equalityComparer The custom equality comparer for the items to use.
      *                                        (true) indicates to check values for exact match (=== operator).
+     * @param callable|bool $keyEqualityComparer The custom equality comparer for the keys to use.
+     *                                           (null) indicates that keys should not be compared.
+     *                                           (true) indicates to check values for exact match (=== operator).
      *
      * @return bool Both are equal or not.
      *
      * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
      */
-    function sequenceEqual($other, $equalityComparer = null) : bool;
+    function sequenceEqual($other, $equalityComparer = null, $keyEqualityComparer = null) : bool;
 
     /**
      * Returns the one and only matching element in that sequence.
@@ -692,8 +677,12 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Converts that sequence to a JSON string.
      *
      * @param callable|int $keySelectorOrOptions The key selector.
-     *                                           If there is only one argumetn submitted and this argument is
-     *                                           no callable, it is handled as value for $options and set to default.
+     *                                           If there is only one arguments submitted and this argument is no
+     *                                           callable, it is handled as value for $options and set to default.
+     *                                           If there are only 2 arguments submitted and this argument is no
+     *                                           callable, $options is handled as value for $depth and this value is
+     *                                           handled as value for $options by setting $keySelectorOrOptions to
+     *                                           default (null).
      * @param int $options @see \json_encode()
      * @param int $depth @see \json_encode()
      *

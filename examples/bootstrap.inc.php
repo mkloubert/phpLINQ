@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 /**********************************************************************************************************************
  * phpLINQ (https://github.com/mkloubert/phpLINQ)                                                                     *
  *                                                                                                                    *
@@ -41,10 +39,6 @@ function __autoload($clsName) {
 	if (false !== $classFile) {
         require_once $classFile;
     }
-}
-
-function isPHP_5_5() {
-    return version_compare(PHP_VERSION, '5.5', '>=');
 }
 
 function parseForHtmlOutput($str) {

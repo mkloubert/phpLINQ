@@ -29,23 +29,45 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+namespace System;
+
 
 /**
- * @see \System\Collections\IEnumerable::randomize()
+ * Indicates that an object has been disposed.
  *
+ * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
+class ObjectDisposedException extends Exception {
+    /**
+     * @var object
+     */
+    private $_obj;
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
-        }
+
+    /**
+     * Initializes a new instance of that class.
+     *
+     * @param object $obj The underlying object.
+     * @param string $message The message.
+     * @param int $code The code.
+     * @param \Exception $innerException The inner exception.
+     */
+    public function __construct($obj = null,
+                                string $message = '', \Exception $innerException = null, int $code = 0) {
+
+        $this->_obj = $obj;
+
+        parent::__construct($message, $innerException, $code);
+    }
+
+
+    /**
+     * Gets the underlying object (if defined).
+     *
+     * @return object The underlying object or (null) if not defined.
+     */
+    public function object() {
+        return $this->_obj;
     }
 }

@@ -135,18 +135,18 @@ return $y;
                 /* @var IEnumerable $seq */
 
                 $items = static::sequenceToArray($seq->orderBy($selectors[0])
-                                                     ->thenDescending());
+                                                     ->thenDescending(), false);
 
                 $this->assertEquals(8, count($items));
 
-                $this->assertEquals('mango', $items[0]);
-                $this->assertEquals('grape', $items[1]);
-                $this->assertEquals('apple', $items[2]);
-                $this->assertEquals('orange', $items[3]);
-                $this->assertEquals('banana', $items[4]);
-                $this->assertEquals('raspberry', $items[5]);
-                $this->assertEquals('blueberry', $items[6]);
-                $this->assertEquals('passionfruit', $items[7]);
+                $this->assertSame('mango', $items[0]);
+                $this->assertSame('grape', $items[1]);
+                $this->assertSame('apple', $items[2]);
+                $this->assertSame('orange', $items[3]);
+                $this->assertSame('banana', $items[4]);
+                $this->assertSame('raspberry', $items[5]);
+                $this->assertSame('blueberry', $items[6]);
+                $this->assertSame('passionfruit', $items[7]);
             }
         }
     }

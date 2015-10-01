@@ -29,23 +29,77 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+namespace System;
+
 
 /**
- * @see \System\Collections\IEnumerable::randomize()
+ * A basic disposable object.
  *
+ * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
+abstract class DisposableBase extends Object implements IDisposable {
+    /**
+     * @var bool
+     */
+    private $_isDisposed = false;
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
+
+    /**
+     * Frees the resources of that object.
+     */
+    final function __destruct() {
+        $this->disposeInner(false);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function dispose() {
+        $this->disposeInner(true);
+    }
+
+    /**
+     * Gets if that object has been disposed or not.
+     *
+     * @return bool Object has been disposed or not.
+     */
+    public final function isDisposed() : bool {
+        return $this->_isDisposed;
+    }
+
+    private function disposeInner(bool $disposing) {
+        if ($disposing && $this->isDisposed()) {
+            // nothing more to do
+            return;
+        }
+
+        $isDisposed = !$disposing ? $this->_isDisposed : true;
+        $this->onDispose($disposing, $isDisposed);
+
+        $this->_isDisposed = $isDisposed;
+    }
+
+    /**
+     * The logic for the destructor and the DisposableBase::dispose() method.
+     *
+     * @param bool $disposing DisposableBase::dispose() method was called (true) or the
+     *                        destructor (false).
+     * @param bool &$isDisposed The new value for DisposableBase::isDisposed() method.
+     *                          Is (true) by default if $disposing is also (true); otherwise it contains
+     *                          the current value.
+     */
+    abstract protected function onDispose(bool $disposing, bool &$isDisposed = false);
+
+    /**
+     * Throws an exception if that object has been disposed.
+     *
+     * @throws ObjectDisposedException Object has been disposed.
+     */
+    protected final function throwIfDisposed() {
+        if ($this->_isDisposed) {
+            throw new ObjectDisposedException($this);
         }
     }
 }

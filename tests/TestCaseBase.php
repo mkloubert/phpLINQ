@@ -91,7 +91,7 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
      *
      * @param array $arr The array with the data for each sequence.
      *
-     * @return array The list of sequences.
+     * @return IEnumerable[] The list of sequences.
      */
     protected static function sequenceListFromArray(array $arr = []) : array {
         return [

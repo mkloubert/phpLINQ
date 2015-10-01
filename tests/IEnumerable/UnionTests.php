@@ -105,19 +105,19 @@ return \unionEqualityComparerFunc($x, $y);
 
             $other = [8, 3, 6, 4, 4, 9, 1, 0];
 
-            $items = static::sequenceToArray($seq->union($other));
+            $items = static::sequenceToArray($seq->union($other), false);
 
             $this->assertEquals(9, count($items));
 
-            $this->assertTrue(5 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
-            $this->assertTrue(9 === $items[2]);
-            $this->assertTrue(7 === $items[3]);
-            $this->assertTrue(8 === $items[4]);
-            $this->assertTrue(6 === $items[5]);
-            $this->assertTrue(4 === $items[6]);
-            $this->assertTrue(1 === $items[7]);
-            $this->assertTrue(0 === $items[8]);
+            $this->assertSame(5, $items[0]);
+            $this->assertSame(3, $items[1]);
+            $this->assertSame(9, $items[2]);
+            $this->assertSame(7, $items[3]);
+            $this->assertSame(8, $items[4]);
+            $this->assertSame(6, $items[5]);
+            $this->assertSame(4, $items[6]);
+            $this->assertSame(1, $items[7]);
+            $this->assertSame(0, $items[8]);
         }
     }
 
@@ -138,19 +138,19 @@ return \unionEqualityComparerFunc($x, $y);
 
             $other = $createGenerator();
 
-            $items = static::sequenceToArray($seq->union($other));
+            $items = static::sequenceToArray($seq->union($other), false);
 
             $this->assertEquals(9, count($items));
 
-            $this->assertTrue(5 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
-            $this->assertTrue(9 === $items[2]);
-            $this->assertTrue(7 === $items[3]);
-            $this->assertTrue(8 === $items[4]);
-            $this->assertTrue(6 === $items[5]);
-            $this->assertTrue(4 === $items[6]);
-            $this->assertTrue(1 === $items[7]);
-            $this->assertTrue(0 === $items[8]);
+            $this->assertSame(5, $items[0]);
+            $this->assertSame(3, $items[1]);
+            $this->assertSame(9, $items[2]);
+            $this->assertSame(7, $items[3]);
+            $this->assertSame(8, $items[4]);
+            $this->assertSame(6, $items[5]);
+            $this->assertSame(4, $items[6]);
+            $this->assertSame(1, $items[7]);
+            $this->assertSame(0, $items[8]);
         }
     }
 
@@ -158,21 +158,21 @@ return \unionEqualityComparerFunc($x, $y);
         foreach (static::sequenceListFromArray([5, 3, 9, 7, 5, 9, 3, 7]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $other = [8, 3, 6, 4, 4, 9, 1, 0];
+            $other = new ArrayIterator([8, 3, 6, 4, 4, 9, 1, 0]);
 
-            $items = new ArrayIterator(static::sequenceToArray($seq->union($other)));
+            $items = static::sequenceToArray($seq->union($other), false);
 
             $this->assertEquals(9, count($items));
 
-            $this->assertTrue(5 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
-            $this->assertTrue(9 === $items[2]);
-            $this->assertTrue(7 === $items[3]);
-            $this->assertTrue(8 === $items[4]);
-            $this->assertTrue(6 === $items[5]);
-            $this->assertTrue(4 === $items[6]);
-            $this->assertTrue(1 === $items[7]);
-            $this->assertTrue(0 === $items[8]);
+            $this->assertSame(5, $items[0]);
+            $this->assertSame(3, $items[1]);
+            $this->assertSame(9, $items[2]);
+            $this->assertSame(7, $items[3]);
+            $this->assertSame(8, $items[4]);
+            $this->assertSame(6, $items[5]);
+            $this->assertSame(4, $items[6]);
+            $this->assertSame(1, $items[7]);
+            $this->assertSame(0, $items[8]);
         }
     }
 
@@ -183,20 +183,20 @@ return \unionEqualityComparerFunc($x, $y);
 
                 $other = [8, 3, 6, 4, '4', 9, 1, 0];
 
-                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer), false);
 
                 $this->assertEquals(10, count($items));
 
-                $this->assertTrue(5 === $items[0]);
-                $this->assertTrue(3 === $items[1]);
-                $this->assertTrue(9 === $items[2]);
-                $this->assertTrue(7 === $items[3]);
-                $this->assertTrue(8 === $items[4]);
-                $this->assertTrue(6 === $items[5]);
-                $this->assertTrue(4 === $items[6]);
-                $this->assertTrue('4' === $items[7]);
-                $this->assertTrue(1 === $items[8]);
-                $this->assertTrue(0 === $items[9]);
+                $this->assertSame(5, $items[0]);
+                $this->assertSame(3, $items[1]);
+                $this->assertSame(9, $items[2]);
+                $this->assertSame(7, $items[3]);
+                $this->assertSame(8, $items[4]);
+                $this->assertSame(6, $items[5]);
+                $this->assertSame(4, $items[6]);
+                $this->assertSame('4', $items[7]);
+                $this->assertSame(1, $items[8]);
+                $this->assertSame(0, $items[9]);
             }
         }
     }
@@ -219,20 +219,20 @@ return \unionEqualityComparerFunc($x, $y);
 
                 $other = $createGenerator();
 
-                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer), false);
 
                 $this->assertEquals(10, count($items));
 
-                $this->assertTrue(5 === $items[0]);
-                $this->assertTrue(3 === $items[1]);
-                $this->assertTrue(9 === $items[2]);
-                $this->assertTrue(7 === $items[3]);
-                $this->assertTrue(8 === $items[4]);
-                $this->assertTrue(6 === $items[5]);
-                $this->assertTrue(4 === $items[6]);
-                $this->assertTrue(4.0 === $items[7]);
-                $this->assertTrue(1 === $items[8]);
-                $this->assertTrue(0 === $items[9]);
+                $this->assertSame(5, $items[0]);
+                $this->assertSame(3, $items[1]);
+                $this->assertSame(9, $items[2]);
+                $this->assertSame(7, $items[3]);
+                $this->assertSame(8, $items[4]);
+                $this->assertSame(6, $items[5]);
+                $this->assertSame(4, $items[6]);
+                $this->assertSame(4.0, $items[7]);
+                $this->assertSame(1, $items[8]);
+                $this->assertSame(0, $items[9]);
             }
         }
     }
@@ -244,20 +244,20 @@ return \unionEqualityComparerFunc($x, $y);
 
                 $other = new ArrayIterator([8, 3, 6, 4, '4', 9, 1, 0]);
 
-                $items = static::sequenceToArray($seq->union($other, $equalityComparer));
+                $items = static::sequenceToArray($seq->union($other, $equalityComparer), false);
 
                 $this->assertEquals(10, count($items));
 
-                $this->assertTrue(5 === $items[0]);
-                $this->assertTrue(3 === $items[1]);
-                $this->assertTrue(9 === $items[2]);
-                $this->assertTrue(7 === $items[3]);
-                $this->assertTrue(8 === $items[4]);
-                $this->assertTrue(6 === $items[5]);
-                $this->assertTrue(4 === $items[6]);
-                $this->assertTrue('4' === $items[7]);
-                $this->assertTrue(1 === $items[8]);
-                $this->assertTrue(0 === $items[9]);
+                $this->assertSame(5, $items[0]);
+                $this->assertSame(3, $items[1]);
+                $this->assertSame(9, $items[2]);
+                $this->assertSame(7, $items[3]);
+                $this->assertSame(8, $items[4]);
+                $this->assertSame(6, $items[5]);
+                $this->assertSame(4, $items[6]);
+                $this->assertSame('4', $items[7]);
+                $this->assertSame(1, $items[8]);
+                $this->assertSame(0, $items[9]);
             }
         }
     }

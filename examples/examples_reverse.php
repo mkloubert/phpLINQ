@@ -44,7 +44,6 @@ $seq = Enumerable::range(1, 25);
 foreach ($seq->reverse() as $item) {
     echo "{$item}\n";
 }
-
 ';
 
 

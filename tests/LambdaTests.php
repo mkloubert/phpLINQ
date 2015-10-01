@@ -38,6 +38,66 @@ use \System\Object;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class LambdaTests extends TestCaseBase {
+    public function testEmptyBody1() {
+        $lambdas = [
+            ' => ',
+            '() =>',
+            ' => {}',
+            '() => {}',
+            ' => {
+
+}',
+            '() => {
+}',
+        ];
+
+        foreach ($lambdas as $l) {
+            $func = Object::toLambda($l);
+
+            $this->assertSame(null, $func(5979, 23979));
+        }
+    }
+
+    public function testEmptyBody2() {
+        $lambdas = [
+            '$x => ',
+            '($x) =>',
+            '$x => {}',
+            '($x) => {}',
+            '$x => {
+
+}',
+            '($x) => {
+}',
+        ];
+
+        foreach ($lambdas as $l) {
+            $func = Object::toLambda($l);
+
+            $this->assertSame(null, $func(5979, 23979));
+        }
+    }
+
+    public function testEmptyBody3() {
+        $lambdas = [
+            '$x, $y => ',
+            '($x, $y) =>',
+            '$x, $y => {}',
+            '($x, $y) => {}',
+            '$x, $y => {
+
+}',
+            '($x, $y) => {
+}',
+        ];
+
+        foreach ($lambdas as $l) {
+            $func = Object::toLambda($l);
+
+            $this->assertSame(null, $func(5979, 23979));
+        }
+    }
+
     public function testInvalidExpressions() {
         $this->assertTrue(Object::isLambda('$x => trim($x)'));
         $this->assertTrue(Object::isLambda('($x) => trim($x)'));
@@ -141,6 +201,29 @@ return $x + $y;
 
             $this->assertTrue(null === $res);
             $this->assertTrue(is_null($res));
+        }
+    }
+
+    public function testWithNoArguments() {
+        $lambdas = [
+            '=> 78.9',
+            '() => 78.9',
+            ' => return 78.9;',
+            '() => return 78.9;',
+            ' => { return 78.9; }',
+            '() => { return 78.9; }',
+            ' => {
+return 78.9;
+}',
+            '() => {
+return 78.9;
+}',
+        ];
+
+        foreach ($lambdas as $l) {
+            $func = Object::toLambda($l);
+
+            $this->assertSame(78.9, $func());
         }
     }
 }

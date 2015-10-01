@@ -171,8 +171,8 @@ class Enumerable extends Object implements IEnumerable {
         if ($this->_i instanceof KeySelectorIterator) {
             $newIterator = $this->_i
                                 ->createNewFromSequence($this->_i
-                                ->sequence()
-                                ->asResettable());
+                                                             ->sequence()
+                                                             ->asResettable());
 
             return static::createEnumerable($newIterator);
         }
@@ -273,10 +273,9 @@ class Enumerable extends Object implements IEnumerable {
         }
 
         if (true === $seeder) {
-            $seeder = function() {
-                list($usec, $sec) = \explode(' ', \microtime());
-                return (float)$sec + ((float)$usec * 100000);
-            };
+            $rc = new \ReflectionClass(static::class);
+
+            $seeder = $rc->getMethod('seedRandom')->getClosure(null);
         }
 
         $seeder = static::asCallable($seeder);
@@ -347,7 +346,7 @@ class Enumerable extends Object implements IEnumerable {
     protected function concatInner(array $itemLists) {
         // first the values of that sequence
         while ($this->valid()) {
-            yield $this->current();
+            yield $this->key() => $this->current();
             $this->next();
         }
 
@@ -359,7 +358,7 @@ class Enumerable extends Object implements IEnumerable {
             }
 
             while ($iterator->valid()) {
-                yield $iterator->current();
+                yield $iterator->key() => $iterator->current();
                 $iterator->next();
             }
         }
@@ -394,15 +393,9 @@ class Enumerable extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public function count() {
-        $result = 0;
-
-        while ($this->valid()) {
-            ++$result;
-
-            $this->next();
-        }
-
-        return $result;
+        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) {
+                                                 $ctx->result($ctx->index() + 1);
+                                             }, 0);
     }
 
     /**
@@ -419,7 +412,7 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    protected final static function createEnumerable($items = null) : IEnumerable {
+    public final static function createEnumerable($items = null) : IEnumerable {
         return new self(static::asIterator($items, true));
     }
 
@@ -451,17 +444,22 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function distinct($equalityComparer = null) : IEnumerable  {
-        $equalityComparer = static::getEqualityComparerSafe($equalityComparer);
+    public final function distinct($equalityComparer = null) : IEnumerable  {
+        return static::createEnumerable($this->distinctInner(static::getEqualityComparerSafe($equalityComparer)));
+    }
 
-        $result = [];
+    /**
+     * @see Enumerable::distinct()
+     */
+    protected function distinctInner(callable $equalityComparer) {
+        $temp = [];
 
         while ($this->valid()) {
             $curItem = $this->current();
 
             // search for duplicate
             $alreadyInList = false;
-            foreach ($result as $existingItem) {
+            foreach ($temp as $existingItem) {
                 if (!$equalityComparer($curItem, $existingItem)) {
                     continue;
                 }
@@ -472,13 +470,12 @@ class Enumerable extends Object implements IEnumerable {
             }
 
             if (!$alreadyInList) {
-                $result[] = $curItem;
+                yield $this->key() => $curItem;
+                $temp[] = $curItem;
             }
 
             $this->next();
         }
-
-        return static::createEnumerable($result);
     }
 
     /**
@@ -571,7 +568,7 @@ class Enumerable extends Object implements IEnumerable {
             }
 
             if (!$found) {
-                yield $curItem;
+                yield $this->key() => $curItem;
             }
 
             $this->next();
@@ -671,13 +668,14 @@ class Enumerable extends Object implements IEnumerable {
             $ctx->result($groupList);
         }, []);
 
-        $cls       = $this->getType();
-        $createSeq = $cls->getMethod('createEnumerable')->getClosure(null);
+        $createSeq = $this->getType()
+                          ->getMethod('createEnumerable')->getClosure(null);
 
         return $createSeq($groups)->select(function(\stdClass $x) use ($createSeq) : IGrouping {
                                                return new Grouping($x->key,
                                                                    $createSeq($x->values));
-                                           });
+                                           })
+                                  ->withNewKeys('($key, $item) => $item->key()');
     }
 
     /**
@@ -781,7 +779,7 @@ class Enumerable extends Object implements IEnumerable {
                 }
 
                 unset($second[$k]);
-                yield $curItem;
+                yield $this->key() => $curItem;
 
                 break;
             }
@@ -925,7 +923,9 @@ class Enumerable extends Object implements IEnumerable {
      *
      * @return mixed The result of the iteration.
      */
-    protected function iterateWithItemContext(callable $action, $initialResult = null, $initialValue = null) {
+    protected function iterateWithItemContext($action, $initialResult = null, $initialValue = null) {
+        $action = static::asCallable($action);
+
         $index   = 0;
         $prevVal = null;
         $result  = $initialResult;
@@ -1093,18 +1093,14 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function order($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
-
-        return $this->orderBy(true, $comparerOrPreventKeys, $preventKeys);
+    public final function order($comparer = null) : IOrderedEnumerable {
+        return $this->orderBy(true, $comparer);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orderBy($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
-
+    public function orderBy($selector, $comparer = null) : IOrderedEnumerable {
         if (true === $selector) {
             $selector = function($x) {
                 return $x;
@@ -1113,32 +1109,26 @@ class Enumerable extends Object implements IEnumerable {
 
         return new OrderedEnumerable($this,
                                      static::asCallable($selector),
-                                     static::getComparerSafe($comparerOrPreventKeys),
-                                     $preventKeys);
+                                     static::getComparerSafe($comparer));
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function orderByDescending($selector, $comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 2, $comparerOrPreventKeys, $preventKeys);
-
-        $comparerOrPreventKeys = static::getComparerSafe($comparerOrPreventKeys);
+    public final function orderByDescending($selector, $comparer = null) : IOrderedEnumerable {
+        $comparer = static::getComparerSafe($comparer);
 
         return $this->orderBy($selector,
-                              function($x, $y) use ($comparerOrPreventKeys) : int {
-                                  return $comparerOrPreventKeys($y, $x);
-                              },
-                              $preventKeys);
+                              function($x, $y) use ($comparer) : int {
+                                  return $comparer($y, $x);
+                              });
     }
 
     /**
      * {@inheritDoc}
      */
-    public final function orderDescending($comparerOrPreventKeys = null, bool $preventKeys = false) : IOrderedEnumerable {
-        static::updateOrderArguments(\func_num_args(), 1, $comparerOrPreventKeys, $preventKeys);
-
-        return $this->orderByDescending(true, $comparerOrPreventKeys, $preventKeys);
+    public final function orderDescending($comparer = null) : IOrderedEnumerable {
+        return $this->orderByDescending(true, $comparer);
     }
 
     /**
@@ -1155,29 +1145,19 @@ class Enumerable extends Object implements IEnumerable {
      */
     public function randomize(
         $seeder = null,
-        $randProviderOrPreventKeys = null,
-        bool $preventKeys = false
+        $randProvider = null
     ) : IOrderedEnumerable {
 
-        if (\func_num_args() < 3) {
-            if (\is_bool($randProviderOrPreventKeys)) {
-                $preventKeys               = $randProviderOrPreventKeys;
-                $randProviderOrPreventKeys = null;
-            }
-        }
-
         if (true === $seeder) {
-            $seeder = function() {
-                list($usec, $sec) = \explode(' ', \microtime());
-                return (float)$sec + ((float)$usec * 100000);
-            };
+            $seeder = $this->getType()
+                           ->getMethod('seedRandom')->getClosure(null);
         }
 
-        $seeder                    = static::asCallable($seeder);
-        $randProviderOrPreventKeys = static::asCallable($randProviderOrPreventKeys);
+        $seeder       = static::asCallable($seeder);
+        $randProvider = static::asCallable($randProvider);
 
-        if (null === $randProviderOrPreventKeys) {
-            $randProviderOrPreventKeys = function () {
+        if (null === $randProvider) {
+            $randProvider = function () {
                 return \mt_rand();
             };
         }
@@ -1186,7 +1166,7 @@ class Enumerable extends Object implements IEnumerable {
             $seeder();
         }
 
-        return $this->orderBy($randProviderOrPreventKeys, null, $preventKeys);
+        return $this->orderBy($randProvider, null);
     }
 
     /**
@@ -1251,19 +1231,18 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function reverse(bool $preventKeys = false) : IOrderedEnumerable {
+    public final function reverse() : IOrderedEnumerable {
         return $this->orderBy(function($x, IIndexedItemContext $ctx) {
                                   return \PHP_INT_MAX - $ctx->index();
                               },
-                              null,
-                              $preventKeys);
+                              null);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function rewind() {
-        // deactivated by default
+    public final function rewind() {
+        // deactivated
     }
 
     /**
@@ -1294,7 +1273,7 @@ class Enumerable extends Object implements IEnumerable {
                 break;
             }
 
-            yield $newItem;
+            yield $ctx->key() => $newItem;
 
             $prevVal = $ctx->nextValue();
             $value   = $ctx->value();
@@ -1315,7 +1294,7 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * @see Enumerable::selectMany()
      */
-    public function selectManyInner(callable $selector) {
+    protected function selectManyInner(callable $selector) {
         $index   = 0;
         $prevVal = null;
         $value   = null;
@@ -1347,8 +1326,12 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function sequenceEqual($other, $equalityComparer = null) : bool {
+    public final function sequenceEqual($other, $equalityComparer = null, $keyEqualityComparer = null) : bool {
         $equalityComparer = static::getEqualityComparerSafe($equalityComparer);
+
+        if (null !== $keyEqualityComparer) {
+            $keyEqualityComparer = static::getEqualityComparerSafe($keyEqualityComparer);
+        }
 
         $other = static::asIterator($other, true);
 
@@ -1367,6 +1350,13 @@ class Enumerable extends Object implements IEnumerable {
             if (!$equalityComparer($x, $y)) {
                 // both items are NOT equal
                 return false;
+            }
+
+            if (null !== $keyEqualityComparer) {
+                if (!$keyEqualityComparer($this->key(), $other->key())) {
+                    // not same keys
+                    return false;
+                }
             }
         }
 
@@ -1524,7 +1514,7 @@ class Enumerable extends Object implements IEnumerable {
             $ctx->value($value);
 
             if ($predicate($ctx->item(), $ctx)) {
-                yield $ctx->item();
+                yield $ctx->key() => $ctx->item();
                 $this->next();
             }
             else {
@@ -1589,19 +1579,19 @@ class Enumerable extends Object implements IEnumerable {
 
         $keySelector = static::asCallable($keySelector);
 
-        $result = [];
+        return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($keySelector) {
+                                                 $result = $ctx->result();
 
-        $this->iterateWithItemContext(function($x, IItemContext $ctx) use ($keySelector, &$result) {
-                                          if (null === $keySelector) {
-                                              // autokey
-                                              $result[] = $x;
-                                          }
-                                          else {
-                                              $result[$keySelector($ctx->key(), $x, $ctx)] = $x;
-                                          }
-                                      });
+                                                 if (null === $keySelector) {
+                                                     // autokey
+                                                     $result[] = $x;
+                                                 }
+                                                 else {
+                                                     $result[$keySelector($ctx->key(), $x, $ctx)] = $x;
+                                                 }
 
-        return $result;
+                                                 $ctx->result($result);
+                                             }, []);
     }
 
     /**
@@ -1619,6 +1609,13 @@ class Enumerable extends Object implements IEnumerable {
             if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
                 // swap values
 
+                $options              = $keySelectorOrOptions;
+                $keySelectorOrOptions = null;
+            }
+        }
+        else if (2 === \func_num_args()) {
+            if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
+                $depth                = $options;
                 $options              = $keySelectorOrOptions;
                 $keySelectorOrOptions = null;
             }
@@ -1679,25 +1676,6 @@ class Enumerable extends Object implements IEnumerable {
     }
 
     /**
-     * Updates the arguments of "order" based methods.
-     *
-     * @param int $argCount The number of submitted arguments.
-     * @param int $mustBe The required number of arguments to update values.
-     * @param mixed &$comparer The comparer.
-     * @param mixed &$preventKeys The value that indicates if keys should be prevented or not.
-     */
-    protected static function updateOrderArguments(int $argCount, int $mustBe, &$comparer, &$preventKeys) {
-        if ($mustBe === $argCount) {
-            if (\is_bool($comparer)) {
-                // swap values
-
-                $preventKeys = $comparer;
-                $comparer    = null;
-            }
-        }
-    }
-
-    /**
      * Updates the variables $predicate and $defValue by the submitted arguments of a method / function.
      *
      * @param int $argCount The number of submitted arguments.
@@ -1752,7 +1730,7 @@ class Enumerable extends Object implements IEnumerable {
             $ctx->value($value);
 
             if ($predicate($ctx->item(), $ctx)) {
-                yield $ctx->item();
+                yield $ctx->key() => $ctx->item();
             }
 
             if ($ctx->cancel()) {

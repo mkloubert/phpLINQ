@@ -29,23 +29,59 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+namespace phpLINQ\Docs\Classes;
 
-/**
- * @see \System\Collections\IEnumerable::randomize()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
+use \phpLINQ\Docs\Project;
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
+
+class Class_ extends Reflectable {
+    /**
+     * @var Method_[]
+     */
+    private $_methods;
+
+
+    public function __construct(Project $proj, \ReflectionClass $reflector, \SimpleXMLElement $xml) {
+        parent::__construct($proj, $reflector, $xml);
+    }
+
+
+    public function generateDocumentation() {
+        foreach ($this->methods() as $method) {
+            $method->generateDocumentation();
         }
+    }
+
+    /**
+     * @return Method_[]
+     */
+    public function methods() {
+        if (null === $this->_methods) {
+            $methodList = [];
+
+            foreach ($this->reflector()->getMethods() as $method) {
+                if (!$method->isPublic()) {
+                    continue;
+                }
+
+                $methodList[] = new Method_($this, $method, $this->xml());
+            }
+
+            usort($methodList, function(Method_ $x, Method_ $y) {
+                return \strcasecmp($x->reflector()->getName(),
+                                   $y->reflector()->getName());
+            });
+
+            $this->_methods = $methodList;
+        }
+
+        return $this->_methods;
+    }
+
+    /**
+     * @return \ReflectionClass
+     */
+    public function reflector() {
+        return parent::reflector();
     }
 }

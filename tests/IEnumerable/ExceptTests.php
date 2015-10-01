@@ -105,12 +105,12 @@ return \exceptEqualityComparerFunc($x, $y);
 
             $ex = [2, 5];
 
-            $items = static::sequenceToArray($seq->except($ex));
+            $items = static::sequenceToArray($seq->except($ex), false);
 
             $this->assertEquals(3, count($items));
-            $this->assertTrue(1 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
-            $this->assertTrue(4 === $items[2]);
+            $this->assertSame(1, $items[0]);
+            $this->assertSame(3, $items[1]);
+            $this->assertSame(4, $items[2]);
         }
     }
 
@@ -126,11 +126,11 @@ return \exceptEqualityComparerFunc($x, $y);
 
             $ex = $createGenerator();
 
-            $items = static::sequenceToArray($seq->except($ex));
+            $items = static::sequenceToArray($seq->except($ex), false);
 
             $this->assertEquals(2, count($items));
-            $this->assertTrue(1 === $items[0]);
-            $this->assertTrue(5 === $items[1]);
+            $this->assertSame(1, $items[0]);
+            $this->assertSame(5, $items[1]);
         }
     }
 
@@ -140,12 +140,12 @@ return \exceptEqualityComparerFunc($x, $y);
 
             $ex = new ArrayIterator([2, 4]);
 
-            $items = static::sequenceToArray($seq->except($ex));
+            $items = static::sequenceToArray($seq->except($ex), false);
 
             $this->assertEquals(3, count($items));
-            $this->assertTrue(1 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
-            $this->assertTrue(5 === $items[2]);
+            $this->assertSame(1, $items[0]);
+            $this->assertSame(3, $items[1]);
+            $this->assertSame(5, $items[2]);
         }
     }
 
@@ -156,13 +156,13 @@ return \exceptEqualityComparerFunc($x, $y);
 
                 $ex = [2, '5'];
 
-                $items = static::sequenceToArray($seq->except($ex, $equalityComparer));
+                $items = static::sequenceToArray($seq->except($ex, $equalityComparer), false);
 
                 $this->assertEquals(4, count($items));
-                $this->assertTrue(1 === $items[0]);
-                $this->assertTrue(3 === $items[1]);
-                $this->assertTrue(4 === $items[2]);
-                $this->assertTrue(5 === $items[3]);
+                $this->assertSame(1, $items[0]);
+                $this->assertSame(3, $items[1]);
+                $this->assertSame(4, $items[2]);
+                $this->assertSame(5, $items[3]);
             }
         }
     }
@@ -180,12 +180,12 @@ return \exceptEqualityComparerFunc($x, $y);
 
                 $ex = $createGenerator();
 
-                $items = static::sequenceToArray($seq->except($ex, $equalityComparer));
+                $items = static::sequenceToArray($seq->except($ex, $equalityComparer), false);
 
                 $this->assertEquals(3, count($items));
-                $this->assertTrue(1 === $items[0]);
-                $this->assertTrue(2 === $items[1]);
-                $this->assertTrue(5 === $items[2]);
+                $this->assertSame(1, $items[0]);
+                $this->assertSame(2, $items[1]);
+                $this->assertSame(5, $items[2]);
             }
         }
     }
@@ -197,12 +197,12 @@ return \exceptEqualityComparerFunc($x, $y);
 
                 $ex = new ArrayIterator([3, 4, 1]);
 
-                $items = static::sequenceToArray($seq->except($ex, $equalityComparer));
+                $items = static::sequenceToArray($seq->except($ex, $equalityComparer), false);
 
                 $this->assertEquals(3, count($items));
-                $this->assertTrue('1' === $items[0]);
-                $this->assertTrue(2 === $items[1]);
-                $this->assertTrue('5' === $items[2]);
+                $this->assertSame('1', $items[0]);
+                $this->assertSame(2, $items[1]);
+                $this->assertSame('5', $items[2]);
             }
         }
     }

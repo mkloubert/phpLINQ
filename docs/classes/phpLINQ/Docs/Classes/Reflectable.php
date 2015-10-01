@@ -29,23 +29,27 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+namespace phpLINQ\Docs\Classes;
 
-/**
- * @see \System\Collections\IEnumerable::randomize()
- *
- * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
- */
-class RandomizeTests extends TestCaseBase {
-    public function test1() {
-        foreach (static::sequenceListFromArray(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]) as $seq) {
-            $items = static::sequenceToArray($seq->randomize(true));
+use \phpLINQ\Docs\Documentable;
+use \phpLINQ\Docs\Project;
 
-            $this->assertEquals(5, count($items));
-            $this->assertNotSame(false, array_search(1, $items, true));
-            $this->assertNotSame(false, array_search(2, $items, true));
-            $this->assertNotSame(false, array_search(3, $items, true));
-            $this->assertNotSame(false, array_search(4, $items, true));
-            $this->assertNotSame(false, array_search(5, $items, true));
-        }
+
+abstract class Reflectable extends Documentable {
+    private $_reflector;
+
+
+    protected function __construct(Project $proj, \Reflector $reflector, \SimpleXMLElement $xml) {
+        $this->_reflector = $reflector;
+
+        parent::__construct($proj, $xml);
+    }
+
+
+    /**
+     * @return \Reflector
+     */
+    public function reflector() {
+        return $this->_reflector;
     }
 }

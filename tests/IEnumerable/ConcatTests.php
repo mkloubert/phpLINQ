@@ -53,7 +53,7 @@ class ConcatTests extends TestCaseBase {
             $generator = $createGenerator();
             $nothing   = null;
 
-            $items = static::sequenceToArray($seq->concat($arr, $iterator, $generator, $nothing));
+            $items = static::sequenceToArray($seq->concat($arr, $iterator, $generator, $nothing), false);
 
             $this->assertEquals(9, count($items));
             foreach ($items as $key => $value) {
@@ -61,7 +61,7 @@ class ConcatTests extends TestCaseBase {
                 $this->assertTrue(is_int($value));
                 $this->assertTrue(is_integer($value));
 
-                $this->assertEquals($key + 1, $value);
+                $this->assertSame($key + 1, $value);
             }
         }
     }

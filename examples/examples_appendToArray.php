@@ -38,17 +38,18 @@ $pageTitle = 'appendToArray()';
 
 // example #1
 $examples[] = new Example();
+$examples[0]->title = 'PHP array';
 $examples[0]->sourceCode = 'use \\System\\Linq\\Enumerable;
 
 $seq1 = Enumerable::fromValues(1, 2, 3);
-$seq2 = Enumerable::create(array("a" => 1, "b" => 2, "c" => 3));
+$seq2 = Enumerable::create(["a" => 1, "b" => 2, "c" => 3]);
 
 // auto append
-$arr1 = array(11, 22, 33);
+$arr1 = [11, 22, 33];
 $seq1->appendToArray($arr1);
 
 // with keys
-$arr2 = array("a" => 11, 22, 33);
+$arr2 = ["a" => 11, 22, 33];
 $seq2->appendToArray($arr2, true);
 
 
@@ -63,8 +64,69 @@ echo \'$arr2:\' . "\n";
 foreach ($arr2 as $key => $value) {
     echo "\t{$key} => {$value}\n";
 }
-
 ';
 
+// example #2
+$examples[] = new Example();
+$examples[1]->title = 'ArrayAccess object';
+$examples[1]->sourceCode = 'use \\System\\Linq\\Enumerable;
+
+class MyArrayWrapper implements \ArrayAccess {
+    private $_array;
+
+    public function __construct(array $arr) {
+        $this->_array = $arr;
+    }
+
+    public function getArray() : array {
+        return $this->_array;
+    }
+
+    public function offsetExists($key) {
+        return \array_key_exists($key, $this->_array);
+    }
+
+    public function offsetGet($key) {
+        return $this->_array[$key];
+    }
+
+    public function offsetSet($key, $newValue) {
+        if (null !== $key) {
+            $this->_array[$key] = $newValue;
+        }
+        else {
+            $this->_array[] = $newValue;
+        }
+    }
+
+    public function offsetUnset($key) {
+        unset($this->_array[$key]);
+    }
+}
+
+$seq1 = Enumerable::fromValues(1, 2, 3);
+$seq2 = Enumerable::create(["A" => 1, "B" => 2, "C" => 3]);
+
+// auto append
+$arrObj1 = new MyArrayWrapper([111, 222, 333]);
+$seq1->appendToArray($arrObj1);
+
+// with keys
+$arrObj2 = new MyArrayWrapper(["A" => 111, 222, 333]);
+$seq2->appendToArray($arrObj2, true);
+
+
+echo \'$arrObj1:\' . "\n";
+foreach ($arrObj1->getArray() as $key => $value) {
+    echo "\t{$key} => {$value}\n";
+}
+
+echo "\n";
+
+echo \'$arrObj2:\' . "\n";
+foreach ($arrObj2->getArray() as $key => $value) {
+    echo "\t{$key} => {$value}\n";
+}
+';
 
 require_once './shutdown.inc.php';

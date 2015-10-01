@@ -32,7 +32,8 @@
 require_once './bootstrap.inc.php';
 
 
-$result = array();
+$result = [];
+
 
 register_shutdown_function(function() use (&$result) {
                                ob_end_clean();
@@ -44,39 +45,76 @@ register_shutdown_function(function() use (&$result) {
 set_error_handler(function($errNr, $errMsg, $errFile, $errLine) use (&$result) {
                       $result['code'] = -2;
                       $result['msg']  = 'Error';
-                      $result['data'] = array(
+                      $result['data'] = [
                           'code' => $errNr,
                           'msg'  => $errMsg,
-                          'file' => array(
+                          'file' => [
                               'name' => $errFile,
                               'line' => $errLine,
-                          )
-                      );
+                          ]
+                      ];
                   }, E_ALL);
 
 set_exception_handler(function($ex) use (&$result) {
                           $result['code'] = -1;
                           $result['msg']  = 'Exception';
-                          $result['data'] = array(
+                          $result['data'] = [
                               'code' => $ex->getCode(),
                               'msg'  => $ex->getMessage(),
-                              'file' => array(
+                              'file' => [
                                   'name' => $ex->getFile(),
                                   'line' => $ex->getLine(),
-                              )
-                          );
+                              ]
+                          ];
                       });
+
+
+function getMemoryLimit() : int {
+    $limit = trim(ini_get('memory_limit'));
+
+    if (1 === preg_match('/^(\d+)(.)$/', $limit, $matches)) {
+        if (isset($matches[2])) {
+            switch (trim(strtoupper($matches[2]))) {
+                case 'K':
+                    $limit = (int)$matches[1] * 1024;
+                    break;
+
+                case 'M':
+                    $limit = (int)$matches[1] * 1024 * 1024;
+                    break;
+            }
+        }
+    }
+
+    return (int)$limit;
+}
 
 
 // execute code
 $start = microtime(true);
+
+$memoryBefore = memory_get_usage();
 eval($_POST['code']);
+
 $end = microtime(true);
 
+$memoryAfter = memory_get_usage();
 
 $result['code'] = 0;
-$result['data'] = array(
+$result['data'] = [
     'content' => ob_get_contents(),
-    'duration' => $end - $start,
-);
+    'time' => [
+        'start' => $start,
+        'end' => $end,
+        'duration' => $end - $start,
+    ],
+    'memory' => [
+        'allocated' => [
+            'before' => $memoryBefore,
+            'after' => $memoryAfter,
+            'difference' => $memoryAfter - $memoryBefore,
+        ],
+        'limit' => getMemoryLimit(),
+    ],
+];
 $result['msg']  = 'OK';

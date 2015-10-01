@@ -1,0 +1,51 @@
+<documentation>
+    <classes>
+        <class name="System.Collections.IEnumerable">
+            <summary>Describes a sequence.</summary>
+            <summary lang="de">Beschreibt eine Sequenz.</summary>
+
+            <methods>
+                <method name="appendToArray">
+                    <summary>Appends the items of that sequence to an array (object).</summary>
+                    <summary lang="de">Fügt die Elemente dieser Sequenz einem Array bzw. einem Arrayobjekt hinzu.</summary>
+
+                    <parameters>
+                        <param name="arr" isReference="true">
+                            <summary>The target array.</summary>
+                            <summary lang="de">Das Ziel-Array(objekt).</summary>
+
+                            <types>
+                                <type>array</type>
+                                <type>\ArrayAccess</type>
+                            </types>
+                        </param>
+
+                        <param name="withKeys"
+                               isOptional="true"
+                               default="false">
+
+                            <summary>Also apply keys (@true) or not (@false).</summary>
+                            <summary lang="de">Zusätzlich die Schlüssel dieser Sequenz übernehmen (@true) oder automatische Schlüssel erzeugen (@false).</summary>
+
+                            <types>
+                                <type>bool</type>
+                            </types>
+                        </param>
+                    </parameters>
+
+                    <result isThis="true">
+                        <types>
+                            <type>\System.Collections.IEnumerable</type>
+                        </types>
+                    </result>
+
+                    <examples>
+                        <example>
+                            <title></title>
+                        </example>
+                    </examples>
+                </method>
+            </methods>
+        </class>
+    </classes>
+</documentation>

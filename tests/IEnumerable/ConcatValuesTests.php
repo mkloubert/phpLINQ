@@ -42,7 +42,7 @@ class ConcatValuesTests extends TestCaseBase {
         foreach (static::sequenceListFromArray([1, 2, 3]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->concatValues(4, 5));
+            $items = static::sequenceToArray($seq->concatValues(4, 5), false);
 
             $this->assertEquals(5, count($items));
             foreach ($items as $key => $value) {
@@ -50,7 +50,7 @@ class ConcatValuesTests extends TestCaseBase {
                 $this->assertTrue(is_int($value));
                 $this->assertTrue(is_integer($value));
 
-                $this->assertEquals($key + 1, $value);
+                $this->assertSame($key + 1, $value);
             }
         }
     }

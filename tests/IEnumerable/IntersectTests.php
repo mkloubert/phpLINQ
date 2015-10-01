@@ -105,11 +105,11 @@ return \intersectEqualityComparerFunc($x, $y);
 
             $i = [2, '3'];
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = static::sequenceToArray($seq->intersect($i), false);
 
             $this->assertEquals(2, count($items));
-            $this->assertTrue(2 === $items[0]);
-            $this->assertTrue(3 === $items[1]);
+            $this->assertSame(2, $items[0]);
+            $this->assertSame(3, $items[1]);
         }
     }
 
@@ -124,11 +124,11 @@ return \intersectEqualityComparerFunc($x, $y);
 
             $i = $createGenerator();
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = static::sequenceToArray($seq->intersect($i), false);
 
             $this->assertEquals(2, count($items));
-            $this->assertTrue(1.0 === $items[0]);
-            $this->assertTrue(5 === $items[1]);
+            $this->assertSame(1.0, $items[0]);
+            $this->assertSame(5, $items[1]);
         }
     }
 
@@ -138,11 +138,11 @@ return \intersectEqualityComparerFunc($x, $y);
 
             $i = new ArrayIterator([5.0, 2]);
 
-            $items = static::sequenceToArray($seq->intersect($i));
+            $items = static::sequenceToArray($seq->intersect($i), false);
 
             $this->assertEquals(2, count($items));
-            $this->assertTrue(2 === $items[0]);
-            $this->assertTrue('5' === $items[1]);
+            $this->assertSame(2, $items[0]);
+            $this->assertSame('5', $items[1]);
         }
     }
 
@@ -153,10 +153,10 @@ return \intersectEqualityComparerFunc($x, $y);
 
                 $i = [2, '3'];
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer), false);
 
                 $this->assertEquals(1, count($items));
-                $this->assertTrue(2 === $items[0]);
+                $this->assertSame(2, $items[0]);
             }
         }
     }
@@ -173,10 +173,10 @@ return \intersectEqualityComparerFunc($x, $y);
 
                 $i = $createGenerator();
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer), false);
 
                 $this->assertEquals(1, count($items));
-                $this->assertTrue(5 === $items[0]);
+                $this->assertSame(5, $items[0]);
             }
         }
     }
@@ -188,10 +188,10 @@ return \intersectEqualityComparerFunc($x, $y);
 
                 $i = new ArrayIterator([5.0, 2]);
 
-                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer));
+                $items = static::sequenceToArray($seq->intersect($i, $equalityComparer), false);
 
                 $this->assertEquals(1, count($items));
-                $this->assertTrue(2 === $items[0]);
+                $this->assertSame(2, $items[0]);
             }
         }
     }

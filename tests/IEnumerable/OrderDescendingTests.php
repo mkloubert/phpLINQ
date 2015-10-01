@@ -42,11 +42,11 @@ class OrderDescendingTests extends TestCaseBase {
         foreach (static::sequenceListFromArray([3, 4, 1, 5, 2]) as $seq) {
             /* @var IEnumerable $seq */
 
-            $items = static::sequenceToArray($seq->orderDescending());
+            $items = static::sequenceToArray($seq->orderDescending(), false);
 
             $this->assertEquals(5, count($items));
             foreach ($items as $key => $value) {
-                $this->assertEquals(5 - $key, $value);
+                $this->assertSame(5 - $key, $value);
             }
         }
     }

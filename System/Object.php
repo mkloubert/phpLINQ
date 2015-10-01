@@ -119,6 +119,7 @@ class Object implements IObject {
         };
 
         if (null === $comparer) {
+            // default
             return $defaultComparer;
         }
 
@@ -163,6 +164,7 @@ class Object implements IObject {
         };
 
         if (null === $equalityComparer) {
+            // default
             return $defaultEqualityComparer;
         }
 
@@ -187,9 +189,9 @@ class Object implements IObject {
      * @return callable The output value.
      */
     public static function getPredicateSafe($predicate) : callable {
-        $predicate = static::asCallable($predicate);
-
         if (null === $predicate) {
+            // default
+
             return function() : bool {
                 return true;
             };
@@ -209,6 +211,7 @@ class Object implements IObject {
         while ($val instanceof IValueWrapper) {
             $wrappedValue = $val->getWrappedValue();
             if ($wrappedValue === $val) {
+                // prevent for a stack overflow
                 break;
             }
 
@@ -234,6 +237,8 @@ class Object implements IObject {
      */
     public static function getValueValidatorSafe($validator) : callable {
         if (null === $validator) {
+            // default
+
             return function() {
                 return true;
             };
@@ -263,6 +268,16 @@ class Object implements IObject {
      */
     public static function isLambda($val) {
         return false !== static::toLambda($val, false);
+    }
+
+    /**
+     * A default random value seeder.
+     */
+    public static function seedRandom() {
+        list($usec, $sec) = \explode(' ', \microtime());
+        $seed = (float)$sec + ((float)$usec * 100000);
+
+        \mt_srand((int)$seed);
     }
 
     /**
@@ -305,7 +320,8 @@ class Object implements IObject {
                 return false;
             }
 
-            // get anything that is after =>
+            // get anything that is
+            // defined after '=>' expression
             $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])));
 
             // remove surrounding {}
@@ -315,15 +331,12 @@ class Object implements IObject {
                 $lambdaBody = \trim(\substr($lambdaBody, 1, \strlen($lambdaBody) - 2));
             }
 
-            if ((';' !== \substr($lambdaBody, -1))) {
-                // auto add return statement
-                $lambdaBody = \sprintf('return %s;',
-                                       $lambdaBody);
-            }
-
-            if ('' === $lambdaBody) {
-                // keep sure to return (null) if body is empty
-                $lambdaBody = 'return null;';
+            if ('' !== $lambdaBody) {
+                if ((';' !== \substr($lambdaBody, -1))) {
+                    // auto add return statement
+                    $lambdaBody = \sprintf('return %s;',
+                                           $lambdaBody);
+                }
             }
 
             // build closure
@@ -360,6 +373,39 @@ class Object implements IObject {
      */
     public function toString() : IString {
         return new ClrString(\get_class($this));
+    }
+
+    /**
+     * Invokes a function for a disposable object and keeps sure that the
+     * IDisposable::dispose() method of it is called at the end of the invocation, even
+     * if an exception is thrown.
+     *
+     * @param callable $func The function to invoke.
+     * @param IDisposable $obj The disposable object.
+     * @param mixed ...$arg One or more additional argument for $func.
+     *
+     * @return mixed The result of $func.
+     *
+     * @throws ArgumentException $func is no valid callable / lambda expression.
+     * @throws ArgumentNullException $func is (null).
+     */
+    public static function using($func, IDisposable $obj = null) {
+        if (null === $func) {
+            throw new ArgumentNullException('func');
+        }
+
+        $func = static::asCallable($func);
+
+        try {
+            return \call_user_func_array($func,
+                                         \array_merge([$obj],
+                                                      \array_slice(\func_get_args(), 2)));
+        }
+        finally {
+            if (null !== $obj) {
+                $obj->dispose();
+            }
+        }
     }
 
     /**

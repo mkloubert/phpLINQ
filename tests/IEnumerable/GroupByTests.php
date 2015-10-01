@@ -115,13 +115,13 @@ return \groupByKeySelectorFunc($x);
             foreach (static::sequenceListFromArray([true, 5979, '', 'TM', false, '23979', 'MK', null]) as $seq) {
                 /* @var IEnumerable $seq */
 
-                $items = static::sequenceToArray($seq->groupBy($keySelector));
+                $items = static::sequenceToArray($seq->groupBy($keySelector), false);
 
                 $this->assertEquals(4, count($items));
-                $this->assertEquals('other' , $items[0]->key());
-                $this->assertEquals('number', $items[1]->key());
-                $this->assertEquals('empty' , $items[2]->key());
-                $this->assertEquals('string', $items[3]->key());
+                $this->assertSame('other' , $items[0]->key());
+                $this->assertSame('number', $items[1]->key());
+                $this->assertSame('empty' , $items[2]->key());
+                $this->assertSame('string', $items[3]->key());
 
                 $otherItems = static::sequenceToArray($items[0]->getIterator());
                 $numberItems = static::sequenceToArray($items[1]->getIterator());
