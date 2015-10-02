@@ -90,6 +90,13 @@ abstract class ArrayCollectionBase extends Enumerable implements IReadOnlyCollec
     /**
      * {@inheritDoc}
      */
+    public final function isEmpty() : bool {
+        return \count($this->_items) < 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isFixedSize() : bool {
         return false;
     }

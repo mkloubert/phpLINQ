@@ -40,9 +40,97 @@ use \System\Collections\IEnumerable;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IString extends IEnumerable, IValueWrapper {
+interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper {
+    /**
+     * Returns a formatted string by using that instance as format string.
+     *
+     * @param mixed ...$arg One or more argument for the format string.
+     *
+     * @return IString The formatted string.
+     */
+    function __invoke();
+
+
+    /**
+     * Returns that string as mutable version.
+     *
+     * @return IString Mutable string.
+     */
+    function asMutable() : IString;
+
     /**
      * {@inheritDoc}
      */
     function getWrappedValue() : string;
+
+    /**
+     * Gets if the string is mutable or not.
+     *
+     * @return bool Is mutable or not.
+     */
+    function isMutable() : bool;
+
+    /**
+     * Checks if that string contains whitespaces only.
+     *
+     * @param string $character_mask The custom list of whitespace characters to use.
+     *
+     * @return bool Contains whitespaces only or not.
+     */
+    function isWhitespace($character_mask = null) : bool;
+
+    /**
+     * Gets the length of the string.
+     *
+     * @return int The length.
+     */
+    function length() : int;
+
+    /**
+     * Converts the string to a char array.
+     *
+     * @return string[] The string as char array.
+     */
+    function toCharArray() : array;
+
+    /**
+     * Returns a version of that string with lowercase chars.
+     *
+     * @return IString The (new) string.
+     */
+    function toLower() : IString;
+
+    /**
+     * Returns a version of that string with uppercase chars.
+     *
+     * @return IString The (new) string.
+     */
+    function toUpper() : IString;
+
+    /**
+     * Strip whitespace (or other characters) from the beginning and end of the string.
+     *
+     * @param string $character_mask The custom list of characters to strip.
+     *
+     * @return IString The (new) string.
+     */
+    function trim($character_mask = null) : IString;
+
+    /**
+     * Strip whitespace (or other characters) from the end of the string.
+     *
+     * @param string $character_mask The custom list of characters to strip.
+     *
+     * @return IString The (new) string.
+     */
+    function trimEnd($character_mask = null) : IString;
+
+    /**
+     * Strip whitespace (or other characters) from the beginning of the string.
+     *
+     * @param string $character_mask The custom list of characters to strip.
+     *
+     * @return IString The (new) string.
+     */
+    function trimStart($character_mask = null) : IString;
 }

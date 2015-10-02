@@ -40,7 +40,7 @@ namespace System;
  */
 class Object implements IObject {
     /**
-     * Object::toString()
+     * {@inheritDoc}
      */
     public final function __toString() {
         return $this->toString()

@@ -146,7 +146,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return IString The sequence as string.
      */
-    function concatToString($defValue = '') : IString;
+    function concatToString($defValue = '');
 
     /**
      * Concats the items of that sequence with a list of values.
@@ -276,6 +276,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function firstOrDefault($predicateOrDefValue = null, $defValue = null, &$found = false);
 
     /**
+     * Returns a formatted string by using the elements of that sequence as arguments
+     * for the format string.
+     *
+     * @param string $format The format string.
+     *
+     * @return IString The formatted string.
+     */
+    function formatAsString($format) : IString;
+
+    /**
      * Groups the items of that sequence.
      *
      * @param callable $keySelector The key selector.
@@ -366,7 +376,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return IString The sequence as string.
      */
-    function joinToString($separator = null, $defValue = '') : IString;
+    function joinToString($separator = null, $defValue = '');
 
     /**
      * Joins all items of that sequence to one string by using a separator.
@@ -376,7 +386,7 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      *
      * @return IString The sequence as string.
      */
-    function joinToStringCallback($separatorFactory = null, $defValue = '') : IString;
+    function joinToStringCallback($separatorFactory = null, $defValue = '');
 
     /**
      * Returns the last matching value of that sequence.

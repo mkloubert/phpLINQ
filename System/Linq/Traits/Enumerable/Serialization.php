@@ -29,44 +29,60 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Linq\Traits\Enumerable;
+
+use \System\ClrString;
+use \System\IString;
 
 
 /**
- * Describes an object.
+ * Serialization operations for \System\Linq\Enumerable class.
  *
- * @package System
+ * @package System\Linq\Traits\Enumerable
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject {
+trait Serialization {
     /**
-     * Returns the string representation of that object.
-     *
-     * @return string The string representation.
+     * {@inheritDoc}
      */
-    function __toString();
-
-
-    /**
-     * Compares that object with another.
-     *
-     * @param mixed $other The other object / value.
-     *
-     * @return bool Are equal or not.
-     */
-    function equals($other) : bool;
+    public function serialize() : string {
+        return \serialize($this->toArray(true));
+    }
 
     /**
-     * Gets the type of that object.
-     *
-     * @return \ReflectionObject The type.
+     * {@inheritDoc}
      */
-    function getType() : \ReflectionObject;
+    public final function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString {
+        if (1 === \func_num_args()) {
+            if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
+                // swap values
+
+                $options              = $keySelectorOrOptions;
+                $keySelectorOrOptions = null;
+            }
+        }
+        else if (2 === \func_num_args()) {
+            if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
+                $depth                = $options;
+                $options              = $keySelectorOrOptions;
+                $keySelectorOrOptions = null;
+            }
+        }
+
+        $keySelectorOrOptions = static::asCallable($keySelectorOrOptions);
+        if (null === $keySelectorOrOptions) {
+            // default
+            $keySelectorOrOptions = true;
+        }
+
+        return new ClrString(\json_encode($this->toArray($keySelectorOrOptions),
+                                          $options, $depth));
+    }
 
     /**
-     * Returns the string representation of that object.
-     *
-     * @return IString The string representation of that object.
+     * {@inheritDoc}
      */
-    function toString() : IString;
+    public function unserialize($str) {
+        $this->__construct(static::asIterator(\unserialize($str), true));
+    }
 }

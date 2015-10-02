@@ -50,7 +50,6 @@ use \System\Collections\KeySelectorIterator;
 use \System\Collections\KeyAndValueSelectorIterator;
 use \System\Collections\Set;
 use \System\ClrString;
-use \System\IString;
 use \System\Object;
 
 
@@ -62,12 +61,9 @@ use \System\Object;
  */
 class Enumerable extends Object implements IEnumerable {
     use \System\Linq\Traits\Enumerable\Factories;
-
-
-    /**
-     * @var \Iterator
-     */
-    protected $_i;
+    use \System\Linq\Traits\Enumerable\Iterator;
+    use \System\Linq\Traits\Enumerable\Serialization;
+    use \System\Linq\Traits\Enumerable\Strings;
 
 
     /**
@@ -314,13 +310,6 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function concatToString($defValue = '') : IString {
-        return $this->joinToString('', $defValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function concatValues() : IEnumerable {
         return $this->concat(\func_get_args());
     }
@@ -343,31 +332,6 @@ class Enumerable extends Object implements IEnumerable {
         return $this->iterateWithItemContext(function($x, IEachItemContext $ctx) {
                                                  $ctx->result($ctx->index() + 1);
                                              }, 0);
-    }
-
-    /**
-     * Creates a new instance from an item list.
-     *
-     * @param mixed $items The initial values.
-     *
-     * @return static
-     */
-    public static function create($items = null) {
-        return new self(static::asIterator($items, true));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final static function createEnumerable($items = null) : IEnumerable {
-        return new self(static::asIterator($items, true));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function current() {
-        return $this->_i->current();
     }
 
     /**
@@ -554,28 +518,6 @@ class Enumerable extends Object implements IEnumerable {
                                                  $ctx->result($x);
                                                  $ctx->cancel(true);
                                              }, $defValue);
-    }
-
-    /**
-     * Creates a new sequence from a JSON string.
-     *
-     * @param mixed $json The JSON data.
-     *
-     * @return static
-     */
-    public static function fromJson($json) {
-        return static::create(\json_decode($json, true));
-    }
-
-    /**
-     * Creates a new instance from a list of values.
-     *
-     * @param mixed ...$value The initial values.
-     *
-     * @return static
-     */
-    public static function fromValues() {
-        return static::create(\func_get_args());
     }
 
     /**
@@ -823,45 +765,6 @@ class Enumerable extends Object implements IEnumerable {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public final function joinToString($separator = null, $defValue = '') : IString {
-        return $this->joinToStringCallback(function() use ($separator) {
-                                               return $separator;
-                                           }, $defValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function joinToStringCallback($separatorFactory = null, $defValue = '') : IString {
-        if (null === $separatorFactory) {
-            $separatorFactory = function() {
-                return '';
-            };
-        }
-
-        $separatorFactory = static::asCallable($separatorFactory);
-
-        $result = $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use ($separatorFactory) {
-            $str = $ctx->result();
-
-            if (!$ctx->isFirst()) {
-                $str .= $separatorFactory($x, $ctx);
-            }
-            else {
-                $str = '';
-            }
-
-            $str .= ClrString::valueToString($x);
-
-            $ctx->result($str);
-        }, $defValue);
-
-        return new ClrString($result);
-    }
-
-    /**
      * Iterates over that sequence by using an item context.
      *
      * @param callable $action The action to invoke for each item.
@@ -900,13 +803,6 @@ class Enumerable extends Object implements IEnumerable {
         }
 
         return $result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function key() {
-        return $this->_i->key();
     }
 
     /**
@@ -969,13 +865,6 @@ class Enumerable extends Object implements IEnumerable {
                                     return $comparer($result, $curItem) > 0 ? $curItem
                                                                             : $result;
                                 }, $defValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function next() {
-        $this->_i->next();
     }
 
     /**
@@ -1117,65 +1006,6 @@ class Enumerable extends Object implements IEnumerable {
     }
 
     /**
-     * Creates a sequence with a range of numbers.
-     *
-     * @param number $start The start value.
-     * @param int $count The number of items.
-     * @param number|callable $increaseBy The increase value or the function that provides that value.
-     *
-     * @return IEnumerable The new sequence.
-     *
-     * @throws ArgumentOutOfRangeException $count is less than 0.
-     */
-    public final static function range($start, int $count, $increaseBy = 1) : IEnumerable {
-        if ($count < 0) {
-            throw new ArgumentOutOfRangeException($count, 'count');
-        }
-
-        $increaseByFunc = $increaseBy;
-        if (!static::isCallable($increaseByFunc)) {
-            $increaseByFunc = function() use ($increaseBy) {
-                return $increaseBy;
-            };
-        }
-        else {
-            $increaseByFunc = static::asCallable($increaseByFunc);
-        }
-
-        return static::createEnumerable(static::rangeInner($start, $count, $increaseByFunc));
-    }
-
-    /**
-     * @see Enumerable::range()
-     */
-    protected static function rangeInner($start, int $count, callable $increaseByFunc) {
-        $result = $start;
-
-        for ($i = 0; $i < $count; $i++) {
-            $currentValue = $result;
-
-            yield $result;
-
-            $result += $increaseByFunc($currentValue, $i);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function reset() : IEnumerable {
-        $this->resetInner();
-        return $this;
-    }
-
-    /**
-     * Enumerable::reset()
-     */
-    protected function resetInner() {
-        $this->_i->rewind();
-    }
-
-    /**
      * {@inheritDoc}
      */
     public final function reverse() : IOrderedEnumerable {
@@ -1183,13 +1013,6 @@ class Enumerable extends Object implements IEnumerable {
                                   return \PHP_INT_MAX - $ctx->index();
                               },
                               null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function rewind() {
-        // deactivated
     }
 
     /**
@@ -1313,13 +1136,6 @@ class Enumerable extends Object implements IEnumerable {
         }
 
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function serialize() : string {
-        return \serialize($this->toArray(true));
     }
 
     /**
@@ -1551,36 +1367,6 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function toJson($keySelectorOrOptions = null, int $options = 0, int $depth = 512) : IString {
-        if (1 === \func_num_args()) {
-            if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
-                // swap values
-
-                $options              = $keySelectorOrOptions;
-                $keySelectorOrOptions = null;
-            }
-        }
-        else if (2 === \func_num_args()) {
-            if ((null !== $keySelectorOrOptions) && !static::isCallable($keySelectorOrOptions)) {
-                $depth                = $options;
-                $options              = $keySelectorOrOptions;
-                $keySelectorOrOptions = null;
-            }
-        }
-
-        $keySelectorOrOptions = static::asCallable($keySelectorOrOptions);
-        if (null === $keySelectorOrOptions) {
-            // default
-            $keySelectorOrOptions = true;
-        }
-
-        return new ClrString(\json_encode($this->toArray($keySelectorOrOptions),
-                                          $options, $depth));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function toList($equalityComparer = null, $itemValidator = null) : IList {
         return new Collection($this, $equalityComparer, $itemValidator);
     }
@@ -1648,13 +1434,6 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public function valid() {
-        return $this->_i->valid();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function where($predicate) : IEnumerable {
         if (null === $predicate) {
             throw new ArgumentNullException('predicate');
@@ -1701,13 +1480,6 @@ class Enumerable extends Object implements IEnumerable {
      */
     public final function withNewKeysAndValues($keySelector, $valueSelector) : IEnumerable {
         return static::createEnumerable(new KeyAndValueSelectorIterator($this, $keySelector, $valueSelector));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function unserialize($str) {
-        $this->__construct(static::asIterator(\unserialize($str), true));
     }
 
     /**

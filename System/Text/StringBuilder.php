@@ -29,44 +29,60 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Text;
+
+use \System\ClrString;
+use \System\IString;
 
 
 /**
- * Describes an object.
+ * A mutable string.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject {
+class StringBuilder extends ClrString {
     /**
-     * Returns the string representation of that object.
-     *
-     * @return string The string representation.
+     * {@inheritDoc}
      */
-    function __toString();
-
-
-    /**
-     * Compares that object with another.
-     *
-     * @param mixed $other The other object / value.
-     *
-     * @return bool Are equal or not.
-     */
-    function equals($other) : bool;
+    public final function asMutable() : IString {
+        return $this;
+    }
 
     /**
-     * Gets the type of that object.
-     *
-     * @return \ReflectionObject The type.
+     * {@inheritDoc}
      */
-    function getType() : \ReflectionObject;
+    public final function clear() : IString {
+        $this->_wrappedValue = '';
+
+        return $this;
+    }
 
     /**
-     * Returns the string representation of that object.
-     *
-     * @return IString The string representation of that object.
+     * {@inheritDoc}
      */
-    function toString() : IString;
+    public final function isMutable() : bool {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function transformWrappedValue($newValue) : IString {
+        $this->_wrappedValue = static::valueToString($newValue);
+
+        $curKey = $this->_i->key();
+        $this->updateStringIterator();
+
+        // try to move to same position
+        while ($this->valid()) {
+            if ($this->key() === $curKey) {
+                break;
+            }
+
+            $this->next();
+        }
+
+        return $this;
+    }
 }

@@ -29,44 +29,72 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Linq\Traits\Enumerable;
+
+use \System\ClrString;
+use \System\IString;
+use \System\Collections\IEachItemContext;
 
 
 /**
- * Describes an object.
+ * String methods for \System\Linq\Enumerable class.
  *
- * @package System
+ * @package System\Linq\Traits\Enumerable
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject {
+trait Strings {
     /**
-     * Returns the string representation of that object.
-     *
-     * @return string The string representation.
+     * {@inheritDoc}
      */
-    function __toString();
-
-
-    /**
-     * Compares that object with another.
-     *
-     * @param mixed $other The other object / value.
-     *
-     * @return bool Are equal or not.
-     */
-    function equals($other) : bool;
+    public final function concatToString($defValue = '') {
+        return $this->joinToString('', $defValue);
+    }
 
     /**
-     * Gets the type of that object.
-     *
-     * @return \ReflectionObject The type.
+     * {@inheritDoc}
      */
-    function getType() : \ReflectionObject;
+    public final function formatAsString($format) : IString {
+        return ClrString::formatArray($format, $this);
+    }
 
     /**
-     * Returns the string representation of that object.
-     *
-     * @return IString The string representation of that object.
+     * {@inheritDoc}
      */
-    function toString() : IString;
+    public final function joinToString($separator = null, $defValue = '') {
+        return $this->joinToStringCallback(function() use ($separator) {
+                                                return $separator;
+                                           }, $defValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function joinToStringCallback($separatorFactory = null, $defValue = '') {
+        if (null === $separatorFactory) {
+            $separatorFactory = function() {
+                return '';
+            };
+        }
+
+        $separatorFactory = static::asCallable($separatorFactory);
+
+        $result = $this->iterateWithItemContext(function($x, IEachItemContext $ctx) use (&$hasItems, $separatorFactory) {
+                                                    $hasItems = true;
+
+                                                    $str = $ctx->result();
+
+                                                    if (!$ctx->isFirst()) {
+                                                        $str .= $separatorFactory($x, $ctx);
+                                                    }
+                                                    else {
+                                                        $str = '';
+                                                    }
+
+                                                    $str .= ClrString::valueToString($x);
+
+                                                    $ctx->result($str);
+                                                }, $defValue);
+
+        return ClrString::asString($result, false);
+    }
 }

@@ -29,44 +29,71 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+namespace System\Linq\Traits\Enumerable;
+
+use \System\Collections\IEnumerable;
 
 
 /**
- * Describes an object.
+ * The \Iterator part of \System\Linq\Enumerable class.
  *
- * @package System
+ * @package System\Linq\Traits\Enumerable
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject {
+trait Iterator {
     /**
-     * Returns the string representation of that object.
-     *
-     * @return string The string representation.
+     * @var \Iterator
      */
-    function __toString();
+    protected $_i;
 
 
     /**
-     * Compares that object with another.
-     *
-     * @param mixed $other The other object / value.
-     *
-     * @return bool Are equal or not.
+     * {@inheritDoc}
      */
-    function equals($other) : bool;
+    public function current() {
+        return $this->_i->current();
+    }
 
     /**
-     * Gets the type of that object.
-     *
-     * @return \ReflectionObject The type.
+     * {@inheritDoc}
      */
-    function getType() : \ReflectionObject;
+    public function key() {
+        return $this->_i->key();
+    }
 
     /**
-     * Returns the string representation of that object.
-     *
-     * @return IString The string representation of that object.
+     * {@inheritDoc}
      */
-    function toString() : IString;
+    public function next() {
+        $this->_i->next();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function reset() : IEnumerable {
+        $this->resetInner();
+        return $this;
+    }
+
+    /**
+     * Enumerable::reset()
+     */
+    protected function resetInner() {
+        $this->_i->rewind();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function rewind() {
+        // deactivated
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function valid() {
+        return $this->_i->valid();
+    }
 }
