@@ -1,51 +1,83 @@
 <documentation>
+    <languages>
+        <language id="en"></language>
+        <language id="de"></language>
+    </languages>
+
     <classes>
+        <class name="System.IObject">
+            <summary lang="de">Beschreibt ein Objekt.</summary>
+        </class>
+
+        <class name="System.Object">
+            <summary>A common list.</summary>
+            <summary lang="de">Ein allgemeines Objekt.</summary>
+        </class>
+
+        <class name="System.Collections.Collection">
+            <summary lang="de">Eine allgemeine Liste.</summary>
+        </class>
+
+        <class name="System.Collections.Dictionary">
+            <summary lang="de">Eine Auflistung von Schlüsseln und Werten.</summary>
+        </class>
+
+        <class name="System.Collections.IDictionary">
+            <summary lang="de">Beschreibt eine Auflistung von Schlüsseln und Werten.</summary>
+        </class>
+
         <class name="System.Collections.IEnumerable">
-            <summary>Describes a sequence.</summary>
             <summary lang="de">Beschreibt eine Sequenz.</summary>
+        </class>
+
+        <class name="System.Collections.IList">
+            <summary lang="de">Beschreibt eine Liste.</summary>
 
             <methods>
-                <method name="appendToArray">
-                    <summary>Appends the items of that sequence to an array (object).</summary>
-                    <summary lang="de">Fügt die Elemente dieser Sequenz einem Array bzw. einem Arrayobjekt hinzu.</summary>
+                <method name="add">
+                    <summary lang="de">Fügt ein neues Element hinzu.</summary>
+                </method>
 
-                    <parameters>
-                        <param name="arr" isReference="true">
-                            <summary>The target array.</summary>
-                            <summary lang="de">Das Ziel-Array(objekt).</summary>
+                <method name="addItems">
+                    <summary lang="de">Fügt die Elemente einer Sequenz hinzu.</summary>
+                </method>
 
-                            <types>
-                                <type>array</type>
-                                <type>\ArrayAccess</type>
-                            </types>
-                        </param>
+                <method name="addRange">
+                    <summary lang="de">Fügt eine Liste von Elementen hinzu.</summary>
+                </method>
 
-                        <param name="withKeys"
-                               isOptional="true"
-                               default="false">
+                <method name="clear">
+                    <summary lang="de">Entfernt alle Elemente.</summary>
+                </method>
 
-                            <summary>Also apply keys (@true) or not (@false).</summary>
-                            <summary lang="de">Zusätzlich die Schlüssel dieser Sequenz übernehmen (@true) oder automatische Schlüssel erzeugen (@false).</summary>
+                <method name="insert">
+                    <summary lang="de">Fügt ein Element an eine bestimmte Stelle der Liste ein.</summary>
+                </method>
 
-                            <types>
-                                <type>bool</type>
-                            </types>
-                        </param>
-                    </parameters>
+                <method name="remove">
+                    <summary lang="de">Entfernt ein bestimmtes Element.</summary>
+                </method>
 
-                    <result isThis="true">
-                        <types>
-                            <type>\System.Collections.IEnumerable</type>
-                        </types>
-                    </result>
-
-                    <examples>
-                        <example>
-                            <title></title>
-                        </example>
-                    </examples>
+                <method name="removeAt">
+                    <summary lang="de">Entfernt ein Element an einer bestimmten Stelle.</summary>
                 </method>
             </methods>
+        </class>
+
+        <class name="System.Collections.ISet">
+            <summary lang="de">Beschreibt eine Menge von Werten.</summary>
+        </class>
+
+        <class name="System.Collections.Set">
+            <summary lang="de">Beschreibt eine allgemeine Menge von Werten.</summary>
+        </class>
+
+        <class name="System.Linq.Enumerable">
+            <summary lang="de">Eine Sequenz.</summary>
+        </class>
+
+        <class name="System.Linq.Traits.Enumerable.Factories">
+            <summary lang="de">Factory-Methoden für die \System\Linq\Enumerable-Klasse.</summary>
         </class>
     </classes>
 </documentation>

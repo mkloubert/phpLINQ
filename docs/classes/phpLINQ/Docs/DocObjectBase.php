@@ -33,6 +33,87 @@ namespace phpLINQ\Docs;
 
 
 abstract class DocObjectBase {
+    protected function findXmlNodeByLanguage(
+        $nodeName,
+        $defXml = null,
+        \SimpleXMLElement $parentNode = null,
+        Language $lang = null)
+    {
+        $nodeName = \trim($nodeName);
+        if ('' === $nodeName) {
+            $nodeName = null;
+        }
 
+        $langId = null;
+        if (null !== $lang) {
+            $langId = $lang->id();
+        }
+
+        $result = null;
+
+        if (null !== $parentNode) {
+            foreach ($parentNode->children() as $childNode) {
+                if (!$childNode instanceof \SimpleXMLElement) {
+                    continue;
+                }
+
+                if ($nodeName !== $childNode->getName()) {
+                    continue;
+                }
+
+                $nodeLang = Language::normalizeId($childNode['lang']);
+                if ($nodeLang !== $langId) {
+                    if (null !== $nodeLang) {
+                        continue;
+                    }
+                }
+
+                $result = $childNode;
+            }
+
+            if (null === $result) {
+                if (!$defXml instanceof \SimpleXMLElement) {
+                    $defXml = \trim($defXml);
+                    if ('' !== $defXml) {
+                        $result = \simplexml_load_string($defXml);
+                    }
+                }
+                else {
+                    $result = $defXml;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function parseForHtmlOutput($str) {
+        $str = \strval($str);
+
+        $str = \str_ireplace("\t", '    ', $str);
+        $str = \str_ireplace("\r", ''    , $str);
+
+        return \htmlentities($str);
+    }
+
+    protected function parseNamespace($ns) {
+        $ns = \trim($ns);
+
+        while (0 === stripos($ns, "\\")) {
+            $ns = \trim(\substr($ns, 1));
+        }
+
+        while ((strlen($ns) > 0) &&
+               ("\\" === \substr($ns, -1))) {
+
+            $ns = \trim(\substr($ns, 0, \strlen($ns) - 1));
+        }
+
+        if ('' !== $ns) {
+            $ns = \str_ireplace("\\", '.', $ns);
+        }
+
+        return '' !== $ns ? $ns : null;
+    }
 }
 

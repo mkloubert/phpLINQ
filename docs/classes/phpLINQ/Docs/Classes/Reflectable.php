@@ -31,11 +31,18 @@
 
 namespace phpLINQ\Docs\Classes;
 
+use \phpDocumentor\Reflection\DocBlock;
 use \phpLINQ\Docs\Documentable;
+use \phpLINQ\Docs\Language;
 use \phpLINQ\Docs\Project;
+use \phpLINQ\Docs\TemplateHandler;
+use \phpLINQ\Docs\Type_;
 
 
 abstract class Reflectable extends Documentable {
+    use TemplateHandler;
+
+
     private $_reflector;
 
 
@@ -47,9 +54,48 @@ abstract class Reflectable extends Documentable {
 
 
     /**
+     * @return DocBlock
+     */
+    public function docBlock() {
+        return new DocBlock($this->_reflector);
+    }
+
+    protected function findLinkForClass(\ReflectionClass $rc, Language $lang = null) {
+        $result = null;
+
+        $type = Type_::fromClass($rc, $lang, $this->project());
+        if (null !== $type) {
+            $result = $type->link();
+        }
+
+        return $result;
+    }
+
+    public function footer() {
+        return $this->project()->footer();
+    }
+
+    public function header() {
+        return $this->project()->header();
+    }
+
+    /**
      * @return \Reflector
      */
     public function reflector() {
         return $this->_reflector;
+    }
+
+    public function summary(Language $lang = null) {
+        $doc = $this->docBlock();
+
+        $summary = $this->findXmlNodeByLanguage('summary', null, $this->xml(), $lang);
+        if (null === $summary) {
+            $summary = $doc->getShortDescription();
+        }
+
+        $summary = \trim($summary);
+
+        return '' !== $summary ? $summary : null;
     }
 }

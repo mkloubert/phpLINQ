@@ -39,14 +39,16 @@ spl_autoload_register(function($clsName) {
     if (0 === stripos($clsName, "System\\")) {
         $classDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
     }
-    else if (0 === stripos($clsName, "phpLINQ\\")) {
+    else if ((0 === stripos($clsName, "phpLINQ\\")) ||
+             (0 === stripos($clsName, "phpDocumentor\\"))) {
+
         $classDir = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR);
     }
 
     if (false !== $classDir) {
         $classFile = realpath($classDir . DIRECTORY_SEPARATOR .
-            str_replace("\\", DIRECTORY_SEPARATOR, $clsName) .
-            '.php');
+                              str_replace("\\", DIRECTORY_SEPARATOR, $clsName) .
+                              '.php');
     }
 
     if (false !== $classFile) {
@@ -87,6 +89,19 @@ if (false === $docXml) {
     exit(2);
 }
 
+if (!file_exists($outDir)) {
+    if (!mkdir($outDir, 0777, true)) {
+        exit(3);
+    }
+}
+
+$outDir = realpath($outDir);
+if (!is_dir($outDir)) {
+    exit(4);
+}
 
 $proj = \phpLINQ\Docs\Project::fromXml($docXml);
-$proj->generateDocumentation();
+$proj->baseDir(__DIR__);
+$proj->outDir($outDir);
+
+$proj->generate();

@@ -302,8 +302,8 @@ class OfTypeTests extends TestCaseBase {
             $items = static::sequenceToArray($seq->ofType('string'), false);
 
             $this->assertEquals(2, count($items));
-            $this->assertTrue('2' === $items[0]);
-            $this->assertTrue('4' === $items[1]);
+            $this->assertSame('2', $items[0]);
+            $this->assertSame('4', $items[1]);
 
             foreach ($items as $x) {
                 $this->assertSame('string', gettype($x));

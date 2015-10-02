@@ -55,12 +55,15 @@ use \System\Object;
 
 
 /**
- * Describes a sequence.
+ * A sequence.
  *
  * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class Enumerable extends Object implements IEnumerable {
+    use \System\Linq\Traits\Enumerable\Factories;
+
+
     /**
      * @var \Iterator
      */
@@ -242,62 +245,6 @@ class Enumerable extends Object implements IEnumerable {
 
         return $count > 0 ? ((float)$sum / (float)$count)
                           : $defValue;
-    }
-
-    /**
-     * Builds a sequence with a specific number of random values.
-     *
-     * @param int $count The number of items to create.
-     * @param int|callable|bool $maxOrSeeder The exclusive maximum value (mt_getrandmax() - 1 by default).
-     *                                       If there are only two arguments and that value is a callable
-     *                                       it is set to (null) and its origin value is written to $seeder.
-     * @param int $min The inclusive minimum value (0 by default).
-     * @param callable|bool $seeder The optional function that initializes the random number generator.
-     *                              If this value is (true), a default logic will be used.
-     *
-     * @return IEnumerable The created sequence.
-     *
-     * @throws ArgumentException $seeder is no valid callable / lambda expression.
-     * @throws ArgumentOutOfRangeException $count is less than 0.
-     */
-    public final static function buildRandom(int $count, $maxOrSeeder = null, int $min = 0, $seeder = null) : IEnumerable {
-        if ($count < 0) {
-            throw new ArgumentOutOfRangeException($count, 'count');
-        }
-
-        if (2 === \func_num_args()) {
-            if ((true === $maxOrSeeder) || static::isCallable($maxOrSeeder)) {
-                $seeder      = $maxOrSeeder;
-                $maxOrSeeder = null;
-            }
-        }
-
-        if (true === $seeder) {
-            $rc = new \ReflectionClass(static::class);
-
-            $seeder = $rc->getMethod('seedRandom')->getClosure(null);
-        }
-
-        $seeder = static::asCallable($seeder);
-
-        if (null === $maxOrSeeder) {
-            $maxOrSeeder = \mt_getrandmax();
-        }
-
-        if (null !== $seeder) {
-            $seeder();
-        }
-
-        return static::create(static::buildRandomInner($count, $min, $maxOrSeeder));
-    }
-
-    /**
-     * @see Enumerable::buildRandom()
-     */
-    protected static function buildRandomInner(int $count, int $min, int $max) {
-        for ($i = 0; $i < $count; $i++) {
-            yield \mt_rand($min, $max - 1);
-        }
     }
 
     /**
