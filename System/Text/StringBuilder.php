@@ -68,19 +68,21 @@ class StringBuilder extends ClrString implements IMutableString {
     /**
      * {@inheritDoc}
      */
-    protected function transformWrappedValue($newValue) : IString {
-        $this->_wrappedValue = static::valueToString($newValue);
+    protected function transformWrappedValue($newValue = null) : IString {
+        if (\func_num_args() > 0) {
+            $this->_wrappedValue = static::valueToString($newValue);
 
-        $curKey = $this->_i->key();
-        $this->updateStringIterator();
+            $curKey = $this->_i->key();
+            $this->updateStringIterator();
 
-        // try to move to same position
-        while ($this->valid()) {
-            if ($this->key() === $curKey) {
-                break;
+            // try to move to same position
+            while ($this->valid()) {
+                if ($this->key() === $curKey) {
+                    break;
+                }
+
+                $this->next();
             }
-
-            $this->next();
         }
 
         return $this;

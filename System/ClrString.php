@@ -269,7 +269,25 @@ class ClrString extends Enumerable implements IString {
 
         return $this->transformWrappedValue(\substr($this->_wrappedValue, 0, $startIndex) .
                                             $valueToInsert .
-                                            \substr($this->_wrappedValue, $startIndex + 1));
+                                            \substr($this->_wrappedValue, $startIndex));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function insertArray(int $startIndex, $values) : IString {
+        $argCount = \func_num_args();
+        for ($i = 1; $i < $argCount; $i++) {
+            $valueToInsert = '';
+
+            foreach (Enumerable::create(\func_get_arg($i)) as $v) {
+                $valueToInsert .= static::valueToString($v);
+            }
+
+            $this->_wrappedValue = (string)$this->insert($startIndex, $valueToInsert);
+        }
+
+        return $this->transformWrappedValue();
     }
 
     /**
@@ -288,6 +306,25 @@ class ClrString extends Enumerable implements IString {
 
         return \call_user_func($func,
                                $str, $expr, $offset);
+    }
+
+    /**
+     * Invokes a replace function for that string.
+     *
+     * @param string $oldValue The old value.
+     * @param $newValue The new value.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int &$count The variable were to write down how many replacements happend.
+     *
+     * @return IString The (new) string.
+     */
+    protected final function invokeReplaceFunc($oldValue, $newValue, bool $ignoreCase, &$count) : IString {
+        $func = !$ignoreCase ? "\\str_replace" : "\\str_ireplace";
+
+        return $this->transformWrappedValue(\call_user_func_array($func,
+                                                                  [static::valueToString($oldValue),
+                                                                   static::valueToString($newValue),
+                                                                   $this->_wrappedValue, &$count]));
     }
 
     /**
@@ -504,6 +541,15 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function replace($oldValue, $newValue, bool $ignoreCase = false, &$count = null) : IString {
+        return $this->invokeReplaceFunc($oldValue, $newValue,
+                                        $ignoreCase,
+                                        $count);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function split($delimiter, $limit = null) : IEnumerable {
         $delimiter = static::valueToString($delimiter, false);
         $str = $this->_wrappedValue;
@@ -603,11 +649,15 @@ class ClrString extends Enumerable implements IString {
     /**
      * Transforms the wrapped value.
      *
-     * @param string $newValue The new value.
+     * @param string $newValue The new value. If not defined, nothing will change.
      *
      * @return IString The (new) string.
      */
-    protected function transformWrappedValue($newValue) : IString {
+    protected function transformWrappedValue($newValue = null) : IString {
+        if (\func_num_args() < 1) {
+            $newValue = $this->_wrappedValue;
+        }
+
         $result = new static($newValue);
 
         // try to move to same position

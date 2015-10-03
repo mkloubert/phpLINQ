@@ -134,6 +134,16 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function insert(int $startIndex, $value) : IString;
 
     /**
+     * Inserts a list of values.
+     *
+     * @param $startIndex The zero based start index.
+     * @param mixed ....$values One or more value list to insert.
+     *
+     * @return IString The (new) string.
+     */
+    function insertArray(int $startIndex, $values) : IString;
+
+    /**
      * Gets if the string is mutable or not.
      *
      * @return bool Is mutable or not.
@@ -223,6 +233,18 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function prependFormatArray($format, $args = null) : IString;
+
+    /**
+     * Replaces parts inside that string.
+     *
+     * @param string $oldValue The value value.
+     * @param string $newValue The new value.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int &$count The variable were to write down how many replacements happend.
+     *
+     * @return IString The (new) string.
+     */
+    function replace($oldValue, $newValue, bool $ignoreCase = false, &$count = null) : IString;
 
     /**
      * Splits the string.

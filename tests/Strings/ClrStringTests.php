@@ -213,7 +213,7 @@ class ClrStringTests extends TestCaseBase {
         $this->assertTrue($str->endsWith('e', true));
     }
 
-    public function insertTests() {
+    public function testInsert() {
         $str1 = $this->createInstance('ABC');
 
         $str2 = $this->checkTransformMethod(function(IString $str) {
@@ -223,6 +223,18 @@ class ClrStringTests extends TestCaseBase {
         $str3 = $this->checkTransformMethod(function(IString $str) {
             return $str->insert(2, '-', '?');
         }, 'Ad-?BC', $str2);
+    }
+
+    public function testInsertArray() {
+        $str1 = $this->createInstance('ABC');
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->insertArray(1, ['d']);
+        }, 'AdBC', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->insertArray(2, new ArrayIterator(['-', '?']), 'wurst');
+        }, 'Adwurst-?BC', $str2);
     }
 
     public function testInvoke() {
@@ -376,6 +388,44 @@ class ClrStringTests extends TestCaseBase {
                                                       ->select('$x => \strtoupper($x)')
                                                       ->reverse());
         }, '   ysMk  MKYS 3.0142xyz', $str2);
+    }
+
+    public function testReplace() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->replace('CD', '01');
+        }, 'ab01efg', 'abCDefg');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->replace('cd', '01');
+        }, 'abCDefg', 'abCDefg');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->replace('cD', '01');
+        }, 'abCDefg', 'abCDefg');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->replace('Cd', '01');
+        }, 'abCDefg', 'abCDefg');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->replace('cd', '01', true);
+        }, 'ab01efg', 'abCDefg');
+
+        $this->createInstance('abCDefg')
+             ->replace('CD', 'cd', false, $replacementCount);
+        $this->assertSame(1, $replacementCount);
+
+        $this->createInstance('abCDefg')
+             ->replace('cD', 'cd', false, $replacementCount);
+        $this->assertSame(0, $replacementCount);
+
+        $this->createInstance('abCDefg')
+             ->replace('Cd', 'cd', false, $replacementCount);
+        $this->assertSame(0, $replacementCount);
+
+        $this->createInstance('acdbCDefCdcDg')
+             ->replace('CD', 'cd', true, $replacementCount);
+        $this->assertSame(4, $replacementCount);
     }
 
     public function testSplit() {
