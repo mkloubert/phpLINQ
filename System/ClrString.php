@@ -591,6 +591,39 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function similarity($other, bool $ignoreCase = false, bool $doTrim = false, $character_mask = null) : float {
+        $argCount = \func_num_args();
+
+        $thisString = $this->_wrappedValue;
+        $other      = static::valueToString($other);
+
+        if ($ignoreCase) {
+            $thisString = \strtolower($thisString);
+            $other      = \strtolower($other);
+        }
+
+        if ($doTrim) {
+            $trimString = function($str) use ($argCount, $character_mask) {
+                $args = [$str];
+                if ($argCount > 3) {
+                    $args[] = static::valueToString($character_mask, false);
+                }
+
+                return \call_user_func_array("\\trim", $args);
+            };
+
+            $thisString = $trimString($thisString);
+            $other      = $trimString($other);
+        }
+
+        \similar_text($thisString, $other, $result);
+
+        return (float)$result / 100.0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function split($delimiter, $limit = null) : IEnumerable {
         $delimiter = static::valueToString($delimiter, false);
         $str = $this->_wrappedValue;

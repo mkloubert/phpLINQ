@@ -456,6 +456,36 @@ class ClrStringTests extends TestCaseBase {
         $this->assertSame(4, $replacementCount);
     }
 
+    public function testSimilarity() {
+        $str1 = $this->createInstance('PHP IS GREAT');
+        $str2 = $this->createInstance('WITH MYSQL');
+
+        $this->assertSame(\round(0.272727272727, 4),
+                          \round($str1->similarity($str2), 4));
+        $this->assertSame(\round(0.181818181818, 4),
+                          \round($str2->similarity($str1), 4));
+
+        $this->assertSame(0.0,
+                          $this->createInstance('')
+                               ->similarity($this->createInstance()));
+    }
+
+    public function testSimilarity2() {
+        $str1 = $this->createInstance('PHP is great');
+        $str2 = $this->createInstance('with MySQL');
+
+        $this->assertSame(\round(0.272727272727, 4),
+                          \round($str1->similarity($str2, true), 4));
+        $this->assertSame(\round(0.181818181818, 4),
+                          \round($str2->similarity($str1, true), 4));
+    }
+
+    public function testSimilarity3() {
+        $this->assertSame(0.0,
+                          $this->createInstance('  ')
+                               ->similarity($this->createInstance(), false, true));
+    }
+
     public function testSplit() {
         $str1 = $this->createInstance('A B c D eF ');
 

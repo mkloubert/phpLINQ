@@ -273,6 +273,19 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function replace($oldValue, $newValue, bool $ignoreCase = false, &$count = null) : IString;
 
     /**
+     * Checks the similarity between that string and another.
+     *
+     * @param string $other The other string.
+     * @param bool $ignoreCase Ignore case or not. If (true) chars of strings will be transformed to lowercase.
+     * @param bool $doTrim Trim strings or not.
+     * @param string $character_mask The custom character mask to use for the string operation.
+     *
+     * @return float The similarity (between 0 for 0% and 1 for 100%).
+     *               0 is retured if two strings are empty.
+     */
+    function similarity($other, bool $ignoreCase = false, bool $doTrim = false, $character_mask = null) : float;
+
+    /**
      * Splits the string.
      *
      * @param string $delimiter The delimiter.
