@@ -24,9 +24,9 @@ use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
 use \System\IDisposable;
-use \System\InvalidOperationException;
 use \System\IString;
 use \System\ObjectDisposedException;
+use \System\NotSupportedException;
 
 
 /**
@@ -76,7 +76,7 @@ interface IStream extends IDisposable {
      * @throws ArgumentNullException $target is (null).
      * @throws ArgumentOutOfRangeException $bufferSize is less than 1.
      * @throws IOException Copy operation failed, e.g. not all data could be written to $target.
-     * @throws InvalidOperationException Stream is not readable.
+     * @throws NotSupportedException Stream is not readable.
      * @throws ObjectDisposedException Stream has been disposed.
      * @throws StreamClosedException Stream has been closed.
      */
@@ -97,6 +97,30 @@ interface IStream extends IDisposable {
     function isDisposed() : bool;
 
     /**
+     * Gets the length of the stream.
+     *
+     * @return int The length.
+     *
+     * @throws IOException Operation failed.
+     * @throws NotSupportedException Stream is not seekable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function length() : int;
+
+    /**
+     * Gets the current position of the stream.
+     *
+     * @return int The current position.
+     *
+     * @throws IOException Operation failed.
+     * @throws NotSupportedException Stream is not seekable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function position() : int;
+
+    /**
      * Reads data from the stream
      *
      * @param int $count The number of data to read.
@@ -105,7 +129,7 @@ interface IStream extends IDisposable {
      *
      * @throws ArgumentOutOfRangeException $count / $offset is less than 0.
      * @throws IOException Read operation failed.
-     * @throws InvalidOperationException Stream is not readable.
+     * @throws NotSupportedException Stream is not readable.
      * @throws ObjectDisposedException Stream has been disposed.
      * @throws StreamClosedException Stream has been closed.
      */
@@ -117,11 +141,27 @@ interface IStream extends IDisposable {
      * @return int|null The byte or (null) if no more data is available.
      *
      * @throws IOException Read operation failed.
-     * @throws InvalidOperationException Stream is not readable.
+     * @throws NotSupportedException Stream is not readable.
      * @throws ObjectDisposedException Stream has been disposed.
      * @throws StreamClosedException Stream has been closed.
      */
     function readByte();
+
+    /**
+     * Sets the new position for the stream.
+     *
+     * @param int $offset The offset.
+     * @param int $where s. \fseek()
+     *
+     * @return int The new position.
+     *
+     * @throws ArgumentOutOfRangeException $where is invalid.
+     * @throws IOException Operation failed.
+     * @throws NotSupportedException Stream is not seekable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function seek(int $offset, int $where = \SEEK_SET) : int;
 
     /**
      * Writes to the stream.
@@ -135,8 +175,8 @@ interface IStream extends IDisposable {
      *
      * @throws ArgumentException The combination of $offset and $count is invalid.
      * @throws ArgumentOutOfRangeException $count / $offset is less than 0.
-     * @throws InvalidOperationException Stream is not writable.
      * @throws IOException Write operation failed.
+     * @throws NotSupportedException Stream is not writable.
      * @throws ObjectDisposedException Stream has been disposed.
      * @throws StreamClosedException Stream has been closed.
      */
@@ -147,10 +187,12 @@ interface IStream extends IDisposable {
      *
      * @param int $byte The byte to write.
      *
-     * @throws InvalidOperationException Stream is not writable.
+     * @return bool Byte was written or not.
+     *
      * @throws IOException Write operation failed.
+     * @throws NotSupportedException Stream is not writable.
      * @throws ObjectDisposedException Stream has been disposed.
      * @throws StreamClosedException Stream has been closed.
      */
-    function writeByte(int $byte);
+    function writeByte(int $byte) : bool;
 }

@@ -16,6 +16,7 @@
 
         <testsuite name="Streams">
             <file>Streams/FileStreamTests.php</file>
+            <file>Streams/MemoryStreamTests.php</file>
             <file>Streams/StreamTests.php</file>
         </testsuite>
 

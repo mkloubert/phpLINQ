@@ -27,6 +27,7 @@ use \System\ClrString;
 use \System\DisposableBase;
 use \System\InvalidOperationException;
 use \System\IString;
+use \System\NotSupportedException;
 
 
 /**
@@ -204,6 +205,62 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
+    public final function length() : int {
+        $this->throwIfDisposed();
+        $this->throwIfClosed();
+        $this->throwIfNotSeekable();
+
+        return $this->lengthInner();
+    }
+
+    /**
+     * @see Stream::length()
+     */
+    protected function lengthInner() : int {
+        throw new NotSupportedException('Could not determine length!');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function onDispose(bool $disposing, bool &$isDisposed = false) {
+        if (!$disposing) {
+            return;
+        }
+
+        if (!$this->_closeOnDispose) {
+            return;
+        }
+
+        $this->close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function position() : int {
+        $this->throwIfDisposed();
+        $this->throwIfClosed();
+        $this->throwIfNotSeekable();
+
+        return $this->positionInner();
+    }
+
+    /**
+     * @see Stream::position()
+     */
+    protected function positionInner() : int {
+        $result = \ftell($this->_resource);
+        if (false === $result) {
+            $this->throwIOException('Position could not be determined!');
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function read(int $count) {
         $this->throwIfDisposed();
         $this->throwIfClosed();
@@ -253,16 +310,34 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
-    protected final function onDispose(bool $disposing, bool &$isDisposed = false) {
-        if (!$disposing) {
-            return;
+    public final function seek(int $offset, int $where = \SEEK_SET) : int {
+        $this->throwIfDisposed();
+        $this->throwIfClosed();
+        $this->throwIfNotSeekable();
+
+        switch ($where) {
+            case \SEEK_SET:
+            case \SEEK_CUR:
+            case \SEEK_END:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException($where, 'where');
+                break;
         }
 
-        if (!$this->_closeOnDispose) {
-            return;
+        if (!$this->seekInner($offset, $where)) {
+            $this->throwIOException('Setting new position failed!');
         }
 
-        $this->close();
+        return $this->position();
+    }
+
+    /**
+     * @see Stream::seek()
+     */
+    protected function seekInner(int $offset, int $where) : bool {
+        return 0 === \fseek($this->_resource, $offset, $where);
     }
 
     /**
@@ -317,7 +392,18 @@ class Stream extends DisposableBase implements IStream {
      */
     protected final function throwIfNotReadable() {
         if (!$this->canRead()) {
-            throw new InvalidOperationException('Stream can not be read!');
+            throw new NotSupportedException('Stream can not be read!');
+        }
+    }
+
+    /**
+     * Throws an exception if that stream is not seekable.
+     *
+     * @throws InvalidOperationException Stream cannot be seeked.
+     */
+    protected final function throwIfNotSeekable() {
+        if (!$this->canSeek()) {
+            throw new NotSupportedException('Stream can not be seeked!');
         }
     }
 
@@ -328,14 +414,14 @@ class Stream extends DisposableBase implements IStream {
      */
     protected final function throwIfNotWritable() {
         if (!$this->canWrite()) {
-            throw new InvalidOperationException('Stream can not be written!');
+            throw new NotSupportedException('Stream can not be written!');
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function write($data, $count = null, int $offset = 0) : int {
+    public final function write($data, $count = null, int $offset = 0) : int {
         $this->throwIfDisposed();
         $this->throwIfClosed();
         $this->throwIfNotWritable();
@@ -365,8 +451,13 @@ class Stream extends DisposableBase implements IStream {
             return 0;
         }
 
-        $data = \substr($data, $offset, $count);
+        return $this->writeInner(\substr($data, $offset, $count));
+    }
 
+    /**
+     * @see Stream::write()
+     */
+    protected function writeInner(string $data) : int {
         $result = \fwrite($this->_resource, $data);
 
         if (false === $result) {
@@ -379,7 +470,7 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
-    public final function writeByte(int $byte) {
-        $this->write(\chr($byte));
+    public final function writeByte(int $byte) : bool {
+        return $this->write(\chr($byte)) > 0;
     }
 }

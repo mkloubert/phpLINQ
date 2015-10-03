@@ -46,13 +46,16 @@ class TestClass {
 }
 
 use \System\Linq\Enumerable;
+use \System\IO\IStream;
+use \System\IO\Stream;
+use \System\Object;
 
-$seq = Enumerable::create([3, 4, 1, 5, 2])->order();
+$res = fopen('test.txt', 'r');
 
-$result = [];
-foreach ($seq as $key => $value) {
-    $result[$key] = $value;
-}
+Object::using(function(IStream $s) {
 
-$tc = new TestClass();
-var_dump(is_callable($tc));
+    while (null !== ($data = $s->read(5))) {
+        var_dump($data);
+    }
+
+}, new Stream($res));

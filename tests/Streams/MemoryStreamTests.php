@@ -30,116 +30,38 @@
  **********************************************************************************************************************/
 
 
-use \System\IO\Stream;
+use \System\IO\MemoryStream;
 
 
 /**
- * @see \System\IO\Stream
+ * @see \System\IO\MemoryStream
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class StreamTests extends TestCaseBase {
-    public function test1() {
-        $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
-
-        $this->assertNotFalse($file);
-
-        $res = \fopen($file, 'r');
-
-        $this->assertTrue(\is_resource($res));
-
-        $s = new Stream($res);
+class MemoryStreamTests extends TestCaseBase {
+    public function testWrite() {
+        $ms = new MemoryStream();
         try {
-            $this->assertTrue($s->canRead());
-            $this->assertTrue($s->canSeek());
-            $this->assertFalse($s->canWrite());
+            $this->assertSame(0, $ms->length());
 
-            $arr = [];
+            $this->assertSame(1, $ms->write('A'));
+            $this->assertSame(1, $ms->position());
+            $this->assertSame(1, $ms->length());
 
-            $this->assertSame(ord('a'), $s->readByte());
+            $this->assertSame(2, $ms->write('bD'));
+            $this->assertSame(3, $ms->position());
+            $this->assertSame(3, $ms->length());
 
-            while (null !== ($data = $s->read(5))) {
-                $arr[] = (string)$data;
-            }
+            $this->assertSame(2, $ms->seek(2));
+            $this->assertSame(2, $ms->write('cE'));
+            $this->assertSame(4, $ms->position());
+            $this->assertSame(3, $ms->seek(-1, \SEEK_END));
+            $this->assertSame(4, $ms->length());
 
-            $this->assertEquals(4, count($arr));
-
-            $this->assertSame('01234', $arr[0]);
-            $this->assertSame('56789', $arr[1]);
-            $this->assertSame('ABCDE', $arr[2]);
-            $this->assertSame('F', $arr[3]);
+            $this->assertSame('AbcE', (string)$ms);
         }
         finally {
-            $s->dispose();
-        }
-    }
-
-    public function testSeek1() {
-        $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
-
-        $this->assertNotFalse($file);
-
-        $res = \fopen($file, 'r');
-
-        $this->assertTrue(\is_resource($res));
-
-        $s = new Stream($res);
-        try {
-            $this->assertTrue($s->canRead());
-            $this->assertTrue($s->canSeek());
-            $this->assertFalse($s->canWrite());
-
-            $arr = [];
-
-            $this->assertSame(2, $s->seek(2));
-
-            while (null !== ($data = $s->read(5))) {
-                $arr[] = (string)$data;
-            }
-
-            $this->assertEquals(3, count($arr));
-
-            $this->assertSame('12345', $arr[0]);
-            $this->assertSame('6789A', $arr[1]);
-            $this->assertSame('BCDEF', $arr[2]);
-        }
-        finally {
-            $s->dispose();
-        }
-    }
-
-    public function testSeek2() {
-        $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
-
-        $this->assertNotFalse($file);
-
-        $res = \fopen($file, 'r');
-
-        $this->assertTrue(\is_resource($res));
-
-        $s = new Stream($res);
-        try {
-            $this->assertTrue($s->canRead());
-            $this->assertTrue($s->canSeek());
-            $this->assertFalse($s->canWrite());
-
-            $arr = [];
-
-            $this->assertSame(1, $s->seek(1));
-            $this->assertSame(2, $s->seek(1, \SEEK_CUR));
-
-            while (null !== ($data = $s->read(5))) {
-                $arr[] = (string)$data;
-            }
-
-            $this->assertEquals(3, count($arr));
-
-            $this->assertSame('12345', $arr[0]);
-            $this->assertSame('6789A', $arr[1]);
-            $this->assertSame('BCDEF', $arr[2]);
-        }
-        finally {
-            $s->dispose();
+            $ms->dispose();
         }
     }
 }

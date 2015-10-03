@@ -70,6 +70,18 @@ class FileStream extends Stream {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function lengthInner() : int {
+        $result = \filesize($this->_file);
+        if (false === $result) {
+            $this->throwIOException('Could not determine length!');
+        }
+
+        return $result;
+    }
+
+    /**
      * Opens a file for reading only (mode 'r').
      *
      * @param string $file The path of the file.
