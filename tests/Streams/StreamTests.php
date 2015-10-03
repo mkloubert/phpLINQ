@@ -29,50 +29,48 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-use \System\IO\ResourceIterator;
+
+use \System\IO\Stream;
 
 
 /**
- * @see \System\IO\ResourceIterator
+ * @see \System\IO\Stream
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ResourceIteratorTests extends TestCaseBase {
+class StreamTests extends TestCaseBase {
     public function test1() {
         $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
 
         $this->assertNotFalse($file);
 
+        $res = \fopen($file, 'r');
+
+        $this->assertTrue(\is_resource($res));
+
+        $s = new Stream($res);
         try {
-            $iterator = ResourceIterator::forFile($file, 5);
-        }
-        catch (\Exception $ex) {
-            $thrownEx = $ex;
-        }
+            $this->assertTrue($s->canRead());
+            $this->assertTrue($s->canSeek());
+            $this->assertFalse($s->canWrite());
 
-        $this->assertFalse(isset($thrownEx));
+            $arr = [];
 
-        $this->assertTrue(isset($iterator));
-        $this->assertInstanceOf(ResourceIterator::class, $iterator);
+            $this->assertSame(ord('a'), $s->readByte());
 
-        try {
-            $arr = iterator_to_array($iterator);
+            while (null !== ($data = $s->read(5))) {
+                $arr[] = (string)$data;
+            }
 
             $this->assertEquals(4, count($arr));
 
             $this->assertSame('01234', $arr[0]);
-            $this->assertSame('56789', $arr[5]);
-            $this->assertSame('ABCDE', $arr[10]);
-            $this->assertSame('F', $arr[15]);
+            $this->assertSame('56789', $arr[1]);
+            $this->assertSame('ABCDE', $arr[2]);
+            $this->assertSame('F', $arr[3]);
         }
         finally {
-            $iterator->dispose();
-            $disposedInvoked = true;
+            $s->dispose();
         }
-
-        $this->assertTrue(isset($disposedInvoked));
-        $this->assertTrue($disposedInvoked);
-
-        $this->assertTrue($iterator->isDisposed());
     }
 }

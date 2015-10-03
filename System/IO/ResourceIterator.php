@@ -98,6 +98,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function current() {
+        $this->throwIfDisposed();
+
         return $this->_buffer;
     }
 
@@ -139,6 +141,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function key() {
+        $this->throwIfDisposed();
+
         return $this->_key;
     }
 
@@ -148,6 +152,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * @return bool Operation was successful or not.
      */
     protected final function loadNext() : bool {
+        $this->throwIfDisposed();
+
         $this->_buffer = \fread($this->_resource, $this->_bufferSize);
 
         return false !== $this->_buffer;
@@ -157,6 +163,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function next() {
+        $this->throwIfDisposed();
+
         $this->updateKey();
         $this->loadNext();
     }
@@ -178,6 +186,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function rewind() {
+        $this->throwIfDisposed();
+
         if (null !== $this->_initialKey) {
             $invokeNext = 0 === \fseek($this->_resource, $this->_initialKey);
         }
@@ -194,6 +204,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function seek($offset) {
+        $this->throwIfDisposed();
+
         if (0 === \fseek($this->_resource, $offset)) {
             $this->next();
         }
@@ -205,6 +217,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * @return bool Operation was successful or not.
      */
     protected final function updateKey() : bool {
+        $this->throwIfDisposed();
+
         $this->_key = \ftell($this->_resource);
 
         return false !== $this->_key;
@@ -214,6 +228,8 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
      * {@inheritDoc}
      */
     public final function valid() {
+        $this->throwIfDisposed();
+
         return ('' !== $this->_buffer) &&
                (false !== $this->_buffer);
     }

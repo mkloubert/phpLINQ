@@ -14,6 +14,11 @@
             <file>SerializationTests.php</file>
         </testsuite>
 
+        <testsuite name="Streams">
+            <file>Streams/FileStreamTests.php</file>
+            <file>Streams/StreamTests.php</file>
+        </testsuite>
+
         <testsuite name="System.Collections.IEnumerable">
             <file>IEnumerable/AggregateTests.php</file>
             <file>IEnumerable/AllTests.php</file>

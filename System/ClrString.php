@@ -53,7 +53,7 @@ class ClrString extends Enumerable implements IString {
      *
      * @param mixed $value The value to wrap (as string).
      */
-    public function __construct($value) {
+    public function __construct($value = '') {
         $this->_wrappedValue = static::valueToString($value);
 
         parent::__construct($this->createStringIterator());
@@ -71,7 +71,7 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
-    public function asMutable() : IString {
+    public function asMutable() : IMutableString {
         return new StringBuilder($this->_wrappedValue);
     }
 
@@ -308,6 +308,14 @@ class ClrString extends Enumerable implements IString {
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function startWith($expr) : bool {
+        return 0 === \strpos($this->_wrappedValue,
+                             static::valueToString($expr, false));
     }
 
     /**

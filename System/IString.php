@@ -54,9 +54,9 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     /**
      * Returns that string as mutable version.
      *
-     * @return IString Mutable string.
+     * @return IMutableString Mutable string.
      */
-    function asMutable() : IString;
+    function asMutable() : IMutableString;
 
     /**
      * {@inheritDoc}
@@ -85,6 +85,15 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return int The length.
      */
     function length() : int;
+
+    /**
+     * Checks if that string starts with an expression.
+     *
+     * @param string $expr The expression to check.
+     *
+     * @return bool Starts with expression or not.
+     */
+    function startWith($expr) : bool;
 
     /**
      * Converts the string to a char array.

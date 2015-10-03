@@ -32,6 +32,7 @@
 namespace System\Text;
 
 use \System\ClrString;
+use \System\IMutableString;
 use \System\IString;
 
 
@@ -41,11 +42,11 @@ use \System\IString;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class StringBuilder extends ClrString {
+class StringBuilder extends ClrString implements IMutableString {
     /**
      * {@inheritDoc}
      */
-    public final function asMutable() : IString {
+    public final function asMutable() : IMutableString {
         return $this;
     }
 
