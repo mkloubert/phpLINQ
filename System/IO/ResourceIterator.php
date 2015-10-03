@@ -172,7 +172,7 @@ class ResourceIterator extends DisposableBase implements \SeekableIterator {
     /**
      * {@inheritDoc}
      */
-    protected final function onDispose(bool $disposing, bool &$isDisposed = false) {
+    protected final function onDispose(bool $disposing, bool &$isDisposed) {
         if (!$disposing) {
             return;
         }

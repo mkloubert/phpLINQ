@@ -18,6 +18,7 @@
             <file>Streams/FileStreamTests.php</file>
             <file>Streams/MemoryStreamTests.php</file>
             <file>Streams/StreamTests.php</file>
+            <file>Streams/TempFileTests.php</file>
         </testsuite>
 
         <testsuite name="System.Collections.IEnumerable">

@@ -43,13 +43,12 @@ class FileStream extends Stream {
      * @param string $path The path of the file.
      * @param string $mode The mode
      *
-     * @throws FileNotFoundException File does not exist.
      * @throws IOException File could not be opened.
      */
     public function __construct($path, $mode = 'r+') {
-        $path = ClrString::valueToString($path);
+        $path = ClrString::asString($path);
 
-        $res = \fopen($path, ClrString::valueToString($mode, false));
+        $res = \fopen((string)$path, ClrString::valueToString($mode, false));
         if (false === $res) {
             $this->throwIOException('Could not open file!');
         }

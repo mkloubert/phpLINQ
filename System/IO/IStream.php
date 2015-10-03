@@ -148,6 +148,19 @@ interface IStream extends IDisposable {
     function readByte();
 
     /**
+     * Reads all remaining data.
+     *
+     * @return IString The read data.
+     *
+     * @throws ArgumentOutOfRangeException $bufferSize is less than 1.
+     * @throws IOException Read operation failed.
+     * @throws NotSupportedException Stream is not readable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function readToEnd(int $bufferSize = 1024) : IString;
+
+    /**
      * Sets the new position for the stream.
      *
      * @param int $offset The offset.

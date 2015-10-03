@@ -47,15 +47,24 @@ class TestClass {
 
 use \System\Linq\Enumerable;
 use \System\IO\IStream;
-use \System\IO\Stream;
+use \System\IO\TempFileStream;
 use \System\Object;
 
 $res = fopen('test.txt', 'r');
 
-Object::using(function(IStream $s) {
+$tf = new TempFileStream();
 
-    while (null !== ($data = $s->read(5))) {
-        var_dump($data);
-    }
+Object::using(function(TempFileStream $tf) {
 
-}, new Stream($res));
+    var_dump(file_exists($tf->file())); // true
+
+    var_dump($tf->length()); // 0
+    var_dump($tf->position());  // 0
+
+    var_dump($tf->write('A'));  // 1
+    var_dump($tf->length()); // 0
+    var_dump($tf->position()); // 1
+
+}, $tf);
+
+var_dump(file_exists($tf->file()));

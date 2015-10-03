@@ -24,6 +24,12 @@ use \System\ClrString;
 use \System\IString;
 
 
+/**
+ * A stream that stores the data in the memory.
+ *
+ * @package System\IO
+ * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
+ */
 class MemoryStream extends Stream {
     /**
      * @var string
@@ -89,7 +95,7 @@ class MemoryStream extends Stream {
     /**
      * {@inheritDoc}
      */
-    protected final function onDispose(bool $disposing, bool &$isDisposed = false) {
+    protected final function onDispose(bool $disposing, bool &$isDisposed) {
         if (!$disposing) {
             return;
         }

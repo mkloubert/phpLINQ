@@ -223,7 +223,7 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
-    protected function onDispose(bool $disposing, bool &$isDisposed = false) {
+    protected function onDispose(bool $disposing, bool &$isDisposed) {
         if (!$disposing) {
             return;
         }
@@ -305,6 +305,23 @@ class Stream extends DisposableBase implements IStream {
 
         return null !== $result ? \ord($result[0])
                                 : null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function readToEnd(int $bufferSize = 1024) : IString {
+        if ($bufferSize < 1) {
+            throw new ArgumentOutOfRangeException($bufferSize, 'bufferSize');
+        }
+
+        $result = '';
+
+        while (null !== ($data = $this->read($bufferSize))) {
+            $result .= $data;
+        }
+
+        return new ClrString($result);
     }
 
     /**
