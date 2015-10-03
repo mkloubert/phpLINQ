@@ -74,6 +74,19 @@ class MemoryStream extends Stream {
     }
 
     /**
+     * Normalizes the value for MemoryStream::position()
+     */
+    protected final function normalizePosition() {
+        if ($this->_position < 0) {
+            $this->_position = 0;
+        }
+
+        if ($this->_position >= ($this->length() + 1)) {
+            $this->_position = $this->length();
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected final function onDispose(bool $disposing, bool &$isDisposed = false) {
@@ -102,9 +115,7 @@ class MemoryStream extends Stream {
         $result = \substr($this->_buffer, $this->position(), $count);
 
         $this->_position += $count;
-        if ($this->position() >= $this->length()) {
-            $this->_position = $this->length();
-        }
+        $this->normalizePosition();
 
         return $result;
     }
@@ -127,17 +138,13 @@ class MemoryStream extends Stream {
                 break;
         }
 
-        if ($newPos < 0) {
-            $newPos = 0;
-        }
-
-        if ($newPos >= ($this->length() + 1)) {
-            $newPos = $this->length();
-        }
-
         $this->_position = $newPos;
+        $this->normalizePosition();
+
         return true;
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -163,6 +170,7 @@ class MemoryStream extends Stream {
             }
 
             ++$this->_position;
+            $this->normalizePosition();
         }
 
         return $result;
