@@ -43,6 +43,7 @@
             <file>IEnumerable/ExceptTests.php</file>
             <file>IEnumerable/FirstOrDefaultTests.php</file>
             <file>IEnumerable/FirstTests.php</file>
+            <file>IENumerable/FormatAsStringTests.php</file>
             <file>IEnumerable/GroupByTests.php</file>
             <file>IEnumerable/GroupJoinTests.php</file>
             <file>IEnumerable/IntersectTests.php</file>
