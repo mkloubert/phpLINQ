@@ -76,7 +76,8 @@ class StringBuilder extends ClrString implements IMutableString {
      * {@inheritDoc}
      */
     public final function appendFormatArray($format, $args = null) : IMutableString {
-        return $this->append(ClrString::formatArray($format, $args));
+        return $this->append(\call_user_func_array([ClrString::class, 'formatArray'],
+                                                   \func_get_args()));
     }
 
     /**

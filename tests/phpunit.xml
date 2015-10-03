@@ -21,6 +21,11 @@
             <file>Streams/TempFileTests.php</file>
         </testsuite>
 
+        <testsuite name="Strings">
+            <file>Strings/ClrStringTests.php</file>
+            <file>Strings/StringBuilderTests.php</file>
+        </testsuite>
+
         <testsuite name="System.Collections.IEnumerable">
             <file>IEnumerable/AggregateTests.php</file>
             <file>IEnumerable/AllTests.php</file>
