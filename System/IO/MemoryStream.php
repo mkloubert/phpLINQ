@@ -150,8 +150,6 @@ class MemoryStream extends Stream {
         return true;
     }
 
-
-
     /**
      * {@inheritDoc}
      */

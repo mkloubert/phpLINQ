@@ -438,6 +438,14 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
+    public function toString() : IString {
+        return $this->canRead() ? $this->readToEnd()
+                                : parent::toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function write($data, $count = null, int $offset = 0) : int {
         $this->throwIfDisposed();
         $this->throwIfClosed();
