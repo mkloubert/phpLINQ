@@ -41,4 +41,12 @@ class FormatAsStringTests extends TestCaseBase {
             $this->assertSame('1 4 3 2', (string)$seq->formatAsString('{0} {3} {2} {1}'));
         }
     }
+
+    public function test2() {
+        $now = new DateTime();
+
+        foreach (static::sequenceListFromArray([1, $now, 3, 4]) as $seq) {
+            $this->assertSame('1 4 3 ' . $now->format('Ymdhis'), (string)$seq->formatAsString('{0} {3} {2} {1:Ymdhis}'));
+        }
+    }
 }
