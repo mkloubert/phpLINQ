@@ -213,6 +213,20 @@ class ClrStringTests extends TestCaseBase {
         $this->assertTrue($str->endsWith('e', true));
     }
 
+    public function testIndexOf() {
+        $str = $this->createInstance('012abcdAb345');
+
+        $this->assertSame(3, $str->indexOf('ab'));
+        $this->assertSame(7, $str->indexOf('Ab'));
+        $this->assertSame(-1, $str->indexOf('aB'));
+        $this->assertSame(-1, $str->indexOf('AB'));
+
+        $this->assertSame(3, $str->indexOf('ab', true));
+        $this->assertSame(3, $str->indexOf('Ab', true));
+        $this->assertSame(3, $str->indexOf('aB', true));
+        $this->assertSame(3, $str->indexOf('AB', true));
+    }
+
     public function testInsert() {
         $str1 = $this->createInstance('ABC');
 
@@ -270,6 +284,20 @@ class ClrStringTests extends TestCaseBase {
         $this->assertTrue($str2->isWhitespace());
         $this->assertFalse($str3->isWhitespace());
         $this->assertFalse($str4->isWhitespace());
+    }
+
+    public function testLastIndexOf() {
+        $str = $this->createInstance('012abcdAb345');
+
+        $this->assertSame(3, $str->lastIndexOf('ab'));
+        $this->assertSame(7, $str->lastIndexOf('Ab'));
+        $this->assertSame(-1, $str->lastIndexOf('aB'));
+        $this->assertSame(-1, $str->lastIndexOf('AB'));
+
+        $this->assertSame(7, $str->lastIndexOf('ab', true));
+        $this->assertSame(7, $str->lastIndexOf('Ab', true));
+        $this->assertSame(7, $str->lastIndexOf('aB', true));
+        $this->assertSame(7, $str->lastIndexOf('AB', true));
     }
 
     public function testLength() {

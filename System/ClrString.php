@@ -44,6 +44,12 @@ use \System\Text\StringBuilder;
  */
 class ClrString extends Enumerable implements IString {
     /**
+     * The index value for something that was not found.
+     */
+    const NOT_FOUND_INDEX = -1;
+
+
+    /**
      * @var string
      */
     protected $_wrappedValue;
@@ -153,14 +159,8 @@ class ClrString extends Enumerable implements IString {
      * {@inheritDoc}
      */
     public final function containsString($str, $ignoreCaseOrOffset = false, int $offset = 0) : bool {
-        if (2 === \func_num_args()) {
-            if (\is_int(\func_get_arg(1))) {
-                $offset             = $ignoreCaseOrOffset;
-                $ignoreCaseOrOffset = false;
-            }
-        }
-
-        return false !== $this->invokeFindStringFunc($str, $ignoreCaseOrOffset, $offset);
+        return \call_user_func_array([$this, 'indexOf'],
+                                     \func_get_args()) > static::NOT_FOUND_INDEX;
     }
 
     /**
@@ -255,6 +255,23 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function indexOf($searchFor, $ignoreCaseOrOffset = false, int $offset = 0) : int {
+        if (2 === \func_num_args()) {
+            if (\is_int(\func_get_arg(1))) {
+                $offset             = $ignoreCaseOrOffset;
+                $ignoreCaseOrOffset = false;
+            }
+        }
+
+        $result = $this->invokeFindStringFunc($searchFor, $ignoreCaseOrOffset, $offset, false);
+
+        return false !== $result ? $result
+                                 : static::NOT_FOUND_INDEX;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function insert(int $startIndex, $value) : IString {
         if (($startIndex < 0) || ($startIndex > $this->length())) {
             throw new ArgumentOutOfRangeException($startIndex, 'startIndex');
@@ -296,13 +313,20 @@ class ClrString extends Enumerable implements IString {
      * @param string &$expr The expression to search for.
      * @param bool $ignoreCase Ignore case or not.
      * @param int $offset The offset.
+     * @param bool $findLast Find last occurrence (true) or first (false).
      *
      * @return mixed The result of the invocation.
      */
-    protected final function invokeFindStringFunc(&$expr = null, bool $ignoreCase = false, int $offset = 0) {
+    protected final function invokeFindStringFunc(&$expr = null, bool $ignoreCase = false, int $offset = 0, bool $findLast = false) {
         $expr = static::valueToString($expr);
         $str  = $this->getWrappedValue();
-        $func = !$ignoreCase ? "\\strpos" : "\\stripos";
+
+        if (!$findLast) {
+            $func = !$ignoreCase ? "\\strpos" : "\\stripos";
+        }
+        else {
+            $func = !$ignoreCase ? "\\strrpos" : "\\strripos";
+        }
 
         return \call_user_func($func,
                                $str, $expr, $offset);
@@ -408,6 +432,23 @@ class ClrString extends Enumerable implements IString {
         }
 
         return \strlen($trimmed) < 1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function lastIndexOf($searchFor, $ignoreCaseOrOffset = false, int $offset = 0) : int {
+        if (2 === \func_num_args()) {
+            if (\is_int(\func_get_arg(1))) {
+                $offset             = $ignoreCaseOrOffset;
+                $ignoreCaseOrOffset = false;
+            }
+        }
+
+        $result = $this->invokeFindStringFunc($searchFor, $ignoreCaseOrOffset, $offset, true);
+
+        return false !== $result ? $result
+                                 : static::NOT_FOUND_INDEX;
     }
 
     /**

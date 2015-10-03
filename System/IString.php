@@ -124,6 +124,19 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function getWrappedValue() : string;
 
     /**
+     * Finds the first occurrence of a string inside that string.
+     *
+     * @param string $str The string to search for.
+     * @param bool|int $ignoreCaseOrOffset Ignore case or not.
+     *                                     If only two arguments are submitted and this value is an integer,
+     *                                     it is used as value for $offset and set to default (false).
+     * @param int $offset The custom offset from where to start.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    function indexOf($searchFor, $ignoreCaseOrOffset = false, int $offset = 0) : int;
+
+    /**
      * Inserts a value.
      *
      * @param $startIndex The zero based start index.
@@ -158,6 +171,19 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return bool Contains whitespaces only or not.
      */
     function isWhitespace($character_mask = null) : bool;
+
+    /**
+     * Finds the last occurrence of a string inside that string.
+     *
+     * @param string $str The string to search for.
+     * @param bool|int $ignoreCaseOrOffset Ignore case or not.
+     *                                     If only two arguments are submitted and this value is an integer,
+     *                                     it is used as value for $offset and set to default (false).
+     * @param int $offset The custom offset from where to start.
+     *
+     * @return int The zero based index or -1 if not found.
+     */
+    function lastIndexOf($searchFor, $ignoreCaseOrOffset = false, int $offset = 0) : int;
 
     /**
      * Gets the length of the string.
