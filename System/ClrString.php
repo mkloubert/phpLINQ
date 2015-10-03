@@ -160,11 +160,8 @@ class ClrString extends Enumerable implements IString {
                       ->appendToArray($args);
         }
 
-        $rc  = new \ReflectionClass(static::class);
-        $pfs = $rc->getMethod('parseFormatStringValue')->getClosure(null);
-
         return static::asString(\preg_replace_callback('/{(\d+)(\:[^}]*)?}/i',
-                                                       function($match) use ($args, $pfs) {
+                                                       function($match) use ($args) {
                                                            $i = (int)$match[1];
 
                                                            $format = null;
@@ -172,7 +169,7 @@ class ClrString extends Enumerable implements IString {
                                                                $format = \substr($match[2], 1);
                                                            }
 
-                                                           return \array_key_exists($i, $args) ? $pfs($format, $args[$i])
+                                                           return \array_key_exists($i, $args) ? ClrString::parseFormatStringValue($format, $args[$i])
                                                                                                : $match[0];
                                                        }, static::valueToString($format)));
     }
