@@ -58,6 +58,8 @@ class Object implements IObject {
      * @throws ArgumentException $val is invalid.
      */
     public static function asCallable($val) {
+        $val = static::getRealValue($val);
+
         if (\is_callable($val) || (null === $val)) {
             return $val;
         }
@@ -255,6 +257,8 @@ class Object implements IObject {
      * @return bool Can be executed or not.
      */
     public static function isCallable($val) {
+        $val = static::getRealValue($val);
+
         return \is_callable($val) ||
                static::isLambda($val);
     }
@@ -306,7 +310,7 @@ class Object implements IObject {
             }
         }
 
-        $expr = \trim($expr);
+        $expr = \trim(ClrString::valueToString($expr));
 
         // check for lambda
         if (1 === \preg_match("/^(\\s*)([\\(]?)([^\\)]*)([\\)]?)(\\s*)(=>)/m", $expr, $lambdaMatches)) {

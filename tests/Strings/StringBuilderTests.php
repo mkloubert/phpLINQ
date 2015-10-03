@@ -73,6 +73,8 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertSame($expected, (string)$str2);
         $this->assertSame($expected, $str2->getWrappedValue());
 
+        $this->assertTrue($str2->isMutable());
+
         return $str2;
     }
 

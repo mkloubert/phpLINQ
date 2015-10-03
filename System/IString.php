@@ -59,6 +59,29 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function asMutable() : IMutableString;
 
     /**
+     * Checks if that contains another.
+     *
+     * @param string $str The string to search for.
+     * @param bool|int $ignoreCaseOrOffset Ignore case or not.
+     *                                     If only two arguments are submitted and this value is an integer,
+     *                                     it is used as value for $offset and set to default (false).
+     * @param int $offset The custom offset from where to start.
+     *
+     * @return bool Conatins $str or not.
+     */
+    function containsString($str, $ignoreCaseOrOffset = false, int $offset = 0) : bool;
+
+    /**
+     * Checks if that string ends with an expression.
+     *
+     * @param string $expr The expression to check.
+     * @param bool $ignoreCase Ignore case or not.
+     *
+     * @return bool Ends with expression or not.
+     */
+    function endsWith($expr, bool $ignoreCase = false) : bool;
+
+    /**
      * {@inheritDoc}
      */
     function getWrappedValue() : string;
@@ -87,13 +110,64 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function length() : int;
 
     /**
+     * Pad that string to a certain length with another string (beginning and end).
+     *
+     * @param int $pad_length s. \str_pad()
+     * @param string|null $pad_string s. \str_pad(); if (null), it is converted to ' '
+     *
+     * @return IString The (new) string.
+     */
+    function pad(int $pad_length, $pad_string = null) : IString;
+
+    /**
+     * Pad that string to a certain length with another string (beginning).
+     *
+     * @param int $pad_length s. \str_pad()
+     * @param string|null $pad_string s. \str_pad(); if (null), it is converted to ' '
+     *
+     * @return IString The (new) string.
+     */
+    function padLeft(int $pad_length, $pad_string = null) : IString;
+
+    /**
+     * Pad that string to a certain length with another string (end).
+     *
+     * @param int $pad_length s. \str_pad()
+     * @param string|null $pad_string s. \str_pad(); if (null), it is converted to ' '
+     *
+     * @return IString The (new) string.
+     */
+    function padRight(int $pad_length, $pad_string = null) : IString;
+
+    /**
+     * Splits the string.
+     *
+     * @param string $delimiter The delimiter.
+     * @param int $limit The limit, if defined.
+     *
+     * @return IEnumerable List of IString instances.
+     */
+    function split($delimiter, $limit = null) : IEnumerable;
+
+    /**
+     * Extracts a part from that string.
+     *
+     * @param int $startIndex The start index.
+     * @param int|null $length
+     *
+     * @return IString The (new) string.
+     */
+    function subString(int $startIndex, $length = null) : IString;
+
+    /**
      * Checks if that string starts with an expression.
      *
      * @param string $expr The expression to check.
+     * @param bool $ignoreCase Ignore case or not.
      *
      * @return bool Starts with expression or not.
      */
-    function startWith($expr) : bool;
+    function startsWith($expr, bool $ignoreCase = false) : bool;
 
     /**
      * Converts the string to a char array.

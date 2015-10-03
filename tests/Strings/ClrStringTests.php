@@ -69,6 +69,8 @@ class ClrStringTests extends TestCaseBase {
         $this->assertSame($expected, (string)$str2);
         $this->assertSame($expected, $str2->getWrappedValue());
 
+        $this->assertFalse($str2->isMutable());
+
         return $str2;
     }
 
@@ -86,6 +88,50 @@ class ClrStringTests extends TestCaseBase {
             $this->assertFalse($s1->isMutable());
             $this->assertTrue($s2->isMutable());
         }
+    }
+
+    public function testContainsString() {
+        $str = $this->createInstance('abcdef');
+
+        foreach (['a', 'b', 'c', 'd', 'e', 'f'] as $char) {
+            $this->assertTrue($str->containsString($char));
+            $this->assertFalse($str->containsString(strtoupper($char)));
+        }
+
+        foreach (['a', 'b', 'c', 'd', 'e', 'f'] as $char) {
+            $this->assertTrue($str->containsString($char), true);
+            $this->assertTrue($str->containsString(strtoupper($char), true));
+        }
+
+        $this->assertFalse($str->containsString('a', 1));
+        $this->assertFalse($str->containsString('A', true, 1));
+
+        foreach (['b', 'c', 'd', 'e', 'f'] as $char) {
+            $this->assertTrue($str->containsString($char, 1));
+            $this->assertFalse($str->containsString(strtoupper($char), 1));
+        }
+
+        foreach (['b', 'c', 'd', 'e', 'f'] as $char) {
+            $this->assertTrue($str->containsString($char, true, 1));
+            $this->assertTrue($str->containsString(strtoupper($char), true, 1));
+        }
+    }
+
+    public function testEndsWith() {
+        $str = $this->createInstance('ABCDE');
+
+        $this->assertTrue($str->endsWith('E'));
+        $this->assertTrue($str->endsWith('DE'));
+        $this->assertFalse($str->endsWith('D'));
+        $this->assertFalse($str->endsWith('CD'));
+        $this->assertFalse($str->endsWith('C'));
+        $this->assertFalse($str->endsWith('BC'));
+        $this->assertFalse($str->endsWith('B'));
+        $this->assertFalse($str->endsWith('AB'));
+        $this->assertFalse($str->endsWith('A'));
+
+        $this->assertFalse($str->endsWith('e'));
+        $this->assertTrue($str->endsWith('e', true));
     }
 
     public function testInvoke() {
@@ -133,20 +179,89 @@ class ClrStringTests extends TestCaseBase {
         $this->assertSame(3, $str3->length());
     }
 
+    public function testPad() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->pad(10);
+        }, '    12    ', '12');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->pad(10, 'x');
+        }, 'xxxxABxxxx', 'AB');
+    }
+
+    public function testPadLeft() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->padLeft(10);
+        }, '        12', '12');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->padLeft(10, 'x');
+        }, 'xxxxxxxxAB', 'AB');
+    }
+
+    public function testPadRight() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->padRight(10);
+        }, '12        ', '12');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->padRight(10, 'x');
+        }, 'ABxxxxxxxx', 'AB');
+    }
+
+    public function testSplit() {
+        $str1 = $this->createInstance('A B c D eF ');
+
+        $items1 = static::sequenceToArray($str1->split(' '));
+
+        $this->assertEquals(6, count($items1));
+        foreach (['A', 'B', 'c', 'D', 'eF', ''] as $index => $expected) {
+            $this->assertTrue(isset($items1[$index]));
+            $this->assertInstanceOf(get_class($str1), $items1[$index]);
+            $this->assertSame($expected, (string)$items1[$index]);
+            $this->assertSame($expected, $items1[$index]->getWrappedValue());
+        }
+
+        $str2 = $this->createInstance('a-=-B-=-C-=-D-=-eF-=- ');
+
+        $items2 = static::sequenceToArray($str2->split('-=-', 3));
+
+        $this->assertEquals(3, count($items2));
+        foreach (['a', 'B', 'C-=-D-=-eF-=- '] as $index => $expected) {
+            $this->assertTrue(isset($items2[$index]));
+            $this->assertInstanceOf(get_class($str2), $items2[$index]);
+            $this->assertSame($expected, (string)$items2[$index]);
+            $this->assertSame($expected, $items2[$index]->getWrappedValue());
+        }
+    }
+
     public function testStartsWith() {
         $str = $this->createInstance('ABCDE');
 
-        $this->assertTrue($str->startWith('A'));
-        $this->assertTrue($str->startWith('AB'));
-        $this->assertFalse($str->startWith('Ab'));
-        $this->assertFalse($str->startWith('aB'));
-        $this->assertFalse($str->startWith('ab'));
-        $this->assertFalse($str->startWith('B'));
-        $this->assertFalse($str->startWith('BC'));
-        $this->assertFalse($str->startWith('C'));
-        $this->assertFalse($str->startWith('CD'));
-        $this->assertFalse($str->startWith('D'));
-        $this->assertFalse($str->startWith('DE'));
+        $this->assertTrue($str->startsWith('A'));
+        $this->assertTrue($str->startsWith('AB'));
+        $this->assertFalse($str->startsWith('Ab'));
+        $this->assertFalse($str->startsWith('aB'));
+        $this->assertFalse($str->startsWith('ab'));
+        $this->assertFalse($str->startsWith('B'));
+        $this->assertFalse($str->startsWith('BC'));
+        $this->assertFalse($str->startsWith('C'));
+        $this->assertFalse($str->startsWith('CD'));
+        $this->assertFalse($str->startsWith('D'));
+        $this->assertFalse($str->startsWith('DE'));
+
+        $this->assertFalse($str->startsWith('a'));
+        $this->assertTrue($str->startsWith('a', true));
+    }
+
+    public function testSubString() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->subString(1);
+        }, '123456789', '0123456789');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->subString(2, 3);
+        }, '234', '0123456789');
     }
 
     public function testToLower() {

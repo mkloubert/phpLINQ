@@ -31,6 +31,7 @@
 
 namespace System;
 
+use \System\Collections\IEnumerable;
 use \System\Linq\Enumerable;
 use \System\Text\StringBuilder;
 
@@ -114,6 +115,20 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function containsString($str, $ignoreCaseOrOffset = false, int $offset = 0) : bool {
+        if (2 === \func_num_args()) {
+            if (\is_int(\func_get_arg(1))) {
+                $offset             = $ignoreCaseOrOffset;
+                $ignoreCaseOrOffset = false;
+            }
+        }
+
+        return false !== $this->invokeFindStringFunc($str, $ignoreCaseOrOffset, $offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function count() {
         return \strlen($this->_wrappedValue);
     }
@@ -125,6 +140,25 @@ class ClrString extends Enumerable implements IString {
      */
     protected function createStringIterator() : \Iterator {
         return new \ArrayIterator(\str_split($this->_wrappedValue));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function endsWith($expr, bool $ignoreCase = false) : bool {
+        $expr = static::valueToString($expr);
+
+        return ('' === $expr) ||
+               (($temp = $this->length() - \strlen($expr)) >= 0 &&
+                 false !== $this->invokeFindStringFunc($expr, $ignoreCase, $temp));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function equals($other) : bool {
+        return static::valueToString($other, false) ===
+               $this->getWrappedValue();
     }
 
     /**
@@ -179,6 +213,45 @@ class ClrString extends Enumerable implements IString {
      */
     public final function getWrappedValue() : string {
         return $this->_wrappedValue;
+    }
+
+    /**
+     * Invokes the function for finding a string.
+     *
+     * @param string &$expr The expression to search for.
+     * @param bool $ignoreCase Ignore case or not.
+     * @param int $offset The offset.
+     *
+     * @return mixed The result of the invocation.
+     */
+    protected final function invokeFindStringFunc(&$expr = null, bool $ignoreCase = false, int $offset = 0) {
+        $expr = static::valueToString($expr);
+        $str  = $this->getWrappedValue();
+        $func = !$ignoreCase ? "\\strpos" : "\\stripos";
+
+        return \call_user_func($func,
+                               $str, $expr, $offset);
+    }
+
+    /**
+     * Invokes the \str_pad() function for that string.
+     *
+     * @param int $pad_type s. \str_pad()
+     * @param int $pad_length s. \str_pad()
+     * @param $pad_string s. \str_pad(); (null) will be converted to ' '
+     *
+     * @return IString The (new) string.
+     */
+    protected final function invokeStrPadFunc(int $pad_type, int $pad_length, $pad_string) : IString {
+        $pad_string = static::valueToString($pad_string, false);
+        if (null === $pad_string) {
+            $pad_string = ' ';
+        }
+
+        return $this->transformWrappedValue(\str_pad($this->_wrappedValue,
+                                                     $pad_length,
+                                                     $pad_string,
+                                                     $pad_type));
     }
 
     /**
@@ -288,6 +361,27 @@ class ClrString extends Enumerable implements IString {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public final function pad(int $pad_length, $pad_string = null) : IString {
+        return $this->invokeStrPadFunc(\STR_PAD_BOTH, $pad_length, $pad_string);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function padLeft(int $pad_length, $pad_string = null) : IString {
+        return $this->invokeStrPadFunc(\STR_PAD_LEFT, $pad_length, $pad_string);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function padRight(int $pad_length, $pad_string = null) : IString {
+        return $this->invokeStrPadFunc(\STR_PAD_RIGHT, $pad_length, $pad_string);
+    }
+
+    /**
      * Formats a value for a formatted string.
      *
      * @param string $format The format string for $value.
@@ -316,9 +410,40 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
-    public final function startWith($expr) : bool {
-        return 0 === \strpos($this->_wrappedValue,
-                             static::valueToString($expr, false));
+    public final function split($delimiter, $limit = null) : IEnumerable {
+        $delimiter = static::valueToString($delimiter, false);
+        $str = $this->_wrappedValue;
+
+        if (\func_num_args() < 2) {
+            $result = Enumerable::create(\explode($delimiter, $str));
+        }
+        else {
+            $result = Enumerable::create(\explode($delimiter, $str, $limit));
+        }
+
+        return $result->select(static::format('$x => new \{0}($x)',
+                                              static::class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function startsWith($expr, bool $ignoreCase = false) : bool {
+        return 0 === $this->invokeFindStringFunc($expr, $ignoreCase);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function subString(int $startIndex, $length = null) : IString {
+        if (\func_num_args() < 2) {
+            $newStr = \substr($this->_wrappedValue, $startIndex);
+        }
+        else {
+            $newStr = \substr($this->_wrappedValue, $startIndex, $length);
+        }
+
+        return $this->transformWrappedValue($newStr);
     }
 
     /**
@@ -459,6 +584,8 @@ class ClrString extends Enumerable implements IString {
      * @return string $value as string.
      */
     public static function valueToString($value, bool $nullAsEmpty = true) {
+        $value = static::getRealValue($value);
+
         if (\is_string($value)) {
             return $value;
         }
