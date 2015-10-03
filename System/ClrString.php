@@ -68,6 +68,43 @@ class ClrString extends Enumerable implements IString {
                                    \func_get_args());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public final function append($value) : IString {
+        return $this->appendArray(\func_get_args());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function appendArray($values = null) : IString {
+        $newValue = $this->_wrappedValue;
+
+        foreach (\func_get_args() as $arg) {
+            foreach (Enumerable::create($arg) as $v) {
+                $newValue .= static::valueToString($v);
+            }
+        }
+
+        return $this->transformWrappedValue($newValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function appendFormat($format) : IString {
+        return $this->append(\call_user_func_array([static::class, 'format'],
+                                                   \func_get_args()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function appendFormatArray($format, $args = null) : IString {
+        return $this->append(\call_user_func_array([static::class, 'formatArray'],
+                                                   \func_get_args()));
+    }
 
     /**
      * {@inheritDoc}
@@ -213,6 +250,26 @@ class ClrString extends Enumerable implements IString {
      */
     public final function getWrappedValue() : string {
         return $this->_wrappedValue;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function insert(int $startIndex, $value) : IString {
+        if (($startIndex < 0) || ($startIndex > $this->length())) {
+            throw new ArgumentOutOfRangeException($startIndex, 'startIndex');
+        }
+
+        $valueToInsert = '';
+
+        $argCount = \func_num_args();
+        for ($i = 1; $i < $argCount; $i++) {
+            $valueToInsert .= static::valueToString(\func_get_arg($i));
+        }
+
+        return $this->transformWrappedValue(\substr($this->_wrappedValue, 0, $startIndex) .
+                                            $valueToInsert .
+                                            \substr($this->_wrappedValue, $startIndex + 1));
     }
 
     /**
@@ -405,6 +462,43 @@ class ClrString extends Enumerable implements IString {
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function prepend($value) : IString {
+        return $this->prependArray(\func_get_args());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function prependArray($values = null) : IString {
+        $newValue = $this->_wrappedValue;
+
+        foreach (\func_get_args() as $arg) {
+            $newValue = Enumerable::create($arg)
+                                  ->concatToString() . $newValue;
+        }
+
+        return $this->transformWrappedValue($newValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function prependFormat($format) : IString {
+        return $this->prepend(\call_user_func_array([static::class, 'format'],
+                                                    \func_get_args()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function prependFormatArray($format, $args = null) : IString {
+        return $this->prepend(\call_user_func_array([static::class, 'formatArray'],
+                                                    \func_get_args()));
     }
 
     /**

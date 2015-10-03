@@ -32,7 +32,6 @@
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'ClrStringTests.php';
 
 use \System\IMutableString;
-use \System\Linq\Enumerable;
 use \System\Text\StringBuilder;
 
 
@@ -52,7 +51,6 @@ class StringBuilderTest extends ClrStringTests {
     protected function createInstance($value = '') {
         return new StringBuilder($value);
     }
-
 
     protected function checkTransformMethod(callable $action, $expected, $initialVal = '') {
         /* @var StringBuilder $str1 */
@@ -76,84 +74,6 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertTrue($str2->isMutable());
 
         return $str2;
-    }
-
-    public function testAppend() {
-        $str1 = $this->createInstance();
-
-        $str2 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->append(1);
-        }, '1', $str1);
-
-        $str3 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->append('2');
-        }, '12', $str2);
-
-        $str4 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->append(4.0);
-        }, '124', $str3);
-
-        $str5 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->append('TM');
-        }, '124TM', $str4);
-
-        $str6 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->append(4.5, 'seven');
-        }, '124TM4.5seven', $str5);
-    }
-
-    public function testAppendArray() {
-        $createGenerator = function() {
-            yield 'MK';
-            yield null;
-            yield 'TM';
-        };
-
-        $str1 = $this->createInstance();
-
-        $str2 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->appendArray([1.0]);
-        }, '1', $str1);
-
-        $str3 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->appendArray(new ArrayIterator([2, '3']));
-        }, '123', $str2);
-
-        $str4 = $this->checkTransformMethod(function(IMutableString $str) use ($createGenerator) {
-            return $str->appendArray($createGenerator(),
-                                     Enumerable::create($createGenerator())
-                                               ->reverse());
-        }, '123MKTMTMMK', $str3);
-    }
-
-    public function testAppendFormat() {
-        $str1 = $this->createInstance();
-
-        $str2 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->appendFormat('{2}{0}{1}', 1, 2.3, '0');
-        }, '012.3', $str1);
-    }
-
-    public function testAppendFormatArray() {
-        $createGenerator = function() {
-            yield 'YS';
-            yield 'MK';
-            yield null;
-        };
-
-        $str1 = $this->createInstance('xyz');
-
-        $str2 = $this->checkTransformMethod(function(IMutableString $str) {
-            return $str->appendFormatArray('{2}{0}{3}{1}', [1, 2.0, '3.0', '4']);
-        }, 'xyz3.0142', $str1);
-
-        $str3 = $this->checkTransformMethod(function(IMutableString $str) use ($createGenerator) {
-            return $str->appendFormatArray('   {0}{1}{2}  {4}{3}{5} ',
-                                           $createGenerator(),
-                                           Enumerable::create($createGenerator())
-                                                     ->select('$x => \strtolower($x)')
-                                                     ->reverse());
-        }, 'xyz3.0142   YSMK  mkys ', $str2);
     }
 
     public function testAsMutable() {

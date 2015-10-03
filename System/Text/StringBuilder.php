@@ -47,42 +47,6 @@ class StringBuilder extends ClrString implements IMutableString {
     /**
      * {@inheritDoc}
      */
-    public final function append($value) : IMutableString {
-        return $this->appendArray(\func_get_args());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function appendArray($values = null) : IMutableString {
-        foreach (\func_get_args() as $arg) {
-            foreach (Enumerable::create($arg) as $v) {
-                $this->transformWrappedValue($this->_wrappedValue .= static::valueToString($v));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function appendFormat($format) : IMutableString {
-         return $this->append(\call_user_func_array([ClrString::class, 'format'],
-                                                    \func_get_args()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function appendFormatArray($format, $args = null) : IMutableString {
-        return $this->append(\call_user_func_array([ClrString::class, 'formatArray'],
-                                                   \func_get_args()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final function asMutable() : IMutableString {
         return $this;
     }

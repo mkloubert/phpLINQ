@@ -42,6 +42,44 @@ use \System\Collections\IEnumerable;
  */
 interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper {
     /**
+     * Appends a value.
+     *
+     * @param mixed ...$value One or more value to append.
+     *
+     * @return IString The (new) string.
+     */
+    function append($value) : IString;
+
+    /**
+     * Appends a list of values.
+     *
+     * @param mixed ...$values One or more value lists to append.
+     *
+     * @return IString The (new) string.
+     */
+    function appendArray($values = null) : IString;
+
+    /**
+     * Appends a formatted string.
+     *
+     * @param string $format The format string.
+     * @param mixed ...$arg One or more argument for $format.
+     *
+     * @return IString The (new) string.
+     */
+    function appendFormat($format) : IString;
+
+    /**
+     * Appends a formatted string.
+     *
+     * @param string $format The format string.
+     * @param mixed ...$args One or more argument lists for for $format.
+     *
+     * @return IString The (new) string.
+     */
+    function appendFormatArray($format, $args = null) : IString;
+
+    /**
      * Returns a formatted string by using that instance as format string.
      *
      * @param mixed ...$arg One or more argument for the format string.
@@ -49,7 +87,6 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The formatted string.
      */
     function __invoke();
-
 
     /**
      * Returns that string as mutable version.
@@ -85,6 +122,16 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * {@inheritDoc}
      */
     function getWrappedValue() : string;
+
+    /**
+     * Inserts a value.
+     *
+     * @param $startIndex The zero based start index.
+     * @param mixed $value The value to insert.
+     *
+     * @return IString The (new) string.
+     */
+    function insert(int $startIndex, $value) : IString;
 
     /**
      * Gets if the string is mutable or not.
@@ -138,6 +185,44 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function padRight(int $pad_length, $pad_string = null) : IString;
+
+    /**
+     * Prepends a value.
+     *
+     * @param mixed $value The value to prepend.
+     *
+     * @return IString The (new) string.
+     */
+    function prepend($value) : IString;
+
+    /**
+     * Prepends a list of values.
+     *
+     * @param mixed ...$values One or more value lists to prepend.
+     *
+     * @return IString The (new) string.
+     */
+    function prependArray($values = null) : IString;
+
+    /**
+     * Prepends a formatted string.
+     *
+     * @param string $format The format string.
+     * @param mixed ...$arg One or more argument for $format.
+     *
+     * @return IString The (new) string.
+     */
+    function prependFormat($format) : IString;
+
+    /**
+     * Prepends a formatted string.
+     *
+     * @param string $format The format string.
+     * @param mixed ...$args One or more argument lists for for $format.
+     *
+     * @return IString The (new) string.
+     */
+    function prependFormatArray($format, $args = null) : IString;
 
     /**
      * Splits the string.

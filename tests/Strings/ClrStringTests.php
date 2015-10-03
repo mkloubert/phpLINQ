@@ -31,6 +31,7 @@
 
 use \System\ClrString;
 use \System\IString;
+use \System\Linq\Enumerable;
 
 
 /**
@@ -72,6 +73,84 @@ class ClrStringTests extends TestCaseBase {
         $this->assertFalse($str2->isMutable());
 
         return $str2;
+    }
+
+    public function testAppend() {
+        $str1 = $this->createInstance();
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->append(1);
+        }, '1', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->append('2');
+        }, '12', $str2);
+
+        $str4 = $this->checkTransformMethod(function(IString $str) {
+            return $str->append(4.0);
+        }, '124', $str3);
+
+        $str5 = $this->checkTransformMethod(function(IString $str) {
+            return $str->append('TM');
+        }, '124TM', $str4);
+
+        $str6 = $this->checkTransformMethod(function(IString $str) {
+            return $str->append(4.5, 'seven');
+        }, '124TM4.5seven', $str5);
+    }
+
+    public function testAppendArray() {
+        $createGenerator = function() {
+            yield 'MK';
+            yield null;
+            yield 'TM';
+        };
+
+        $str1 = $this->createInstance();
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->appendArray([1.0]);
+        }, '1', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->appendArray(new ArrayIterator([2, '3']));
+        }, '123', $str2);
+
+        $str4 = $this->checkTransformMethod(function(IString $str) use ($createGenerator) {
+            return $str->appendArray($createGenerator(),
+                                     Enumerable::create($createGenerator())
+                                               ->reverse());
+        }, '123MKTMTMMK', $str3);
+    }
+
+    public function testAppendFormat() {
+        $str1 = $this->createInstance();
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->appendFormat('{2}{0}{1}', 1, 2.3, '0');
+        }, '012.3', $str1);
+    }
+
+    public function testAppendFormatArray() {
+        $createGenerator = function() {
+            yield 'YS';
+            yield 'MK';
+            yield null;
+        };
+
+        $str1 = $this->createInstance('xyz');
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->appendFormatArray('{2}{0}{3}{1}', [1, 2.0, '3.0', '4']);
+        }, 'xyz3.0142', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) use ($createGenerator) {
+            return $str->appendFormatArray('   {0}{1}{2}  {4}{3}{5} ',
+                                           $createGenerator(),
+                                           Enumerable::create($createGenerator())
+                                                     ->select('$x => \strtolower($x)')
+                                                     ->reverse());
+        }, 'xyz3.0142   YSMK  mkys ', $str2);
     }
 
     public function testAsMutable() {
@@ -132,6 +211,18 @@ class ClrStringTests extends TestCaseBase {
 
         $this->assertFalse($str->endsWith('e'));
         $this->assertTrue($str->endsWith('e', true));
+    }
+
+    public function insertTests() {
+        $str1 = $this->createInstance('ABC');
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->insert(1, 'd');
+        }, 'AdBC', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->insert(2, '-?');
+        }, 'Ad-?BC', $str2);
     }
 
     public function testInvoke() {
@@ -207,6 +298,84 @@ class ClrStringTests extends TestCaseBase {
         $this->checkTransformMethod(function(IString $str) {
             return $str->padRight(10, 'x');
         }, 'ABxxxxxxxx', 'AB');
+    }
+
+    public function testPrepend() {
+        $str1 = $this->createInstance();
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prepend(1);
+        }, '1', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prepend('2');
+        }, '21', $str2);
+
+        $str4 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prepend(4.0);
+        }, '421', $str3);
+
+        $str5 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prepend('TM');
+        }, 'TM421', $str4);
+
+        $str6 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prepend(4.5, 'seven');
+        }, '4.5sevenTM421', $str5);
+    }
+
+    public function testPrependArray() {
+        $createGenerator = function() {
+            yield 'MK';
+            yield null;
+            yield 'TM';
+        };
+
+        $str1 = $this->createInstance();
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prependArray([1.0]);
+        }, '1', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prependArray(new ArrayIterator([2, '3']));
+        }, '231', $str2);
+
+        $str4 = $this->checkTransformMethod(function(IString $str) use ($createGenerator) {
+            return $str->prependArray($createGenerator(),
+                                      Enumerable::create($createGenerator())
+                                                ->reverse());
+        }, 'TMMKMKTM231', $str3);
+    }
+
+    public function testPrependFormat() {
+        $str1 = $this->createInstance('a');
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prependFormat('{2}{0}{1}', 1, 2.3, '0');
+        }, '012.3a', $str1);
+    }
+
+    public function testPrependFormatArray() {
+        $createGenerator = function() {
+            yield 'ys';
+            yield 'Mk';
+            yield null;
+        };
+
+        $str1 = $this->createInstance('xyz');
+
+        $str2 = $this->checkTransformMethod(function(IString $str) {
+            return $str->prependFormatArray('{2}{0}{3}{1}', [1, 2.0, '3.0', '4']);
+        }, '3.0142xyz', $str1);
+
+        $str3 = $this->checkTransformMethod(function(IString $str) use ($createGenerator) {
+            return $str->prependFormatArray('   {0}{1}{2}  {4}{3}{5} ',
+                                            $createGenerator(),
+                                            Enumerable::create($createGenerator())
+                                                      ->select('$x => \strtoupper($x)')
+                                                      ->reverse());
+        }, '   ysMk  MKYS 3.0142xyz', $str2);
     }
 
     public function testSplit() {
