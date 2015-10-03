@@ -144,7 +144,7 @@ class ClrString extends Enumerable implements IString {
      * Formats a string.
      *
      * @param string $format The format string.
-     * @param mixed $args One or more argument for $format.
+     * @param mixed ...$args One or more argument lists for $format.
      *
      * @return string The formatted string.
      */
@@ -152,6 +152,12 @@ class ClrString extends Enumerable implements IString {
         if (!\is_array($args)) {
             $args = Enumerable::create($args)
                               ->toArray();
+        }
+
+        $argCount = \func_num_args();
+        for ($i = 2; $i < $argCount; $i++) {
+            Enumerable::create(\func_get_arg($i))
+                      ->appendToArray($args);
         }
 
         $rc  = new \ReflectionClass(static::class);
