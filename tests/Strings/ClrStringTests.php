@@ -221,7 +221,7 @@ class ClrStringTests extends TestCaseBase {
         }, 'AdBC', $str1);
 
         $str3 = $this->checkTransformMethod(function(IString $str) {
-            return $str->insert(2, '-?');
+            return $str->insert(2, '-', '?');
         }, 'Ad-?BC', $str2);
     }
 
