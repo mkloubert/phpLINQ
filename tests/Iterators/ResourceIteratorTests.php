@@ -29,49 +29,50 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System\Collections;
-
-use \System\ArgumentException;
+use \System\IO\ResourceIterator;
 
 
 /**
- * Indicates that an item / value is invalid.
+ * @see \System\Collections\KeySelectorIterator
  *
- * @package System\Collections
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class InvalidItemException extends ArgumentException {
-    /**
-     * @var mixed
-     */
-    protected $_actualValue;
+class ResourceIteratorTests extends TestCaseBase {
+    public function test1() {
+        $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
 
+        $this->assertNotFalse($file);
 
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param string $paramName The name of the underlying parameter.
-     * @param mixed $actualValue The underlying value.
-     * @param string $message The message.
-     * @param int $code The code.
-     * @param \Exception $innerException The inner exception.
-     */
-    public function __construct($actualValue = null, $paramName = null,
-                                $message = null, \Exception $innerException = null, $code = 0) {
+        try {
+            $iterator = ResourceIterator::forFile($file, 5);
+        }
+        catch (\Exception $ex) {
+            $thrownEx = $ex;
+        }
 
-        $this->_actualValue = $actualValue;
+        $this->assertFalse(isset($thrownEx));
 
-        parent::__construct($paramName,
-                            $message, $innerException, $code);
-    }
+        $this->assertTrue(isset($iterator));
+        $this->assertInstanceOf(ResourceIterator::class, $iterator);
 
+        try {
+            $arr = iterator_to_array($iterator);
 
-    /**
-     * Gets the underlying value of the item.
-     *
-     * @return mixed The underlying value of the item.
-     */
-    public final function actualValue() {
-        return $this->_actualValue;
+            $this->assertEquals(4, count($arr));
+
+            $this->assertSame('01234', $arr[0]);
+            $this->assertSame('56789', $arr[5]);
+            $this->assertSame('ABCDE', $arr[10]);
+            $this->assertSame('F', $arr[15]);
+        }
+        finally {
+            $iterator->dispose();
+            $disposedInvoked = true;
+        }
+
+        $this->assertTrue(isset($disposedInvoked));
+        $this->assertTrue($disposedInvoked);
+
+        $this->assertTrue($iterator->isDisposed());
     }
 }

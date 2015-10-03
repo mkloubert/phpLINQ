@@ -29,49 +29,48 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System\Collections;
+namespace System\IO;
 
-use \System\ArgumentException;
+use \System\ClrString;
+use \System\Exception;
 
 
 /**
- * Indicates that an item / value is invalid.
+ * Indicates that a file was not found / does not exist.
  *
- * @package System\Collections
+ * @package System\IO
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class InvalidItemException extends ArgumentException {
+class FileNotFoundException extends Exception {
     /**
-     * @var mixed
+     * @var string
      */
-    protected $_actualValue;
+    private $_path;
 
 
     /**
      * Initializes a new instance of that class.
      *
-     * @param string $paramName The name of the underlying parameter.
-     * @param mixed $actualValue The underlying value.
      * @param string $message The message.
-     * @param int $code The code.
      * @param \Exception $innerException The inner exception.
+     * @param int $code The code.
      */
-    public function __construct($actualValue = null, $paramName = null,
-                                $message = null, \Exception $innerException = null, $code = 0) {
+    public function __construct($path = null, $message = null,
+                                \Exception $innerException = null,
+                                int $code = 0) {
 
-        $this->_actualValue = $actualValue;
+        $this->_path = ClrString::valueToString($path, false);
 
-        parent::__construct($paramName,
-                            $message, $innerException, $code);
+        parent::__construct($message, $innerException, $code);
     }
 
 
     /**
-     * Gets the underlying value of the item.
+     * Gets the path of file that does not exist.
      *
-     * @return mixed The underlying value of the item.
+     * @return string The path of the file.
      */
-    public final function actualValue() {
-        return $this->_actualValue;
+    public final function path() {
+        return $this->_path;
     }
 }

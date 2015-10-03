@@ -53,10 +53,10 @@ class ArgumentException extends Exception {
      * @param int $code The code.
      * @param \Exception $innerException The inner exception.
      */
-    public function __construct(string $paramName = '',
-                                string $message = '', \Exception $innerException = null, int $code = 0) {
+    public function __construct($paramName = null,
+                                $message = null, \Exception $innerException = null, int $code = 0) {
 
-        $this->_paramName = $paramName;
+        $this->_paramName = ClrString::valueToString($paramName, false);
 
         parent::__construct($message, $innerException, $code);
     }

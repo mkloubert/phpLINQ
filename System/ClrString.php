@@ -447,7 +447,7 @@ class ClrString extends Enumerable implements IString {
      *
      * @return string $value as string.
      */
-    public static function valueToString($value, bool $nullAsEmpty = true) : string {
+    public static function valueToString($value, bool $nullAsEmpty = true) {
         if (\is_string($value)) {
             return $value;
         }

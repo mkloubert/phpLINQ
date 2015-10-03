@@ -46,11 +46,12 @@ class Exception extends \Exception implements IException {
      * @param \Exception $innerException The inner exception.
      * @param int $code The code.
      */
-    public function __construct(string $message = '',
+    public function __construct($message = null,
                                 \Exception $innerException = null,
                                 int $code = 0) {
 
-        parent::__construct($message, $code, $innerException);
+        parent::__construct(ClrString::valueToString($message),
+                            $code, $innerException);
     }
 
     /**

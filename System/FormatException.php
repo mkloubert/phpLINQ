@@ -46,7 +46,7 @@ class FormatException extends Exception {
      * @param \Exception $innerException The inner exception.
      * @param int $code The code.
      */
-    public function __construct(string $message = 'Invalid format!',
+    public function __construct($message = null,
                                 \Exception $innerException = null,
                                 int $code = 0) {
 

@@ -29,49 +29,16 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System\Collections;
+namespace System\IO;
 
-use \System\ArgumentException;
+use \System\Exception;
 
 
 /**
- * Indicates that an item / value is invalid.
+ * Indicates that an IO operation failed.
  *
- * @package System\Collections
+ * @package System\IO
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class InvalidItemException extends ArgumentException {
-    /**
-     * @var mixed
-     */
-    protected $_actualValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param string $paramName The name of the underlying parameter.
-     * @param mixed $actualValue The underlying value.
-     * @param string $message The message.
-     * @param int $code The code.
-     * @param \Exception $innerException The inner exception.
-     */
-    public function __construct($actualValue = null, $paramName = null,
-                                $message = null, \Exception $innerException = null, $code = 0) {
-
-        $this->_actualValue = $actualValue;
-
-        parent::__construct($paramName,
-                            $message, $innerException, $code);
-    }
-
-
-    /**
-     * Gets the underlying value of the item.
-     *
-     * @return mixed The underlying value of the item.
-     */
-    public final function actualValue() {
-        return $this->_actualValue;
-    }
+class IOException extends Exception {
 }

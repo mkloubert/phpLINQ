@@ -54,8 +54,8 @@ class ArgumentOutOfRangeException extends ArgumentException {
      * @param int $code The code.
      * @param \Exception $innerException The inner exception.
      */
-    public function __construct($actualValue = null, string $paramName = '',
-                                string $message = '', \Exception $innerException = null, $code = 0) {
+    public function __construct($actualValue = null, $paramName = null,
+                                $message = null, \Exception $innerException = null, $code = 0) {
 
         $this->_actualValue = $actualValue;
 
@@ -69,7 +69,7 @@ class ArgumentOutOfRangeException extends ArgumentException {
      *
      * @return mixed The underlying value.
      */
-    public function actualValue() {
+    public final function actualValue() {
         return $this->_actualValue;
     }
 }

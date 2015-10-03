@@ -54,7 +54,7 @@ class EnumerableException extends \System\Exception {
      * @param int $code The code.
      */
     public function __construct(IEnumerable $seq,
-                                string $message = null,
+                                $message = null,
                                 \Exception $innerException = null,
                                 int $code = 0) {
 
@@ -69,7 +69,7 @@ class EnumerableException extends \System\Exception {
      *
      * @return IEnumerable The underlying sequence.
      */
-    public function sequence() {
+    public final function sequence() {
         return $this->_sequence;
     }
 }

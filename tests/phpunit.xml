@@ -3,6 +3,7 @@
         <testsuite name="Iterators">
             <file>Iterators/KeySelectorIteratorTests.php</file>
             <file>Iterators/KeyAndValueSelectorIteratorTests.php</file>
+            <file>Iterators/ResourceIteratorTests.php</file>
         </testsuite>
 
         <testsuite name="Lambda expressions">

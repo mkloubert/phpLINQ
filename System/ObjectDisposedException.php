@@ -54,7 +54,7 @@ class ObjectDisposedException extends Exception {
      * @param \Exception $innerException The inner exception.
      */
     public function __construct($obj = null,
-                                string $message = '', \Exception $innerException = null, int $code = 0) {
+                                $message = null, \Exception $innerException = null, int $code = 0) {
 
         $this->_obj = $obj;
 
@@ -67,7 +67,7 @@ class ObjectDisposedException extends Exception {
      *
      * @return object The underlying object or (null) if not defined.
      */
-    public function object() {
+    public final function object() {
         return $this->_obj;
     }
 }
