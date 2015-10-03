@@ -48,7 +48,6 @@ class TempFileTests extends TestCaseBase {
             $this->assertSame(0, $tf->position());
 
             $this->assertSame(1, $tf->write('A'));
-            $this->assertSame(1, $tf->length());
             $this->assertSame(1, $tf->position());
         }
         finally {

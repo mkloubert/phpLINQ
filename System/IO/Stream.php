@@ -38,6 +38,32 @@ use \System\NotSupportedException;
  */
 class Stream extends DisposableBase implements IStream {
     /**
+     * Close operation failed.
+     */
+    const ERROR_CLOSE_FAILED = 2;
+    /**
+     * Could not determine position.
+     */
+    const ERROR_COULD_NOT_DETERMINE_POSITION = 4;
+    /**
+     * Could not set position.
+     */
+    const ERROR_COULD_NOT_SET_POSITION = 5;
+    /**
+     * Not all data was written.
+     */
+    const ERROR_NOT_ALL_DATA_WRITTEN = 3;
+    /**
+     * Read operation failed.
+     */
+    const ERROR_READ_FAILED = 0;
+    /**
+     * Write operation failed.
+     */
+    const ERROR_WRITE_FAILED = 1;
+
+
+    /**
      * @var bool
      */
     private $_closeOnDispose;
@@ -158,7 +184,7 @@ class Stream extends DisposableBase implements IStream {
         }
 
         if (!\fclose($this->_resource)) {
-            $this->throwIOException('Could not close stream!');
+            $this->throwIOException('Could not close stream!', static::ERROR_CLOSE_FAILED);
         }
 
         $this->_isClosed = true;
@@ -189,7 +215,7 @@ class Stream extends DisposableBase implements IStream {
 
             if ($throwIfNotAllDataWereWritten) {
                 if ($bytesWritten < $dataLen) {
-                    $this->throwIOException('Not all data could be written!');
+                    $this->throwIOException('Not all data could be written!', static::ERROR_NOT_ALL_DATA_WRITTEN);
                 }
             }
         }
@@ -252,7 +278,7 @@ class Stream extends DisposableBase implements IStream {
     protected function positionInner() : int {
         $result = \ftell($this->_resource);
         if (false === $result) {
-            $this->throwIOException('Position could not be determined!');
+            $this->throwIOException('Position could not be determined!', static::ERROR_COULD_NOT_DETERMINE_POSITION);
         }
 
         return $result;
@@ -287,7 +313,7 @@ class Stream extends DisposableBase implements IStream {
         $result = \fread($this->_resource, $count);
 
         if (false === $result) {
-            $this->throwIOException('Could not read from resource!');
+            $this->throwIOException('Could not read from resource!', static::ERROR_READ_FAILED);
         }
 
         if ('' === $result) {
@@ -344,7 +370,7 @@ class Stream extends DisposableBase implements IStream {
         }
 
         if (!$this->seekInner($offset, $where)) {
-            $this->throwIOException('Setting new position failed!');
+            $this->throwIOException('Setting new position failed!', static::ERROR_COULD_NOT_SET_POSITION);
         }
 
         return $this->position();
@@ -486,7 +512,7 @@ class Stream extends DisposableBase implements IStream {
         $result = \fwrite($this->_resource, $data);
 
         if (false === $result) {
-            $this->throwIOException('Could not write to resource!');
+            $this->throwIOException('Could not write to resource!', static::ERROR_WRITE_FAILED);
         }
 
         return $result;
