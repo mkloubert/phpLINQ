@@ -418,6 +418,16 @@ class ClrStringTests extends TestCaseBase {
         }, '   ysMk  MKYS 3.0142xyz', $str2);
     }
 
+    public function testRemove() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->remove(2);
+        }, '01', '0123456789');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->remove(2, 3);
+        }, '0156789', '0123456789');
+    }
+
     public function testReplace() {
         $this->checkTransformMethod(function(IString $str) {
             return $str->replace('CD', '01');

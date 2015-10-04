@@ -261,6 +261,20 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function prependFormatArray($format, $args = null) : IString;
 
     /**
+     * Removes a part from that string.
+     *
+     * @param int $startIndex The zero based start index.
+     * @param int $count The optional number of chars to remove.
+     *
+     * @return IString The (new) string.
+     *
+     * @throws ArgumentOutOfRangeException $startIndex / $count is less than 0
+     *                                     -- or --
+     *                                     Sum of $startIndex and $count is out of range
+     */
+    function remove(int $startIndex, $count = null) : IString;
+
+    /**
      * Replaces parts inside that string.
      *
      * @param string $oldValue The value value.

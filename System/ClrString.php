@@ -582,6 +582,37 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function remove(int $startIndex, $count = null) : IString {
+        $argCount = \func_num_args();
+
+        if ($startIndex < 0) {
+            throw new ArgumentOutOfRangeException($startIndex, 'startIndex');
+        }
+
+        if ($argCount > 1) {
+            if ($count < 0) {
+                throw new ArgumentOutOfRangeException($count, 'count');
+            }
+
+            if ($count > ($this->length() - $startIndex)) {
+                throw new ArgumentOutOfRangeException([$count, $startIndex], 'count+startIndex');
+            }
+        }
+
+        $newValue = \substr($this->_wrappedValue, 0, $startIndex);
+
+        if ($argCount > 1) {
+            $newValue .=  \substr($this->_wrappedValue,
+                                  $startIndex + $count,
+                                  \strlen($this->_wrappedValue) - $startIndex - $count);
+        }
+
+        return $this->transformWrappedValue($newValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function replace($oldValue, $newValue, bool $ignoreCase = false, &$count = null) : IString {
         return $this->invokeReplaceFunc($oldValue, $newValue,
                                         $ignoreCase,
