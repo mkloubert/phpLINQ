@@ -29,8 +29,19 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\Object;
 use \System\ValueWrapper;
 
+
+function converterSumFunc($a, $b) {
+    return $a + $b;
+}
+
+class converterSumClass {
+    public function __invoke($a, $b) {
+        return converterSumFunc($a, $b);
+    }
+}
 
 /**
  * Tests for converting objects and values.
@@ -38,47 +49,92 @@ use \System\ValueWrapper;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class ConverterTests extends TestCaseBase {
+    protected function createSumFunctions() : array {
+        return [
+            'converterSumFunc',
+            '\converterSumFunc',
+            function($a, $b) {
+                return converterSumFunc($a, $b);
+            },
+            [$this, 'sumMethod1'],
+            [static::class, 'sumMethod2'],
+            new converterSumClass(),
+            '$a, $b => converterSumFunc($a, $b)',
+            '$a, $b => \converterSumFunc($a, $b)',
+            '($a, $b) => converterSumFunc($a, $b)',
+            '($a, $b) => \converterSumFunc($a, $b)',
+            '$a, $b => return converterSumFunc($a, $b);',
+            '$a, $b => return \converterSumFunc($a, $b);',
+            '($a, $b) => return converterSumFunc($a, $b);',
+            '($a, $b) => return \converterSumFunc($a, $b);',
+            '$a, $b => { return converterSumFunc($a, $b); }',
+            '$a, $b => { return \converterSumFunc($a, $b); }',
+            '($a, $b) => { return converterSumFunc($a, $b); }',
+            '($a, $b) => { return \converterSumFunc($a, $b); }',
+            '$a, $b => {
+return converterSumFunc($a, $b);
+}',
+            '$a, $b => {
+return \converterSumFunc($a, $b);
+}',
+            '($a, $b) => {
+return converterSumFunc($a, $b);
+}',
+            '($a, $b) => {
+return \converterSumFunc($a, $b);
+}',
+        ];
+    }
+
+    public function sumMethod1($a, $b) {
+        return static::sumMethod2($a, $b);
+    }
+
+    public static function sumMethod2($a, $b) {
+        return converterSumFunc($a, $b);
+    }
+
     public function testCallable() {
-        foreach (['callable', 'function'] as $targetType) {
-            /* @var callable $func1 */
-            /* @var callable $func2 */
-            /* @var callable $func3 */
-            /* @var callable $func4 */
-            /* @var callable $func5 */
+        foreach ($this->createSumFunctions() as $sumFunc) {
+            foreach (['callable', 'function'] as $targetType) {
+                /* @var callable $func1 */
+                /* @var callable $func2 */
+                /* @var callable $func3 */
+                /* @var callable $func4 */
+                /* @var callable $func5 */
 
-            $obj1 = new ValueWrapper('1');
-            $obj2 = new ValueWrapper(2);
-            $obj3 = new ValueWrapper(3.0);
-            $obj4 = new ValueWrapper(4.5);
-            $obj5 = new ValueWrapper(function($a, $b) {
-                return $a + $b;
-            });
+                $obj1 = new ValueWrapper('1');
+                $obj2 = new ValueWrapper(2);
+                $obj3 = new ValueWrapper(3.0);
+                $obj4 = new ValueWrapper(4.5);
+                $obj5 = new ValueWrapper(Object::asCallable($sumFunc));
 
-            $this->assertSame('1', $obj1->getWrappedValue());
-            $this->assertSame(2, $obj2->getWrappedValue());
-            $this->assertSame(3.0, $obj3->getWrappedValue());
-            $this->assertSame(4.5, $obj4->getWrappedValue());
-            $this->assertTrue(is_callable($obj5->getWrappedValue()));
+                $this->assertSame('1', $obj1->getWrappedValue());
+                $this->assertSame(2, $obj2->getWrappedValue());
+                $this->assertSame(3.0, $obj3->getWrappedValue());
+                $this->assertSame(4.5, $obj4->getWrappedValue());
+                $this->assertTrue(is_callable($obj5->getWrappedValue()));
 
-            $func1 = $obj1->toType($targetType);
-            $func2 = $obj2->toType($targetType);
-            $func3 = $obj3->toType($targetType);
-            $func4 = $obj4->toType($targetType);
-            $func5 = $obj5->toType($targetType);
+                $func1 = $obj1->toType($targetType);
+                $func2 = $obj2->toType($targetType);
+                $func3 = $obj3->toType($targetType);
+                $func4 = $obj4->toType($targetType);
+                $func5 = $obj5->toType($targetType);
 
-            $this->assertTrue(is_callable($func1));
-            $this->assertTrue(is_callable($func2));
-            $this->assertTrue(is_callable($func3));
-            $this->assertTrue(is_callable($func4));
-            $this->assertTrue(is_callable($func5));
+                $this->assertTrue(is_callable($func1));
+                $this->assertTrue(is_callable($func2));
+                $this->assertTrue(is_callable($func3));
+                $this->assertTrue(is_callable($func4));
+                $this->assertTrue(is_callable($func5));
 
-            $this->assertSame($func1(), $obj1->getWrappedValue());
-            $this->assertSame($func2(), $obj2->getWrappedValue());
-            $this->assertSame($func3(), $obj3->getWrappedValue());
-            $this->assertSame($func4(), $obj4->getWrappedValue());
-            $this->assertSame($func5, $obj5->getWrappedValue());
+                $this->assertSame($func1(), $obj1->getWrappedValue());
+                $this->assertSame($func2(), $obj2->getWrappedValue());
+                $this->assertSame($func3(), $obj3->getWrappedValue());
+                $this->assertSame($func4(), $obj4->getWrappedValue());
+                $this->assertSame($func5, $obj5->getWrappedValue());
 
-            $this->assertSame(6, $func5(2, 4));
+                $this->assertSame(6.5, $func5(2, 4.5));
+            }
         }
     }
 
