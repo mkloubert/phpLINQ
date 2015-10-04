@@ -29,6 +29,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\ArgumentException;
 use \System\Object;
 
 
@@ -99,31 +100,111 @@ class LambdaTests extends TestCaseBase {
     }
 
     public function testInvalidExpressions() {
-        $this->assertTrue(Object::isLambda('$x => trim($x)'));
-        $this->assertTrue(Object::isLambda('($x) => trim($x)'));
-        $this->assertTrue(Object::isLambda('$x => return trim($x);'));
-        $this->assertTrue(Object::isLambda('($x) => return trim($x);'));
-        $this->assertTrue(Object::isLambda('$x => { return trim($x); }'));
-        $this->assertTrue(Object::isLambda('($x) => { return trim($x); }'));
-        $this->assertTrue(Object::isLambda('$x => {
+        $invalidExpressions1 = [
+            '($x => trim($x)',
+            '$x) => trim($x)',
+            '($x => return trim($x);',
+            '$x) => return trim($x);',
+            '($x => { return trim($x); }',
+            '$x) => { return trim($x); }',
+            '($x => {
 return trim($x);
-}'));
-        $this->assertTrue(Object::isLambda('($x) => {
+}',
+                        '$x) => {
 return trim($x);
-}'));
+}',
+        ];
 
-        $this->assertFalse(Object::isLambda('($x => trim($x)'));
-        $this->assertFalse(Object::isLambda('$x) => trim($x)'));
-        $this->assertFalse(Object::isLambda('($x => return trim($x);'));
-        $this->assertFalse(Object::isLambda('$x) => return trim($x);'));
-        $this->assertFalse(Object::isLambda('($x => { return trim($x); }'));
-        $this->assertFalse(Object::isLambda('$x) => { return trim($x); }'));
-        $this->assertFalse(Object::isLambda('($x => {
+        foreach ($invalidExpressions1 as $expr) {
+            unset($lambda);
+            unset($thrownEx);
+
+            $this->assertFalse(Object::isLambda($expr));
+
+            try {
+                $lambda = Object::toLambda($expr);
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertFalse(isset($lambda));
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+            $this->assertSame(1, $thrownEx->getCode());
+        }
+
+        $invalidExpressions2 = [
+            false,
+            '',
+            true,
+            ' ',
+            '($x)',
+            null,
+            new \DateTime(),
+            new \stdClass(),
+            3.0,
+            '$x ',
+            1,
+            'Das ist das Haus vom Nikolaus.',
+            '2',
+            "\\trim",
+            function() {
+                return 1000;
+            },
+        ];
+
+        foreach ($invalidExpressions2 as $expr) {
+            unset($lambda);
+            unset($thrownEx);
+
+            $this->assertFalse(Object::isLambda($expr));
+
+            try {
+                $lambda = Object::toLambda($expr);
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertFalse(isset($lambda));
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(ArgumentException::class, $thrownEx);
+            $this->assertSame(0, $thrownEx->getCode());
+        }
+
+        $validExpressions = [
+            '$x => trim($x)',
+            '($x) => trim($x)',
+            '$x => return trim($x);',
+            '($x) => return trim($x);',
+            '$x => { return trim($x); }',
+            '($x) => { return trim($x); }',
+            '$x => {
 return trim($x);
-}'));
-        $this->assertFalse(Object::isLambda('$x) => {
+}',
+            '($x) => {
 return trim($x);
-}'));
+}'
+        ];
+
+        foreach ($validExpressions as $expr) {
+            unset($lambda);
+            unset($thrownEx);
+
+            $this->assertTrue(Object::isLambda($expr));
+
+            try {
+                $lambda = Object::toLambda($expr);
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertTrue(isset($lambda));
+            $this->assertFalse(isset($thrownEx));
+            $this->assertTrue(is_callable($lambda));
+        }
     }
 
     public function testWith1Argument() {
