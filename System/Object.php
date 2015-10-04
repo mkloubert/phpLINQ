@@ -108,7 +108,9 @@ class Object implements IObject {
         }
 
         if ($conversionType instanceof \ReflectionClass) {
-            if ($conversionType->isInstance($valueToConvert)) {
+            if (\is_object($valueToConvert) &&
+                $conversionType->isInstance($valueToConvert)) {
+
                 return $valueToConvert;
             }
 
@@ -122,6 +124,10 @@ class Object implements IObject {
                 $conversionType->implementsInterface(IValueWrapper::class)) {
 
                 return $conversionType->newInstance($valueToConvert);
+            }
+
+            if (null === $valueToConvert) {
+                return null;
             }
         }
         else {

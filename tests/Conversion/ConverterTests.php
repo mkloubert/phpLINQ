@@ -30,6 +30,7 @@
  **********************************************************************************************************************/
 
 use \System\Object;
+use \System\IValueWrapper;
 use \System\ValueWrapper;
 
 
@@ -164,5 +165,36 @@ return \converterSumFunc($a, $b);
         $this->assertSame('4.5', $obj4->toType('string'));
         $this->assertSame(4, $obj4->toType('int'));
         $this->assertSame(null, $obj4->toType('unset'));
+    }
+
+    public function testValueWrapper2() {
+        foreach ([IValueWrapper::class, new ReflectionClass(IValueWrapper::class)] as $targetType) {
+            /* @var IValueWrapper $obj1 */
+            /* @var IValueWrapper $obj2 */
+            /* @var IValueWrapper $obj3 */
+            /* @var IValueWrapper $obj4 */
+
+            $val1 = '1';
+            $val2 = 2;
+            $val3 = 3.0;
+            $val4 = 4.5;
+
+            $obj1 = Object::convertTo($val1, $targetType);
+            $obj2 = Object::convertTo($val2, $targetType);
+            $obj3 = Object::convertTo($val3, $targetType);
+            $obj4 = Object::convertTo($val4, $targetType);
+
+            $this->assertInstanceOf(IValueWrapper::class, $obj1);
+            $this->assertSame($val1, $obj1->getWrappedValue());
+
+            $this->assertInstanceOf(IValueWrapper::class, $obj2);
+            $this->assertSame($val2, $obj2->getWrappedValue());
+
+            $this->assertInstanceOf(IValueWrapper::class, $obj3);
+            $this->assertSame($val3, $obj3->getWrappedValue());
+
+            $this->assertInstanceOf(IValueWrapper::class, $obj4);
+            $this->assertSame($val4, $obj4->getWrappedValue());
+        }
     }
 }
