@@ -39,6 +39,22 @@ use \System\IO\MemoryStream;
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
 class MemoryStreamTests extends TestCaseBase {
+    public function testSetLength() {
+        $ms = new MemoryStream('0123456789');
+        try {
+            $this->assertEquals(10, $ms->length());
+            $this->assertSame('0123456789', (string)$ms);
+
+            $ms->setLength(4);
+
+            $this->assertEquals(4, $ms->length());
+            $this->assertSame('0123', (string)$ms);
+        }
+        finally {
+            $ms->dispose();
+        }
+    }
+
     public function testWrite() {
         $ms = new MemoryStream();
         try {

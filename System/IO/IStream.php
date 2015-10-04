@@ -83,6 +83,13 @@ interface IStream extends IDisposable {
     function copyTo($target, int $bufferSize = 1024, bool $throwIfNotAllDataWereWritten = true);
 
     /**
+     * Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+     *
+     * @throws IOException Operation failed.
+     */
+    function flush();
+
+    /**
      * Gets if the stream has been closed or not.
      *
      * @return bool Has been closed or not.
@@ -175,6 +182,18 @@ interface IStream extends IDisposable {
      * @throws StreamClosedException Stream has been closed.
      */
     function seek(int $offset, int $where = \SEEK_SET) : int;
+
+    /**
+     * Sets the length of that stream.
+     *
+     * @param int $value The desired length of the current stream.
+     *
+     * @throws IOException Operation failed.
+     * @throws NotSupportedException Stream is not seekable / writable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function setLength(int $value);
 
     /**
      * Writes to the stream.

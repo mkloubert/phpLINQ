@@ -81,6 +81,13 @@ class MemoryStream extends Stream {
     /**
      * {@inheritDoc}
      */
+    protected function flushInner() {
+        // nothing to do here
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected final function lengthInner() : int {
         return \strlen($this->_buffer);
     }
@@ -154,6 +161,22 @@ class MemoryStream extends Stream {
         $this->normalizePosition();
 
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setLengthInner(int $value) {
+        if ($value < 0) {
+            $value = 0;
+        }
+
+        if ($value >= $this->length()) {
+            return;
+        }
+
+        $this->_buffer = \substr($this->_buffer, 0, $value);
+        $this->normalizePosition();
     }
 
     /**

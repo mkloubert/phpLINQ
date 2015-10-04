@@ -228,6 +228,22 @@ class Stream extends DisposableBase implements IStream {
     /**
      * {@inheritDoc}
      */
+    public final function flush() {
+         $this->flushInner();
+    }
+
+    /**
+     * @see Stream::flush()
+     */
+    protected function flushInner() {
+        if (!\fflush($this->_resource)) {
+            $this->throwIOException('Flush operation failed!');
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function isClosed() : bool {
         return $this->_isClosed;
     }
@@ -388,6 +404,27 @@ class Stream extends DisposableBase implements IStream {
      */
     protected function seekInner(int $offset, int $where) : bool {
         return 0 === \fseek($this->_resource, $offset, $where);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function setLength(int $value) {
+        $this->throwIfDisposed();
+        $this->throwIfClosed();
+        $this->throwIfNotWritable();
+        $this->throwIfNotSeekable();
+
+        $this->setLengthInner($value);
+    }
+
+    /**
+     * @see Stream::setLength()
+     */
+    protected function setLengthInner(int $value) {
+        if (!\ftruncate($this->_resource, $value)) {
+            $this->throwIOException('Could not set length!');
+        }
     }
 
     /**

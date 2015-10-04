@@ -20,6 +20,8 @@
 
 namespace System\IO;
 
+use \System\ObjectDisposedException;
+
 
 /**
  * Indicates that a stream has been closed.
@@ -27,13 +29,7 @@ namespace System\IO;
  * @package System\IO
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class StreamClosedException extends IOException {
-    /**
-     * @var IStream
-     */
-    private $_stream;
-
-
+class StreamClosedException extends ObjectDisposedException {
     /**
      * Initializes a new instance of that class.
      *
@@ -47,18 +43,7 @@ class StreamClosedException extends IOException {
                                 \Exception $innerException = null,
                                 int $code = 0) {
 
-        $this->_stream = $stream;
-
-        parent::__construct($message, $innerException, $code);
-    }
-
-
-    /**
-     * Gets the underlying stream.
-     *
-     * @return IStream The underlying stream.
-     */
-    public function stream() {
-        return $this->_stream;
+        parent::__construct($stream,
+                            $message, $innerException, $code);
     }
 }
