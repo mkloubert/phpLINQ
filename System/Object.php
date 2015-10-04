@@ -303,10 +303,8 @@ class Object implements IObject {
             return false;
         };
 
-        if (\is_object($expr)) {
-            if (!\method_exists($expr, '__toString')) {
-                return $throwOrReturn();
-            }
+        if (!ClrString::canBeString($expr)) {
+            return $throwOrReturn();
         }
 
         $expr = \trim(ClrString::valueToString($expr));
