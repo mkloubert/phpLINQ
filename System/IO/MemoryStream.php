@@ -171,11 +171,15 @@ class MemoryStream extends Stream {
             $value = 0;
         }
 
-        if ($value >= $this->length()) {
-            return;
+        if ($value !== $this->length()) {
+            if ($value < $this->length()) {
+                $this->_buffer = \substr($this->_buffer, 0, $value);
+            }
+            else {
+                $this->_buffer .= \str_repeat("\0", $value - $this->length());
+            }
         }
 
-        $this->_buffer = \substr($this->_buffer, 0, $value);
         $this->normalizePosition();
     }
 
