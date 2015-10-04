@@ -456,7 +456,7 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @param string $other The other string.
      * @param bool $ignoreCase Ignore case or not. If (true) chars of strings will be transformed to lowercase.
      * @param bool $doTrim Trim strings or not.
-     * @param string $character_mask The custom character mask to use for the string operation.
+     * @param string $character_mask The custom character mask to use for the trim operation.
      *
      * @return float The similarity (between 0 for 0% and 1 for 100%).
      *               0 is retured if two strings are empty.
