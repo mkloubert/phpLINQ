@@ -148,6 +148,7 @@ return \converterSumFunc($a, $b);
         $this->assertSame('1', $obj1->getWrappedValue());
         $this->assertSame('1', $obj1->toType('string'));
         $this->assertSame(null, $obj1->toType('unset'));
+        $this->assertSame(null, $obj1->toType('null'));
         $this->assertSame(1, $obj1->toType('int'));
         $this->assertSame(1.0, $obj1->toType('float'));
 
@@ -155,16 +156,19 @@ return \converterSumFunc($a, $b);
         $this->assertSame('2', $obj2->toType('string'));
         $this->assertSame(2.0, $obj2->toType('float'));
         $this->assertSame(null, $obj2->toType('unset'));
+        $this->assertSame(null, $obj2->toType('null'));
 
         $this->assertSame(3.0, $obj3->getWrappedValue());
         $this->assertSame('3', $obj3->toType('string'));
         $this->assertSame(3, $obj3->toType('int'));
         $this->assertSame(null, $obj3->toType('unset'));
+        $this->assertSame(null, $obj3->toType('null'));
 
         $this->assertSame(4.5, $obj4->getWrappedValue());
         $this->assertSame('4.5', $obj4->toType('string'));
         $this->assertSame(4, $obj4->toType('int'));
         $this->assertSame(null, $obj4->toType('unset'));
+        $this->assertSame(null, $obj4->toType('null'));
     }
 
     public function testValueWrapper2() {
