@@ -33,7 +33,6 @@ namespace System\Linq\Expressions;
 
 use \System\ArgumentException;
 use \System\ClrString;
-use \System\FormatException;
 use \System\IString;
 
 
@@ -59,8 +58,7 @@ class LambdaExpression extends \System\Object {
      *
      * @param string $expr The lambda expression.
      *
-     * @throws ArgumentException $expr is no lambda expression.
-     * @throws FormatException $expr is has an invalid format.
+     * @throws ArgumentException $expr is no (valid) lambda expression.
      */
     public function __construct($expr) {
         $this->_expr = \trim($expr);
