@@ -34,6 +34,7 @@ use \System\ClrString;
 use \System\IString;
 use \System\NotSupportedException;
 use \System\IO\FileStream;
+use \System\IO\MemoryStream;
 use \System\Linq\Enumerable;
 
 
@@ -322,6 +323,27 @@ class ClrStringTests extends TestCaseBase {
         $this->assertSame('ABC', $str->getWrappedValue());
     }
 
+    public function testAsImmutable() {
+        $strs   = [];
+        $strs[] = $this->createInstance(null);
+        $strs[] = $this->createInstance('');
+        $strs[] = $this->createInstance('ABC');
+        $strs[] = $this->createInstance('  ABC   ');
+
+        foreach ($strs as $s1) {
+            /* @var ClrString $s1 */
+            $s2 = $s1->asImmutable();
+
+            $this->assertFalse($s1->isMutable());
+            $this->assertFalse($s2->isMutable());
+            $this->assertTrue($s1->isImmutable());
+            $this->assertTrue($s2->isImmutable());
+
+            $this->assertSame($s1, $s2);
+            $this->assertInstanceOf(get_class($s1), $s2);
+        }
+    }
+
     public function testAsMutable() {
         $strs   = [];
         $strs[] = $this->createInstance(null);
@@ -335,6 +357,10 @@ class ClrStringTests extends TestCaseBase {
 
             $this->assertFalse($s1->isMutable());
             $this->assertTrue($s2->isMutable());
+            $this->assertTrue($s1->isImmutable());
+            $this->assertFalse($s2->isImmutable());
+
+            $this->assertNotSame($s1, $s2);
         }
     }
 
@@ -489,6 +515,21 @@ class ClrStringTests extends TestCaseBase {
         $this->assertSame('Hello, JS! It is ' . $now->format('Y-m-d H:i:s') . '.', $str('!', 'JS', $now)->getWrappedValue());
     }
 
+    public function testIsImmutable() {
+        $strs   = [];
+        $strs[] = $this->createInstance(null);
+        $strs[] = $this->createInstance('');
+        $strs[] = $this->createInstance('ABC');
+        $strs[] = $this->createInstance('  ABC   ');
+
+        foreach ($strs as $s) {
+            /* @var ClrString $s */
+
+            $this->assertTrue($s->isImmutable());
+            $this->assertFalse($s->isMutable());
+        }
+    }
+
     public function testIsMutable() {
         $strs   = [];
         $strs[] = $this->createInstance(null);
@@ -500,6 +541,7 @@ class ClrStringTests extends TestCaseBase {
             /* @var ClrString $s */
 
             $this->assertFalse($s->isMutable());
+            $this->assertTrue($s->isImmutable());
         }
     }
 
@@ -886,5 +928,22 @@ class ClrStringTests extends TestCaseBase {
         $this->checkTransformMethod(function(IString $str) {
             return $str->trimStart();
         }, 'A b  C  ', ' A b  C  ');
+    }
+
+    public function testWriteTo() {
+        $str = $this->createInstance('ABC');
+
+        $ms = new MemoryStream();
+        try {
+            $str->writeTo($ms);
+
+            $this->assertEquals(3, $ms->length());
+            $this->assertEquals(3, $ms->position());
+
+            $this->assertSame('ABC', (string)$ms);
+        }
+        finally {
+            $ms->dispose();
+        }
     }
 }

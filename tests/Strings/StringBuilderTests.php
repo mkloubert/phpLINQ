@@ -118,6 +118,26 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertSame('BcE', $str->getWrappedValue());
     }
 
+    public function testAsImmutable() {
+        $strs   = [];
+        $strs[] = $this->createInstance(null);
+        $strs[] = $this->createInstance('');
+        $strs[] = $this->createInstance('ABC');
+        $strs[] = $this->createInstance('  ABC   ');
+
+        foreach ($strs as $s1) {
+            /* @var StringBuilder $s1 */
+            $s2 = $s1->asImmutable();
+
+            $this->assertTrue($s1->isMutable());
+            $this->assertFalse($s2->isMutable());
+            $this->assertFalse($s1->isImmutable());
+            $this->assertTrue($s2->isImmutable());
+
+            $this->assertNotSame($s1, $s2);
+        }
+    }
+
     public function testAsMutable() {
         $strs   = [];
         $strs[] = $this->createInstance(null);
@@ -131,6 +151,9 @@ class StringBuilderTest extends ClrStringTests {
 
             $this->assertTrue($s1->isMutable());
             $this->assertTrue($s2->isMutable());
+            $this->assertFalse($s1->isImmutable());
+            $this->assertFalse($s2->isImmutable());
+
             $this->assertSame($s1, $s2);
         }
     }
@@ -145,6 +168,21 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertFalse($str2->isNotEmpty());
     }
 
+    public function testIsImmutable() {
+        $strs   = [];
+        $strs[] = $this->createInstance(null);
+        $strs[] = $this->createInstance('');
+        $strs[] = $this->createInstance('ABC');
+        $strs[] = $this->createInstance('  ABC   ');
+
+        foreach ($strs as $s) {
+            /* @var StringBuilder $s */
+
+            $this->assertFalse($s->isImmutable());
+            $this->assertTrue($s->isMutable());
+        }
+    }
+
     public function testIsMutable() {
         $strs   = [];
         $strs[] = $this->createInstance(null);
@@ -156,6 +194,7 @@ class StringBuilderTest extends ClrStringTests {
             /* @var StringBuilder $s */
 
             $this->assertTrue($s->isMutable());
+            $this->assertFalse($s->isImmutable());
         }
     }
 }

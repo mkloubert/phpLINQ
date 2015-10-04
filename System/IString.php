@@ -138,6 +138,13 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function appendStream(IStream $stream, int $bufferSize = 1024, $count = null) : IString;
 
     /**
+     * Returns that string as immutable version.
+     *
+     * @return IString Immutable string.
+     */
+    function asImmutable() : IString;
+
+    /**
      * Returns that string as mutable version.
      *
      * @return IMutableString Mutable string.
@@ -260,6 +267,13 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @throws StreamClosedException Stream has been closed.
      */
     function insertStream(int $startIndex, IStream $stream, int $bufferSize = 1024, $count = null) : IString;
+
+    /**
+     * Gets if the string is immutable or not.
+     *
+     * @return bool Is immutable or not.
+     */
+    function isImmutable() : bool;
 
     /**
      * Gets if the string is mutable or not.
@@ -526,4 +540,18 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function trimStart($character_mask = null) : IString;
+
+    /**
+     * Writes the whole string to a target.
+     *
+     * @param mixed $target The variable that contains the target.
+     * @param int $bufferSize The buffer size for the write operation is $target is a stream, e.g.
+     *
+     * @return IString That instance.
+     *
+     * @throws ArgumentException $target is invalid.
+     * @throws ArgumentNullException $target is (null).
+     * @throws ArgumentOutOfRangeException $bufferSize is less than 1.
+     */
+    function writeTo(&$target, int $bufferSize = 1024) : IString;
 }

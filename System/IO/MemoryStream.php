@@ -45,6 +45,12 @@ class MemoryStream extends Stream {
     private $_writable;
 
 
+    /**
+     * Initializes a new instance of that class.
+     *
+     * @param string $buffer The initial data.
+     * @param bool $writable New instance is writable or read only.
+     */
     public function __construct($buffer = null, bool $writable = true) {
         $this->_buffer = ClrString::valueToString($buffer);
         $this->_writable = $writable;

@@ -113,11 +113,15 @@ class Stream extends DisposableBase implements IStream {
             return null;
         }
 
-        if (!\is_resource($val)) {
-            throw new ArgumentException('val');
+        if (\is_resource($val)) {
+            return new static($val, false);
         }
 
-        return new static($val, false);
+        if (ClrString::canBeString($val)) {
+            return new MemoryStream($val);
+        }
+
+        throw new ArgumentException('val');
     }
 
     /**
@@ -301,6 +305,9 @@ class Stream extends DisposableBase implements IStream {
         }
 
         $result = $this->readInner($count);
+        if ('' === $result) {
+            $result = null;
+        }
 
         return null !== $result ? new ClrString($result)
                                 : null;

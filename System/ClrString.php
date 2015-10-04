@@ -35,6 +35,8 @@ use \System\Collections\IEnumerable;
 use \System\Linq\Enumerable;
 use \System\IO\IOException;
 use \System\IO\IStream;
+use \System\IO\MemoryStream;
+use \System\IO\Stream;
 use \System\IO\StreamClosedException;
 use \System\Text\StringBuilder;
 
@@ -154,6 +156,13 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public function asImmutable() : IString {
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function asMutable() : IMutableString {
         return new StringBuilder($this->_wrappedValue);
     }
@@ -184,6 +193,33 @@ class ClrString extends Enumerable implements IString {
         }
 
         return $val;
+    }
+
+    /**
+     * Checks if a value can be transformed to a string.
+     *
+     * @param mixed $val The value to check.
+     *
+     * @return bool Can be a string or not.
+     */
+    public static function canBeString($val) : bool {
+        if (static::isString($val)) {
+            return true;
+        }
+
+        if (\is_scalar($val)) {
+            return true;
+        }
+
+        if (null === $val) {
+            return true;
+        }
+
+        if (\is_object($val)) {
+            return \method_exists($val, '__toString');
+        }
+
+        return false;
     }
 
     /**
@@ -498,6 +534,13 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function isImmutable() : bool {
+        return !$this->isMutable();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isMutable() : bool {
         return false;
     }
@@ -534,6 +577,18 @@ class ClrString extends Enumerable implements IString {
         }
 
         return $str->isWhitespace($character_mask);
+    }
+
+    /**
+     * Checks if a value is a string.
+     *
+     * @param mixed $val The value to check.
+     *
+     * @return bool Is string or not.
+     */
+    public static function isString($val) : bool {
+        return \is_string($val) ||
+               ($val instanceof IString);
     }
 
     /**
@@ -1114,5 +1169,30 @@ class ClrString extends Enumerable implements IString {
         }
 
         return \strval($value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function writeTo(&$target, int $bufferSize = 1024) : IString {
+        if (null === $target) {
+            throw new ArgumentNullException('target');
+        }
+
+        if ($bufferSize < 1) {
+            throw new ArgumentOutOfRangeException($bufferSize, 'bufferSize');
+        }
+
+        if ($target instanceof IString) {
+            $target = $target->append($this->_wrappedValue);
+        }
+        else {
+            static::using(function(IStream $src, IStream $dest, int $buffSize) {
+                $src->copyTo($dest, $buffSize);
+            }, new MemoryStream($this->_wrappedValue)
+             , Stream::asStream($target), $bufferSize);
+        }
+
+        return $this;
     }
 }

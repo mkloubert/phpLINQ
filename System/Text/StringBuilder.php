@@ -47,6 +47,13 @@ class StringBuilder extends ClrString implements IMutableString {
     /**
      * {@inheritDoc}
      */
+    public function asImmutable() : IString {
+        return new ClrString($this->_wrappedValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function asMutable() : IMutableString {
         return $this;
     }
