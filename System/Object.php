@@ -297,7 +297,7 @@ class Object implements IObject {
     public static function toLambda($expr, bool $throwException = true) {
         $throwOrReturn = function() use ($throwException) {
             if ($throwException) {
-                throw new ArgumentException('expr', null, null, 0);
+                throw new ArgumentException('expr', 'No lambda expression!', null, 0);
             }
 
             return false;
@@ -315,7 +315,7 @@ class Object implements IObject {
                 (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
             {
                 if ($throwException) {
-                    throw new ArgumentException('expr', null, null, 1);
+                    throw new ArgumentException('expr', 'Syntax error in lambda expression!', null, 1);
                 }
 
                 return false;
