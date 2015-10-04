@@ -38,7 +38,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject {
+interface IObject extends IEquatable {
     /**
      * Returns the string representation of that object.
      *
@@ -46,15 +46,6 @@ interface IObject {
      */
     function __toString();
 
-
-    /**
-     * Compares that object with another.
-     *
-     * @param mixed $other The other object / value.
-     *
-     * @return bool Are equal or not.
-     */
-    function equals($other) : bool;
 
     /**
      * Gets the type of that object.

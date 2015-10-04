@@ -29,43 +29,111 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+
+use \System\ValueProvider;
+
+
+function valueProviderClassProviderFunc() : \DateTime {
+    return new DateTime();
+}
+
+class valueProviderClassProviderClass {
+    public function __invoke() {
+        return valueProviderClassProviderFunc();
+    }
+}
 
 
 /**
- * An object that wraps a value.
+ * Tests for \System\ValueProvider class.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
+class ValueProviderTests extends TestCaseBase {
     /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
+     * Creates the class reflector for the tests.
      *
-     * @param mixed $value The value to wrap.
+     * @return ReflectionClass The reflector.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(ValueProvider::class);
     }
 
     /**
-     * {@inheritDoc}
+     * Creates an instance of a \System\ValueProvider based class.
+     *
+     * @param callable $provider The provider.
+     *
+     * @return ValueProvider The new instance.
      */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    protected function createInstance($provider) {
+        return $this->createClassReflector()
+                    ->newInstance($provider);
+    }
+
+    /**
+     * Creates the value providers for the tests.
+     *
+     * @return array The created providers.
+     */
+    protected function createValueProviders() : array {
+        return [
+            'valueProviderClassProviderFunc',
+            '\valueProviderClassProviderFunc',
+            function() {
+                return valueProviderClassProviderFunc();
+            },
+            new valueProviderClassProviderClass(),
+            [$this, 'valueProviderMethod1'],
+            [static::class, 'valueProviderMethod2'],
+            '=> valueProviderClassProviderFunc()',
+            '=> \valueProviderClassProviderFunc()',
+            '() => valueProviderClassProviderFunc()',
+            '() => \valueProviderClassProviderFunc()',
+            '=> return valueProviderClassProviderFunc();',
+            '=> return \valueProviderClassProviderFunc();',
+            '() => return valueProviderClassProviderFunc();',
+            '() => return \valueProviderClassProviderFunc();',
+            '=> { return valueProviderClassProviderFunc(); }',
+            '=> { return \valueProviderClassProviderFunc(); }',
+            '() => { return valueProviderClassProviderFunc(); }',
+            '() => { return \valueProviderClassProviderFunc(); }',
+            '=> {
+return valueProviderClassProviderFunc();
+}',
+            '=> {
+return \valueProviderClassProviderFunc();
+}',
+            '() => {
+return valueProviderClassProviderFunc();
+}',
+            '() => {
+return \valueProviderClassProviderFunc();
+}',
+        ];
+    }
+
+    public function test1() {
+        foreach ($this->createValueProviders() as $provider) {
+            /* @var ValueProvider $obj */
+
+            $obj = $this->createInstance($provider);
+
+            $value1 = $obj->getWrappedValue();
+            $this->assertInstanceOf(DateTime::class, $value1);
+
+            $value2 = $obj->getWrappedValue();
+            $this->assertInstanceOf(DateTime::class, $value2);
+
+            $this->assertNotSame($value1, $value2);
+        }
+    }
+
+    public function valueProviderMethod1() {
+        return static::valueProviderMethod2();
+    }
+
+    public static function valueProviderMethod2() {
+        return valueProviderClassProviderFunc();
     }
 }

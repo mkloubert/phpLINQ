@@ -29,43 +29,29 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'EqualityComparerTests.php';
+
+use \System\Comparer;
 
 
 /**
- * An object that wraps a value.
+ * Tests for \System\Comparer class.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $value The value to wrap.
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
+class ComparerTests extends EqualityComparerTests {
     /**
      * {@inheritDoc}
      */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    protected function createInstance($value, $equalityComparer = null, $comparer = null) {
+        return $this->createClassReflector()
+                    ->newInstance($value, $comparer, $equalityComparer);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(Comparer::class);
     }
 }

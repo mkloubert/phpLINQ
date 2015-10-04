@@ -29,43 +29,41 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+use \System\Lazy;
+
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'ValueProviderTests.php';
 
 
 /**
- * An object that wraps a value.
+ * Tests for \System\Lazy class.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $value The value to wrap.
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
+class LazyTests extends ValueProviderTests {
     /**
      * {@inheritDoc}
      */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(Lazy::class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    public function test1() {
+        foreach ($this->createValueProviders() as $provider) {
+            /* @var Lazy $obj */
+
+            $obj = $this->createInstance($provider);
+
+            $this->assertFalse($obj->isValueCreated());
+
+            $value1 = $obj->value();
+            $this->assertTrue($obj->isValueCreated());
+            $this->assertInstanceOf(DateTime::class, $value1);
+
+            $value2 = $obj->value();
+            $this->assertTrue($obj->isValueCreated());
+            $this->assertInstanceOf(DateTime::class, $value1);
+
+            $this->assertSame($value1, $value2);
+        }
     }
 }

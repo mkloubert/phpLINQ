@@ -38,5 +38,5 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IException extends IObject {
+interface IException extends IObject, \Throwable {
 }

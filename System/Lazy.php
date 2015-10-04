@@ -33,39 +33,46 @@ namespace System;
 
 
 /**
- * An object that wraps a value.
+ * Provides a lazy value.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
+class Lazy extends ValueProvider {
     /**
-     * @var mixed
+     * @var bool
      */
-    protected $_wrappedValue;
+    private $_isValueCreated = false;
+    private $_value;
 
 
     /**
-     * Initializes a new instance of that class.
+     * {@inheritDoc}
+     */
+    public final function getWrappedValue() {
+        if (!$this->_isValueCreated) {
+            $this->_value = parent::getWrappedValue();
+            $this->_isValueCreated = true;
+        }
+
+        return $this->_value;
+    }
+
+    /**
+     * Gets if the value has been created or not.
      *
-     * @param mixed $value The value to wrap.
+     * @return bool Value has been created or not.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    public final function isValueCreated() : bool {
+        return $this->_isValueCreated;
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the created value.
+     *
+     * @return mixed The created value.
      */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    public final function value() {
+        return $this->getWrappedValue();
     }
 }

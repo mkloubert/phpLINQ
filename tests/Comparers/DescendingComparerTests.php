@@ -29,43 +29,62 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'ComparerTests.php';
+
+use \System\Comparer;
+use \System\DescendingComparer;
 
 
 /**
- * An object that wraps a value.
+ * Tests for \System\DescendingComparer class.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $value The value to wrap.
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
+class DescendingComparerTests extends ComparerTests {
     /**
      * {@inheritDoc}
      */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(DescendingComparer::class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    public function testComparer1() {
+        $objs = $this->createComparerObjects();
+
+        usort($objs, function(Comparer $x, Comparer $y) : int {
+            return $x->compareTo($y);
+        });
+
+        $this->assertEquals(4, count($objs));
+
+        $values = array_map(function(Comparer $obj) {
+            return $obj->getWrappedValue();
+        }, $objs);
+
+        $this->assertEquals(count($objs), count($values));
+
+        for ($i = 0; $i < count($values); $i++) {
+            $this->assertSame(count($values) - $i, $values[$i]);
+        }
+    }
+
+    public function testComparer2() {
+        $objs = $this->createComparerObjects();
+
+        usort($objs, function(Comparer $x, Comparer $y) : int {
+            return $y->compareTo($x);
+        });
+
+        $this->assertEquals(4, count($objs));
+
+        $values = array_map(function(Comparer $obj) {
+            return $obj->getWrappedValue();
+        }, $objs);
+
+        $this->assertEquals(count($objs), count($values));
+
+        for ($i = 0; $i < count($values); $i++) {
+            $this->assertSame($i + 1, $values[$i]);
+        }
     }
 }

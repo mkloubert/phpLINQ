@@ -33,39 +33,22 @@ namespace System;
 
 
 /**
- * An object that wraps a value.
+ * A value wrapper for comparing that object
+ * with another (value) descending.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param mixed $value The value to wrap.
-     */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
+class DescendingComparer extends Comparer {
     /**
      * {@inheritDoc}
      */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
-    }
+    public final function compareTo($other) : int {
+        $result = parent::compareTo($other);
+        if (\PHP_INT_MIN === $result) {
+            return \PHP_INT_MAX;
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+        return $result * -1;
     }
 }

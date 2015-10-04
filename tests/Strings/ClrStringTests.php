@@ -67,7 +67,7 @@ class ClrStringTests extends TestCaseBase {
     }
 
     /**
-     * Creates an instance of the \System\ClrString class.
+     * Creates an instance of a \System\ClrString based class.
      *
      * @param mixed $value The initial value.
      *

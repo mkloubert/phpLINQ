@@ -85,26 +85,24 @@ class Object implements IObject {
         $comparer = static::asCallable($comparer);
 
         $defaultComparer = function($x, $y) : int {
-            if ($x instanceof IObject) {
-                if ($x instanceof IComparable) {
-                    return $x->compareTo($y);
-                }
-
+            if ($x instanceof IComparable) {
+                return $x->compareTo($y);
+            }
+            else if ($x instanceof IEquatable) {
                 if ($x->equals($y)) {
                     return 0;
                 }
             }
 
-            if ($y instanceof IObject) {
-                if ($y instanceof IComparable) {
-                    $yComparedToX = $y->compareTo($x);
-                    if (\PHP_INT_MIN === $yComparedToX) {
-                        return \PHP_INT_MAX;
-                    }
-
-                    return $y->compareTo($x) * -1;
+            if ($y instanceof IComparable) {
+                $yComparedToX = $y->compareTo($x);
+                if (\PHP_INT_MIN === $yComparedToX) {
+                    return \PHP_INT_MAX;
                 }
 
+                return $y->compareTo($x) * -1;
+            }
+            else if ($y instanceof IEquatable) {
                 if ($y->equals($x)) {
                     return 0;
                 }
@@ -155,10 +153,10 @@ class Object implements IObject {
         $equalityComparer = static::asCallable($equalityComparer);
 
         $defaultEqualityComparer = function($x, $y) : bool {
-            if ($x instanceof IObject) {
+            if ($x instanceof IEquatable) {
                 return $x->equals($y);
             }
-            else if ($y instanceof IObject) {
+            else if ($y instanceof IEquatable) {
                 return $y->equals($x);
             }
 

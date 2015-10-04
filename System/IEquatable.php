@@ -33,39 +33,18 @@ namespace System;
 
 
 /**
- * An object that wraps a value.
+ * Describes an object that can be compared with another (value).
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
+interface IEquatable {
     /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
-    /**
-     * Initializes a new instance of that class.
+     * Compares that object with another.
      *
-     * @param mixed $value The value to wrap.
+     * @param mixed $other The other object / value.
+     *
+     * @return bool Are equal or not.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
-    }
+    function equals($other) : bool;
 }

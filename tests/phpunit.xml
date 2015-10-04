@@ -1,5 +1,11 @@
 <phpunit bootstrap="bootstrap.php">
     <testsuites>
+        <testsuite name="Comparers">
+            <file>Comparers/ComparerTests.php</file>
+            <file>Comparers/DescendingComparerTests.php</file>
+            <file>Comparers/EqualityComparerTests.php</file>
+        </testsuite>
+
         <testsuite name="Iterators">
             <file>Iterators/KeySelectorIteratorTests.php</file>
             <file>Iterators/KeyAndValueSelectorIteratorTests.php</file>
@@ -48,7 +54,7 @@
             <file>IEnumerable/ExceptTests.php</file>
             <file>IEnumerable/FirstOrDefaultTests.php</file>
             <file>IEnumerable/FirstTests.php</file>
-            <file>IENumerable/FormatAsStringTests.php</file>
+            <file>IEnumerable/FormatAsStringTests.php</file>
             <file>IEnumerable/GroupByTests.php</file>
             <file>IEnumerable/GroupJoinTests.php</file>
             <file>IEnumerable/IntersectTests.php</file>
@@ -113,6 +119,11 @@
             <file>IOrderedEnumerable/ThenByTests.php</file>
             <file>IOrderedEnumerable/ThenDescendingTests.php</file>
             <file>IOrderedEnumerable/ThenTests.php</file>
+        </testsuite>
+
+        <testsuite name="Values">
+            <file>Values/LazyTests.php</file>
+            <file>Values/ValueProviderTests.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

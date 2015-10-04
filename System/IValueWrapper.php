@@ -38,7 +38,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IValueWrapper extends IObject {
+interface IValueWrapper {
     /**
      * Gets the wrapped value.
      *

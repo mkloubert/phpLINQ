@@ -39,7 +39,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IComparable extends IObject {
+interface IComparable {
     /**
      * @param $other
      *

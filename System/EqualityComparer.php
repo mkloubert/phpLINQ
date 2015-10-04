@@ -33,39 +33,50 @@ namespace System;
 
 
 /**
- * An object that wraps a value.
+ * A value wrapper for comparing that object with another (value)
+ * by using an equality comparer callable.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
+class EqualityComparer extends ValueWrapper implements IComparable {
+    private $_equalityComparer;
 
 
     /**
      * Initializes a new instance of that class.
      *
      * @param mixed $value The value to wrap.
+     * @param callable $equalityComparer The custom equality comparer to use.
+     *
+     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
      */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
+    public function __construct($value, $equalityComparer = null) {
+        $this->_equalityComparer = static::getEqualityComparerSafe($equalityComparer);
+
+        parent::__construct($value);
     }
 
 
     /**
      * {@inheritDoc}
      */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
+    public function compareTo($other) : int {
+        $other = static::getRealValue($other);
+
+        if ($this->equals($other)) {
+            return 0;
+        }
+
+        $thisValue = static::getRealValue($this->_wrappedValue);
+        return $thisValue < $other ? -1 : 1;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getWrappedValue() {
-        return $this->_wrappedValue;
+    public final function equals($other) : bool {
+        return \call_user_func($this->_equalityComparer,
+                               static::getRealValue($this->_wrappedValue), static::getRealValue($other));
     }
 }

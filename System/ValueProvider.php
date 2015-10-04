@@ -33,39 +33,33 @@ namespace System;
 
 
 /**
- * An object that wraps a value.
+ * A value wrapper that provides a value by using a callable.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class ValueWrapper extends Object implements IValueWrapper {
-    /**
-     * @var mixed
-     */
-    protected $_wrappedValue;
-
-
+class ValueProvider extends ValueWrapper {
     /**
      * Initializes a new instance of that class.
      *
-     * @param mixed $value The value to wrap.
+     * @param callable $provider The callable that provides the value.
+     *
+     * @throws ArgumentException $provider is no valid callable / lambda expression.
+     * @throws ArgumentNullException $provider is (null).
      */
-    public function __construct($value) {
-        $this->_wrappedValue = $value;
+    public function __construct($provider) {
+        if (null === $provider) {
+            throw new ArgumentNullException('provider');
+        }
+
+        parent::__construct(static::asCallable($provider));
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this->getWrappedValue() == static::getRealValue($other);
-    }
 
     /**
      * {@inheritDoc}
      */
     public function getWrappedValue() {
-        return $this->_wrappedValue;
+        return \call_user_func($this->_wrappedValue);
     }
 }
