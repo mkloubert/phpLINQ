@@ -33,42 +33,23 @@ namespace System;
 
 
 /**
- * Provides a lazy value.
+ * Describes an object that provides a value lazy.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Lazy extends ValueProvider implements ILazy {
+interface ILazy extends IValueWrapper {
     /**
-     * @var bool
+     * Gets if the value has been created or not.
+     *
+     * @return bool Value has been created or not.
      */
-    private $_isValueCreated = false;
-    private $_value;
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getWrappedValue() {
-        if (!$this->_isValueCreated) {
-            $this->_value = parent::getWrappedValue();
-            $this->_isValueCreated = true;
-        }
-
-        return $this->_value;
-    }
+    function isValueCreated() : bool;
 
     /**
-     * {@inheritDoc}
+     * Gets the created value.
+     *
+     * @return mixed The created value.
      */
-    public final function isValueCreated() : bool {
-        return $this->_isValueCreated;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function value() {
-        return $this->getWrappedValue();
-    }
+    function value();
 }
