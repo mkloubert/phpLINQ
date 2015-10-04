@@ -33,6 +33,9 @@ namespace System;
 
 use \System\Collections\IEnumerable;
 use \System\Linq\Enumerable;
+use \System\IO\IOException;
+use \System\IO\IStream;
+use \System\IO\StreamClosedException;
 use \System\Text\StringBuilder;
 
 
@@ -128,15 +131,24 @@ class ClrString extends Enumerable implements IString {
      * {@inheritDoc}
      */
     public final function appendLine($value = '', $newLine = null) : IString {
-        if (\func_num_args() < 2) {
-            $newLine = "\n";
-        }
-
-        if (true === $newLine) {
-            $newLine = \PHP_EOL;
-        }
+        static::updateNewLineValue(\func_num_args(), $newLine);
 
         return $this->appendArray([$value, $newLine]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function appendStream(IStream $stream, int $bufferSize = 1024, $count = null) : IString {
+        /* @var IString $result */
+        $result = null;
+
+        $this->loadStreamData(function($data, IString $str) use (&$result) {
+                                  $result = $str->append($data);
+                              }, $stream, $bufferSize, $count);
+
+        return null !== $result ? $result
+                                : $this->transformWrappedValue();
     }
 
     /**
@@ -300,9 +312,7 @@ class ClrString extends Enumerable implements IString {
      * {@inheritDoc}
      */
     public final function insert(int $startIndex, $value) : IString {
-        if (($startIndex < 0) || ($startIndex > $this->length())) {
-            throw new ArgumentOutOfRangeException($startIndex, 'startIndex');
-        }
+        $this->throwIfIndexOfOfRange($startIndex, true);
 
         $valueToInsert = '';
 
@@ -320,6 +330,8 @@ class ClrString extends Enumerable implements IString {
      * {@inheritDoc}
      */
     public final function insertArray(int $startIndex, $values) : IString {
+        $this->throwIfIndexOfOfRange($startIndex, true);
+
         $argCount = \func_num_args();
         for ($i = 1; $i < $argCount; $i++) {
             $valueToInsert = '';
@@ -338,12 +350,38 @@ class ClrString extends Enumerable implements IString {
      * {@inheritDoc}
      */
     public final function insertBuffer(int $startIndex, $action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString {
+        $this->throwIfIndexOfOfRange($startIndex, true);
+
         static::updateBufferMethodArgs(\func_get_args(),
                                        $action, $startNewOrBufferFunc, $bufferFunc);
 
         return $this->insert($startIndex, $this->invokeBufferFunc($action,
                                                                   $startNewOrBufferFunc,
                                                                   $bufferFunc));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function insertLine(int $startIndex, $value = '', $newLine = null) : IString {
+        static::updateNewLineValue(\func_num_args() - 1, $newLine);
+
+        return $this->insertArray($startIndex, [$value, $newLine]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function insertStream(int $startIndex, IStream $stream, int $bufferSize = 1024, $count = null) : IString {
+        $this->throwIfIndexOfOfRange($startIndex, true);
+
+        $valueToInsert = '';
+
+        $this->loadStreamData(function($data) use (&$valueToInsert) {
+                                  $valueToInsert .= $data;
+                              }, $stream, $bufferSize, $count);
+
+        return $this->insert($startIndex, $valueToInsert);
     }
 
     /**
@@ -537,6 +575,60 @@ class ClrString extends Enumerable implements IString {
     }
 
     /**
+     * Loads data from a stream.
+     *
+     * @param callable $onDataArrived The event that is raised when data has arrived.
+     * @param IStream $stream
+     * @param int $bufferSize The buffer size for read operation to use.
+     * @param int|null $count The maximum number of bytes to load.
+     *
+     * @throws ArgumentOutOfRangeException $bufferSize is less than 1
+     *                                     -- or ---
+     *                                     $count is defined and less than 0.
+     * @throws IOException Read operation failed.
+     * @throws NotSupportedException Stream is not readable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    protected function loadStreamData(callable $onDataArrived, IStream $stream, int $bufferSize, $count) {
+        if ($bufferSize < 1) {
+            throw new ArgumentOutOfRangeException($bufferSize, 'bufferSize');
+        }
+
+        if (null !== $count) {
+            if ($count < 0) {
+                throw new ArgumentOutOfRangeException($count, 'count');
+            }
+        }
+
+        $me = $this;
+
+        $invokeOnDataArrived = function($data) use ($me, $onDataArrived, $stream) {
+            $onDataArrived($data, $me, $stream);
+        };
+
+        if (null === $count) {
+            $invokeOnDataArrived($stream->readToEnd($bufferSize));
+        }
+        else {
+            while ($count > 0) {
+                $dataSize = $count;
+                if ($dataSize > $bufferSize) {
+                    $dataSize = $bufferSize;
+                }
+
+                $data = $stream->read($dataSize);
+                if (null === $data) {
+                    // no more data
+                    break;
+                }
+
+                $invokeOnDataArrived($data);
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     public final function offsetExists($index) {
@@ -673,6 +765,28 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function prependLine($value = '', $newLine = null) : IString {
+        static::updateNewLineValue(\func_num_args(), $newLine);
+
+        return $this->prependArray([$value, $newLine]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function prependStream(IStream $stream, int $bufferSize = 1024, $count = null) : IString {
+        $valueToPrepend = '';
+
+        $this->loadStreamData(function($data) use (&$valueToPrepend) {
+                                  $valueToPrepend .= $data;
+                              }, $stream, $bufferSize, $count);
+
+        return $this->prepend($valueToPrepend);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function remove(int $startIndex, $count = null) : IString {
         $argCount = \func_num_args();
 
@@ -793,11 +907,17 @@ class ClrString extends Enumerable implements IString {
      * Throws an exception if an index is out of range.
      *
      * @param int $index The value to check.
+     * @param bool $allowStringLength Allow length of string as valid value or not.
      *
      * @throws ArgumentOutOfRangeException $index is out of range.
      */
-    protected final function throwIfIndexOfOfRange(int $index) {
-        if (($index < 0) || ($index >= \strlen($this->_wrappedValue))) {
+    protected final function throwIfIndexOfOfRange(int $index, bool $allowStringLength = false) {
+        $outOfLengthVal = \strlen($this->_wrappedValue);
+        if ($allowStringLength) {
+            ++$outOfLengthVal;
+        }
+
+        if (($index < 0) || ($index >= $outOfLengthVal)) {
             throw new ArgumentOutOfRangeException($index, 'index');
         }
     }
@@ -949,6 +1069,22 @@ class ClrString extends Enumerable implements IString {
         }
 
         $bufferFunc = static::asCallable($bufferFunc);
+    }
+
+    /**
+     * Updates the "new line" value for a suitable method.
+     *
+     * @param int $argCount The number of arguments that were submitted to the method.
+     * @param string &$newLine The variable that contains the "new line" value.
+     */
+    protected static function updateNewLineValue(int $argCount, &$newLine) {
+        if ($argCount < 2) {
+            $newLine = "\n";
+        }
+
+        if (true === $newLine) {
+            $newLine = \PHP_EOL;
+        }
     }
 
     /**

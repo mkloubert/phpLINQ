@@ -33,6 +33,7 @@ use \System\ArgumentOutOfRangeException;
 use \System\ClrString;
 use \System\IString;
 use \System\NotSupportedException;
+use \System\IO\FileStream;
 use \System\Linq\Enumerable;
 
 
@@ -211,6 +212,40 @@ class ClrStringTests extends TestCaseBase {
         $this->checkTransformMethod(function(IString $str) {
             return $str->appendLine('def', "P.Z. stinkt!");
         }, 'ABCdefP.Z. stinkt!', 'ABC');
+    }
+
+    public function testAppendStream() {
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                return $str->appendStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'ABCxyz', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->readByte();
+                return $str->appendStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'ABCyz', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->read(3);
+                return $str->appendStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'ABC', 'ABC');
     }
 
     public function testArrayAccess() {
@@ -393,6 +428,58 @@ class ClrStringTests extends TestCaseBase {
         }
     }
 
+    public function testInsertLine() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->insertLine(3);
+        }, "012\n345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->insertLine(3, 'abc');
+        }, "012abc\n345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->insertLine(3, 'abc', true);
+        }, "012abc" . \PHP_EOL . "345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->insertLine(3, 'abc', 'PZ smells!');
+        }, "012abcPZ smells!345", '012345');
+    }
+
+    public function testInsertStream() {
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                return $str->insertStream(1, $fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'AxyzBC', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->readByte();
+                return $str->insertStream(1, $fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'AyzBC', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->read(3);
+                return $str->insertStream(1, $fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'ABC', 'ABC');
+    }
+
     public function testInvoke() {
         $now = new DateTime();
 
@@ -566,6 +653,58 @@ class ClrStringTests extends TestCaseBase {
                                                       ->select('$x => \strtoupper($x)')
                                                       ->reverse());
         }, '   ysMk  MKYS 3.0142xyz', $str2);
+    }
+
+    public function testPrependLine() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->prependLine();
+        }, "\n012345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->prependLine('abc');
+        }, "abc\n012345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->prependLine('abc', true);
+        }, "abc" . \PHP_EOL . "012345", '012345');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->prependLine('abc', 'PZ sux!');
+        }, "abcPZ sux!012345", '012345');
+    }
+
+    public function testPrependStream() {
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                return $str->prependStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'xyzABC', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->readByte();
+                return $str->prependStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'yzABC', 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            $fs = FileStream::openRead(__DIR__ . DIRECTORY_SEPARATOR . 'test.txt');
+            try {
+                $fs->read(3);
+                return $str->prependStream($fs);
+            }
+            finally {
+                $fs->dispose();
+            }
+        }, 'ABC', 'ABC');
     }
 
     public function testRemove() {

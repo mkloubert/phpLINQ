@@ -32,6 +32,9 @@
 namespace System;
 
 use \System\Collections\IEnumerable;
+use \System\IO\IOException;
+use \System\IO\IStream;
+use \System\IO\StreamClosedException;
 
 
 /**
@@ -116,6 +119,25 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function appendLine($value = '', $newLine = null) : IString;
 
     /**
+     * Loads data from a stream and appends it.
+     *
+     * @param IStream $stream The source stream.
+     * @param int $bufferSize The buffer size to use for the read operation.
+     * @param int|null $count The maximum number of data to load.
+     *
+     * @return IString The (new) stream.
+     *
+     * @throws ArgumentOutOfRangeException $bufferSize is less than 1
+     *                                     -- or ---
+     *                                     $count is defined and less than 0.
+     * @throws IOException Read operation failed.
+     * @throws NotSupportedException Stream is not readable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function appendStream(IStream $stream, int $bufferSize = 1024, $count = null) : IString;
+
+    /**
      * Returns that string as mutable version.
      *
      * @return IMutableString Mutable string.
@@ -166,27 +188,31 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     /**
      * Inserts a value.
      *
-     * @param $startIndex The zero based start index.
+     * @param int $startIndex The zero based start index.
      * @param mixed $value The value to insert.
      *
      * @return IString The (new) string.
+     *
+     * @throws ArgumentOutOfRangeException $startIndex is invalid.
      */
     function insert(int $startIndex, $value) : IString;
 
     /**
      * Inserts a list of values.
      *
-     * @param $startIndex The zero based start index.
+     * @param int $startIndex The zero based start index.
      * @param mixed ....$values One or more value list to insert.
      *
      * @return IString The (new) string.
+     *
+     * @throws ArgumentOutOfRangeException $startIndex is invalid.
      */
     function insertArray(int $startIndex, $values) : IString;
 
     /**
      * Invokes a buffered action and inserts the content and result.
      *
-     * @param $startIndex The zero based start index.
+     * @param int $startIndex The zero based start index.
      * @param callable $action The action to invoke.
      * @param bool|callable $startNewOrBufferFunc Start new buffer or not.
      *                                            If only one argument is submitted and that value is a callable
@@ -196,8 +222,44 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      *
      * @throws ArgumentException $action / $bufferFunc is no valid callable / lambda expression.
+     * @throws ArgumentOutOfRangeException $startIndex is invalid.
      */
     function insertBuffer(int $startIndex, $action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString;
+
+    /**
+     * Inserts a value with a new line expression.
+     *
+     * @param string $value The optional value to insert.
+     * @param string|bool $newLine The custom new line expression to use.
+     *                             If (true) the value from \PHP_EOL constant is used.
+     *
+     * @return IString The (new) string.
+     *
+     * @throws ArgumentOutOfRangeException $startIndex is invalid.
+     */
+    function insertLine(int $startIndex, $value = '', $newLine = null) : IString;
+
+    /**
+     * Loads data from a stream and inserts it.
+     *
+     * @param int $startIndex The zero based start index.
+     * @param IStream $stream The source stream.
+     * @param int $bufferSize The buffer size to use for the read operation.
+     * @param int|null $count The maximum number of data to load.
+     *
+     * @return IString The (new) stream.
+     *
+     * @throws ArgumentOutOfRangeException $startIndex is invalid
+     *                                     -- or --
+     *                                     $bufferSize is less than 1
+     *                                     -- or --
+     *                                     $count is defined and less than 0
+     * @throws IOException Read operation failed.
+     * @throws NotSupportedException Stream is not readable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function insertStream(int $startIndex, IStream $stream, int $bufferSize = 1024, $count = null) : IString;
 
     /**
      * Gets if the string is mutable or not.
@@ -317,6 +379,36 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function prependFormatArray($format, $args = null) : IString;
+
+    /**
+     * Prepends a value with a new line expression.
+     *
+     * @param string $value The optional value to prepend.
+     * @param string|bool $newLine The custom new line expression to use.
+     *                             If (true) the value from \PHP_EOL constant is used.
+     *
+     * @return IString The (new) string.
+     */
+    function prependLine($value = '', $newLine = null) : IString;
+
+    /**
+     * Loads data from a stream and prepends it.
+     *
+     * @param IStream $stream The source stream.
+     * @param int $bufferSize The buffer size to use for the read operation.
+     * @param int|null $count The maximum number of data to load.
+     *
+     * @return IString The (new) stream.
+     *
+     * @throws ArgumentOutOfRangeException $bufferSize is less than 1
+     *                                     -- or ---
+     *                                     $count is defined and less than 0.
+     * @throws IOException Read operation failed.
+     * @throws NotSupportedException Stream is not readable.
+     * @throws ObjectDisposedException Stream has been disposed.
+     * @throws StreamClosedException Stream has been closed.
+     */
+    function prependStream(IStream $stream, int $bufferSize = 1024, $count = null) : IString;
 
     /**
      * Removes a part from that string.
