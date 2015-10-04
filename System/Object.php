@@ -293,12 +293,11 @@ class Object implements IObject {
      * @return \Closure|bool The closure or (false) on error.
      *
      * @throws ArgumentException $expr is no valid expression.
-     * @throws FormatException Seems to be a lambda expression, but has an invalid format.
      */
     public static function toLambda($expr, bool $throwException = true) {
         $throwOrReturn = function() use ($throwException) {
             if ($throwException) {
-                throw new ArgumentException('expr');
+                throw new ArgumentException('expr', null, null, 0);
             }
 
             return false;
@@ -318,7 +317,7 @@ class Object implements IObject {
                 (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
             {
                 if ($throwException) {
-                    throw new FormatException();
+                    throw new ArgumentException('expr', null, null, 1);
                 }
 
                 return false;

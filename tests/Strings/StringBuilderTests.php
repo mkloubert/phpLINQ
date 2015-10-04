@@ -42,16 +42,15 @@ use \System\Text\StringBuilder;
  */
 class StringBuilderTest extends ClrStringTests {
     /**
-     * Creates an instance of the \System\Text\StringBuilder class.
-     *
-     * @param mixed $value The initial value.
-     *
-     * @return StringBuilder The new instance.
+     * {@inheritDoc}
      */
-    protected function createInstance($value = '') {
-        return new StringBuilder($value);
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(StringBuilder::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function checkTransformMethod(callable $action, $expected, $initialVal = '') {
         /* @var StringBuilder $str1 */
         /* @var StringBuilder $str2 */

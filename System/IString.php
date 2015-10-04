@@ -42,6 +42,16 @@ use \System\Collections\IEnumerable;
  */
 interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper {
     /**
+     * Returns a formatted string by using that instance as format string.
+     *
+     * @param mixed ...$arg One or more argument for the format string.
+     *
+     * @return IString The formatted string.
+     */
+    function __invoke();
+
+
+    /**
      * Appends a value.
      *
      * @param mixed ...$value One or more value to append.
@@ -58,6 +68,21 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function appendArray($values = null) : IString;
+
+    /**
+     * Invokes a buffered action and appends the content and result.
+     *
+     * @param callable $action The action to invoke.
+     * @param bool|callable $startNewOrBufferFunc Start new buffer or not.
+     *                                            If only one argument is submitted and that value is a callable
+     *                                            it will be used as value for $bufferFunc and set to default (true).
+     * @param callable $bufferFunc The optional callable to use for the NEW buffer.
+     *
+     * @return IString The (new) string.
+     *
+     * @throws ArgumentException $action / $bufferFunc is no valid callable / lambda expression.
+     */
+    function appendBuffer($action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString;
 
     /**
      * Appends a formatted string.
@@ -80,13 +105,15 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
     function appendFormatArray($format, $args = null) : IString;
 
     /**
-     * Returns a formatted string by using that instance as format string.
+     * Appends a value with a new line expression.
      *
-     * @param mixed ...$arg One or more argument for the format string.
+     * @param string $value The optional value to append.
+     * @param string|bool $newLine The custom new line expression to use.
+     *                             If (true) the value from \PHP_EOL constant is used.
      *
-     * @return IString The formatted string.
+     * @return IString The (new) string.
      */
-    function __invoke();
+    function appendLine($value = '', $newLine = null) : IString;
 
     /**
      * Returns that string as mutable version.
@@ -155,6 +182,22 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function insertArray(int $startIndex, $values) : IString;
+
+    /**
+     * Invokes a buffered action and inserts the content and result.
+     *
+     * @param $startIndex The zero based start index.
+     * @param callable $action The action to invoke.
+     * @param bool|callable $startNewOrBufferFunc Start new buffer or not.
+     *                                            If only one argument is submitted and that value is a callable
+     *                                            it will be used as value for $bufferFunc and set to default (true).
+     * @param callable $bufferFunc The optional callable to use for the NEW buffer.
+     *
+     * @return IString The (new) string.
+     *
+     * @throws ArgumentException $action / $bufferFunc is no valid callable / lambda expression.
+     */
+    function insertBuffer(int $startIndex, $action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString;
 
     /**
      * Gets if the string is mutable or not.
@@ -239,6 +282,21 @@ interface IString extends \ArrayAccess, IComparable, IEnumerable, IValueWrapper 
      * @return IString The (new) string.
      */
     function prependArray($values = null) : IString;
+
+    /**
+     * Invokes a buffered action and prepends the content and result.
+     *
+     * @param callable $action The action to invoke.
+     * @param bool|callable $startNewOrBufferFunc Start new buffer or not.
+     *                                            If only one argument is submitted and that value is a callable
+     *                                            it will be used as value for $bufferFunc and set to default (true).
+     * @param callable $bufferFunc The optional callable to use for the NEW buffer.
+     *
+     * @return IString The (new) string.
+     *
+     * @throws ArgumentException $action / $bufferFunc is no valid callable / lambda expression.
+     */
+    function prependBuffer($action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString;
 
     /**
      * Prepends a formatted string.

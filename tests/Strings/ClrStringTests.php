@@ -41,6 +41,28 @@ use \System\Linq\Enumerable;
  */
 class ClrStringTests extends TestCaseBase {
     /**
+     * Creates the buffer actions for the tests.
+     *
+     * @return array The actions.
+     */
+    protected function createBufferActions() : array {
+        return [
+            function() {
+                echo 'xyz';
+            }
+        ];
+    }
+
+    /**
+     * Creates the class reflector for the tests.
+     *
+     * @return ReflectionClass The reflector.
+     */
+    protected function createClassReflector() : ReflectionClass {
+        return new ReflectionClass(ClrString::class);
+    }
+
+    /**
      * Creates an instance of the \System\ClrString class.
      *
      * @param mixed $value The initial value.
@@ -48,7 +70,8 @@ class ClrStringTests extends TestCaseBase {
      * @return ClrString The new instance.
      */
     protected function createInstance($value = '') {
-        return new ClrString($value);
+        return $this->createClassReflector()
+                    ->newInstance($value);
     }
 
     protected function checkTransformMethod(callable $action, $expected, $initialVal = '') {
@@ -123,6 +146,14 @@ class ClrStringTests extends TestCaseBase {
         }, '123MKTMTMMK', $str3);
     }
 
+    public function testAppendBuffer() {
+        foreach ($this->createBufferActions() as $action) {
+            $this->checkTransformMethod(function(IString $str) use ($action) {
+                return $str->appendBuffer($action);
+            }, 'ABCxyz', 'ABC');
+        }
+    }
+
     public function testAppendFormat() {
         $str1 = $this->createInstance();
 
@@ -151,6 +182,24 @@ class ClrStringTests extends TestCaseBase {
                                                      ->select('$x => \strtolower($x)')
                                                      ->reverse());
         }, 'xyz3.0142   YSMK  mkys ', $str2);
+    }
+
+    public function testAppendLine() {
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->appendLine();
+        }, "ABC\n", 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->appendLine('def');
+        }, "ABCdef\n", 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->appendLine('def', true);
+        }, "ABCdef" . PHP_EOL, 'ABC');
+
+        $this->checkTransformMethod(function(IString $str) {
+            return $str->appendLine('def', "P.Z. stinkt!");
+        }, 'ABCdefP.Z. stinkt!', 'ABC');
     }
 
     public function testAsMutable() {
@@ -249,6 +298,14 @@ class ClrStringTests extends TestCaseBase {
         $str3 = $this->checkTransformMethod(function(IString $str) {
             return $str->insertArray(2, new ArrayIterator(['-', '?']), 'wurst');
         }, 'Adwurst-?BC', $str2);
+    }
+
+    public function testInsertBuffer() {
+        foreach ($this->createBufferActions() as $action) {
+            $this->checkTransformMethod(function(IString $str) use ($action) {
+                return $str->insertBuffer(3, $action);
+            }, '012xyz345', '012345');
+        }
     }
 
     public function testInvoke() {
@@ -388,6 +445,14 @@ class ClrStringTests extends TestCaseBase {
         }, 'TMMKMKTM231', $str3);
     }
 
+    public function testPrependBuffer() {
+        foreach ($this->createBufferActions() as $action) {
+            $this->checkTransformMethod(function(IString $str) use ($action) {
+                return $str->prependBuffer($action);
+            }, 'xyzABC', 'ABC');
+        }
+    }
+
     public function testPrependFormat() {
         $str1 = $this->createInstance('a');
 
@@ -464,6 +529,24 @@ class ClrStringTests extends TestCaseBase {
         $this->createInstance('acdbCDefCdcDg')
              ->replace('CD', 'cd', true, $replacementCount);
         $this->assertSame(4, $replacementCount);
+    }
+
+    public function testSerialization() {
+        $str1 = $this->createInstance('Braune Baeren brachten ihren Bruedern bunte Beeren');
+
+        $serializedStr = serialize($str1);
+
+        /* @var IString $str2 */
+        $str2 = unserialize($serializedStr);
+
+        $this->assertSame($str1->getWrappedValue(), $str2->getWrappedValue());
+        $this->assertSame((string)$str1, $str2->getWrappedValue());
+        $this->assertSame($str1->getWrappedValue(), (string)$str2);
+        $this->assertSame((string)$str1, (string)$str2);
+        $this->assertNotSame($str1, $str2);
+        $this->assertInstanceOf(get_class($str1), $str2);
+        $this->assertTrue($str1->equals($str2));
+        $this->assertTrue($str2->equals($str1));
     }
 
     public function testSimilarity() {

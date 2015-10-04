@@ -99,6 +99,18 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function appendBuffer($action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString {
+        static::updateBufferMethodArgs(\func_get_args(),
+                                       $action, $startNewOrBufferFunc, $bufferFunc);
+
+        return $this->append($this->invokeBufferFunc($action,
+                                                     $startNewOrBufferFunc,
+                                                     $bufferFunc));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function appendFormat($format) : IString {
         return $this->append(\call_user_func_array([static::class, 'format'],
                                                    \func_get_args()));
@@ -110,6 +122,21 @@ class ClrString extends Enumerable implements IString {
     public final function appendFormatArray($format, $args = null) : IString {
         return $this->append(\call_user_func_array([static::class, 'formatArray'],
                                                    \func_get_args()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function appendLine($value = '', $newLine = null) : IString {
+        if (\func_num_args() < 2) {
+            $newLine = "\n";
+        }
+
+        if (true === $newLine) {
+            $newLine = \PHP_EOL;
+        }
+
+        return $this->appendArray([$value, $newLine]);
     }
 
     /**
@@ -305,6 +332,57 @@ class ClrString extends Enumerable implements IString {
         }
 
         return $this->transformWrappedValue();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function insertBuffer(int $startIndex, $action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString {
+        static::updateBufferMethodArgs(\func_get_args(),
+                                       $action, $startNewOrBufferFunc, $bufferFunc);
+
+        return $this->insert($startIndex, $this->invokeBufferFunc($action,
+                                                                  $startNewOrBufferFunc,
+                                                                  $bufferFunc));
+    }
+
+    /**
+     * Invokes a buffered function.
+     *
+     * @param callable $func The function to invoke.
+     * @param bool $startNew Start new buffer or not.
+     * @param callable $bufferFunc The optional callable for the NEW buffer.
+     *
+     * @return string The final content of the buffer.
+     */
+    protected function invokeBufferFunc(callable $func, bool $startNew, $bufferFunc) {
+        $actionResult = null;
+
+        try {
+            if ($startNew) {
+                if (null === $bufferFunc) {
+                    \ob_start();
+                }
+                else {
+                    \ob_start($bufferFunc);
+                }
+            }
+
+            $actionResult = static::valueToString($func($this), false);
+        }
+        finally {
+            $result = \ob_get_contents();
+
+            if ($startNew) {
+                \ob_end_clean();
+            }
+        }
+
+        if (!static::isNullOrEmpty($actionResult)) {
+            $result .= $actionResult;
+        }
+
+        return $result;
     }
 
     /**
@@ -566,6 +644,18 @@ class ClrString extends Enumerable implements IString {
     /**
      * {@inheritDoc}
      */
+    public final function prependBuffer($action, $startNewOrBufferFunc = true, $bufferFunc = null) : IString {
+        static::updateBufferMethodArgs(\func_get_args(),
+                                       $action, $startNewOrBufferFunc, $bufferFunc);
+
+        return $this->prepend($this->invokeBufferFunc($action,
+                                                      $startNewOrBufferFunc,
+                                                      $bufferFunc));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function prependFormat($format) : IString {
         return $this->prepend(\call_user_func_array([static::class, 'format'],
                                                     \func_get_args()));
@@ -617,6 +707,13 @@ class ClrString extends Enumerable implements IString {
         return $this->invokeReplaceFunc($oldValue, $newValue,
                                         $ignoreCase,
                                         $count);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function serialize() : string {
+        return $this->_wrappedValue;
     }
 
     /**
@@ -815,6 +912,42 @@ class ClrString extends Enumerable implements IString {
      */
     public final function trimStart($character_mask = null) : IString {
         return $this->trimMe("\\ltrim", $character_mask);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function unserialize($str) {
+        $this->__construct($str);
+    }
+
+    /**
+     * Updates the arguments for a "buffer method"
+     *
+     * @param array $args The arguments that were submitted to the method.
+     * @param callable &$action The variable for the buffer action.
+     * @param bool $startNew The variable with the value that indicates if new buffer should be started or not.
+     * @param callable $bufferFunc The value for the buffer callback.
+     *
+     * @throws ArgumentNullException $action / $bufferFunc is no valid callable / lambda expression.
+     */
+    protected static function updateBufferMethodArgs(array $args, &$action, &$startNew, &$bufferFunc) {
+        if (null === $action) {
+            throw new ArgumentNullException('action');
+        }
+
+        $action = static::asCallable($action);
+
+        if (2 === count($args)) {
+            if (static::isCallable($args[1])) {
+                // swap values
+
+                $bufferFunc = $args[1];
+                $startNew   = true;
+            }
+        }
+
+        $bufferFunc = static::asCallable($bufferFunc);
     }
 
     /**
