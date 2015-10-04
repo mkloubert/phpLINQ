@@ -95,12 +95,9 @@ class Object implements IObject {
             }
 
             if ($y instanceof IComparable) {
-                $yComparedToX = $y->compareTo($x);
-                if (\PHP_INT_MIN === $yComparedToX) {
-                    return \PHP_INT_MAX;
-                }
+                $yToXComparer = new DescendingComparer($y);
 
-                return $y->compareTo($x) * -1;
+                return $yToXComparer->compareTo($x);
             }
             else if ($y instanceof IEquatable) {
                 if ($y->equals($x)) {
