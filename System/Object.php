@@ -70,6 +70,88 @@ class Object implements IObject {
     /**
      * {@inheritDoc}
      */
+    public function cloneMe() : ICloneable {
+        return clone $this;
+    }
+
+    /**
+     * Converts a value to another type.
+     *
+     * @param mixed $val The value to convert.
+     * @param string|\ReflectionClass $conversionType The type the object should be converted to.
+     * @param IFormatProvider|null $provider The optional format provider to use.
+     *
+     * @return mixed The new object / value.
+     *
+     * @throws InvalidCastException Conversion failed.
+     */
+    public static function convertTo($val, $conversionType, IFormatProvider $provider = null) {
+        $conversionType = static::getRealValue($conversionType);
+        $valueToConvert = static::getRealValue($val);
+
+        if ($valueToConvert instanceof IConvertible) {
+            return $valueToConvert->toType($conversionType, $provider);
+        }
+
+        if (\is_object($conversionType)) {
+            if (!$conversionType instanceof \ReflectionClass) {
+                $conversionType = new \ReflectionObject($conversionType);
+            }
+        }
+
+        $typeName = \trim(ClrString::valueToString($conversionType));
+
+        if (!$conversionType instanceof \ReflectionClass) {
+            if (\class_exists($typeName) || \interface_exists($typeName)) {
+                $conversionType = new \ReflectionClass($typeName);
+            }
+        }
+
+        if ($conversionType instanceof \ReflectionClass) {
+            if ($conversionType->isInstance($valueToConvert)) {
+                return $valueToConvert;
+            }
+
+            if ($conversionType->isInterface() &&
+                ($conversionType->getName() === IValueWrapper::class)) {
+
+                return new Comparer($valueToConvert);
+            }
+
+            if ($conversionType->isInstantiable() &&
+                $conversionType->implementsInterface(IValueWrapper::class)) {
+
+                return $conversionType->newInstance($valueToConvert);
+            }
+        }
+        else {
+            switch ($typeName) {
+                case 'callable':
+                case 'function':
+                    if (!static::isCallable($valueToConvert)) {
+                        return function() use ($valueToConvert) {
+                            return $valueToConvert;
+                        };
+                    }
+
+                    return static::asCallable($valueToConvert);
+                    break;
+
+                case 'null':
+                    $typeName = 'unset';
+                    break;
+            }
+
+            return eval(\sprintf('return (%s)$valueToConvert;',
+                                 $typeName));
+        }
+
+        throw new InvalidCastException($conversionType, $val);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function equals($other) : bool {
         return $this == static::getRealValue($other);
     }
@@ -80,6 +162,8 @@ class Object implements IObject {
      * @param callable $comparer The input value.
      *
      * @return callable The output value.
+     *
+     * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
     public static function getComparerSafe($comparer) : callable {
         $comparer = static::asCallable($comparer);
@@ -134,11 +218,35 @@ class Object implements IObject {
     }
 
     /**
+     * Keeps sure that a converter is NOT (null).
+     *
+     * @param callable $converter The input value.
+     *
+     * @return callable The output value.
+     *
+     * @throws ArgumentException $converter is no valid callable / lambda expression.
+     */
+    public static function getConverterSafe($converter) : callable {
+        $converter = static::asCallable($converter);
+
+        if (null === $converter) {
+            $cls = new \ReflectionClass(static::class);
+
+            return $cls->getMethod('convertTo')
+                       ->getClosure(null);
+        }
+
+        return static::wrapConverter($converter);
+    }
+
+    /**
      * Keeps sure that a equality comparer is NOT (null).
      *
      * @param callable $equalityComparer The input value.
      *
      * @return callable The output value.
+     *
+     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
      */
     public static function getEqualityComparerSafe($equalityComparer) : callable {
         if (true === $equalityComparer) {
@@ -184,6 +292,8 @@ class Object implements IObject {
      * @param callable $predicate The input value.
      *
      * @return callable The output value.
+     *
+     * @throws ArgumentException $predicate is no valid callable / lambda expression.
      */
     public static function getPredicateSafe($predicate) : callable {
         if (null === $predicate) {
@@ -367,6 +477,14 @@ class Object implements IObject {
     /**
      * {@inheritDoc}
      */
+    public function toType($conversionType, IFormatProvider $provider = null) {
+        return static::convertTo($this,
+                                 $conversionType, $provider);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function toString() : IString {
         return new ClrString(\get_class($this));
     }
@@ -410,12 +528,31 @@ class Object implements IObject {
      * @param callable $comparer The equality comparer to wrap.
      *
      * @return callable The wrapper.
+     *
+     * @throws ArgumentException $comparer is no valid callable / lambda expression.
      */
-    public static function wrapComparer($comparer) {
+    public static function wrapComparer($comparer) : callable {
         $comparer = static::asCallable($comparer);
 
         return function($x, $y) use ($comparer) : int {
             return $comparer($x, $y);
+        };
+    }
+
+    /**
+     * Wraps a value converter with a safe callable.
+     *
+     * @param callable $converter The converter to wrap.
+     *
+     * @return callable The wrapper.
+     *
+     * @throws ArgumentException $converter is no valid callable / lambda expression.
+     */
+    public static function wrapConverter($converter) : callable {
+        $converter = static::asCallable($converter);
+
+        return function($val, $conversionType, IFormatProvider $provider = null) use ($converter) {
+            return $converter($val, $conversionType, $provider);
         };
     }
 
@@ -425,8 +562,10 @@ class Object implements IObject {
      * @param callable $equalityComparer The equality comparer to wrap.
      *
      * @return callable The wrapper.
+     *
+     * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
      */
-    public static function wrapEqualityComparer($equalityComparer) {
+    public static function wrapEqualityComparer($equalityComparer) : callable {
         $equalityComparer = static::asCallable($equalityComparer);
 
         return function($x, $y) use ($equalityComparer) : bool {
@@ -440,6 +579,8 @@ class Object implements IObject {
      * @param callable $predicate The predicate to wrap.
      *
      * @return callable The wrapper.
+     *
+     * @throws ArgumentException $predicate is no valid callable / lambda expression.
      */
     public static function wrapPredicate($predicate) : callable {
         $predicate = static::asCallable($predicate);
@@ -455,6 +596,8 @@ class Object implements IObject {
      * @param callable $validator The validator to wrap.
      *
      * @return callable The wrapper.
+     *
+     * @throws ArgumentException $validator is no valid callable / lambda expression.
      */
     public static function wrapValueValidator($validator) : callable {
         $validator = static::asCallable($validator);

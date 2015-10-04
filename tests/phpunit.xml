@@ -1,9 +1,17 @@
 <phpunit bootstrap="bootstrap.php">
     <testsuites>
+        <testsuite name="Cloneable">
+            <file>Cloneable/CloneableTests.php</file>
+        </testsuite>
+
         <testsuite name="Comparers">
             <file>Comparers/ComparerTests.php</file>
             <file>Comparers/DescendingComparerTests.php</file>
             <file>Comparers/EqualityComparerTests.php</file>
+        </testsuite>
+
+        <testsuite name="Conversion">
+            <file>Conversion/ConverterTests.php</file>
         </testsuite>
 
         <testsuite name="Iterators">

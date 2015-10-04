@@ -38,7 +38,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface IObject extends IEquatable {
+interface IObject extends ICloneable, IConvertible, IEquatable {
     /**
      * Returns the string representation of that object.
      *

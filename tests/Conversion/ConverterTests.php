@@ -29,73 +29,84 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+use \System\ValueWrapper;
 
 
 /**
- * An exception.
+ * Tests for converting objects and values.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
-     */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
+class ConverterTests extends TestCaseBase {
+    public function testCallable() {
+        foreach (['callable', 'function'] as $targetType) {
+            /* @var callable $func1 */
+            /* @var callable $func2 */
+            /* @var callable $func3 */
+            /* @var callable $func4 */
+            /* @var callable $func5 */
 
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
+            $obj1 = new ValueWrapper('1');
+            $obj2 = new ValueWrapper(2);
+            $obj3 = new ValueWrapper(3.0);
+            $obj4 = new ValueWrapper(4.5);
+            $obj5 = new ValueWrapper(function($a, $b) {
+                return $a + $b;
+            });
+
+            $this->assertSame('1', $obj1->getWrappedValue());
+            $this->assertSame(2, $obj2->getWrappedValue());
+            $this->assertSame(3.0, $obj3->getWrappedValue());
+            $this->assertSame(4.5, $obj4->getWrappedValue());
+            $this->assertTrue(is_callable($obj5->getWrappedValue()));
+
+            $func1 = $obj1->toType($targetType);
+            $func2 = $obj2->toType($targetType);
+            $func3 = $obj3->toType($targetType);
+            $func4 = $obj4->toType($targetType);
+            $func5 = $obj5->toType($targetType);
+
+            $this->assertTrue(is_callable($func1));
+            $this->assertTrue(is_callable($func2));
+            $this->assertTrue(is_callable($func3));
+            $this->assertTrue(is_callable($func4));
+            $this->assertTrue(is_callable($func5));
+
+            $this->assertSame($func1(), $obj1->getWrappedValue());
+            $this->assertSame($func2(), $obj2->getWrappedValue());
+            $this->assertSame($func3(), $obj3->getWrappedValue());
+            $this->assertSame($func4(), $obj4->getWrappedValue());
+            $this->assertSame($func5, $obj5->getWrappedValue());
+
+            $this->assertSame(6, $func5(2, 4));
+        }
     }
 
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
+    public function testValueWrapper() {
+        $obj1 = new ValueWrapper('1');
+        $obj2 = new ValueWrapper(2);
+        $obj3 = new ValueWrapper(3.0);
+        $obj4 = new ValueWrapper(4.5);
 
+        $this->assertSame('1', $obj1->getWrappedValue());
+        $this->assertSame('1', $obj1->toType('string'));
+        $this->assertSame(null, $obj1->toType('unset'));
+        $this->assertSame(1, $obj1->toType('int'));
+        $this->assertSame(1.0, $obj1->toType('float'));
 
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
+        $this->assertSame(2, $obj2->getWrappedValue());
+        $this->assertSame('2', $obj2->toType('string'));
+        $this->assertSame(2.0, $obj2->toType('float'));
+        $this->assertSame(null, $obj2->toType('unset'));
 
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
+        $this->assertSame(3.0, $obj3->getWrappedValue());
+        $this->assertSame('3', $obj3->toType('string'));
+        $this->assertSame(3, $obj3->toType('int'));
+        $this->assertSame(null, $obj3->toType('unset'));
 
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
+        $this->assertSame(4.5, $obj4->getWrappedValue());
+        $this->assertSame('4.5', $obj4->toType('string'));
+        $this->assertSame(4, $obj4->toType('int'));
+        $this->assertSame(null, $obj4->toType('unset'));
     }
 }

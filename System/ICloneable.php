@@ -33,69 +33,16 @@ namespace System;
 
 
 /**
- * An exception.
+ * Describes an object that is cloneable.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+interface ICloneable {
     /**
-     * Initializes a new instance of that class.
+     * Clones that object.
      *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
+     * @return ICloneable The cloned object.
      */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
-
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
-    }
-
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
-    }
+    function cloneMe() : ICloneable;
 }

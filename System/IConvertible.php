@@ -33,69 +33,21 @@ namespace System;
 
 
 /**
- * An exception.
+ * Describes an object that can be converted to another type.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+interface IConvertible {
     /**
-     * Initializes a new instance of that class.
+     * Converts that object to another type.
      *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
+     * @param string|\ReflectionClass $conversionType The type the object should be converted to.
+     * @param IFormatProvider|null $provider The optional format provider to use.
+     *
+     * @return mixed The new object / value.
+     *
+     * @throws InvalidCastException Conversion failed.
      */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
-
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
-    }
-
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
-    }
+    function toType($conversionType, IFormatProvider $provider = null);
 }

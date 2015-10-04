@@ -33,69 +33,33 @@ namespace System;
 
 
 /**
- * An exception.
+ * A converter that uses a callable for converting its wrapped value to a target type.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+class Converter extends ValueWrapper {
+    private $_converter;
+
+
     /**
      * Initializes a new instance of that class.
      *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
+     * @param mixed $value The value to wrap.
+     * @param callable $converter The converter to use.
      */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
+    public function __construct($value, $converter = null) {
+        $this->_converter = static::getConverterSafe($converter);
 
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
+        parent::__construct($value);
     }
 
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
 
     /**
      * {@inheritDoc}
      */
     public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
+        return \call_user_func($this->_converter,
+                               static::getRealValue($this->_wrappedValue), static::getRealValue($conversionType), $provider);
     }
 }

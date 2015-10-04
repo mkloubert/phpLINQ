@@ -33,69 +33,52 @@ namespace System;
 
 
 /**
- * An exception.
+ * Indicates that a cast operation failed.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+class InvalidCastException extends Exception {
+    private $_targetType;
+    private $_value;
+
+
     /**
      * Initializes a new instance of that class.
      *
+     * @param mixed $targetType The target type.
+     * @param mixed $value The value that has tried to be converted / casted.
      * @param string $message The message.
      * @param \Exception $innerException The inner exception.
      * @param int $code The code.
      */
-    public function __construct($message = null,
+    public function __construct($targetType = null, $value = null,
+                                $message = null,
                                 \Exception $innerException = null,
                                 int $code = 0) {
 
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
-    }
+        $this->_targetType = $targetType;
+        $this->_value = $value;
 
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
+        parent::__construct($message, $innerException, $code);
     }
 
 
     /**
-     * {@inheritDoc}
+     * Gets the target type.
+     *
+     * @return mixed The target type.
      */
-    public function cloneMe() : ICloneable {
-        return clone $this;
+    public final function targetType() {
+        return $this->_targetType;
     }
 
     /**
-     * {@inheritDoc}
+     * The value that has tried to be converted / casted.
+     *
+     * @return mixed The value.
      */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
+    public final function value() {
+        return $this->_value;
     }
 }

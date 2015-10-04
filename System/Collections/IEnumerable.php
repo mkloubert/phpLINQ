@@ -34,6 +34,7 @@ namespace System\Collections;
 use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
+use \System\IFormatProvider;
 use \System\IObject;
 use \System\IString;
 use \System\Linq\ILookup;
@@ -125,10 +126,11 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * Casts all items of that class to a specific type.
      *
      * @param string $type The target type.
+     * @param IFormatProvider $provider The custom format provider to use.
      *
      * @return IEnumerable The new sequence.
      */
-    function cast($type) : IEnumerable;
+    function cast($type, IFormatProvider $provider = null) : IEnumerable;
 
     /**
      * Concats the items of that sequence with one or more others.

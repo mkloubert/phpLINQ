@@ -29,73 +29,26 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-namespace System;
+use \System\ValueWrapper;
 
 
 /**
- * An exception.
+ * Tests for cloneable object.
  *
- * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
-    /**
-     * Initializes a new instance of that class.
-     *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
-     */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
+class CloneableTests extends TestCaseBase {
+    public function testValueWrapper() {
+        /* @var ValueWrapper $obj2 */
 
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
-    }
+        $obj1 = new ValueWrapper(1);
 
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
+        $this->assertSame(1, $obj1->getWrappedValue());
 
+        $obj2 = $obj1->cloneMe();
 
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
+        $this->assertInstanceOf(get_class($obj1), $obj2);
+        $this->assertNotSame($obj1, $obj2);
+        $this->assertSame(1, $obj2->getWrappedValue());
     }
 }

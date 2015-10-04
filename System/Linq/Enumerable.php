@@ -50,6 +50,7 @@ use \System\Collections\KeySelectorIterator;
 use \System\Collections\KeyAndValueSelectorIterator;
 use \System\Collections\Set;
 use \System\ClrString;
+use \System\IFormatProvider;
 use \System\Object;
 
 
@@ -246,33 +247,12 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
-    public final function cast($type) : IEnumerable {
-        $type     = \trim($type);
-        $castCode = \sprintf('return (%s)$x;', $type);
-        $cls      = $this->getType();
+    public final function cast($type, IFormatProvider $provider = null) : IEnumerable {
+        $cls = $this->getType();
+        $ctm = $cls->getMethod('convertTo')->getClosure(null);
 
-        $myMethods = [
-            'asCallable' => $cls->getMethod('asCallable')->getClosure(null),
-            'isCallable' => $cls->getMethod('isCallable')->getClosure(null),
-        ];
-
-        return $this->select(function($x) use ($castCode, $myMethods, $type) {
-                                 switch ($type) {
-                                     case 'callable':
-                                     case 'function':
-                                         if ($myMethods['isCallable']($x)) {
-                                             // is already callable
-                                             return $myMethods['asCallable']($x);
-                                         }
-
-                                         // wrap
-                                         return function() use ($x) {
-                                             return $x;
-                                         };
-                                         break;
-                                 }
-
-                                 return eval($castCode);
+        return $this->select(function($x) use ($ctm, $provider, $type) {
+                                 return $ctm($x, $type, $provider);
                              });
     }
 

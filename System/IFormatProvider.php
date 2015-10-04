@@ -33,69 +33,19 @@ namespace System;
 
 
 /**
- * An exception.
+ * Provides a mechanism for retrieving an object to control formatting.
  *
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Exception extends \Exception implements IException {
+interface IFormatProvider {
     /**
-     * Initializes a new instance of that class.
+     * Returns an object that provides formatting services for the specified type.
      *
-     * @param string $message The message.
-     * @param \Exception $innerException The inner exception.
-     * @param int $code The code.
+     * @param string|\ReflectionClass $formatType A value that specifies the type of format object to return.
+     *
+     * @return mixed A value specified by $formatType, if that object can supply the type of $formatType;
+     *               otherwise (null)
      */
-    public function __construct($message = null,
-                                \Exception $innerException = null,
-                                int $code = 0) {
-
-        parent::__construct(ClrString::valueToString($message),
-                            $code, $innerException);
-    }
-
-    /**
-     * @see Object::toString()
-     */
-    public final function __toString() {
-        return $this->toString()
-                    ->getWrappedValue();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function cloneMe() : ICloneable {
-        return clone $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function equals($other) : bool {
-        return $this == $other;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final function getType() : \ReflectionObject {
-        return new \ReflectionObject($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toString() : IString {
-        return new ClrString(parent::__toString());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return Object::convertTo($this,
-                                 $conversionType, $provider);
-    }
+    function getFormat($formatType);
 }
