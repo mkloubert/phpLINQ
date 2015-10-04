@@ -29,8 +29,10 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+use \System\ArgumentOutOfRangeException;
 use \System\ClrString;
 use \System\IString;
+use \System\NotSupportedException;
 use \System\Linq\Enumerable;
 
 
@@ -74,6 +76,15 @@ class ClrStringTests extends TestCaseBase {
                     ->newInstance($value);
     }
 
+    /**
+     * Invokes an action that transforms a string.
+     *
+     * @param callable $action The action to invoke which returns the (transformed) IString instance.
+     * @param string $expected The expected string value.
+     * @param string $initialVal The initial value.
+     *
+     * @return IString The value that was returned by $action.
+     */
     protected function checkTransformMethod(callable $action, $expected, $initialVal = '') {
         /* @var ClrString $str1 */
         /* @var ClrString $str2 */
@@ -200,6 +211,80 @@ class ClrStringTests extends TestCaseBase {
         $this->checkTransformMethod(function(IString $str) {
             return $str->appendLine('def', "P.Z. stinkt!");
         }, 'ABCdefP.Z. stinkt!', 'ABC');
+    }
+
+    public function testArrayAccess() {
+        $str = $this->createInstance('ABC');
+
+        $this->assertTrue(isset($str[0]));
+        $this->assertSame('A', $str[0]);
+        $this->assertTrue(isset($str[1]));
+        $this->assertSame('B', $str[1]);
+        $this->assertTrue(isset($str[2]));
+        $this->assertSame('C', $str[2]);
+
+        $this->assertFalse(isset($str[3]));
+        try {
+            $char = $str[3];
+        }
+        catch (\Exception $ex) {
+            $thrownEx = $ex;
+        }
+
+        $this->assertFalse(isset($char));
+        $this->assertTrue(isset($thrownEx));
+        $this->assertInstanceOf(ArgumentOutOfRangeException::class, $thrownEx);
+
+        unset($char);
+        unset($thrownEx);
+
+        $this->assertTrue(isset($str[1]));
+        try {
+            $char = $str[1];
+        }
+        catch (\Exception $ex) {
+            $thrownEx = $ex;
+        }
+
+        $this->assertTrue(isset($char));
+        $this->assertSame('B', $char);
+        $this->assertFalse(isset($thrownEx));
+
+        foreach (['', null, 'c', 'cD'] as $valueToInsert) {
+            unset($char);
+            unset($thrownEx);
+
+            try {
+                $str[2] = $valueToInsert;
+            }
+            catch (\Exception $ex) {
+                $thrownEx = $ex;
+            }
+
+            $this->assertFalse(isset($char));
+            $this->assertTrue(isset($thrownEx));
+            $this->assertInstanceOf(NotSupportedException::class, $thrownEx);
+
+            $this->assertEquals(3, count($str));
+            $this->assertSame('ABC', (string)$str);
+            $this->assertSame('ABC', $str->getWrappedValue());
+        }
+
+        unset($thrownEx);
+
+        try {
+            unset($str[1]);
+        }
+        catch (\Exception $ex) {
+            $thrownEx = $ex;
+        }
+
+        $this->assertTrue(isset($thrownEx));
+        $this->assertInstanceOf(NotSupportedException::class, $thrownEx);
+
+        $this->assertEquals(3, count($str));
+        $this->assertSame('ABC', (string)$str);
+        $this->assertSame('ABC', $str->getWrappedValue());
     }
 
     public function testAsMutable() {

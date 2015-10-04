@@ -31,6 +31,7 @@
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'ClrStringTests.php';
 
+use \System\ArgumentOutOfRangeException;
 use \System\IMutableString;
 use \System\Text\StringBuilder;
 
@@ -73,6 +74,48 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertTrue($str2->isMutable());
 
         return $str2;
+    }
+
+    public function testArrayAccess() {
+        $str = $this->createInstance('ABC');
+
+        $this->assertTrue(isset($str[0]));
+        $this->assertSame('A', $str[0]);
+        $this->assertTrue(isset($str[1]));
+        $this->assertSame('B', $str[1]);
+        $this->assertTrue(isset($str[2]));
+        $this->assertSame('C', $str[2]);
+
+        $this->assertFalse(isset($str[3]));
+        try {
+            $char = $str[3];
+        }
+        catch (\Exception $ex) {
+            $thrownEx = $ex;
+        }
+
+        $this->assertFalse(isset($char));
+        $this->assertTrue(isset($thrownEx));
+        $this->assertInstanceOf(ArgumentOutOfRangeException::class, $thrownEx);
+
+        unset($char);
+        unset($thrownEx);
+
+        $this->checkTransformMethod(function($str) {
+            $str[2] = 'cE';
+
+            return $str;
+        }, 'ABcE', $str);
+
+        $this->assertEquals(4, count($str));
+        $this->assertSame('ABcE', (string)$str);
+        $this->assertSame('ABcE', $str->getWrappedValue());
+
+        unset($str[0]);
+
+        $this->assertEquals(3, count($str));
+        $this->assertSame('BcE', (string)$str);
+        $this->assertSame('BcE', $str->getWrappedValue());
     }
 
     public function testAsMutable() {

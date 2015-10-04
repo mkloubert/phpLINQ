@@ -557,9 +557,10 @@ class ClrString extends Enumerable implements IString {
      */
     public final function offsetSet($index, $value) {
         $this->throwIfNotMutable();
-        $this->throwIfIndexOfOfRange($index);
 
-        $this->_wrappedValue[$index] = static::valueToString($value);
+        $this->offsetUnset($index);
+        $this->transformWrappedValue($this->insert($index, $value)
+                                          ->getWrappedValue());
     }
 
     /**
@@ -569,8 +570,8 @@ class ClrString extends Enumerable implements IString {
         $this->throwIfNotMutable();
         $this->throwIfIndexOfOfRange($index);
 
-        $this->transformWrappedValue(\substr($this->_wrappedValue, 0, $index) .
-                                     \substr($this->_wrappedValue, $index + 1));
+        $this->transformWrappedValue($this->remove($index, 1)
+                                          ->getWrappedValue());
     }
 
     /**
@@ -804,11 +805,11 @@ class ClrString extends Enumerable implements IString {
     /**
      * Throws an exception if that string is NOT mutable.
      *
-     * @throws InvalidOperationException String is NOT mutable.
+     * @throws NotSupportedException String is NOT mutable.
      */
     protected final function throwIfNotMutable() {
         if (!$this->isMutable()) {
-            throw new InvalidOperationException('String is NOT mutable!');
+            throw new NotSupportedException('String is NOT mutable!');
         }
     }
 
