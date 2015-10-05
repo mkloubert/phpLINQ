@@ -114,7 +114,7 @@ class Stream extends DisposableBase implements IStream {
         }
 
         if (\is_resource($val)) {
-            return new static($val, false);
+            return new self($val, false);
         }
 
         if (ClrString::canBeString($val)) {
