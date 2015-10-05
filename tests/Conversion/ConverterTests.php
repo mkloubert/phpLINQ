@@ -106,8 +106,14 @@ return \converterSumFunc($a, $b);
     }
 
     public function testCallable() {
+        $callableTypes = [
+            'callable',
+            'function',
+            \Closure::class,
+        ];
+
         foreach ($this->createSumFunctions() as $sumFunc) {
-            foreach (['callable', 'function'] as $targetType) {
+            foreach ($callableTypes as $targetType) {
                 /* @var callable $func1 */
                 /* @var callable $func2 */
                 /* @var callable $func3 */
@@ -142,7 +148,6 @@ return \converterSumFunc($a, $b);
                 $this->assertSame($func2(), $obj2->getWrappedValue());
                 $this->assertSame($func3(), $obj3->getWrappedValue());
                 $this->assertSame($func4(), $obj4->getWrappedValue());
-                $this->assertSame($func5, $obj5->getWrappedValue());
 
                 $this->assertSame(6.5, $func5(2, 4.5));
             }
@@ -164,6 +169,15 @@ return \converterSumFunc($a, $b);
             /* @var ILazy $lazyObj3 */
             /* @var ILazy $lazyObj4 */
 
+            $rc = $targetType;
+            if ('lazy' === $rc) {
+                $rc = Lazy::class;
+            }
+
+            if (!$rc instanceof ReflectionClass) {
+                $rc = new ReflectionClass($rc);
+            }
+
             $obj1 = new ValueWrapper('1');
             $obj2 = new ValueWrapper(2);
             $obj3 = new ValueWrapper(3.0);
@@ -180,21 +194,25 @@ return \converterSumFunc($a, $b);
             $lazyObj4 = $obj4->toType($targetType);
 
             $this->assertInstanceOf(ILazy::class, $lazyObj1);
+            $this->assertInstanceOf($rc->getName(), $lazyObj1);
             $this->assertFalse($lazyObj1->isValueCreated());
             $this->assertSame($obj1->getWrappedValue(), $lazyObj1->value());
             $this->assertTrue($lazyObj1->isValueCreated());
 
             $this->assertInstanceOf(ILazy::class, $lazyObj2);
+            $this->assertInstanceOf($rc->getName(), $lazyObj2);
             $this->assertFalse($lazyObj2->isValueCreated());
             $this->assertSame($obj2->getWrappedValue(), $lazyObj2->value());
             $this->assertTrue($lazyObj2->isValueCreated());
 
             $this->assertInstanceOf(ILazy::class, $lazyObj3);
+            $this->assertInstanceOf($rc->getName(), $lazyObj3);
             $this->assertFalse($lazyObj3->isValueCreated());
             $this->assertSame($obj3->getWrappedValue(), $lazyObj3->value());
             $this->assertTrue($lazyObj3->isValueCreated());
 
             $this->assertInstanceOf(ILazy::class, $lazyObj4);
+            $this->assertInstanceOf($rc->getName(), $lazyObj4);
             $this->assertFalse($lazyObj4->isValueCreated());
             $this->assertSame($obj4->getWrappedValue(), $lazyObj4->value());
             $this->assertTrue($lazyObj4->isValueCreated());
@@ -247,6 +265,11 @@ return \converterSumFunc($a, $b);
             /* @var IValueWrapper $obj3 */
             /* @var IValueWrapper $obj4 */
 
+            $rc = $targetType;
+            if (!$rc instanceof ReflectionClass) {
+                $rc = new ReflectionClass($rc);
+            }
+
             $val1 = '1';
             $val2 = 2;
             $val3 = 3.0;
@@ -258,15 +281,19 @@ return \converterSumFunc($a, $b);
             $obj4 = Object::convertTo($val4, $targetType);
 
             $this->assertInstanceOf(IValueWrapper::class, $obj1);
+            $this->assertInstanceOf($rc->getName(), $obj1);
             $this->assertSame($val1, $obj1->getWrappedValue());
 
             $this->assertInstanceOf(IValueWrapper::class, $obj2);
+            $this->assertInstanceOf($rc->getName(), $obj2);
             $this->assertSame($val2, $obj2->getWrappedValue());
 
             $this->assertInstanceOf(IValueWrapper::class, $obj3);
+            $this->assertInstanceOf($rc->getName(), $obj3);
             $this->assertSame($val3, $obj3->getWrappedValue());
 
             $this->assertInstanceOf(IValueWrapper::class, $obj4);
+            $this->assertInstanceOf($rc->getName(), $obj4);
             $this->assertSame($val4, $obj4->getWrappedValue());
         }
     }

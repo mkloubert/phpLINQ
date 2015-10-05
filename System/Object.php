@@ -128,6 +128,14 @@ class Object implements IObject {
                 return $valueToConvert;
             }
 
+            // to closure?
+            if ($conversionType->getName() === \Closure::class) {
+                return function() use ($valueToCallable) {
+                    return \call_user_func_array($valueToCallable(),
+                                                 \func_get_args());
+                };
+            }
+
             // to IValueWrapper?
             if ($conversionType->isInterface() &&
                 ($conversionType->getName() === IValueWrapper::class)) {
