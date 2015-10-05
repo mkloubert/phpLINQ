@@ -248,8 +248,8 @@ class Enumerable extends Object implements IEnumerable {
      * {@inheritDoc}
      */
     public final function cast($type, IFormatProvider $provider = null) : IEnumerable {
-        $cls = $this->getType();
-        $ctm = $cls->getMethod('convertTo')->getClosure(null);
+        $ctm = $this->getType()
+                    ->getMethod('convertTo')->getClosure(null);
 
         return $this->select(function($x) use ($ctm, $provider, $type) {
                                  return $ctm($x, $type, $provider);

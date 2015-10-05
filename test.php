@@ -45,26 +45,27 @@ class TestClass {
     }
 }
 
-use \System\Linq\Enumerable;
-use \System\IO\IStream;
-use \System\IO\TempFileStream;
-use \System\Object;
 
-$res = fopen('test.txt', 'r');
+use \System\IO\DirectoryInfo;
+use \System\IO\FileSystemInfo;
+use \System\IO\IFileSystemInfo;
+use \System\IO\IFileInfo;
 
-$tf = new TempFileStream();
+$dir = new DirectoryInfo('.');
 
-Object::using(function(TempFileStream $tf) {
+// var_dump((string)$dir);
 
-    var_dump(file_exists($tf->file())); // true
+foreach ($dir->enumerateDirectories() as $file) {
+    /* @var IFileInfo $file */
 
-    var_dump($tf->length()); // 0
-    var_dump($tf->position());  // 0
+    var_dump((string)$file->fullName());
+}
 
-    var_dump($tf->write('A'));  // 1
-    var_dump($tf->length()); // 0
-    var_dump($tf->position()); // 1
+// var_dump(pathinfo('.'));
 
-}, $tf);
+// var_dump((string)$dir->directory());
+// var_dump((string)$dir->directory()->directory());
+// var_dump((string)$dir->directory()->directory());
 
-var_dump(file_exists($tf->file()));
+
+// var_dump((string)$dir->directory()->directory()->directory()->directory()->name());
