@@ -36,12 +36,12 @@ use \System\Exception;
 
 
 /**
- * Indicates that a file was not found / does not exist.
+ * Indicates that a directory was not found / does not exist.
  *
  * @package System\IO
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class FileNotFoundException extends Exception {
+class DirectoryNotFoundException extends Exception {
     /**
      * @var string
      */
@@ -51,7 +51,7 @@ class FileNotFoundException extends Exception {
     /**
      * Initializes a new instance of that class.
      *
-     * @param string $path The path of the file.
+     * @param string $path The path of the directory.
      * @param string $message The message.
      * @param \Exception $innerException The inner exception.
      * @param int $code The code.

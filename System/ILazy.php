@@ -38,7 +38,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-interface ILazy extends IValueWrapper {
+interface ILazy {
     /**
      * Gets if the value has been created or not.
      *

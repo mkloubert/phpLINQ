@@ -355,15 +355,45 @@ class Object implements IObject {
      * @return mixed The output value.
      */
     public static function getRealValue($val) {
-        while ($val instanceof IValueWrapper) {
-            $wrappedValue = $val->getWrappedValue();
-            if ($wrappedValue === $val) {
-                // prevent for a stack overflow
-                break;
+        $handledValues = [];
+
+        $checkForUnhandledValue = function($valueToCheck) use (&$handledValues) {
+            foreach ($handledValues as $hv) {
+                if ($hv === $valueToCheck) {
+                    // already handled
+                    return false;
+                }
             }
 
-            $val = $wrappedValue;
+            // not handled yet => add to list
+            $handledValues[] = $valueToCheck;
+            return true;
+        };
+
+        do {
+            if ($val instanceof IValueWrapper) {
+                $wrappedValue = $val->getWrappedValue();
+
+                if ($wrappedValue !== $val) {
+                    if ($checkForUnhandledValue($wrappedValue)) {
+                        $val = $wrappedValue;
+                        continue;  // check next
+                    }
+                }
+            }
+
+            if ($val instanceof ILazy) {
+                $lazyVal = $val->value();
+
+                if ($lazyVal !== $val) {
+                    if ($checkForUnhandledValue($lazyVal)) {
+                        $val = $lazyVal;
+                        continue;  // check next
+                    }
+                }
+            }
         }
+        while (false);  // no infinite loop
 
         return $val;
     }
