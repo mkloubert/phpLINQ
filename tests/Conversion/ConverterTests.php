@@ -30,11 +30,20 @@
  **********************************************************************************************************************/
 
 use \System\Object;
+use \System\ILazy;
 use \System\IValueWrapper;
 use \System\ValueWrapper;
 
 
-function converterSumFunc($a, $b) {
+function converterSumFunc($a = null, $b = null) {
+    if (func_num_args() < 1) {
+        $a = 0;
+    }
+
+    if (func_num_args() < 2) {
+        $b = 0;
+    }
+
     return $a + $b;
 }
 
@@ -136,6 +145,57 @@ return \converterSumFunc($a, $b);
 
                 $this->assertSame(6.5, $func5(2, 4.5));
             }
+        }
+    }
+
+    public function testLazy() {
+        foreach ($this->createSumFunctions() as $sumFunc) {
+            /* @var ILazy $lazyObj1 */
+            /* @var ILazy $lazyObj2 */
+            /* @var ILazy $lazyObj3 */
+            /* @var ILazy $lazyObj4 */
+            /* @var ILazy $lazyObj5 */
+
+            $obj1 = new ValueWrapper('1');
+            $obj2 = new ValueWrapper(2);
+            $obj3 = new ValueWrapper(3.0);
+            $obj4 = new ValueWrapper(4.5);
+            $obj5 = new ValueWrapper(Object::asCallable($sumFunc));
+
+            $this->assertSame('1', $obj1->getWrappedValue());
+            $this->assertSame(2, $obj2->getWrappedValue());
+            $this->assertSame(3.0, $obj3->getWrappedValue());
+            $this->assertSame(4.5, $obj4->getWrappedValue());
+            $this->assertTrue(is_callable($obj5->getWrappedValue()));
+
+            $lazyObj1 = $obj1->toType('lazy');
+            $lazyObj2 = $obj2->toType('lazy');
+            $lazyObj3 = $obj3->toType('lazy');
+            $lazyObj4 = $obj4->toType('lazy');
+            $lazyObj5 = $obj5->toType('lazy');
+
+            $this->assertInstanceOf(ILazy::class, $lazyObj1);
+            $this->assertFalse($lazyObj1->isValueCreated());
+            $this->assertSame($obj1->getWrappedValue(), $lazyObj1->value());
+            $this->assertTrue($lazyObj1->isValueCreated());
+
+            $this->assertInstanceOf(ILazy::class, $lazyObj2);
+            $this->assertFalse($lazyObj2->isValueCreated());
+            $this->assertSame($obj2->getWrappedValue(), $lazyObj2->value());
+            $this->assertTrue($lazyObj2->isValueCreated());
+
+            $this->assertInstanceOf(ILazy::class, $lazyObj3);
+            $this->assertFalse($lazyObj3->isValueCreated());
+            $this->assertSame($obj3->getWrappedValue(), $lazyObj3->value());
+            $this->assertTrue($lazyObj3->isValueCreated());
+
+            $this->assertInstanceOf(ILazy::class, $lazyObj4);
+            $this->assertFalse($lazyObj4->isValueCreated());
+            $this->assertSame($obj4->getWrappedValue(), $lazyObj4->value());
+            $this->assertTrue($lazyObj4->isValueCreated());
+
+            $this->assertInstanceOf(ILazy::class, $lazyObj5);
+            $this->assertFalse($lazyObj5->isValueCreated());
         }
     }
 

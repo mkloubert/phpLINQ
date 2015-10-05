@@ -93,6 +93,20 @@ class Object implements IObject {
             return $valueToConvert->toType($conversionType, $provider);
         }
 
+        $thisCls = new \ReflectionClass(static::class);
+        $acm     = $thisCls->getMethod('asCallable')->getClosure(null);
+        $icm     = $thisCls->getMethod('isCallable')->getClosure(null);
+
+        $valueToCallable = function() use ($acm, $icm, &$valueToConvert) {
+            if (!$icm($valueToConvert)) {
+                return function() use (&$valueToConvert) {
+                    return $valueToConvert;
+                };
+            }
+
+            return $acm($valueToConvert);
+        };
+
         if (\is_object($conversionType)) {
             if (!$conversionType instanceof \ReflectionClass) {
                 $conversionType = new \ReflectionObject($conversionType);
@@ -114,12 +128,28 @@ class Object implements IObject {
                 return $valueToConvert;
             }
 
+            // to IValueWrapper?
             if ($conversionType->isInterface() &&
                 ($conversionType->getName() === IValueWrapper::class)) {
 
                 return new Comparer($valueToConvert);
             }
 
+            // to ILazy?
+            if ($conversionType->isInterface() &&
+                ($conversionType->getName() === ILazy::class)) {
+
+                return new Lazy($valueToCallable());
+            }
+
+            // ILazy based object?
+            if ($conversionType->isInstantiable() &&
+                $conversionType->implementsInterface(ILazy::class)) {
+
+                return $conversionType->newInstance($valueToCallable());
+            }
+
+            // IValueWrapper based object?
             if ($conversionType->isInstantiable() &&
                 $conversionType->implementsInterface(IValueWrapper::class)) {
 
@@ -133,14 +163,10 @@ class Object implements IObject {
         else {
             switch ($typeName) {
                 case 'callable':
+                case 'lazy':
                 case 'function':
-                    if (!static::isCallable($valueToConvert)) {
-                        return function() use ($valueToConvert) {
-                            return $valueToConvert;
-                        };
-                    }
-
-                    return static::asCallable($valueToConvert);
+                    return 'lazy' === $typeName ? new Lazy($valueToCallable())
+                                                : $valueToCallable();
                     break;
 
                 case 'null':
