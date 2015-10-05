@@ -57,10 +57,10 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
 
             $av = $seq->current();
             if ($exact) {
-                $this->assertEquals($ev, $av);
+                $this->assertSame($ev, $av);
             }
             else {
-                $this->assertSame($ev, $av);
+                $this->assertEquals($ev, $av);
             }
         }
     }
