@@ -46,7 +46,7 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
      * @param array $expected The expected values.
      * @param bool $exact Check values exactly or not.
      */
-    protected function checkForExpectedValues(IEnumerable $seq, array $expected = array(), bool $exact = true) {
+    protected function checkForExpectedValues(IEnumerable $seq, array $expected = [], bool $exact = true) {
         foreach ($expected as $index => $ev) {
             $seq->reset();
 
