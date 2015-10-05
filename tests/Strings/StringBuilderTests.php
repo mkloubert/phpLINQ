@@ -116,6 +116,12 @@ class StringBuilderTest extends ClrStringTests {
         $this->assertEquals(3, count($str));
         $this->assertSame('BcE', (string)$str);
         $this->assertSame('BcE', $str->getWrappedValue());
+
+        $this->checkTransformMethod(function($str) {
+            $str[] = 'a';
+
+            return $str;
+        }, 'BcEa', $str);
     }
 
     public function testAsImmutable() {

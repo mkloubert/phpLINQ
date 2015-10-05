@@ -175,15 +175,17 @@ class Object implements IObject {
                 case 'function':
                     return 'lazy' === $typeName ? new Lazy($valueToCallable())
                                                 : $valueToCallable();
-                    break;
 
-                case 'null':
-                    $typeName = 'unset';
-                    break;
+                case 'real':
+                    return (float)$valueToConvert;
+
+                case 'unset':
+                    return null;
             }
 
-            return eval(\sprintf('return (%s)$valueToConvert;',
-                                 $typeName));
+            if (false !== \settype($valueToConvert, $typeName)) {
+                return $valueToConvert;
+            }
         }
 
         throw new InvalidCastException($conversionType, $val);
@@ -496,28 +498,18 @@ class Object implements IObject {
                 return false;
             }
 
-            // get anything that is
-            // defined after '=>' expression
-            $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])));
-
-            // remove surrounding {}
-            while ((\strlen($lambdaBody) >= 2) &&
-                   ('{' === \substr($lambdaBody, 0, 1)) && ('}' === \substr($lambdaBody, -1))) {
-
-                $lambdaBody = \trim(\substr($lambdaBody, 1, \strlen($lambdaBody) - 2));
-            }
+            $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])),  // take anything after =>
+                                '{}' . " \t\n\r\0\x0B");  // remove surrounding {}
 
             if ('' !== $lambdaBody) {
                 if ((';' !== \substr($lambdaBody, -1))) {
                     // auto add return statement
-                    $lambdaBody = \sprintf('return %s;',
-                                           $lambdaBody);
+                    $lambdaBody = 'return ' . $lambdaBody . ';';
                 }
             }
 
             // build closure
-            return eval(\sprintf('return function(%s) { %s };',
-                                 $lambdaMatches[3], $lambdaBody));
+            return eval('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
         }
 
         return $throwOrReturn();
@@ -562,7 +554,7 @@ class Object implements IObject {
     /**
      * Invokes a function for a disposable object and keeps sure that the
      * IDisposable::dispose() method of it is called at the end of the invocation, even
-     * if an exception is thrown.
+     * if an exception is thrown. s. https://msdn.microsoft.com/en-us/library/yh598w02.aspx
      *
      * @param callable $func The function to invoke.
      * @param IDisposable $obj The disposable object.

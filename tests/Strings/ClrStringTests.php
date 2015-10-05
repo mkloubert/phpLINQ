@@ -38,6 +38,18 @@ use \System\IO\MemoryStream;
 use \System\Linq\Enumerable;
 
 
+class ClrStringTestClass {
+    private $_value;
+
+    public function __construct($value = null) {
+        $this->_value = $value;
+    }
+
+    public function __toString() {
+        return (string)$this->_value;
+    }
+}
+
 /**
  * Tests for \System\ClrString class.
  *
@@ -364,6 +376,25 @@ class ClrStringTests extends TestCaseBase {
         }
     }
 
+    public function testCanBeString() {
+        $rc = $this->createClassReflector();
+
+        $cbs = $rc->getMethod('canBeString')->getClosure(null);
+
+        $this->assertTrue($cbs(null));
+        $this->assertTrue($cbs(''));
+        $this->assertTrue($cbs('Hello!'));
+        $this->assertTrue($cbs($this->createInstance('')));
+        $this->assertTrue($cbs($this->createInstance('Hello, again!')));
+        $this->assertTrue($cbs(true));
+        $this->assertTrue($cbs(false));
+        $this->assertTrue($cbs(1));
+        $this->assertTrue($cbs(2.3));
+        $this->assertFalse($cbs(new \stdClass()));
+        $this->assertFalse($cbs(new \DateTime()));
+        $this->assertTrue($cbs(new ClrStringTestClass()));
+    }
+
     public function testContainsString() {
         $str = $this->createInstance('abcdef');
 
@@ -406,6 +437,40 @@ class ClrStringTests extends TestCaseBase {
 
         $this->assertFalse($str->endsWith('e'));
         $this->assertTrue($str->endsWith('e', true));
+    }
+
+    public function testFormat() {
+        /* @var IString $str */
+
+        $rc = $this->createClassReflector();
+
+        $f = $rc->getMethod('format')->getClosure(null);
+
+        $str = $f('{0} {2} {1}', 1, 'a', 'CD');
+
+        $this->assertInstanceOf(IString::class, $str);
+        $this->assertSame('1 CD a', (string)$str);
+        $this->assertSame('1 CD a', $str->getWrappedValue());
+    }
+
+    public function testFormatArray() {
+        /* @var IString $str */
+
+        $rc = $this->createClassReflector();
+
+        $fa = $rc->getMethod('formatArray')->getClosure(null);
+
+        $lists = [array(1, 'a', 'CD')];
+        $lists = array_merge($lists,
+                             static::sequenceListFromArray($lists[0]));
+
+        foreach ($lists as $l) {
+            $str = $fa('{0} {2} {1}', $l);
+
+            $this->assertInstanceOf(IString::class, $str);
+            $this->assertSame('1 CD a', (string)$str);
+            $this->assertSame('1 CD a', $str->getWrappedValue());
+        }
     }
 
     public function testIndexOf() {
@@ -543,6 +608,67 @@ class ClrStringTests extends TestCaseBase {
             $this->assertFalse($s->isMutable());
             $this->assertTrue($s->isImmutable());
         }
+    }
+
+    public function testIsNullOrEmpty() {
+        $rc = $this->createClassReflector();
+
+        $isoe = $rc->getMethod('isNullOrEmpty')->getClosure(null);
+
+        $this->assertTrue($isoe(null));
+        $this->assertTrue($isoe(''));
+        $this->assertFalse($isoe(' '));
+        $this->assertFalse($isoe('0'));
+        $this->assertFalse($isoe(0));
+        $this->assertFalse($isoe(0.0));
+
+        $this->assertTrue($isoe(new ClrStringTestClass(null)));
+        $this->assertTrue($isoe(new ClrStringTestClass('')));
+        $this->assertFalse($isoe(new ClrStringTestClass(' ')));
+        $this->assertFalse($isoe(new ClrStringTestClass('0')));
+        $this->assertFalse($isoe(new ClrStringTestClass(0)));
+        $this->assertFalse($isoe(new ClrStringTestClass(0.0)));
+    }
+
+    public function testIsNullOrWhitespace() {
+        $rc = $this->createClassReflector();
+
+        $isow = $rc->getMethod('isNullOrWhitespace')->getClosure(null);
+
+        $this->assertTrue($isow(null));
+        $this->assertTrue($isow(''));
+        $this->assertTrue($isow(' '));
+        $this->assertTrue($isow('{{}', '{}'));
+        $this->assertFalse($isow('0'));
+        $this->assertFalse($isow(0));
+        $this->assertFalse($isow(0.0));
+
+        $this->assertTrue($isow(new ClrStringTestClass(null)));
+        $this->assertTrue($isow(new ClrStringTestClass('')));
+        $this->assertTrue($isow(new ClrStringTestClass(' ')));
+        $this->assertTrue($isow(new ClrStringTestClass('[[]]]'), '[]'));
+        $this->assertFalse($isow(new ClrStringTestClass('0')));
+        $this->assertFalse($isow(new ClrStringTestClass(0)));
+        $this->assertFalse($isow(new ClrStringTestClass(0.0)));
+    }
+
+    public function testIsString() {
+        $rc = $this->createClassReflector();
+
+        $ism = $rc->getMethod('isString')->getClosure(null);
+
+        $this->assertTrue($ism(''));
+        $this->assertTrue($ism('abc'));
+        $this->assertTrue($ism($this->createInstance(null)));
+        $this->assertTrue($ism($this->createInstance('')));
+        $this->assertTrue($ism($this->createInstance('ABC')));
+        $this->assertFalse($ism(null));
+        $this->assertFalse($ism(false));
+        $this->assertFalse($ism(true));
+        $this->assertFalse($ism(1));
+        $this->assertFalse($ism(4.3));
+        $this->assertFalse($ism(new \stdClass()));
+        $this->assertFalse($ism(new \DateTime()));
     }
 
     public function testIsWhitespace() {
@@ -928,6 +1054,28 @@ class ClrStringTests extends TestCaseBase {
         $this->checkTransformMethod(function(IString $str) {
             return $str->trimStart();
         }, 'A b  C  ', ' A b  C  ');
+    }
+
+    public function testValueToString() {
+        $rc = $this->createClassReflector();
+
+        $vts = $rc->getMethod('valueToString')->getClosure(null);
+
+        $this->assertSame('', $vts(null));
+        $this->assertSame('', $vts(''));
+        $this->assertSame('0', $vts(0));
+        $this->assertSame('0', $vts(0.0));
+        $this->assertSame('1', $vts(1));
+        $this->assertSame('2.3', $vts(2.3));
+        $this->assertSame(null, $vts(null, false));
+
+        $this->assertSame('', $vts(new ClrStringTestClass(null)));
+        $this->assertSame('', $vts(new ClrStringTestClass('')));
+        $this->assertSame('0', $vts(new ClrStringTestClass(0)));
+        $this->assertSame('0', $vts(new ClrStringTestClass(0.0)));
+        $this->assertSame('1', $vts(new ClrStringTestClass(1)));
+        $this->assertSame('2.3', $vts(new ClrStringTestClass(2.3)));
+        $this->assertSame('', $vts(new ClrStringTestClass(null), false));
     }
 
     public function testWriteTo() {

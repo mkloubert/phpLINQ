@@ -207,19 +207,15 @@ class ClrString extends Enumerable implements IString {
             return true;
         }
 
-        if (\is_scalar($val)) {
-            return true;
-        }
-
-        if (null === $val) {
-            return true;
-        }
-
         if (\is_object($val)) {
             return \method_exists($val, '__toString');
         }
 
-        return false;
+        if (\is_array($val)) {
+            return false;
+        }
+
+        return false !== @\settype($val, 'string');
     }
 
     /**
@@ -705,9 +701,15 @@ class ClrString extends Enumerable implements IString {
     public final function offsetSet($index, $value) {
         $this->throwIfNotMutable();
 
-        $this->offsetUnset($index);
-        $this->transformWrappedValue($this->insert($index, $value)
-                                          ->getWrappedValue());
+        if (null !== $index) {
+            $this->offsetUnset($index);
+            $this->transformWrappedValue($this->insert($index, $value)
+                                              ->getWrappedValue());
+        }
+        else {
+            $this->transformWrappedValue($this->append($value)
+                                              ->getWrappedValue());
+        }
     }
 
     /**
@@ -1156,6 +1158,8 @@ class ClrString extends Enumerable implements IString {
      * @param bool $nullAsEmpty Handle (null) as empty or not.
      *
      * @return string $value as string.
+     *
+     * @throws InvalidCastException Cannot convert value to string.
      */
     public static function valueToString($value, bool $nullAsEmpty = true) {
         $value = static::getRealValue($value);
@@ -1168,7 +1172,15 @@ class ClrString extends Enumerable implements IString {
             return $nullAsEmpty ? '' : null;
         }
 
-        return \strval($value);
+        if (!static::canBeString($value)) {
+            throw new InvalidCastException('string', $value, null, null, 0);
+        }
+
+        if (false === @\settype($value, 'string')) {
+            throw new InvalidCastException('string', $value, null, null, 1);
+        }
+
+        return $value;
     }
 
     /**
