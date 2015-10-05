@@ -105,7 +105,7 @@ abstract class TestCaseBase extends PHPUnit_Framework_TestCase {
      * Creates an array from a sequence.
      *
      * @param IEnumerable $seq The sequence.
-     * @param bool $seq $preventKeys Prevent keys or not.
+     * @param bool $preventKeys Prevent keys or not.
      *
      * @return array The sequence as array.
      */
