@@ -138,4 +138,15 @@ class FileInfo extends FileSystemInfo implements IFileInfo {
             return $result;
         });
     }
+
+    /**
+     * Throws an exception if the directory does not exist.
+     *
+     * @throws FileNotFoundException The directory does not exist.
+     */
+    protected final function throwIfNotExist() {
+        if (!$this->exists()) {
+            throw new FileNotFoundException($this->fullName());
+        }
+    }
 }

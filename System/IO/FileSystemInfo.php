@@ -113,17 +113,6 @@ abstract class FileSystemInfo extends Object implements IFileSystemInfo {
     abstract public function refresh();
 
     /**
-     * Throws an exception if the directory does not exist.
-     *
-     * @throws FileNotFoundException The directory does not exist.
-     */
-    protected final function throwIfNotExist() {
-        if (!$this->exists()) {
-            throw new FileNotFoundException($this->fullName());
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public final function toString() : IString {
