@@ -32,6 +32,7 @@
 use \System\Object;
 use \System\ILazy;
 use \System\IValueWrapper;
+use \System\Lazy;
 use \System\ValueWrapper;
 
 
@@ -149,30 +150,34 @@ return \converterSumFunc($a, $b);
     }
 
     public function testLazy() {
-        foreach ($this->createSumFunctions() as $sumFunc) {
+        $lazyTypes = [
+            'lazy',
+            ILazy::class,
+            new ReflectionClass(ILazy::class),
+            Lazy::class,
+            new ReflectionClass(Lazy::class),
+        ];
+
+        foreach ($lazyTypes as $targetType) {
             /* @var ILazy $lazyObj1 */
             /* @var ILazy $lazyObj2 */
             /* @var ILazy $lazyObj3 */
             /* @var ILazy $lazyObj4 */
-            /* @var ILazy $lazyObj5 */
 
             $obj1 = new ValueWrapper('1');
             $obj2 = new ValueWrapper(2);
             $obj3 = new ValueWrapper(3.0);
             $obj4 = new ValueWrapper(4.5);
-            $obj5 = new ValueWrapper(Object::asCallable($sumFunc));
 
             $this->assertSame('1', $obj1->getWrappedValue());
             $this->assertSame(2, $obj2->getWrappedValue());
             $this->assertSame(3.0, $obj3->getWrappedValue());
             $this->assertSame(4.5, $obj4->getWrappedValue());
-            $this->assertTrue(is_callable($obj5->getWrappedValue()));
 
-            $lazyObj1 = $obj1->toType('lazy');
-            $lazyObj2 = $obj2->toType('lazy');
-            $lazyObj3 = $obj3->toType('lazy');
-            $lazyObj4 = $obj4->toType('lazy');
-            $lazyObj5 = $obj5->toType('lazy');
+            $lazyObj1 = $obj1->toType($targetType);
+            $lazyObj2 = $obj2->toType($targetType);
+            $lazyObj3 = $obj3->toType($targetType);
+            $lazyObj4 = $obj4->toType($targetType);
 
             $this->assertInstanceOf(ILazy::class, $lazyObj1);
             $this->assertFalse($lazyObj1->isValueCreated());
@@ -193,13 +198,10 @@ return \converterSumFunc($a, $b);
             $this->assertFalse($lazyObj4->isValueCreated());
             $this->assertSame($obj4->getWrappedValue(), $lazyObj4->value());
             $this->assertTrue($lazyObj4->isValueCreated());
-
-            $this->assertInstanceOf(ILazy::class, $lazyObj5);
-            $this->assertFalse($lazyObj5->isValueCreated());
         }
     }
 
-    public function testValueWrapper() {
+    public function testValueWrapper1() {
         $obj1 = new ValueWrapper('1');
         $obj2 = new ValueWrapper(2);
         $obj3 = new ValueWrapper(3.0);
@@ -232,7 +234,14 @@ return \converterSumFunc($a, $b);
     }
 
     public function testValueWrapper2() {
-        foreach ([IValueWrapper::class, new ReflectionClass(IValueWrapper::class)] as $targetType) {
+        $wrapperTypes = [
+            IValueWrapper::class,
+            new ReflectionClass(IValueWrapper::class),
+            ValueWrapper::class,
+            new ReflectionClass(ValueWrapper::class),
+        ];
+
+        foreach ($wrapperTypes as $targetType) {
             /* @var IValueWrapper $obj1 */
             /* @var IValueWrapper $obj2 */
             /* @var IValueWrapper $obj3 */
