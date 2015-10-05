@@ -34,7 +34,6 @@ namespace System\Text;
 use \System\ClrString;
 use \System\IMutableString;
 use \System\IString;
-use \System\Linq\Enumerable;
 
 
 /**
