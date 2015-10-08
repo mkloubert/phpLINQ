@@ -71,21 +71,12 @@ class phpLINQ {
      *
      * @param string $expr The expression.
      * @param bool $throwException Throw exception or return (false) instead.
-     * @param object $bindTo Custom object to bind the closure to.
      *
      * @return \Closure|bool The closure or (false) on error.
      *
      * @throws ArgumentException $expr is no valid expression.
-     *                           -- or --
-     *                           $bindTo is no valid object.
      */
-    public static function toLambda($expr, bool $throwException = true, $bindTo = null) {
-        if (null !== $bindTo) {
-            if (!is_object($bindTo) && (false !== $bindTo)) {
-                throw new ArgumentException('bindTo', 'No valid object!', null, 2);
-            }
-        }
-
+    public static function toLambda($expr, bool $throwException = true) {
         $throwOrReturn = function() use ($throwException) {
             if ($throwException) {
                 throw new ArgumentException('expr', 'No lambda expression!', null, 0);
@@ -122,17 +113,7 @@ class phpLINQ {
                 }
             }
 
-            /* @var Closure $result */
-
-            // build closure
-            $result = self::execGlobal('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
-
-            if (false !== $bindTo) {
-                $obj = new self();
-                $result->bindTo($bindTo ?? $obj);
-            }
-
-            return $result;
+            return self::execGlobal('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
         }
 
         return $throwOrReturn();
