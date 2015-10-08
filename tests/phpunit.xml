@@ -55,6 +55,7 @@
             <file>IEnumerable/CountTests.php</file>
             <file>IEnumerable/DefaultArrayIfEmptyTests.php</file>
             <file>IEnumerable/DefaultIfEmptyTests.php</file>
+            <file>IEnumerable/DisposeAllTests.php</file>
             <file>IEnumerable/DistinctTests.php</file>
             <file>IEnumerable/EachTests.php</file>
             <file>IEnumerable/ElementAtOrDefaultTests.php</file>
@@ -90,6 +91,7 @@
             <file>IEnumerable/SingleOrDefaultTests.php</file>
             <file>IEnumerable/SingleTests.php</file>
             <file>IEnumerable/SkipTests.php</file>
+            <file>IEnumerable/SkipAllTests.php</file>
             <file>IEnumerable/SkipWhileTests.php</file>
             <file>IEnumerable/SumTests.php</file>
             <file>IEnumerable/TakeTests.php</file>
@@ -101,6 +103,7 @@
             <file>IEnumerable/ToLookupTests.php</file>
             <file>IEnumerable/ToSetTests.php</file>
             <file>IEnumerable/UnionTests.php</file>
+            <file>IEnumerable/UnwrapTests.php</file>
             <file>IEnumerable/WithNewKeysAndValuesTests.php</file>
             <file>IEnumerable/WithNewKeysTests.php</file>
             <file>IEnumerable/ZipTests.php</file>

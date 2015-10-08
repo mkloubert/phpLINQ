@@ -189,6 +189,16 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function defaultIfEmpty() : IEnumerable;
 
     /**
+     * Disposes all IDisposable objects (other values and objects are ignored).
+     *
+     * @param bool $returnAll Return non-disposable objects only (false) or also the disposed ones (true).
+     * @param bool $returnNull Also return (null) references or not.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function disposeAll(bool $returnAll = false, bool $returnNull = false) : IEnumerable;
+
+    /**
      * Removes duplicates.
      *
      * @param callable|bool $equalityComparer The custom equality comparer.
@@ -616,6 +626,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
     function skip(int $count) : IEnumerable;
 
     /**
+     * Skips all elements of that sequence.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function skipAll() : IEnumerable;
+
+    /**
      * Skips items while a condition matches.
      *
      * @param callable $predicate The predicate to use.
@@ -753,6 +770,13 @@ interface IEnumerable extends \Countable, \Iterator, \Serializable, IObject {
      * @throws ArgumentException $equalityComparer is no valid callable / lambda expression.
      */
     function union($second, $equalityComparer = null) : IEnumerable;
+
+    /**
+     * Returns a sequence of "real" / unwrapped values of the items of that sequence.
+     *
+     * @return IEnumerable The new sequence.
+     */
+    function unwrap() : IEnumerable;
 
     /**
      * Filters the items of that sequence.

@@ -29,16 +29,19 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
+// DON'T REMOVE THE "UNUSED" NAMESPACES!!!
+// This is for better access in lambda expressions, e.g.
+use \System\ArgumentException;
+use \System\ClrString;
+use \System\Linq\Enumerable;
+
 
 /**
  * Provides services in a root namespace context.
  *
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-final class phpLINQ {
-    private function __construct() {
-    }
-
+class phpLINQ {
     /**
      * Executes code globally.
      *
@@ -48,7 +51,90 @@ final class phpLINQ {
      *
      * @throws \System\InvalidCastException $code cannot be a string.
      */
-    public static function execGlobal($code) {
+    public static final function execGlobal($code) {
         return eval(\System\ClrString::valueToString($code, false));
+    }
+
+    /**
+     * Checks if a value is a valid lambda expression.
+     *
+     * @param mixed $val The value to check.
+     *
+     * @return bool Is valid lambda expression or not.
+     */
+    public static function isLambda($val) {
+        return false !== static::toLambda($val, false);
+    }
+
+    /**
+     * Creates a closure from a lambda expression.
+     *
+     * @param string $expr The expression.
+     * @param bool $throwException Throw exception or return (false) instead.
+     * @param object $bindTo Custom object to bind the closure to.
+     *
+     * @return \Closure|bool The closure or (false) on error.
+     *
+     * @throws ArgumentException $expr is no valid expression.
+     *                           -- or --
+     *                           $bindTo is no valid object.
+     */
+    public static function toLambda($expr, bool $throwException = true, $bindTo = null) {
+        if (null !== $bindTo) {
+            if (!is_object($bindTo) && (false !== $bindTo)) {
+                throw new ArgumentException('bindTo', 'No valid object!', null, 2);
+            }
+        }
+
+        $throwOrReturn = function() use ($throwException) {
+            if ($throwException) {
+                throw new ArgumentException('expr', 'No lambda expression!', null, 0);
+            }
+
+            return false;
+        };
+
+        if (!ClrString::canBeString($expr)) {
+            return $throwOrReturn();
+        }
+
+        $expr = trim(ClrString::valueToString($expr));
+
+        // check for lambda
+        if (1 === preg_match("/^(\\s*)([\\(]?)([^\\)]*)([\\)]?)(\\s*)(=>)/m", $expr, $lambdaMatches)) {
+            if ((empty($lambdaMatches[2]) && !empty($lambdaMatches[4])) ||
+                (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
+            {
+                if ($throwException) {
+                    throw new ArgumentException('expr', 'Syntax error in lambda expression!', null, 1);
+                }
+
+                return false;
+            }
+
+            $lambdaBody = trim(substr($expr, strlen($lambdaMatches[0])),  // take anything after =>
+                               '{}' . " \t\n\r\0\x0B");  // remove surrounding {}
+
+            if ('' !== $lambdaBody) {
+                if ((';' !== \substr($lambdaBody, -1))) {
+                    // auto add return statement
+                    $lambdaBody = 'return ' . $lambdaBody . ';';
+                }
+            }
+
+            /* @var Closure $result */
+
+            // build closure
+            $result = self::execGlobal('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
+
+            if (false !== $bindTo) {
+                $obj = new self();
+                $result->bindTo($bindTo ?? $obj);
+            }
+
+            return $result;
+        }
+
+        return $throwOrReturn();
     }
 }

@@ -38,7 +38,7 @@ namespace System;
  * @package System
  * @author Marcel Joachim Kloubert <marcel.kloubert@gmx.net>
  */
-class Object implements IObject {
+class Object extends \phpLINQ implements IObject {
     /**
      * {@inheritDoc}
      */
@@ -372,7 +372,7 @@ class Object implements IObject {
             return true;
         };
 
-        do {
+        while (true) {
             if ($val instanceof IValueWrapper) {
                 $wrappedValue = $val->getWrappedValue();
 
@@ -394,8 +394,9 @@ class Object implements IObject {
                     }
                 }
             }
-        }
-        while (false);  // no infinite loop
+
+            break;  // no infinite loop
+        };
 
         return $val;
     }
@@ -441,17 +442,6 @@ class Object implements IObject {
     }
 
     /**
-     * Checks if a value is a valid lambda expression.
-     *
-     * @param mixed $val The value to check.
-     *
-     * @return bool Is valid lambda expression or not.
-     */
-    public static function isLambda($val) {
-        return false !== static::toLambda($val, false);
-    }
-
-    /**
      * A default random value seeder.
      */
     public static function seedRandom() {
@@ -459,60 +449,6 @@ class Object implements IObject {
         $seed = (float)$sec + ((float)$usec * 100000);
 
         \mt_srand((int)$seed);
-    }
-
-    /**
-     * Creates a closure from a lambda expression.
-     *
-     * @param string $expr The expression.
-     * @param bool $throwException Throw exception or return (false) instead.
-     *
-     * @return \Closure|bool The closure or (false) on error.
-     *
-     * @throws ArgumentException $expr is no valid expression.
-     */
-    public static function toLambda($expr, bool $throwException = true) {
-        $throwOrReturn = function() use ($throwException) {
-            if ($throwException) {
-                throw new ArgumentException('expr', 'No lambda expression!', null, 0);
-            }
-
-            return false;
-        };
-
-        if (!ClrString::canBeString($expr)) {
-            return $throwOrReturn();
-        }
-
-        $expr = \trim(ClrString::valueToString($expr));
-
-        // check for lambda
-        if (1 === \preg_match("/^(\\s*)([\\(]?)([^\\)]*)([\\)]?)(\\s*)(=>)/m", $expr, $lambdaMatches)) {
-            if ((empty($lambdaMatches[2]) && !empty($lambdaMatches[4])) ||
-                (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
-            {
-                if ($throwException) {
-                    throw new ArgumentException('expr', 'Syntax error in lambda expression!', null, 1);
-                }
-
-                return false;
-            }
-
-            $lambdaBody = \trim(\substr($expr, \strlen($lambdaMatches[0])),  // take anything after =>
-                                '{}' . " \t\n\r\0\x0B");  // remove surrounding {}
-
-            if ('' !== $lambdaBody) {
-                if ((';' !== \substr($lambdaBody, -1))) {
-                    // auto add return statement
-                    $lambdaBody = 'return ' . $lambdaBody . ';';
-                }
-            }
-
-            // build closure and execute it
-            return \phpLINQ::execGlobal('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
-        }
-
-        return $throwOrReturn();
     }
 
     /**

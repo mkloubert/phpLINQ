@@ -34,6 +34,10 @@ namespace System\Linq;
 use \System\ArgumentException;
 use \System\ArgumentNullException;
 use \System\ArgumentOutOfRangeException;
+use \System\ClrString;
+use \System\IDisposable;
+use \System\IFormatProvider;
+use \System\Object;
 use \System\Collections\Collection;
 use \System\Collections\Dictionary;
 use \System\Collections\EnumerableException;
@@ -49,9 +53,6 @@ use \System\Collections\IEnumerable;
 use \System\Collections\KeySelectorIterator;
 use \System\Collections\KeyAndValueSelectorIterator;
 use \System\Collections\Set;
-use \System\ClrString;
-use \System\IFormatProvider;
-use \System\Object;
 
 
 /**
@@ -330,6 +331,41 @@ class Enumerable extends Object implements IEnumerable {
      */
     public final function defaultIfEmpty() : IEnumerable {
         return $this->defaultArrayIfEmpty(\func_get_args());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function disposeAll(bool $returnAll = false, bool $returnNull = false) : IEnumerable {
+        return static::createEnumerable($this->disposeAllInner($returnAll, $returnNull));
+    }
+
+    /**
+     * @see Enumerable::disposeAll()
+     */
+    protected function disposeAllInner(bool $returnAll, bool $returnNull) {
+        while ($this->valid()) {
+            $curItem = $this->current();
+
+            if (null === $curItem) {
+                $doReturnItem = $returnNull;
+            }
+            else {
+                $doReturnItem = true;
+
+                if ($curItem instanceof IDisposable) {
+                    $doReturnItem = $returnAll;
+
+                    $curItem->dispose();
+                }
+            }
+
+            if ($doReturnItem) {
+                yield $this->key() => $curItem;
+            }
+
+            $this->next();
+        }
     }
 
     /**
@@ -1178,6 +1214,13 @@ class Enumerable extends Object implements IEnumerable {
     /**
      * {@inheritDoc}
      */
+    public final function skipAll() : IEnumerable {
+        return $this->skipWhile('($x) => true');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public final function skipWhile($predicate) : IEnumerable {
         if (null === $predicate) {
             throw new ArgumentNullException('predicate');
@@ -1386,6 +1429,18 @@ class Enumerable extends Object implements IEnumerable {
     public final function union($second, $equalityComparer = null) : IEnumerable {
         return $this->concat($second)
                     ->distinct($equalityComparer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final function unwrap() : IEnumerable {
+        $cls = $this->getType();
+        $grv = $cls->getMethod('getRealValue')->getClosure(false);
+
+        return $this->select(function($x) use($grv) {
+                                 return $grv($x);
+                             });
     }
 
     /**
