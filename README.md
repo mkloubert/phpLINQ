@@ -18,13 +18,9 @@ Here you can find the [DOCUMENTATION](https://github.com/mkloubert/phpLINQ/wiki)
 * PHP 5.3+ ([branch v2](https://github.com/mkloubert/phpLINQ/tree/v2) or [branch v1](https://github.com/mkloubert/phpLINQ/tree/v1))
 * PHP 7+ (master branch)
 
-## Examples
+## Example
 
 A complete list can be found at the [live example page](https://github.com/mkloubert/phpLINQ/tree/master/examples).
-
-### Example 1
-
-Create a sequence from a list of values.
 
 ```php
 use \System\Linq;
@@ -46,23 +42,16 @@ foreach ($newSeq as $item) {
 }
 ```
 
-### Example 2
+## What you need
 
-Create a sequence from any [Iterator](https://github.com/mkloubert/phpLINQ/wiki/Sequence).
+* The [phpLINQ.php](https://github.com/mkloubert/phpLINQ/blob/master/phpLINQ.php) file
+* The whole [System](https://github.com/mkloubert/phpLINQ/tree/master/System) folder
 
-```php
-use \System\Linq;
+The file / directory structure:
 
-function createIterator() {
-    yield 5979;
-    yield 23979;
-    yield 1781;
-    yield 241279;
-}
-
-$seq = Enumerable::create(createIterator());
-
-// ...
+```
+System/
+phpLINQ.php
 ```
 
 ## Implemented
