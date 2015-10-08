@@ -508,8 +508,8 @@ class Object implements IObject {
                 }
             }
 
-            // build closure
-            return eval('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
+            // build closure and execute it
+            return \phpLINQ::execGlobal('return function(' . $lambdaMatches[3] . ') { ' . $lambdaBody . ' };');
         }
 
         return $throwOrReturn();
