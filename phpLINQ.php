@@ -31,8 +31,8 @@
 
 // DON'T REMOVE THE "UNUSED" NAMESPACES!!!
 // This is for better access in lambda expressions, e.g.
-use \System\ArgumentException;
 use \System\ClrString;
+use \System\Object as ClrObject;
 use \System\Linq\Enumerable;
 
 
@@ -79,7 +79,7 @@ class phpLINQ {
     public static function toLambda($expr, bool $throwException = true) {
         $throwOrReturn = function() use ($throwException) {
             if ($throwException) {
-                throw new ArgumentException('expr', 'No lambda expression!', null, 0);
+                throw new System\ArgumentException('expr', 'No lambda expression!', null, 0);
             }
 
             return false;
@@ -97,7 +97,7 @@ class phpLINQ {
                 (!empty($lambdaMatches[2]) && empty($lambdaMatches[4])))
             {
                 if ($throwException) {
-                    throw new ArgumentException('expr', 'Syntax error in lambda expression!', null, 1);
+                    throw new System\ArgumentException('expr', 'Syntax error in lambda expression!', null, 1);
                 }
 
                 return false;
