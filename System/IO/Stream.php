@@ -129,9 +129,8 @@ class Stream extends DisposableBase implements IStream {
      */
     public function canRead() : bool {
         $mode = $this->streamMode() ?? new ClrString();
-        $mode->toLower()->trim();
 
-        switch (\strval($mode)) {
+        switch (\strval($mode->toLower()->trim())) {
             case 'a+':
             case 'c+':
             case 'r':
@@ -161,9 +160,8 @@ class Stream extends DisposableBase implements IStream {
      */
     public function canWrite() : bool {
         $mode = $this->streamMode() ?? new ClrString();
-        $mode->toLower()->trim();
 
-        switch (\strval($mode)) {
+        switch (\strval($mode->toLower()->trim())) {
             case 'a':
             case 'a+':
             case 'c':
