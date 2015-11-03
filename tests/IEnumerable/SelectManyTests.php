@@ -198,7 +198,7 @@ return selectManySelector3Func($x);
                 foreach (static::sequenceListFromArray([1, 2, 3]) as $seq) {
                     /* @var IEnumerable $seq */
 
-                    $items = static::sequenceToArray($seq->selectMany($s));
+                    $items = static::sequenceToArray($seq->selectMany($s), false);
 
                     $this->assertEquals(9, count($items));
 

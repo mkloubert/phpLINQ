@@ -270,7 +270,7 @@ return \groupJoinResultSelectorFunc($person, $pets);
                 $joined = $personSeq->groupJoin($petSeq,
                                                 $personKeySelector, $petKeySelector, $resultSelector);
 
-                $items = static::sequenceToArray($joined);
+                $items = static::sequenceToArray($joined, false);
 
                 $this->assertEquals(4, count($items));
                 $this->assertEquals('Owner: Tanja; Pets: "WauWau", "Sparky"', $items[0]);

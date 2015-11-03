@@ -647,7 +647,7 @@ class Enumerable extends Object implements IEnumerable {
                 }
 
                 foreach ($outerGrp->values as $outerVal) {
-                    yield $resultSelector($outerVal, $innerGrp->values, $outerGrp->key, $innerGrp->key);
+                    yield [$outerGrp->key, $innerGrp->key] => $resultSelector($outerVal, $innerGrp->values);
                 }
             }
         }
@@ -773,7 +773,7 @@ class Enumerable extends Object implements IEnumerable {
 
                 foreach ($outerGrp->values as $outerVal) {
                     foreach ($innerGrp->values as $innerVal) {
-                        yield $resultSelector($outerVal, $innerVal, $outerGrp->key, $innerGrp->key);
+                        yield [$outerGrp->key, $innerGrp->key] => $resultSelector($outerVal, $innerVal);
                     }
                 }
             }
@@ -1099,7 +1099,7 @@ class Enumerable extends Object implements IEnumerable {
             }
 
             while ($iterator->valid()) {
-                yield $iterator->current();
+                yield [$ctx->key(), $iterator->key()] => $iterator->current();
 
                 $iterator->next();
             }
@@ -1557,7 +1557,7 @@ class Enumerable extends Object implements IEnumerable {
                 break;
             }
 
-            yield $zipped;
+            yield [$ctx1->key(), $ctx2->key()] => $zipped;
 
             $prevVal1 = $ctx1->nextValue();
             $prevVal2 = $ctx2->nextValue();

@@ -212,7 +212,7 @@ return sprintf(\'Owner: %s; Pet: %s\', $person->Name, $pet->Name);
                 $joined = $personSeq->join($petSeq,
                                            $personKeySelector, $petKeySelector, $resultSelector);
 
-                $items = static::sequenceToArray($joined);
+                $items = static::sequenceToArray($joined, false);
 
                 $this->assertEquals(6, count($items));
                 $this->assertEquals('Owner: Tanja; Pet: WauWau', $items[0]);

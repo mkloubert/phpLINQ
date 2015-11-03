@@ -97,7 +97,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = ['A', 'B', 'C', 'D'];
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(3, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -114,7 +114,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = ['A', 'B'];
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(2, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -130,7 +130,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = ['A', 'B', 'C', 'd'];
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(4, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -148,7 +148,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(3, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -165,7 +165,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = new ArrayIterator(['A', 'B']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(2, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -181,7 +181,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = new ArrayIterator(['A', 'B', 'C', 'd']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(4, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -206,7 +206,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = $createGenerator();
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(3, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -228,7 +228,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = $createGenerator();
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(2, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -251,7 +251,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = $createGenerator();
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(4, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -269,7 +269,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = static::sequenceFromArray(['A', 'B', 'C', 'D']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(3, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -286,7 +286,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = static::sequenceFromArray(['A', 'B']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(2, count($items));
                 $this->assertEquals('1A', $items[0]);
@@ -302,7 +302,7 @@ return \zipFunc($itemA, $itemB);
 
                 $b = static::sequenceFromArray(['A', 'B', 'C', 'd']);
 
-                $items = static::sequenceToArray($a->zip($b, $selector));
+                $items = static::sequenceToArray($a->zip($b, $selector), false);
 
                 $this->assertEquals(4, count($items));
                 $this->assertEquals('1A', $items[0]);
