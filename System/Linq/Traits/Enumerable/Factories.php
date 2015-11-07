@@ -218,7 +218,7 @@ trait Factories {
     /**
      * Generates a new sequence that contains one repeated value or object.
      *
-     * @param $item The item to repeat.
+     * @param mixed $item The item to repeat.
      * @param int $count The number of items to return.
      *
      * @return IEnumerable The new sequence.

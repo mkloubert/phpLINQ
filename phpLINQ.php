@@ -52,7 +52,7 @@ class phpLINQ {
      * @throws \System\InvalidCastException $code cannot be a string.
      */
     public static final function execGlobal($code) {
-        return eval(\System\ClrString::valueToString($code, false));
+        return eval(System\ClrString::valueToString($code, false));
     }
 
     /**

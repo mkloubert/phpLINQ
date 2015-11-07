@@ -189,7 +189,7 @@ class Enumerable extends Object implements IEnumerable {
      *
      * @return \Iterator|null $obj as iterator or (null) if $obj is also (null).
      */
-    public static function asIterator($obj, $emptyIfNull = false) {
+    public static function asIterator($obj, bool $emptyIfNull = false) {
         while (null !== $obj) {
             if (\is_array($obj)) {
                 return new \ArrayIterator($obj);
@@ -205,6 +205,11 @@ class Enumerable extends Object implements IEnumerable {
             break;
         }
 
+        if ($obj instanceof \Iterator) {
+            // nothing to convert
+            return $obj;
+        }
+
         if (null === $obj) {
             if (!$emptyIfNull) {
                 return null;
@@ -212,11 +217,6 @@ class Enumerable extends Object implements IEnumerable {
             else {
                 return new \EmptyIterator();
             }
-        }
-
-        if ($obj instanceof \Iterator) {
-            // nothing to convert
-            return $obj;
         }
 
         if ($obj instanceof \Traversable) {
