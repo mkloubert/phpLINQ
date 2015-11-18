@@ -80,16 +80,18 @@ class Object extends \phpLINQ implements IObject {
      * @param mixed $val The value to convert.
      * @param string|\ReflectionClass $conversionType The type the object should be converted to.
      * @param IFormatProvider|null $provider The optional format provider to use.
+     * @param bool $handleConvertible Handle IConvertible objects or not.
      *
      * @return mixed The new object / value.
      *
      * @throws InvalidCastException Conversion failed.
      */
-    public static function convertTo($val, $conversionType, IFormatProvider $provider = null) {
+    public static function convertTo($val, $conversionType, IFormatProvider $provider = null,
+                                     $handleConvertible = true) {
         $conversionType = static::getRealValue($conversionType);
         $valueToConvert = static::getRealValue($val);
 
-        if ($valueToConvert instanceof IConvertible) {
+        if (($valueToConvert instanceof IConvertible) && $handleConvertible) {
             return $valueToConvert->toType($conversionType, $provider);
         }
 
@@ -475,16 +477,17 @@ class Object extends \phpLINQ implements IObject {
     /**
      * {@inheritDoc}
      */
-    public function toType($conversionType, IFormatProvider $provider = null) {
-        return static::convertTo($this,
-                                 $conversionType, $provider);
+    public function toString() : IString {
+        return new ClrString(\get_class($this));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toString() : IString {
-        return new ClrString(\get_class($this));
+    public function toType($conversionType, IFormatProvider $provider = null) {
+        return static::convertTo($this,
+                                 $conversionType, $provider,
+                                 false);
     }
 
     /**
